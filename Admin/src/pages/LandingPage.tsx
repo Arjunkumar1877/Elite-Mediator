@@ -1,5 +1,8 @@
 import { HiOutlineUsers } from "react-icons/hi";
 import Footer from "./Footer";
+import { IoBusiness } from "react-icons/io5";
+import { Link } from "react-router-dom";
+
 
 const Landing = () => {
   return (
@@ -8,7 +11,6 @@ const Landing = () => {
       <div className="absolute rounded-2xl -top-14  sm:ml-30 md:ml-28 lg:left-64 transform translate-x-1/2 -translate-y-1/2 bg-neutral-500 w-40 h-40 lg:w-72 lg:h-72 rotate-45"></div>
 
       <div className="relative flex flex-col lg:flex-row items-center justify-between space-y-8 lg:space-y-0 mt-40">
-        {/* Left Section */}
         <div className="lg:w-1/2 flex flex-col space-y-4 lg:p-16">
           <h1 className="text-3xl lg:text-5xl font-bold text-zinc-600">
             DON'T MISS ANYONE
@@ -20,12 +22,13 @@ const Landing = () => {
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
             eiusmod tempor incididunt ut labore et dolore magna aliqua.
           </p>
-          <button className="bg-sky-500 text-white px-4 py-2 rounded-lg self-start">
+        <Link to={'/service'}>
+        <button className="bg-sky-500 hover:bg-sky-600 text-white px-4 py-2 rounded self-start">
             SERVICES
           </button>
+        </Link>
         </div>
 
-        {/* Right Section */}
 
         <div className="lg:w-1/2 flex justify-center lg:justify-end">
           <img
@@ -38,7 +41,7 @@ const Landing = () => {
 
       <div className="flex flex-col items-center justify-center p-6 bg-white md:p-12 ">
         <div className="relative w-full">
-          <div className="bg-sky-500 h-14 w-16 absolute -left-24 -top-3 rounded-xl md:h-18 md:-left-20 md:h-20  md:-top-5"></div>
+          <div className="bg-sky-500 h-14 w-16 absolute -left-24 -top-3 rounded-xl md:h-18 md:-left-28 md:h-20  md:-top-5 lg:-left-20"></div>
           <h2 className="text-2xl font-bold text-zinc-600 text-center md:text-4xl">
             BE ALWAYS AVAILABLE FOR EVERYONE
           </h2>
@@ -50,7 +53,10 @@ const Landing = () => {
         <div className="">
           <div className="flex flex-col justify-between mt-6 space-y-6 md:flex-row md:space-y-0 md:space-x-12 md:text-sm  lg:text-lg">
             <div className="flex flex-col items-center p-10 space-y-4 text-center bg-gray-100  rounded-lg md:w-1/3">
-              <div className="flex items-center justify-center w-12 h-12 bg-sky-500 rounded-2xl"></div>
+              <div className="flex items-center justify-center w-12 h-12 bg-sky-500 rounded-2xl relative">
+          <HiOutlineUsers className="text-4xl absolute -left-2 bottom-0" />
+
+              </div>
               <h3 className="text-xl font-semibold">Domestic</h3>
               <p className="text-gray-600">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
@@ -60,7 +66,9 @@ const Landing = () => {
             </div>
 
             <div className="flex flex-col items-center p-10 space-y-4 text-center bg-gray-100 rounded-lg md:w-1/3">
-              <div className="flex items-center justify-center w-12 h-12 bg-sky-500 rounded-2xl"></div>
+              <div className="flex items-center justify-center w-12 h-12 bg-sky-500 rounded-2xl relative">
+              <IoBusiness className="text-4xl absolute -left-2 bottom-0" />
+              </div>
               <h3 className="text-xl font-semibold">Business</h3>
               <p className="text-gray-600">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
@@ -71,9 +79,11 @@ const Landing = () => {
           </div>
 
           <div className="flex justify-center p-2 md:p-0 lg:p-0">
-            <button className="mt-auto px-4 h-11 font-semibold text-white bg-sky-500 rounded-lg">
+           <Link to={'/service'}>
+           <button className="mt-auto px-4 h-11 font-semibold text-white bg-sky-500 rounded  hover:bg-sky-600 ">
               SERVICES
             </button>
+           </Link>
           </div>
         </div>
       </div>
@@ -116,24 +126,27 @@ const Landing = () => {
         </div>
       </div>
 
-      <div className="flex flex-col rounded-xl  justify-between items-center mt-9 md:flex-row bg-zinc-300 h-[400px]">
-        <div className="relative flex-1">
-          <div className="bg-sky-500 h-14 w-16 absolute -left-20 -top-3 rounded-xl md:h-18 md:-left-7 md:h-20  md:-top-2"></div>
-          <div className="flex flex-col w-[700px] justify-center mt-12 text-start md:mt-0">
-            <h2 className="text-2xl mt-70 font-bold text-zinc-600 text-center md:text-4xl ">
+      <div className="flex flex-col rounded-xl items-center justify-center gap-8  lg:justify-between mt-9 lg:flex-row bg-zinc-300 h-[400px]">
+        <div className="relative w-1/2">
+          <div className="bg-sky-500 h-14 w-16 absolute -left-44 top-9 rounded-xl sm:-left-80 md:h-18 md:-left-60 md:h-20  md:-top-2 lg:-left-8"></div>
+
+
+          <div className="flex flex-col lg:w-[700px] justify-center mt-12 text-center md:text-start md:mt-0">
+
+            <h2 className="text-xl mt-70 font-bold text-zinc-600 text-center lg:text-4xl ">
               YOUR VIRITUAL DOORMAN
             </h2>
-            <h2 className=" text-center text-xs font-bold text-sky-500  md:text-2xl md:ml-24 ">
-              CONNECT WTH VISITORS FROM ANNYWHERE
+            <h2 className="text-center w-full text-sm font-bold text-sky-500 ml-5  lg:text-2xl lg:ml-8 self-start ">
+              CONNECT WTH VISITORS FROM ANYWHERE
             </h2>
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-16 md:gap-10 flex-1">
-          <HiOutlineUsers className="text-5xl" />
-          <HiOutlineUsers className="text-5xl" />
-          <HiOutlineUsers className="text-5xl" />
-          <HiOutlineUsers className="text-5xl" />
+        <div className="grid grid-cols-2 gap-16 w-1/2 p-6 ">
+          <HiOutlineUsers className="text-3xl lg:text-5xl text-slate-500" />
+          <HiOutlineUsers className="text-3xl lg:text-5xl text-slate-500" />
+          <HiOutlineUsers className="text-3xl lg:text-5xl text-slate-500" />
+          <HiOutlineUsers className="text-3xl lg:text-5xl text-slate-500" />
         </div>
       </div>
 
@@ -233,8 +246,7 @@ const Landing = () => {
           </button>
       </div>
 
-
-<Footer />
+      <Footer />
 
     </div>
   );
