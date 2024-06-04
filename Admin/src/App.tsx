@@ -7,6 +7,7 @@ import { Route, Routes, BrowserRouter } from 'react-router-dom'
 import Signup from './pages/Signup'
 import OtpVerification from './pages/VerifyOtp'
 import UserVerifyData from './pages/UserVerifyData'
+import SideNavBar from './pages/SideNavBar'
 
 export default function App() {
   return (
@@ -15,7 +16,7 @@ export default function App() {
 {/* <ServicePage /> */}
 <BrowserRouter>
  <Routes>
-  <Route path='/home' element={<UserVerifyData/>} />
+  <Route path='/home' element={<SideNavBar/>} />
   <Route path='/service' element={<ServicePage />} />
   <Route path='/login' element={<Login/>} />
   <Route path='/signup' element={<Signup/>} />
