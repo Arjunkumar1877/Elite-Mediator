@@ -1,11 +1,12 @@
 import './App.css'
-import Landing from './pages/LandingPage'
+// import Landing from './pages/LandingPage'
+import ServicePage from './pages/ServicePage'
 
 export default function App() {
   return (
    <div className="">
-<Landing/>
 
+<ServicePage />
 
    </div>
   )
