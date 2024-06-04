@@ -5,6 +5,7 @@ import Login from './pages/Login'
 import ServicePage from './pages/ServicePage'
 import { Route, Routes, BrowserRouter } from 'react-router-dom'
 import Signup from './pages/Signup'
+import OtpVerification from './pages/VerifyOtp'
 
 export default function App() {
   return (
@@ -13,7 +14,7 @@ export default function App() {
 {/* <ServicePage /> */}
 <BrowserRouter>
  <Routes>
-  <Route path='/home' element={<Landing />} />
+  <Route path='/home' element={<OtpVerification />} />
   <Route path='/service' element={<ServicePage />} />
   <Route path='/login' element={<Login/>} />
   <Route path='/signup' element={<Signup/>} />
