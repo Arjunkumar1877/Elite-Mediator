@@ -1,50 +1,117 @@
-import React from 'react';
+import { BsCheckCircleFill } from "react-icons/bs";
+import { FcGoogle } from "react-icons/fc";
+import { Link } from "react-router-dom";
 
-const Sign = () => {
+const Signup = () => {
   return (
-    <div className="flex flex-col items-center justify-center h-screen bg-gray-100 md:flex-row">
-      <div className="hidden md:flex md:w-1/2 lg:w-1/2 items-center justify-center">
-        <img src="public/login.jpg" alt="Dummy" className="object-cover w-full h-full" />
+    <div className="flex justify-center h-[700px] w-full">
+      <div className="hidden sm:flex sm:flex-1 sm:h-full">
+        <img
+          src="public/login.jpg"
+          alt="Dummy"
+          className="h-full object-cover w-full"
+        />
       </div>
-      <div className="flex w-full md:w-1/2 lg:w-1/2 p-8 space-y-8 bg-white shadow-lg rounded-lg">
-        <div className="w-full p-10">
-          <h2 className="text-2xl font-bold text-center">Create an account</h2>
-          <form className="space-y-6">
-            <div>
-              <label htmlFor="username" className="block text-sm font-medium text-gray-700">Username</label>
-              <input type="text" id="username" className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" placeholder="Enter your username" />
-              <span className="text-green-500 text-xs ml-2">Valid</span>
+
+      <div className="w-full  lg:flex-1 h-full bg-sky-100 p-5">
+        <div className="bg-white h-full flex flex-col justify-center items-center">
+          <h1 className="text-2xl lg:text-3xl">Create an account</h1>
+          <p className="text-xs  ">Enter your email to sign up for this app</p>
+
+          <div className="flex flex-col pt-5">
+            <div className="flex justify-between px-5 py-1">
+              <span className="text-xs text-zinc-500">Username</span>
+              <div className="flex justify-between gap-1">
+                <BsCheckCircleFill className="text-green-600 text-xs" />
+                <span className="text-xs text-green-500 text-center">
+                  Valid
+                </span>
+              </div>
             </div>
-            <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
-              <input type="email" id="email" className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" placeholder="Enter your email" />
-              <span className="text-green-500 text-xs ml-2">Valid</span>
+            <input
+              type="text"
+              className="w-[300px] border rounded py-1 px-5"
+              placeholder="Enter your username"
+            />
+          </div>
+
+          <div className="flex flex-col pt-5">
+            <div className="flex justify-between px-5 py-1">
+              <span className="text-xs text-zinc-500">Email</span>
+              <div className="flex justify-between gap-1">
+                <BsCheckCircleFill className="text-green-600 text-xs" />
+                <span className="text-xs text-green-500 text-center">
+                  Valid
+                </span>
+              </div>
             </div>
-            <div>
-              <label htmlFor="phone" className="block text-sm font-medium text-gray-700">Phone</label>
-              <input type="tel" id="phone" className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" placeholder="Enter your phone" />
-              <span className="text-green-500 text-xs ml-2">Valid</span>
+            <input
+              type="text"
+              className="w-[300px] border rounded py-1 px-5"
+              placeholder="Enter your email"
+            />
+          </div>
+
+          <div className="flex flex-col pt-5">
+            <div className="flex justify-between px-5 py-1">
+              <span className="text-xs text-zinc-500">Phone</span>
+              <div className="flex justify-between gap-1">
+                <BsCheckCircleFill className="text-green-600 text-xs" />
+                <span className="text-xs text-green-500 text-center">
+                  Valid
+                </span>
+              </div>
             </div>
-            <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700">Password</label>
-              <input type="password" id="password" className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" placeholder="Enter your password" />
-              <span className="text-green-500 text-xs ml-2">Valid</span>
+            <input
+              type="text"
+              className="w-[300px] border rounded py-1 px-5"
+              placeholder="Enter your phone"
+            />
+          </div>
+
+          <div className="flex flex-col pt-5">
+            <div className="flex justify-between px-5 py-1">
+              <span className="text-xs text-zinc-500">Password</span>
+              <div className="flex justify-between gap-1">
+                <BsCheckCircleFill className="text-green-600 text-xs" />
+                <span className="text-xs text-green-500 text-center">
+                  Valid
+                </span>
+              </div>
             </div>
-            <div>
-              <button type="submit" className="w-full px-4 py-2 font-semibold text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">Login</button>
-            </div>
-          </form>
-          <div className="text-center">
-            <p className="text-sm text-gray-600">Already have an account?</p>
-            <button className="w-full px-4 py-2 mt-2 font-semibold text-white bg-red-600 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
-              <i className="fab fa-google mr-2"></i> Continue with Google
+            <input
+              type="text"
+              className="w-[300px] border rounded py-1 px-5"
+              placeholder="Enter your password"
+            />
+          </div>
+
+          <div className=" w-[300px] mt-6">
+            <button className="bg-sky-500 w-full rounded py-1 px-5 text-white hover:bg-sky-600 ">
+              Signup
             </button>
           </div>
-          <p className="text-xs text-gray-500 text-center">By clicking continue, you agree to our <a href="#" className="text-blue-600 hover:underline">Terms of Service</a> and <a href="#" className="text-blue-600 hover:underline">Privacy Policy</a>.</p>
+
+          <div className="mt-5 mb-5 text-sm">
+            <Link to={"/login"}>Already have an account</Link>
+          </div>
+
+          <div className="flex">
+            <span className="text-slate-200">_____________</span>
+            <span className="text-slate-300">or continue with</span>
+            <span className="text-slate-200">_____________</span>
+          </div>
+
+          <div className=" w-[300px] mt-6">
+            <button className="relative bg-zinc-300 w-full rounded py-1 px-5 text-slate-600   hover:bg-zinc-400">
+              <FcGoogle className="absolute left-2 top-2" />
+              Google
+            </button>
+          </div>
         </div>
       </div>
     </div>
   );
 };
 
-export default Sign;
+export default Signup;
