@@ -8,7 +8,6 @@ import Signup from './pages/Signup'
 import OtpVerification from './pages/VerifyOtp'
 import UserVerifyData from './pages/UserVerifyData'
 import ProfilePage from './component/ProfilePage'
-import EditProfileSection from './pages/EditProfileSection'
 import EditProfilePage from './component/EditProfilePage'
 
 export default function App() {
