@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import Footer from "./Footer";
+import Footer from "../pages/Footer";
 
 const ServicePage = () => {
   return (

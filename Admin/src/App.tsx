@@ -1,13 +1,15 @@
 import './App.css'
-import Landing from './pages/LandingPage'
+import Landing from './component/LandingPage'
 import Login from './pages/Login'
 // import Landing from './pages/LandingPage'
-import ServicePage from './pages/ServicePage'
+import ServicePage from './component/ServicePage'
 import { Route, Routes, BrowserRouter } from 'react-router-dom'
 import Signup from './pages/Signup'
 import OtpVerification from './pages/VerifyOtp'
 import UserVerifyData from './pages/UserVerifyData'
-import SideNavBar from './pages/SideNavBar'
+import ProfilePage from './component/ProfilePage'
+import EditProfileSection from './pages/EditProfileSection'
+import EditProfilePage from './component/EditProfilePage'
 
 export default function App() {
   return (
@@ -16,10 +18,15 @@ export default function App() {
 {/* <ServicePage /> */}
 <BrowserRouter>
  <Routes>
-  <Route path='/home' element={<SideNavBar/>} />
+  <Route path='/' element={<Landing />} />
   <Route path='/service' element={<ServicePage />} />
   <Route path='/login' element={<Login/>} />
   <Route path='/signup' element={<Signup/>} />
+  <Route path='/otpverify' element={<OtpVerification/>} />
+  <Route path='/admin-data' element={<UserVerifyData/>} />
+
+  <Route path='/profile' element={<ProfilePage />} />
+  <Route path='/editprofile' element={<EditProfilePage/>}/>
  </Routes>
 </BrowserRouter>
 
