@@ -10,6 +10,7 @@ interface FormDataType {
   state: string;
   city: string;
   pincode: string;
+  landmark: string;
   image: string;
 }
 
@@ -24,6 +25,7 @@ const UserVerifyData = () => {
     state: '',
     city: '',
     pincode: '',
+    landmark: '',
     image: currentUser?.image || ''
   });
 
@@ -34,6 +36,7 @@ const UserVerifyData = () => {
     state: false,
     city: false,
     pincode: false,
+    landmark: false,
     image: false,
   });
 
@@ -97,6 +100,7 @@ const UserVerifyData = () => {
         state: !validateInput('state', formData.state),
         city: !validateInput('city', formData.city),
         pincode: !validateInput('pincode', formData.pincode),
+        landmark: !validateInput('landmark', formData.landmark),
         image: !validateInput('image', formData.image),
       });
       return;

@@ -1,47 +1,52 @@
 import mongoose from "mongoose";
 
-const AdminSchema = new mongoose.Schema({
+const AdminSchema = new mongoose.Schema(
+  {
     username: {
-        type: String,
-        required: true
+      type: String,
+      required: true,
     },
     email: {
-        type: String,
-        required: true,
-        unique: true       
+      type: String,
+      required: true,
+      unique: true,
     },
     phone: {
-        type: Number,
-        required: true,
-        unique: true
+      type: Number,
+      required: true,
+      unique: true,
     },
     password: {
-        type: String,
-        required: true
+      type: String,
+      required: true,
     },
     address: {
-        type: String
+      type: String,
     },
     state: {
-     type: String
+      type: String,
     },
     city: {
-        type: String
+      type: String,
     },
     pincode: {
-        type: String
+      type: String,
+    },
+    landmark: {
+      type: String,
     },
     firebaseConfirm: {
-        type: String
+      type: String,
     },
-    image:{
-        type: String
+    image: {
+      type: String,
     },
     verified: {
-        type:Boolean,
-    default: false
-}
-}, {timestamps: true})
+      type: Boolean,
+      default: false,
+    },
+  },
+  { timestamps: true }
+);
 
-
-export const AdminModel = mongoose.model('Admin', AdminSchema);
+export const AdminModel = mongoose.model("Admin", AdminSchema);

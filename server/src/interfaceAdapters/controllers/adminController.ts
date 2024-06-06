@@ -90,9 +90,9 @@ export class AdminController{
         const id = req.params.id;
         const updatedAdmin = new AdminUseCase(adminRepository);
         console.log(req.body)
-        const data = await updatedAdmin.UpdatedAdmin(req.body.formData, id);
+        const data = await updatedAdmin.UpdatedAdmin(req.body, id);
         
-        res.json(data);
+        res.json({updated: true, data:data});
         
       } catch (error) {
         console.log(error)

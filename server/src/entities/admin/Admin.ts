@@ -6,9 +6,10 @@ export interface Admin {
     address?: string | null;
     state?: string | null;
     city?: string | null;
-    pinccode?: number | null;
+    pincode?: number | null;
     verified?: boolean
     firebaseConfirm?: string | null;
     image?: string
+    landmark?: string
 
 }

@@ -3,19 +3,23 @@ import { AdminModel } from "../../../frameworks/database/models/AdminModel";
 import { IAdminRepository } from "./IAdminRepository";
 
 export class MongoAdminRepository implements IAdminRepository {
-  async CreateAdmin(admin: Admin): Promise<Admin> {
+  async CreateAdmin(admin: Admin): Promise<any> {
     console.log("repository file mongo db functions 🤷‍♂️🤷‍♂️🤷‍♂️");
     return AdminModel.create(admin);
   }
 
-  async GetUnverifiedAdmin(phone: number): Promise<Admin | null> {
+  async GetUnverifiedAdmin(phone: number): Promise<any> {
     return AdminModel.findOne({ phone });
+  }
+
+  async FindAdminByPhone(phone: number): Promise<Admin | null> {
+    return await AdminModel.findOne({phone});
   }
 
   async UpdateUnverifiedAdmin(
     firebaseCode: string,
     phone: number
-  ): Promise<Admin | null> {
+  ): Promise<any> {
     const update = await AdminModel.findOneAndUpdate(
       { phone: phone },
       { $set: { firebaseConfirm: firebaseCode } },
@@ -25,12 +29,12 @@ export class MongoAdminRepository implements IAdminRepository {
     return update;
   }
 
-  async LoginAdmin(email: string): Promise<Admin | null> {
+  async FindAdminByEmail(email: string): Promise<any> {
     const adminExist = await AdminModel.findOne({ email });
     return adminExist;
   }
 
-  async GoogleOAuth(admin: Admin): Promise<Admin | null> {
+  async GoogleOAuth(admin: Admin): Promise<any> {
     const newUser = await AdminModel.create(admin);
     newUser.verified = true;
     newUser.save();
@@ -41,10 +45,13 @@ export class MongoAdminRepository implements IAdminRepository {
   async UpdateAdmin(admin: Admin, id: string): Promise<Admin | null> {
     return await AdminModel.findOneAndUpdate({_id: id}, {
       $set: {
-        address: admin.address,
+        username: admin.username,
+        email: admin.email,
+        phone: admin.phone,
+        address: admin.password,
         state: admin.state,
         city: admin.city,
-        pincode: admin.pinccode,
+        // pincode: admin.pincode,
         image: admin.image
       }
     }, {new: true})   

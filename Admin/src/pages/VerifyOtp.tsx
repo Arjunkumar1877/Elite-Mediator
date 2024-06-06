@@ -4,6 +4,7 @@ import React, { useState, useEffect, ChangeEvent } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { auth } from '../firebase/firebase';
 import { PhoneAuthProvider, signInWithCredential } from 'firebase/auth';
+import toast from 'react-hot-toast';
 
 const OtpVerification: React.FC = () => {
   const [otp, setOtp] = useState<string[]>(new Array(6).fill(""));
@@ -68,7 +69,7 @@ const OtpVerification: React.FC = () => {
         if (res.ok) {
           const data = await res.json();
           setAdminData(data);
-          console.log("otp resended and updated on the database sucessfully")
+          toast("otp resended sucessfully")
         } else {
           console.log('Error updating firebase verification:', res.status);
         }
@@ -95,13 +96,13 @@ const OtpVerification: React.FC = () => {
       console.log('Verification result:', verifyResult);
 
       // Post-verification logic here
-      alert('OTP verification successful!');
+     toast('OTP verification successful!');
       navigate('/login')
     } catch (error: any) {
       if (error.code === 'auth/code-expired') {
-        alert('The OTP has expired. Please request a new one.');
+        toast('The OTP has expired. Please request a new one.');
       } else if (error.code === 'auth/invalid-verification-code') {
-        alert('The OTP entered is invalid. Please try again.');
+       toast('The OTP entered is invalid. Please try again.');
       } else {
         alert('Error verifying OTP. Please try again.');
       }

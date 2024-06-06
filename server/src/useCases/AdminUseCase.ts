@@ -6,12 +6,21 @@ import bcrypt from 'bcrypt';
 export class AdminUseCase {
     constructor(private adminRepository: IAdminRepository) {}
 
-    async AdminSignupExecut(admin: Admin): Promise<Admin> {
+    async AdminSignupExecut(admin: Admin): Promise<Admin | string> {
+
+      const ExisitingEmail = await this.adminRepository.FindAdminByEmail(admin.email);
+      const ExisitingPhone = await this.adminRepository.FindAdminByPhone(admin.phone);
+
+      if(ExisitingPhone || ExisitingEmail){
+        return 'Credantials already exisit'
+      }else{
         console.log("AdminUseCase");
         const hashedPassword = hashSync(admin.password, 10); 
         admin.password = hashedPassword;
         const adminData = await this.adminRepository.CreateAdmin(admin);
         return adminData;
+      }
+       
     }
 
     async UnverifiedAdminExecute(phone: number): Promise<Admin | null>{
@@ -23,23 +32,23 @@ export class AdminUseCase {
     }
 
     async LoginVerifyAdmin(email: string, password: string): Promise<Admin | null | string> {
-      const admin = await this.adminRepository.LoginAdmin(email);
+      const admin = await this.adminRepository.FindAdminByEmail(email);
     
       if (!admin) {
-        return "Invalid credentials"; // No admin found with the given email
+        return "Invalid credentials"; 
       }
     
-      const passwordMatch = bcrypt.compareSync(password, admin.password); // Using compareSync instead of compare
+      const passwordMatch = bcrypt.compareSync(password, admin.password); 
     
       if (passwordMatch) {
-        return admin; // Password matches, return the admin object
+        return admin; 
       } else {
-        return "Invalid credentials"; // Password does not match
+        return "Invalid credentials"; 
       }
     }
 
     async GoogleLogin(admin: Admin): Promise<Admin | null | string | undefined> {
-        const getUser = await this.adminRepository.LoginAdmin(admin.email); 
+        const getUser = await this.adminRepository.FindAdminByEmail(admin.email); 
       
         if (!getUser) {
         const newUser = await this.adminRepository.GoogleOAuth(admin);

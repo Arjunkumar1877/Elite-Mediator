@@ -10,11 +10,13 @@ import UserVerifyData from "./pages/UserVerifyData";
 import ProfilePage from "./component/ProfilePage";
 import EditProfilePage from "./component/EditProfilePage";
 import AdminPrivateRoute from "./component/AdminPrivateRoute";
+import toast, { Toaster } from 'react-hot-toast';
 
 export default function App() {
   return (
     <div className="">
       {/* <ServicePage /> */}
+      <Toaster />
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Landing />} />

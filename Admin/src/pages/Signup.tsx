@@ -1,12 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import { BsCheckCircleFill } from "react-icons/bs";
 import { FcGoogle } from "react-icons/fc";
 import { Link, useNavigate } from "react-router-dom";
-import PhoneInput from 'react-phone-input-2';
-import 'react-phone-input-2/lib/style.css';
+import PhoneInput from "react-phone-input-2";
+import "react-phone-input-2/lib/style.css";
 import { auth } from "../firebase/firebase";
 import { signInWithPhoneNumber, RecaptchaVerifier } from "firebase/auth";
-import OAuth from '../component/OAuth';
+import OAuth from "../component/OAuth";
+import toast from "react-hot-toast";
 
 interface Errors {
   username?: string;
@@ -15,12 +16,11 @@ interface Errors {
   password?: string;
 }
 
-
 const Signup: React.FC = () => {
-  const [username, setUsername] = useState<string>('');
-  const [email, setEmail] = useState<string>('');
-  const [phone, setPhone] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
+  const [username, setUsername] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
+  const [phone, setPhone] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
   const [errors, setErrors] = useState<Errors>({});
   const [confirmOtp, setConfirmOtp] = useState<any>(null);
   const navigate = useNavigate();
@@ -55,50 +55,62 @@ const Signup: React.FC = () => {
     setErrors(formErrors);
     return isValid;
   };
+
   const onSubmit = async (confirmationResult: any) => {
     try {
       const res = await fetch("/api/signup", {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json'
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          username, email, password, phone, firebaseConfirm: confirmationResult.verificationId
-        })
+          username,
+          email,
+          password,
+          phone,
+          firebaseConfirm: confirmationResult.verificationId,
+        }),
       });
-  
+
       if (res.ok) {
-        const { userId } = await res.json();
-        navigate(`/verifyOtpPage/${phone}`, { state: { userId } });
+        const data = await res.json();
+        if (data === "Credantials already exisit") {
+          return toast(data);
+        }
+
+        toast("Verification message sucessfully send to your mobile");
+        navigate(`/verifyOtpPage/${phone}`);
       }
     } catch (error) {
       console.log(error);
     }
   };
-  
+
   const onSendOtp = async () => {
     if (!validateForm()) {
       return;
     } else {
       try {
-        const recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha', {});
-        const confirmationResult = await signInWithPhoneNumber(auth, phone, recaptchaVerifier);
-  
+        const recaptchaVerifier = new RecaptchaVerifier(auth, "recaptcha", {});
+        const confirmationResult = await signInWithPhoneNumber(
+          auth,
+          phone,
+          recaptchaVerifier
+        );
+
         if (confirmationResult) {
           setConfirmOtp(confirmationResult);
           onSubmit(confirmationResult);
         } else {
-          console.log('Error confirming the captcha.');
+          console.log("Error confirming the captcha.");
         }
       } catch (error) {
         console.log(error);
       }
     }
   };
-  
 
-
-  console.log(confirmOtp)
+  console.log(confirmOtp);
 
   return (
     <div className="flex justify-center h-[700px] w-full">
@@ -122,7 +134,9 @@ const Signup: React.FC = () => {
                 {username && (
                   <>
                     <BsCheckCircleFill className="text-green-600 text-xs" />
-                    <span className="text-xs text-green-500 text-center">Valid</span>
+                    <span className="text-xs text-green-500 text-center">
+                      Valid
+                    </span>
                   </>
                 )}
               </div>
@@ -134,7 +148,9 @@ const Signup: React.FC = () => {
               value={username}
               onChange={(e) => setUsername(e.target.value)}
             />
-            {errors.username && <span className="text-red-500 text-xs">{errors.username}</span>}
+            {errors.username && (
+              <span className="text-red-500 text-xs">{errors.username}</span>
+            )}
           </div>
 
           <div className="flex flex-col pt-5">
@@ -144,7 +160,9 @@ const Signup: React.FC = () => {
                 {email && (
                   <>
                     <BsCheckCircleFill className="text-green-600 text-xs" />
-                    <span className="text-xs text-green-500 text-center">Valid</span>
+                    <span className="text-xs text-green-500 text-center">
+                      Valid
+                    </span>
                   </>
                 )}
               </div>
@@ -156,7 +174,9 @@ const Signup: React.FC = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
-            {errors.email && <span className="text-red-500 text-xs">{errors.email}</span>}
+            {errors.email && (
+              <span className="text-red-500 text-xs">{errors.email}</span>
+            )}
           </div>
 
           <div className="flex flex-col pt-5">
@@ -166,17 +186,21 @@ const Signup: React.FC = () => {
                 {phone && (
                   <>
                     <BsCheckCircleFill className="text-green-600 text-xs" />
-                    <span className="text-xs text-green-500 text-center">Valid</span>
+                    <span className="text-xs text-green-500 text-center">
+                      Valid
+                    </span>
                   </>
                 )}
               </div>
             </div>
             <PhoneInput
-              country={'in'}
+              country={"in"}
               value={phone}
-              onChange={(phone) => setPhone('+' + phone)}
+              onChange={(phone) => setPhone("+" + phone)}
             />
-            {errors.phone && <span className="text-red-500 text-xs">{errors.phone}</span>}
+            {errors.phone && (
+              <span className="text-red-500 text-xs">{errors.phone}</span>
+            )}
           </div>
 
           <div className="flex flex-col pt-5">
@@ -186,7 +210,9 @@ const Signup: React.FC = () => {
                 {password && (
                   <>
                     <BsCheckCircleFill className="text-green-600 text-xs" />
-                    <span className="text-xs text-green-500 text-center">Valid</span>
+                    <span className="text-xs text-green-500 text-center">
+                      Valid
+                    </span>
                   </>
                 )}
               </div>
@@ -198,11 +224,16 @@ const Signup: React.FC = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
-            {errors.password && <span className="text-red-500 text-xs">{errors.password}</span>}
+            {errors.password && (
+              <span className="text-red-500 text-xs">{errors.password}</span>
+            )}
           </div>
 
           <div className="w-[300px] mt-6">
-            <button className="bg-sky-500 w-full rounded py-1 px-5 text-white hover:bg-sky-600" onClick={onSendOtp}>
+            <button
+              className="bg-sky-500 w-full rounded py-1 px-5 text-white hover:bg-sky-600"
+              onClick={onSendOtp}
+            >
               Signup
             </button>
           </div>
