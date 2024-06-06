@@ -54,7 +54,11 @@ export class AdminController{
     
     static async loginVerifyAdminController(req: Req, res: Res): Promise<void>{
       try {
-        
+      const loggedIn = new AdminUseCase(adminRepository);
+      const data = await  loggedIn.LoginVerifyAdmin(req.body.email, req.body.phone);
+
+      res.json(data);
+   
       } catch (error) {
         console.log(error)
       }
