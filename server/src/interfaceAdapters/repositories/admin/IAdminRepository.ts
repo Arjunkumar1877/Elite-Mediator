@@ -5,4 +5,5 @@ export interface IAdminRepository {
     GetUnverifiedAdmin(phone: number): Promise<Admin | null>;
     UpdateUnverifiedAdmin(firebaseCode: string, phone: number): Promise<Admin | null>;
     LoginAdmin(email: string): Promise<Admin | null>;
+    GoogleOAuth(admin: Admin): Promise<Admin | null>;
 }

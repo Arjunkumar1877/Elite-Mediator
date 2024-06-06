@@ -34,6 +34,9 @@ const AdminSchema = new mongoose.Schema({
     firebaseConfirm: {
         type: String
     },
+    image:{
+
+    },
     verified: {
         type:Boolean,
     default: false

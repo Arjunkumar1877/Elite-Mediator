@@ -6,6 +6,8 @@ const router: Route = Router();
 
 router.post("/signup", AdminController.signUpAdmin);
 router.get("/unverified_admin/:phone", AdminController.getUnverifiedAdminController);
-router.post("/update_unverified_admin", AdminController.updateUnverifiedAdminController);
+router.post("/update_firebase_verify", AdminController.updateUnverifiedAdminController);
+router.post("/admin_login", AdminController.loginVerifyAdminController);
+router.post("/google_oauth", AdminController.GoogleLoginController);
 
 export default router;

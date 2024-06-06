@@ -6,6 +6,7 @@ import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
 import { auth } from "../firebase/firebase";
 import { signInWithPhoneNumber, RecaptchaVerifier } from "firebase/auth";
+import OAuth from '../component/OAuth';
 
 interface Errors {
   username?: string;
@@ -219,10 +220,11 @@ const Signup: React.FC = () => {
           </div>
 
           <div className="w-[300px] mt-6">
-            <button className="relative bg-zinc-300 w-full rounded py-1 px-5 text-slate-600 hover:bg-zinc-400">
+            {/* <button className="relative bg-zinc-300 w-full rounded py-1 px-5 text-slate-600 hover:bg-zinc-400">
               <FcGoogle className="absolute left-2 top-2" />
               Google
-            </button>
+            </button> */}
+            <OAuth />
           </div>
         </div>
       </div>

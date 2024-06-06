@@ -32,4 +32,13 @@ export class MongoAdminRepository implements IAdminRepository {
      return adminExist;
   }
 
+
+   async GoogleOAuth(admin: Admin): Promise<Admin | null> {
+   const newUser =  await AdminModel.create(admin);
+  newUser.verified = true;
+  newUser.save();
+
+  return newUser
+  }
+
 }

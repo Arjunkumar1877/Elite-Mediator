@@ -1,9 +1,46 @@
+import { useState } from "react";
 import { BsCheckCircleFill } from "react-icons/bs";
+import { useNavigate } from "react-router-dom";
 
+interface FormDataType {
+  address: string,
+  state: string,
+  city: string,
+  pincode: string,
+  image: string
+}
 const UserVerifyData = () => {
-  const handleImageClick = () => {
-    document.getElementById("fileInput")?.click();
-  };
+  const navigate =  useNavigate()
+ const [formadata, setFormData] = useState<FormDataType>({
+  address: "",
+  state: "",
+  city: "",
+  pincode: "",
+  image: ""
+ });
+
+ const handleSubmit = async()=>{
+  try {
+    const res = await fetch('/api/update_Admin', {
+      method: "POST", 
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(formadata)
+    })
+
+    const data = await res.json();
+    if(res.ok){
+      if(data.updated){
+        navigate('/profile')
+      }
+    }
+  } catch (error) {
+    console.log(error)
+  }
+ }
+  
+
   return (
     <div className="">
        <div className="absolute z-0 rounded-2xl -top-14 sm:ml-30 md:ml-28 lg:left-64 transform translate-x-1/2 -translate-y-1/2 bg-zinc-300 w-40 h-40 lg:w-72 lg:h-72 rotate-45"></div>
@@ -12,7 +49,7 @@ const UserVerifyData = () => {
         <div className="flex flex-col justify-center items-center border-2 relative rounded-md z-10 px-8">
           <div
             className="relative p-2 self-center h-[150px] w-[150px] cursor-pointer mt-8 mb-16"
-            onClick={handleImageClick}
+            // onClick={handleImageClick}
           >
             <input
               type="file"

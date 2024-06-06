@@ -42,6 +42,7 @@ export class AdminController{
 
     static async updateUnverifiedAdminController(req: Req, res: Res):Promise<void>{
       try {
+        console.log("👍👍👍👍😣😣🤷‍♀️🤷‍♀️🤷‍♀️ ")
         const updatedAdmin = new AdminUseCase(adminRepository);
         const data = await updatedAdmin.UnverifiedUserUpdate(req.body.firebaseConfirm, req.body.phone);
  
@@ -54,11 +55,29 @@ export class AdminController{
     
     static async loginVerifyAdminController(req: Req, res: Res): Promise<void>{
       try {
+        console.log("😣😣✌️✌️✌️🤷‍♂️🤷‍♂️")
       const loggedIn = new AdminUseCase(adminRepository);
-      const data = await  loggedIn.LoginVerifyAdmin(req.body.email, req.body.phone);
+      const data = await  loggedIn.LoginVerifyAdmin(req.body.email, req.body.password);
 
-      res.json(data);
+      if(data){
+        res.json({loggedIn: true, data: data})
+      }else{
+        res.json({loggedIn: false})
+      }
    
+      } catch (error) {
+        console.log(error)
+      }
+    }
+
+    static async GoogleLoginController(req: Req, res: Res): Promise<void>{
+      try {
+        console.log('😂😂😣❤️')
+        const googleVerify = new AdminUseCase(adminRepository);
+        const data = await googleVerify.GoogleLogin(req.body);
+        console.log(data)
+        console.log(req.body)
+        res.json(data)
       } catch (error) {
         console.log(error)
       }
