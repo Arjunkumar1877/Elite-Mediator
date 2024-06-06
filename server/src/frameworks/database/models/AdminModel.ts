@@ -30,8 +30,14 @@ const AdminSchema = new mongoose.Schema({
     },
     pincode: {
         type: String
-    }
-
+    },
+    firebaseConfirm: {
+        type: String
+    },
+    verified: {
+        type:Boolean,
+    default: false
+}
 }, {timestamps: true})
 
 

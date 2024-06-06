@@ -21,7 +21,7 @@ export default function App() {
   <Route path='/service' element={<ServicePage />} />
   <Route path='/login' element={<Login/>} />
   <Route path='/signup' element={<Signup/>} />
-  <Route path='/otpverify' element={<OtpVerification/>} />
+  <Route path='/verifyOtpPage/:ph' element={<OtpVerification/>} />
   <Route path='/admin-data' element={<UserVerifyData/>} />
 
   <Route path='/profile' element={<ProfilePage />} />

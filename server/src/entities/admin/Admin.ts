@@ -7,5 +7,6 @@ export interface Admin {
     state?: string | null;
     city?: string | null;
     pinccode?: number | null;
+    firebaseConfirm?: string | null;
 
 }
