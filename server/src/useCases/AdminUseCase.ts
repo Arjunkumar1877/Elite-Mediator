@@ -22,7 +22,6 @@ export class AdminUseCase {
         return await this.adminRepository.UpdateUnverifiedAdmin(firebaseCode, phone);
     }
 
-
     async LoginVerifyAdmin(email: string, password: string): Promise<Admin | null | string> {
       const admin = await this.adminRepository.LoginAdmin(email);
     
@@ -51,7 +50,10 @@ export class AdminUseCase {
             return getUser;
         //   }
         }
-      }
-      
+    }
+    
+    async UpdatedAdmin(admin: Admin, id: string): Promise<Admin | null>{
+      return this.adminRepository.UpdateAdmin(admin, id);
+    }
     
 }

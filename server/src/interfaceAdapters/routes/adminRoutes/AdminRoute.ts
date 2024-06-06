@@ -9,5 +9,6 @@ router.get("/unverified_admin/:phone", AdminController.getUnverifiedAdminControl
 router.post("/update_firebase_verify", AdminController.updateUnverifiedAdminController);
 router.post("/admin_login", AdminController.loginVerifyAdminController);
 router.post("/google_oauth", AdminController.GoogleLoginController);
+router.post("/update_admin/:id", AdminController.UpdateAdminProfile);
 
 export default router;

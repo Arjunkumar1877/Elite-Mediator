@@ -35,7 +35,7 @@ const AdminSchema = new mongoose.Schema({
         type: String
     },
     image:{
-
+        type: String
     },
     verified: {
         type:Boolean,

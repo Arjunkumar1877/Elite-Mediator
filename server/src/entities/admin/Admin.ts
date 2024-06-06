@@ -9,6 +9,6 @@ export interface Admin {
     pinccode?: number | null;
     verified?: boolean
     firebaseConfirm?: string | null;
-    image?: string;
+    image?: string
 
 }

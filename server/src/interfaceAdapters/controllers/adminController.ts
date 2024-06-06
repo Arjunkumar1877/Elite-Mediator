@@ -82,4 +82,20 @@ export class AdminController{
         console.log(error)
       }
     }
+
+    static async UpdateAdminProfile(req: Req, res: Res): Promise<void>{
+      try {
+        console.log("✌️✌️✌️✌️✌️✌️✌️❤️❤️🤷‍♀️🤷‍♀️")
+
+        const id = req.params.id;
+        const updatedAdmin = new AdminUseCase(adminRepository);
+        console.log(req.body)
+        const data = await updatedAdmin.UpdatedAdmin(req.body.formData, id);
+        
+        res.json(data);
+        
+      } catch (error) {
+        console.log(error)
+      }
+    }
 }

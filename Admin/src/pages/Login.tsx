@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { BsCheckCircleFill, BsXCircleFill } from 'react-icons/bs';
-import { FcGoogle } from 'react-icons/fc';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { signInStart, signInSuccess } from '../redux/user/userSlice';
