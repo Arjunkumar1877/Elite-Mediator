@@ -1,3 +1,4 @@
+import { ObjectId } from "mongoose";
 import { Admin } from "../../../entities/admin/Admin";
 import { AdminModel } from "../../../frameworks/database/models/AdminModel";
 import { IAdminRepository } from "./IAdminRepository";
@@ -42,18 +43,25 @@ export class MongoAdminRepository implements IAdminRepository {
     return newUser;
   }
 
-  async UpdateAdmin(admin: Admin, id: string): Promise<Admin | null> {
+  async UpdateAdminData(admin: Admin, id: string): Promise<Admin | null> {
     return await AdminModel.findOneAndUpdate({_id: id}, {
       $set: {
         username: admin.username,
         email: admin.email,
         phone: admin.phone,
-        address: admin.password,
+        address: admin.address,
         state: admin.state,
         city: admin.city,
-        // pincode: admin.pincode,
+        pincode: admin.pincode,
+        landmark: admin.landmark,
         image: admin.image
       }
     }, {new: true})   
+  }
+
+  async FindAdminById(id: any): Promise<any> {
+    console.log("😂")
+    const adminData = await AdminModel.findOne({_id: id});
+    return adminData;     
   }
 }

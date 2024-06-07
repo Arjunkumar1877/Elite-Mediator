@@ -1,7 +1,7 @@
 import express from 'express';
 // import { serverPackage } from '../types/ServerTypes';
 import adminRoutes from '../../../interfaceAdapters/routes/adminRoutes/AdminRoute'
-import { serverPackage } from '../../../entities/types/ServerTypes';
+import { serverPackage } from '../../types/ServerTypes';
 
 export class ExpressServer{
     constructor(){

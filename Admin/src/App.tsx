@@ -10,7 +10,8 @@ import UserVerifyData from "./pages/UserVerifyData";
 import ProfilePage from "./component/ProfilePage";
 import EditProfilePage from "./component/EditProfilePage";
 import AdminPrivateRoute from "./component/AdminPrivateRoute";
-import toast, { Toaster } from 'react-hot-toast';
+import  { Toaster } from "react-hot-toast";
+
 
 export default function App() {
   return (
@@ -24,7 +25,7 @@ export default function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/verifyOtpPage/:ph" element={<OtpVerification />} />
-          
+
           <Route element={<AdminPrivateRoute />}>
             <Route path="/admin-data" element={<UserVerifyData />} />
             <Route path="/profile" element={<ProfilePage />} />
@@ -35,3 +36,7 @@ export default function App() {
     </div>
   );
 }
+
+
+
+

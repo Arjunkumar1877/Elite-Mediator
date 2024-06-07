@@ -1,6 +1,6 @@
 import { NextFunction } from "express";
 import { TokenServices } from "../../entities/services/TokenServices";
-import { Req, Res } from "../../entities/types/ServerTypes";
+import { Req, Res } from "../../frameworks/types/ServerTypes";
 import jwt from 'jsonwebtoken';
 
 

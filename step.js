@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { CircularProgressbar } from 'react-circular-progressbar';
 import {
   BsCheckCircleFill,
   BsExclamationCircleFill
@@ -28,7 +29,7 @@ import {
   uploadBytesResumable
 } from "firebase/storage";
 import app from "../firebase/firebase";
-import { CircularProgressbar } from "react-circular-progressbar";
+import toast from "react-hot-toast";
 
 interface ProfileData {
   name: string;
@@ -38,8 +39,6 @@ interface ProfileData {
   state: string;
   city: string;
   image: string;
-  landmark: string;
-  pincode: string;
 }
 
 const EditProfileSection: React.FC = () => {
@@ -50,15 +49,14 @@ const EditProfileSection: React.FC = () => {
     phone: "",
     state: "",
     city: "",
-    image: "",
-    landmark: "",
-    pincode: ""
+    image: ""
   });
+  let isValid = false;
   const [file, setFile] = useState < File | null > (null);
   const [imageUploadProgress, setImageUploadProgress] = useState < number | null > (null);
   const [imageUploadError, setImageUploadError] = useState < string | null > (null);
 
-  // const [profileImage, setProfileImage] = useState < string | null > (null);
+  const [profileImage, setProfileImage] = useState < string | null > (null);
   const {
     currentUser
   } = useSelector((state: any) => state.user);
@@ -125,9 +123,7 @@ const EditProfileSection: React.FC = () => {
           phone: data.phone,
           state: data.state,
           city: data.city,
-          image: data.image,
-          landmark: data.landmark,
-          pincode: data.pincode
+          image: data.image
         });
       } else {
         console.log("Error fetching admin data");
@@ -143,9 +139,7 @@ const EditProfileSection: React.FC = () => {
     phone: true,
     state: true,
     city: true,
-    image: true,
-    landmark: true,
-    pincode: true
+    image: true
   });
 
   const validateEmail = (email: string): boolean => {
@@ -172,14 +166,6 @@ const EditProfileSection: React.FC = () => {
     return state.trim() !== "";
   };
 
-    const validateLandmark = (landmark: string): boolean => {
-    return landmark.trim() !== "";
-  };
-
-    const validatePincode = (pincode: string): boolean => {
-    return pincode.length === 6
-  };
-
   const handleChange = (e: React.ChangeEvent < HTMLInputElement > , field: keyof ProfileData) => {
     const value = e.target.value;
     setProfileData({
@@ -188,7 +174,7 @@ const EditProfileSection: React.FC = () => {
     });
 
     // Validate the field
-    let isValid = false;
+    
     switch (field) {
       case "email":
         isValid = validateEmail(value);
@@ -207,12 +193,6 @@ const EditProfileSection: React.FC = () => {
         break;
       case "city":
         isValid = validateCity(value);
-        break;
-      case "landmark":
-        isValid = validateLandmark(value);
-        break;
-      case "pincode":
-        isValid = validatePincode(value);
         break;
       default:
         isValid = value.trim() !== "";
@@ -236,6 +216,7 @@ const EditProfileSection: React.FC = () => {
       const data = await res.json();
       if (res.ok && data.updated) {
         navigate("/profile");
+        toast("Profile updated sucessfully")
       } else {
         console.log("error updating the profile");
       }
@@ -245,56 +226,62 @@ const EditProfileSection: React.FC = () => {
   };
 
   return ( 
-    <div className="w-full h-screen flex flex-col relative z-10">
-  <div className="p-6 bg-white shadow-sm">
-    <h1 className="text-xl">Edit Profile</h1>
-  </div>
-
-  <div className="flex-1 flex flex-col items-center p-6 overflow-y-auto bg-gray-100 relative z-20">
-    <div className="flex flex-col justify-center items-center w-full bg-white rounded-md shadow-md p-6 md:p-8 lg:p-10">
-      <div className="flex flex-col md:flex-row justify-between items-center w-full mb-10 px-10">
-      <div className="mb-6 md:mb-0 relative">
-              <label htmlFor="profile-image" className="cursor-pointer">
-                <div className="relative h-24 w-24 md:h-32 md:w-32 lg:h-48 lg:w-48">
-                  {imageUploadProgress && (
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <CircularProgressbar
-                        value={imageUploadProgress || 0}
-                        text={`${imageUploadProgress}%`}
-                        strokeWidth={5}
-                        styles={{
-                          root: {
-                            width: '100%',
-                            height: '100%',
-                          },
-                          path: {
-                            stroke: `rgba(62, 152, 199, ${imageUploadProgress / 100})`,
-                          },
-                        }}
-                      />
-                    </div>
-                  )}
-                 <img
-  src={profileData.image && profileData.image}
-  alt='user'
-  className={`h-full w-full rounded-full object-cover ${imageUploadProgress && imageUploadProgress < 100 && 'opacity-60'}`}
-/>
-
-                </div>
-              </label>
-              <input
-                type="file"
-                accept="image/*"
-                id="profile-image"
-                className="hidden"
-                onChange={handleImageChange}
-              />
-            </div>
+    <div className = "w-full h-screen flex flex-col relative z-10" >
+      <div className = "p-6 bg-white shadow-sm" >
+        <h1 className = "text-xl" > Edit Profile </h1> 
       </div>
-      <div className="grid grid-cols-1 gap-6 xl:grid-cols-2 w-full">
+
+      <div className = "flex-1 flex flex-col items-center p-6 overflow-y-auto bg-gray-100 relative z-20" >
+        <div className = "flex flex-col justify-center items-center w-full bg-white rounded-md shadow-md p-6 md:p-8 lg:p-10" >
+          <div className = "flex flex-col md:flex-row justify-between items-center w-full mb-10 px-10" >
+            <div className = "mb-6 md:mb-0" >
+              <label htmlFor = "profile-image" className = "cursor-pointer" >
        
 
-      <div className = "flex flex-col w-full px-4 py-6 md:px-6 md:py-8 lg:px-10 lg:py-10 rounded-md shadow-sm" >
+{imageUploadProgress && (
+            <CircularProgressbar
+              value={imageUploadProgress || 0}
+              text={`${imageUploadProgress}%`}
+              strokeWidth={5}
+              styles={{
+                root: {
+                  width: '100%',
+                  height: '100%',
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                },
+                path: {
+                  stroke: `rgba(62, 152, 199, ${
+                    imageUploadProgress / 100
+                  })`,
+                },
+              }}
+            />
+          )}
+          <img
+            src={profileData.image || file}
+            alt='user'
+            className={`h-24 w-24 md:h-32 md:w-32 lg:h-48 lg:w-48 rounded-full object-cover ${
+              imageUploadProgress &&
+              imageUploadProgress < 100 &&
+              'opacity-60'
+            }`}
+          />
+            
+              </label> 
+              <input type = "file"
+                accept = "image/*"
+                id = "profile-image"
+                className = "hidden"
+                onChange = {
+                  handleImageChange
+                }
+              /> 
+            </div> 
+          </div> 
+          <div className = "grid grid-cols-1 gap-6 xl:grid-cols-2 w-full" >
+            <div className = "flex flex-col w-full px-4 py-6 md:px-6 md:py-8 lg:px-10 lg:py-10 rounded-md shadow-sm" >
               <div className = "flex justify-between items-center mb-4 px-2" >
                 <span className = "text-gray-500 text-lg md:text-xl" > Name </span> 
                 <div className = "flex items-center gap-2" >
@@ -332,16 +319,16 @@ const EditProfileSection: React.FC = () => {
                 <span className = "text-gray-500 text-lg md:text-xl" > Email </span> 
                 <div className = "flex items-center gap-2" >
                   {
-                    validity.email ? ( 
+                    validity?.email && profileData.email.length > 0 ? ( 
                       <BsCheckCircleFill className = "text-green-600 text-sm" />
                     ) : ( 
                       <BsExclamationCircleFill className = "text-red-600 text-sm" />
                     )
                   } 
                   <span className = {
-                    `text-xs ${validity.email ? 'text-green-500' : "text-red-600"}`
+                    `text-xs ${validity?.email && profileData.email.length > 0 ? 'text-green-500' : "text-red-600"}`
                   } > {
-                    validity.email ? "Valid" : "Required"
+                    validity?.email && profileData.email.length > 0 ? "Valid" : "Required"
                   } 
                   </span> 
                 </div> 
@@ -365,16 +352,16 @@ const EditProfileSection: React.FC = () => {
                 <span className = "text-gray-500 text-lg md:text-xl" > Address </span> 
                 <div className = "flex items-center gap-2" >
                   {
-                    validity.address ? ( 
+                    validity?.address && profileData?.address?.length ? ( 
                       <BsCheckCircleFill className = "text-green-600 text-sm" />
                     ) : ( 
                       <BsExclamationCircleFill className = "text-red-600 text-sm" />
                     )
                   } 
                   <span className = {
-                    `text-xs ${validity.address ? 'text-green-500' : "text-red-600"}`
+                    `text-xs ${validity?.address && profileData?.address?.length  ? 'text-green-500' : "text-red-600"}`
                   } > {
-                    validity.address ? "Valid" : "Required"
+                    validity?.address && profileData?.address?.length ? "Valid" : "Required"
                   } 
                   </span> 
                 </div> 
@@ -398,22 +385,22 @@ const EditProfileSection: React.FC = () => {
                 <span className = "text-gray-500 text-lg md:text-xl" > Phone </span> 
                 <div className = "flex items-center gap-2" >
                   {
-                    validity.phone ? ( 
+                    validity.phone && profileData?.phone?.length > 0 ? ( 
                       <BsCheckCircleFill className = "text-green-600 text-sm" />
                     ) : ( 
                       <BsExclamationCircleFill className = "text-red-600 text-sm" />
                     )
                   } 
                   <span className = {
-                    `text-xs ${validity.phone ? 'text-green-500' : "text-red-600"}`
+                    `text-xs ${validity.phone && profileData?.phone?.length > 0 ? 'text-green-500' : "text-red-600"}`
                   } > {
-                    validity.phone ? "Valid" : "Required"
+                    validity.phone && profileData?.phone?.length ? "Valid" : "Required"
                   } 
                   </span> 
                 </div> 
               </div> 
               <div className = "flex relative" >
-                <FiPhone className = "absolute right-4 top-1/2 transform -translate-y-1/2 text-lg md:text-xl" />
+                <FiPhone className = "absolute right-4 top-1/2 transform -translate-y-1/2 text-lg md:text-xl" / >
                 <input type = "tel"
                   className = "border-2 w-full rounded-md placeholder-text-black placeholder-gray-400 py-2 px-4 md:py-3 md:px-5"
                   placeholder = "Enter your phone number"
@@ -459,8 +446,6 @@ const EditProfileSection: React.FC = () => {
                 /> 
               </div> 
             </div> 
-
-
             <div className = "flex flex-col w-full px-4 py-6 md:px-6 md:py-8 lg:px-10 lg:py-10 rounded-md shadow-sm" >
               <div className = "flex justify-between items-center mb-4 px-2" >
                 <span className = "text-gray-500 text-lg md:text-xl" > City </span> 
@@ -494,91 +479,18 @@ const EditProfileSection: React.FC = () => {
                 /> 
               </div> 
             </div> 
-
-
-
-<div className = "flex flex-col w-full px-4 py-6 md:px-6 md:py-8 lg:px-10 lg:py-10 rounded-md shadow-sm" >
-<div className = "flex justify-between items-center mb-4 px-2" >
-  <span className = "text-gray-500 text-lg md:text-xl" > Pincode </span> 
-  <div className = "flex items-center gap-2" >
-    {
-      validity.city ? ( 
-        <BsCheckCircleFill className = "text-green-600 text-sm" />
-      ) : ( 
-        <BsExclamationCircleFill className = "text-red-600 text-sm" />
-      )
-    } 
-    <span className = {
-      `text-xs ${validity.pincode ? 'text-green-500' : "text-red-600"}`
-    } > {
-      validity.pincode ? "Valid" : "Required"
-    } 
-    </span> 
-  </div> 
-</div> 
-<div className = "flex relative" >
-  <FaRegAddressCard className = "absolute right-4 top-1/2 transform -translate-y-1/2 text-lg md:text-xl" />
-  <input type = "text"
-    className = "border-2 w-full rounded-md placeholder-text-black placeholder-gray-400 py-2 px-4 md:py-3 md:px-5"
-    placeholder = "Enter your pincode"
-    value = {
-      profileData.pincode
-    }
-    onChange = {
-      (e) => handleChange(e, "pincode")
-    }
-  /> 
-</div> 
-</div> 
-
-
-
-<div className = "flex flex-col w-full px-4 py-6 md:px-6 md:py-8 lg:px-10 lg:py-10 rounded-md shadow-sm" >
-<div className = "flex justify-between items-center mb-4 px-2" >
-  <span className = "text-gray-500 text-lg md:text-xl" > Landmark </span> 
-  <div className = "flex items-center gap-2" >
-    {
-      validity.landmark ? ( 
-        <BsCheckCircleFill className = "text-green-600 text-sm" />
-      ) : ( 
-        <BsExclamationCircleFill className = "text-red-600 text-sm" />
-      )
-    } 
-    <span className = {
-      `text-xs ${validity.landmark ? 'text-green-500' : "text-red-600"}`
-    } > {
-      validity.landmark ? "Valid" : "Required"
-    } 
-    </span> 
-  </div> 
-</div> 
-<div className = "flex relative" >
-  <FaRegAddressCard className = "absolute right-4 top-1/2 transform -translate-y-1/2 text-lg md:text-xl" />
-  <input type = "text"
-    className = "border-2 w-full rounded-md placeholder-text-black placeholder-gray-400 py-2 px-4 md:py-3 md:px-5"
-    placeholder = "Enter your landmark"
-    value = {
-      profileData.landmark
-    }
-    onChange = {
-      (e) => handleChange(e, "landmark")
-    }
-  /> 
-</div> 
-</div> 
-
-
-
-      </div>
-      <div className="w-full flex justify-end mt-10">
-        <button onClick={handleSave} className="bg-sky-600 text-white py-2 px-6 rounded-md">
-          Save
-        </button>
-      </div>
+          </div> 
+          <div className = "w-full flex justify-end mt-10" >
+            <button onClick = {
+              handleSave
+            }
+            className = "bg-blue-600 text-white py-2 px-6 rounded-md">
+              Save 
+            </button> 
+          </div> 
+        </div> 
+      </div> 
     </div>
-  </div>
-</div>
-
   );
 };
 
