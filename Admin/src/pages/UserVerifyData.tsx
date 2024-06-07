@@ -9,6 +9,7 @@ import {
   uploadBytesResumable,
 } from "firebase/storage";
 import app from "../firebase/firebase";
+import { CircularProgressbar } from "react-circular-progressbar";
 
 interface FormDataType {
   address: string;
@@ -22,7 +23,7 @@ interface FormDataType {
 const UserVerifyData = () => {
   const navigate = useNavigate();
   const { currentUser } = useSelector((state: any) => state.user);
-  const [file, setFile] = useState<any>(null);
+  const [file, setFile] = useState<File | null>(null);
   const [imageUploadProgress, setImageUploadProgress] = useState<number | null>(
     null
   );
@@ -37,7 +38,8 @@ const UserVerifyData = () => {
   });
 
   console.log(formData);
-console.log(currentUser._id)
+  console.log(currentUser._id);
+
   const [formErrors, setFormErrors] = useState({
     address: false,
     state: false,
@@ -54,7 +56,15 @@ console.log(currentUser._id)
     return value.trim() !== "";
   };
 
-  const handleImageUpload = async () => {
+
+  const handleImageChange = (e: React.ChangeEvent < HTMLInputElement > ) => {
+    if (e.target.files && e.target.files[0]) {
+      setFile(e.target.files[0]);
+      handleImageUpload(e.target.files[0]);
+    }
+  };
+
+  const handleImageUpload = async (file: File) => {
     if (!file) {
       setImageUploadError("Please select an image");
       return;
@@ -82,8 +92,10 @@ console.log(currentUser._id)
           getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
             setImageUploadProgress(null);
             setImageUploadError(null);
-            setFormData((prevData) => ({ ...prevData, image: downloadURL }));
-            setFormErrors((prevErrors) => ({ ...prevErrors, image: false }));
+            setFormData((prevData) => ({
+              ...prevData,
+              image: downloadURL
+            }));
           });
         }
       );
@@ -133,8 +145,8 @@ console.log(currentUser._id)
       const data = await res.json();
       if (res.ok && data.updated) {
         navigate("/profile");
-      }else{
-        console.log("error updating the profile");
+      } else {
+        console.log("Error updating the profile");
       }
     } catch (error) {
       console.error("Error updating admin:", error);
@@ -149,33 +161,46 @@ console.log(currentUser._id)
       </h1>
       <div className="p-10 z-10">
         <div className="flex flex-col justify-center items-center border-2 relative rounded-md z-10 px-8">
-          <div className="relative p-2 self-center h-[150px] w-[150px] cursor-pointer mt-8 mb-16">
+          <div className="mb-6 md:mb-0 relative">
+            <label htmlFor="profile-image" className="cursor-pointer">
+              <div className="relative h-24 w-24 md:h-32 md:w-32 lg:h-48 lg:w-48">
+                {imageUploadProgress !== null && (
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <CircularProgressbar
+                      value={imageUploadProgress}
+                      text={`${Math.round(imageUploadProgress)}%`}
+                      strokeWidth={5}
+                      styles={{
+                        root: {
+                          width: "100%",
+                          height: "100%",
+                        },
+                        path: {
+                          stroke: `rgba(62, 152, 199, ${imageUploadProgress / 100})`,
+                        },
+                      }}
+                    />
+                  </div>
+                )}
+                <img
+                  src={formData.image}
+                  alt="user"
+                  className={`h-full w-full rounded-full object-cover ${
+                    imageUploadProgress !== null &&
+                    imageUploadProgress < 100 &&
+                    "opacity-60"
+                  }`}
+                />
+              </div>
+            </label>
             <input
               type="file"
-              id="fileInput"
-              className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
               accept="image/*"
-              onChange={(e: any) => {
-                setFile(e.target.files[0]);
-                handleImageUpload();
-              }}
-            />
-            <img
-              src={formData.image || file}
-              className="w-full h-full object-cover rounded-full"
-              alt="User Icon"
+              id="profile-image"
+              className="hidden"
+              onChange={handleImageChange}
             />
           </div>
-          {imageUploadProgress !== null && (
-            <div className="w-full bg-gray-200 rounded-full">
-              <div
-                className="bg-blue-600 text-xs font-medium text-blue-100 text-center p-0.5 leading-none rounded-full"
-                style={{ width: `${imageUploadProgress}%` }}
-              >
-                {imageUploadProgress}%
-              </div>
-            </div>
-          )}
           {imageUploadError && (
             <div className="text-red-500 mt-2">{imageUploadError}</div>
           )}

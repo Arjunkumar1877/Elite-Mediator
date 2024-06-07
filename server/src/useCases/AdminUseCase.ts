@@ -59,15 +59,15 @@ export class AdminUseCase {
   }
 
   async GoogleLogin(admin: Admin): Promise<Admin | null | string | undefined> {
-    const getUser = await this.adminRepository.FindAdminByEmail(admin.email);
+    const getAdmin = await this.adminRepository.FindAdminByEmail(admin.email);
 
-    if (!getUser) {
-      const newUser = await this.adminRepository.GoogleOAuth(admin);
+    if (!getAdmin) {
+      const newAdmin = await this.adminRepository.GoogleOAuth(admin);
 
-      return newUser;
+      return newAdmin;
     } else {
-      //   if(getUser?.verified){
-      return getUser;
+      //   if(getAdmin?.verified){
+      return getAdmin;
       //   }
     }
   }

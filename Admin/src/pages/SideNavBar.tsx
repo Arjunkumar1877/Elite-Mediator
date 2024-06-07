@@ -7,9 +7,13 @@ import { BsQrCodeScan } from "react-icons/bs";
 import { RiLogoutBoxLine } from "react-icons/ri";
 import { FaAngleRight } from "react-icons/fa6";
 import { MdKeyboardArrowLeft } from "react-icons/md";
+import { useDispatch, useSelector } from "react-redux";
+import { signoutSuccess } from "../redux/user/userSlice";
 
 const SideNavBar = ({ navShowSet }: { navShowSet: (showNav: boolean) => void; }) => {
   const [showNav, setShowNav] = useState<boolean>(true);
+  // const { currentUser } = useSelector((state: )=> state.user)
+  const dispatch = useDispatch()
 
   useEffect(() => {
     navShowSet(showNav);
@@ -31,6 +35,11 @@ const SideNavBar = ({ navShowSet }: { navShowSet: (showNav: boolean) => void; })
       window.removeEventListener('resize', handleResize);
     };
   }, []);
+
+
+  const handleSignout = ()=>{
+    dispatch(signoutSuccess())
+  }
 
   return (
     <div className="fixed z-20">
@@ -84,7 +93,7 @@ const SideNavBar = ({ navShowSet }: { navShowSet: (showNav: boolean) => void; })
             <span className={`text-sm transition-opacity duration-300 ${showNav ? "opacity-100" : "opacity-0 hidden"}`}>QR CODE'S</span>
           </div>
 
-          <div className="flex gap-5 self-start px-5 hover:text-black cursor-pointer text-sky-500 items-center text-xl">
+          <div className="flex gap-5 self-start px-5 hover:text-black cursor-pointer text-sky-500 items-center text-xl" onClick={handleSignout}>
             <span>
               <RiLogoutBoxLine />
             </span>

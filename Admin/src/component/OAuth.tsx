@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { signInSuccess } from "../redux/user/userSlice";
 import { FcGoogle } from "react-icons/fc";
+import toast from "react-hot-toast";
 
 const OAuth = () => {
   const dispatch = useDispatch();
@@ -32,9 +33,18 @@ const OAuth = () => {
 
       const data = await res.json();
       if (res.ok) {
+      if(data?.address){
+        console.log(data);
+        dispatch(signInSuccess(data));
+        navigate("/profile");
+        toast("Succesfully logged In")
+      }else{
         console.log(data);
         dispatch(signInSuccess(data));
         navigate("/admin-data");
+        toast("Succesfully logged In")
+
+      }
       }
     } catch (error) {
       console.log(error);

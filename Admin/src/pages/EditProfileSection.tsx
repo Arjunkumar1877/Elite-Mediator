@@ -29,9 +29,10 @@ import {
 } from "firebase/storage";
 import app from "../firebase/firebase";
 import { CircularProgressbar } from "react-circular-progressbar";
+import toast from "react-hot-toast";
 
 interface ProfileData {
-  name: string;
+  username: string;
   email: string;
   address: string;
   phone: string;
@@ -44,7 +45,7 @@ interface ProfileData {
 
 const EditProfileSection: React.FC = () => {
   const [profileData, setProfileData] = useState<ProfileData>({
-    name: "",
+    username: "",
     email: "",
     address: "",
     phone: "",
@@ -119,7 +120,7 @@ const EditProfileSection: React.FC = () => {
       if (res.ok) {
         const data = await res.json();
         setProfileData({
-          name: data.username,
+          username: data.username,
           email: data.email,
           address: data.address,
           phone: data.phone,
@@ -137,7 +138,7 @@ const EditProfileSection: React.FC = () => {
   }, [currentUser._id]);
 
   const [validity, setValidity] = useState < Record < keyof ProfileData, boolean >> ({
-    name: true,
+    username: true,
     email: true,
     address: true,
     phone: true,
@@ -152,8 +153,8 @@ const EditProfileSection: React.FC = () => {
     return /\S+@\S+\.\S+/.test(email);
   };
 
-  const validateName = (name: string): boolean => {
-    return name.trim() !== "";
+  const validateName = (username: string): boolean => {
+    return username.trim() !== "";
   };
 
   const validateAddress = (address: string): boolean => {
@@ -193,7 +194,7 @@ const EditProfileSection: React.FC = () => {
       case "email":
         isValid = validateEmail(value);
         break;
-      case "name":
+      case "username":
         isValid = validateName(value);
         break;
       case "address":
@@ -223,6 +224,8 @@ const EditProfileSection: React.FC = () => {
     });
   };
 
+  console.log(profileData)
+
   const handleSave = async () => {
     try {
       const res = await fetch(`/api/update_admin/${currentUser._id}`, {
@@ -236,6 +239,7 @@ const EditProfileSection: React.FC = () => {
       const data = await res.json();
       if (res.ok && data.updated) {
         navigate("/profile");
+        toast("Profile data's updated successfully..")
       } else {
         console.log("error updating the profile");
       }
@@ -251,7 +255,9 @@ const EditProfileSection: React.FC = () => {
   </div>
 
   <div className="flex-1 flex flex-col items-center p-6 overflow-y-auto bg-gray-100 relative z-20">
-    <div className="flex flex-col justify-center items-center w-full bg-white rounded-md shadow-md p-6 md:p-8 lg:p-10">
+  <div className="absolute z-0 rounded-2xl -top-14 sm:ml-30 md:ml-28 lg:left-20 transform translate-x-1/2 -translate-y-1/2 bg-sky-500 w-40 h-40 lg:w-72 lg:h-72 rotate-45"></div>
+
+    <div className="flex flex-col justify-center items-center w-full bg-white rounded-md shadow-md p-6 md:p-8 lg:p-10 relative z-20">
       <div className="flex flex-col md:flex-row justify-between items-center w-full mb-10 px-10">
       <div className="mb-6 md:mb-0 relative">
               <label htmlFor="profile-image" className="cursor-pointer">
@@ -299,16 +305,16 @@ const EditProfileSection: React.FC = () => {
                 <span className = "text-gray-500 text-lg md:text-xl" > Name </span> 
                 <div className = "flex items-center gap-2" >
                   {
-                    validity.name ? ( 
+                    validity.username ? ( 
                       <BsCheckCircleFill className = "text-green-600 text-sm" />
                     ) : ( 
                       <BsExclamationCircleFill className = "text-red-600 text-sm" />
                     )
                   } 
                   <span className = {
-                    `text-xs ${validity.name ? 'text-green-500' : "text-red-600"}`
+                    `text-xs ${validity.username ? 'text-green-500' : "text-red-600"}`
                   } > {
-                    validity.name ? "Valid" : "Required"
+                    validity.username ? "Valid" : "Required"
                   } 
                   </span> 
                 </div> 
@@ -317,12 +323,12 @@ const EditProfileSection: React.FC = () => {
                 <FaRegUser className = "absolute right-4 top-1/2 transform -translate-y-1/2 text-lg md:text-xl" />
                 <input type = "text"
                   className = "border-2 w-full rounded-md placeholder-text-black placeholder-gray-400 py-2 px-4 md:py-3 md:px-5"
-                  placeholder = "Enter your name"
+                  placeholder = "Enter your username"
                   value = {
-                    profileData.name
+                    profileData.username
                   }
                   onChange = {
-                    (e) => handleChange(e, "name")
+                    (e) => handleChange(e, "username")
                   }
                 /> 
               </div> 
@@ -571,7 +577,7 @@ const EditProfileSection: React.FC = () => {
 
       </div>
       <div className="w-full flex justify-end mt-10">
-        <button onClick={handleSave} className="bg-sky-600 text-white py-2 px-6 rounded-md">
+        <button onClick={handleSave} className="bg-sky-500 text-white py-2 px-6 rounded-md">
           Save
         </button>
       </div>
