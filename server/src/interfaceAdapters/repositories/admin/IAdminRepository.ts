@@ -1,4 +1,4 @@
-import { Admin } from "../../../entities/admin/Admin"
+import { Admin } from "../../../entities/models/admin/Admin"
 
 export interface IAdminRepository {
     CreateAdmin(admin: Admin): Promise<Admin>;

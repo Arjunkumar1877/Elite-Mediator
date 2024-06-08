@@ -1,5 +1,5 @@
 import { ObjectId } from "mongoose";
-import { Admin } from "../../../entities/admin/Admin";
+import { Admin } from "../../../entities/models/admin/Admin";
 import { AdminModel } from "../../../frameworks/database/models/AdminModel";
 import { IAdminRepository } from "./IAdminRepository";
 

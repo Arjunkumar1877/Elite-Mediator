@@ -1,14 +1,16 @@
 import { Router } from "express";
 import { Route } from "../../../frameworks/types/ServerTypes";
-import { SignupController } from "../../controllers/SignUpController";
-import { GetUnVerifiedAdminController } from "../../controllers/GetUnverifiedAdminController";
-import { UpdateUnverifiedAdminController } from "../../controllers/UpdateUnverifiedAdminController";
-import { AdminLoginController } from "../../controllers/AdminLoginController";
-import { GoogleAthController } from "../../controllers/GoogleOAuthController";
-import {  UpdateAdminProfileController } from "../../controllers/UpdateAdminProfileController";
-import { GetAdminController } from "../../controllers/GetAdminDataController";
+import { SignupController } from "../../controllers/Admin/SignUpController";
+import { GetUnVerifiedAdminController } from "../../controllers/Admin/GetUnverifiedAdminController";
+import { UpdateUnverifiedAdminController } from "../../controllers/Admin/UpdateUnverifiedAdminController";
+import { AdminLoginController } from "../../controllers/Admin/AdminLoginController";
+import { GoogleAthController } from "../../controllers/Admin/GoogleOAuthController";
+import { UpdateAdminProfileController } from "../../controllers/Admin/UpdateAdminProfileController";
+import { GetAdminController } from "../../controllers/Admin/GetAdminDataController";
+import { JwtTokenAdapter } from "../../../frameworks/services/jwtService/TokenService";
 const router: Route = Router();
 
+const JwtToken = new JwtTokenAdapter();
 
 // -------------------------------------| ADMIN SIGN UP-----------------------------------------------------------------------------------|
 router.post("/signup", SignupController.signUpAdmin);
@@ -23,12 +25,12 @@ router.post("/update_firebase_verify", UpdateUnverifiedAdminController.UpdateAdm
 router.post("/admin_login", AdminLoginController.AdminLoginController);
 
 // -------------------------------------| GOOGLE AUTHENTICATION --------------------------------------------------------------------------|
-router.post("/google_oauth",  GoogleAthController.GoogleAuthController);
+router.post("/google_oauth",JwtToken.CreateJwtToken,  GoogleAthController.GoogleAuthController);
 
 // -------------------------------------| UPDATE THE ADDMIN PROFILE ----------------------------------------------------------------------|
-router.post("/update_admin/:id", UpdateAdminProfileController.UpdateAdminProfileData);
+router.post("/update_admin/:id",JwtToken.verifyToken,  UpdateAdminProfileController.UpdateAdminProfileData);
 
 // -------------------------------------| GET THE ADMIN DATA BY THE ADMIN ID -------------------------------------------------------------|
-router.get("/get_admin/:id", GetAdminController.GetAdminDataByIdController);
+router.get("/get_admin/:id",JwtToken.verifyToken, GetAdminController.GetAdminDataByIdController);
 
 export default router;

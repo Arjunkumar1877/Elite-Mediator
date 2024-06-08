@@ -1,5 +1,5 @@
-import { Admin } from "../../entities/admin/Admin";
-import { IGetUnverifiedAdmin } from "../../entities/useCasesInterfaces/GetUnverifiedAdmin";
+import { Admin } from "../../entities/models/admin/Admin";
+import { IGetUnverifiedAdmin } from "../../entities/useCasesInterfaces/Admin/GetUnverifiedAdmin";
 import { IAdminRepository } from "../../interfaceAdapters/repositories/admin/IAdminRepository";
 
 

@@ -7,6 +7,8 @@ import { auth } from "../firebase/firebase";
 import { signInWithPhoneNumber, RecaptchaVerifier } from "firebase/auth";
 import OAuth from "../component/OAuth";
 import toast from "react-hot-toast";
+import { FaEyeSlash } from "react-icons/fa";
+import { IoEyeSharp } from "react-icons/io5";
 
 interface Errors {
   username?: string;
@@ -22,6 +24,7 @@ const Signup: React.FC = () => {
   const [password, setPassword] = useState<string>("");
   const [errors, setErrors] = useState<Errors>({});
   const [confirmOtp, setConfirmOtp] = useState<any>(null);
+  const [viewPassword, setViewPassword] = useState<boolean>(false);
   const navigate = useNavigate();
 
   const validateForm = (): boolean => {
@@ -205,7 +208,7 @@ const Signup: React.FC = () => {
           <div className="flex flex-col pt-5">
             <div className="flex justify-between px-5 py-1">
               <span className="text-xs text-zinc-500">Password</span>
-              <div className="flex justify-between gap-1">
+              <div className="flex justify-between gap-1 relative">
                 {password && (
                   <>
                     <BsCheckCircleFill className="text-green-600 text-xs" />
@@ -216,13 +219,22 @@ const Signup: React.FC = () => {
                 )}
               </div>
             </div>
+            <div className="relative">
             <input
-              type="password"
+              type={`${viewPassword ? 'text' : "password"}`}
               className="w-[300px] border rounded py-1 px-5"
               placeholder="Enter your password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
+{
+  viewPassword ? <FaEyeSlash  className="absolute top-2 right-3" onClick={()=> setViewPassword(false)}/> :  (
+<IoEyeSharp className="absolute top-2 right-3" onClick={()=> setViewPassword(true)} />
+
+  )
+}
+            </div>
+
             {errors.password && (
               <span className="text-red-500 text-xs">{errors.password}</span>
             )}

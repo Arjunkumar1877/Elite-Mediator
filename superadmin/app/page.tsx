@@ -1,8 +1,12 @@
 'use client'
 import React, { useEffect, useState } from "react";
 import { BsCheckCircleFill, BsXCircleFill } from "react-icons/bs";
+import { FaEyeSlash } from "react-icons/fa";
+import { IoEyeSharp } from "react-icons/io5";
 
 
+import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState<string>("");
@@ -10,6 +14,11 @@ const Login: React.FC = () => {
   const [emailValid, setEmailValid] = useState<boolean>(true);
   const [passwordValid, setPasswordValid] = useState<boolean>(true);
   const [loginError, setLoginError] = useState<string>("");
+  const [viewPassword, setViewPassword] = useState<boolean>(false);
+  // const { currentUser } = useSelector((state: any) => state.user);
+  // const dispatch = useDispatch();
+  // const navigate = useNavigate();
+  const router = useRouter()
 
 
   const validateEmail = (email: string): boolean => {
@@ -32,9 +41,10 @@ const Login: React.FC = () => {
       return;
     }
 
+    // dispatch(signInStart());
 
     try {
-      const res = await fetch("/api/admin_login", {
+      const res = await fetch("http://localhost:7000/superadmin/superadmin_login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -46,8 +56,21 @@ const Login: React.FC = () => {
         const data = await res.json();
         console.log(data);
         console.log("Login successful:", data);
+        if(data === 'Invalid credentials'){
+           toast(data)
+        }else{
+          router.push('/dashboard')
+        }
 
-      
+        // if (data !== 'Invalid credentials') {
+        //   if (data && !data?.address) {
+        //     navigate("/admin-data");
+        //     dispatch(signInSuccess(data));
+        //   } else if (data && data?.address) {
+        //     dispatch(signInSuccess(data));
+        //     navigate("/profile");
+        //   }
+        // }
       } else {
         const errorData = await res.json();
         setLoginError(errorData.message || "Login failed. Please try again.");
@@ -62,7 +85,7 @@ const Login: React.FC = () => {
     <div className="flex justify-center h-[700px] w-full">
       <div className="hidden sm:flex sm:flex-1 sm:h-full">
         <img
-          src="public/login.jpg"
+          src="login.jpg"
           alt="Dummy"
           className="h-full object-cover w-full"
         />
@@ -121,15 +144,25 @@ const Login: React.FC = () => {
                 </span>
               </div>
             </div>
-            <input
-              type="password"
-              className={`w-[300px] border rounded py-1 px-5 ${
+           
+          <div className=" relative ">
+          <input
+              type={`${viewPassword ? 'text' : 'password'}`}
+              className={`w-[300px] border rounded py-1 px-5${
                 !passwordValid ? "border-red-500" : ""
               }`}
               placeholder="Enter your password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
+{
+  viewPassword ? <FaEyeSlash  className="absolute top-2 right-3" onClick={()=> setViewPassword(false)}/> :  (
+<IoEyeSharp className="absolute top-2 right-3" onClick={()=> setViewPassword(true)} />
+
+  )
+}
+
+          </div>
           </div>
 
           {loginError && (
@@ -145,7 +178,15 @@ const Login: React.FC = () => {
             </button>
           </div>
 
-       
+    
+
+          <div className="flex items-center mt-5">
+            <span className="border-t border-gray-300 flex-grow mr-3"></span>
+            <span className="text-gray-400">or continue with</span>
+            <span className="border-t border-gray-300 flex-grow ml-3"></span>
+          </div>
+
+  
         </div>
       </div>
     </div>

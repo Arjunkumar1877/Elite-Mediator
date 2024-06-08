@@ -1,5 +1,5 @@
-import { Admin } from "../../entities/admin/Admin";
-import { IGoogleAuth } from "../../entities/useCasesInterfaces/GoogleAuth";
+import { Admin } from "../../entities/models/admin/Admin";
+import { IGoogleAuth } from "../../entities/useCasesInterfaces/Admin/GoogleAuth";
 import { IAdminRepository } from "../../interfaceAdapters/repositories/admin/IAdminRepository";
 
 

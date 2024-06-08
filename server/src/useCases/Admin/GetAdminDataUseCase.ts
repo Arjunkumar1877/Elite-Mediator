@@ -1,5 +1,5 @@
-import { Admin } from "../../entities/admin/Admin";
-import { IGetAdmin } from "../../entities/useCasesInterfaces/GetAdmin";
+import { Admin } from "../../entities/models/admin/Admin";
+import { IGetAdmin } from "../../entities/useCasesInterfaces/Admin/GetAdmin";
 import { IAdminRepository } from "../../interfaceAdapters/repositories/admin/IAdminRepository";
 
 export class GetAdminDataUseCase implements IGetAdmin{

@@ -3,7 +3,10 @@ import { BsCheckCircleFill, BsXCircleFill } from "react-icons/bs";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { signInStart, signInSuccess } from "../redux/user/userSlice";
+import { FaEyeSlash } from "react-icons/fa";
 import OAuth from "../component/OAuth";
+import { IoEyeSharp } from "react-icons/io5";
+
 import toast from "react-hot-toast";
 
 const Login: React.FC = () => {
@@ -12,6 +15,7 @@ const Login: React.FC = () => {
   const [emailValid, setEmailValid] = useState<boolean>(true);
   const [passwordValid, setPasswordValid] = useState<boolean>(true);
   const [loginError, setLoginError] = useState<string>("");
+  const [viewPassword, setViewPassword] = useState<boolean>(false);
   const { currentUser } = useSelector((state: any) => state.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -145,15 +149,25 @@ const Login: React.FC = () => {
                 </span>
               </div>
             </div>
-            <input
-              type="password"
-              className={`w-[300px] border rounded py-1 px-5 ${
+           
+          <div className=" relative ">
+          <input
+              type={`${viewPassword ? 'text' : 'password'}`}
+              className={`w-[300px] border rounded py-1 px-5${
                 !passwordValid ? "border-red-500" : ""
               }`}
               placeholder="Enter your password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
+{
+  viewPassword ? <FaEyeSlash  className="absolute top-2 right-3" onClick={()=> setViewPassword(false)}/> :  (
+<IoEyeSharp className="absolute top-2 right-3" onClick={()=> setViewPassword(true)} />
+
+  )
+}
+
+          </div>
           </div>
 
           {loginError && (

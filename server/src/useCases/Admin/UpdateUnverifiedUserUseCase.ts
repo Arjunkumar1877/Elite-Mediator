@@ -1,5 +1,5 @@
-import { Admin } from "../../entities/admin/Admin";
-import { IUpdateUnverifiedUseCase } from "../../entities/useCasesInterfaces/UpdateUnverifiedAdminUseCase";
+import { Admin } from "../../entities/models/admin/Admin";
+import { IUpdateUnverifiedUseCase } from "../../entities/useCasesInterfaces/Admin/UpdateUnverifiedAdminUseCase";
 import { IAdminRepository } from "../../interfaceAdapters/repositories/admin/IAdminRepository";
 
 export class UpdateUnverifiedUseCase implements IUpdateUnverifiedUseCase {
