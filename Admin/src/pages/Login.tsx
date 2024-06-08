@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { signInStart, signInSuccess } from "../redux/user/userSlice";
 import OAuth from "../component/OAuth";
+import toast from "react-hot-toast";
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState<string>("");
@@ -58,13 +59,16 @@ const Login: React.FC = () => {
         const data = await res.json();
         console.log(data);
         console.log("Login successful:", data);
+        if(data === 'Invalid credentials'){
+           toast(data)
+        }
 
-        if (data.loggedIn === true) {
-          if (!data.data.address) {
+        if (data !== 'Invalid credentials') {
+          if (data && !data?.address) {
             navigate("/admin-data");
-            dispatch(signInSuccess(data.data));
-          } else if (data.loggedIn === true && data?.data?.address) {
-            dispatch(signInSuccess(data.data));
+            dispatch(signInSuccess(data));
+          } else if (data && data?.address) {
+            dispatch(signInSuccess(data));
             navigate("/profile");
           }
         }
