@@ -180,11 +180,7 @@ const Login: React.FC = () => {
 
     
 
-          <div className="flex items-center mt-5">
-            <span className="border-t border-gray-300 flex-grow mr-3"></span>
-            <span className="text-gray-400">or continue with</span>
-            <span className="border-t border-gray-300 flex-grow ml-3"></span>
-          </div>
+        
 
   
         </div>

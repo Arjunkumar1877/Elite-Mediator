@@ -9,10 +9,18 @@ import { FaAngleRight } from "react-icons/fa6";
 import { MdKeyboardArrowLeft } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
 import { signoutSuccess } from "../redux/user/userSlice";
+import { Link, useLocation } from "react-router-dom";
 
 const SideNavBar = ({ navShowSet }: { navShowSet: (showNav: boolean) => void; }) => {
   const [showNav, setShowNav] = useState<boolean>(true);
-  // const { currentUser } = useSelector((state: )=> state.user)
+  // const { currentUser } = useSelector((state: )=> state.user);
+  const [ActiveLink, setActiveLink] = useState<boolean>(false);
+  const location = useLocation();
+  location.pathname
+console.log(
+  location.pathname
+
+)    
   const dispatch = useDispatch()
 
   useEffect(() => {
@@ -37,6 +45,8 @@ const SideNavBar = ({ navShowSet }: { navShowSet: (showNav: boolean) => void; })
   }, []);
 
 
+
+
   const handleSignout = ()=>{
     dispatch(signoutSuccess())
   }
@@ -50,7 +60,7 @@ const SideNavBar = ({ navShowSet }: { navShowSet: (showNav: boolean) => void; })
         </span>
       </div>
 
-      <div className={`transition-all duration-300 ${showNav ? "h-screen w-[250px] bg-sky-50" : "h-screen w-[60px] bg-sky-50"}`}>
+      <div className={`transition-all duration-300 ${showNav ? "h-screen w-[250px] bg-sky-50" : "h-screen w-[60px] bg-sky-50"}  `}>
         <span className="hidden md:flex justify-center items-center bg-sky-500 rounded-full w-5 h-5 absolute -right-2 cursor-pointer"
           onClick={() => setShowNav(!showNav)}>
           {showNav ? <MdKeyboardArrowLeft className="text-3xl" /> : <FaAngleRight className="text-xs" />}
@@ -58,19 +68,23 @@ const SideNavBar = ({ navShowSet }: { navShowSet: (showNav: boolean) => void; })
         <br />
         <br />
         <div className="flex flex-col gap-10 items-center justify-center">
-          <div className="flex gap-5 self-start px-5 hover:text-black cursor-pointer items-center text-xl">
+          <Link to={"/profile"} className={`flex gap-5 ${location.pathname === '/profile' ? 'text-black' : 'text-sky-500'} self-start   px-5 hover:text-black cursor-pointer items-center text-xl`}>
             <span>
               <FaRegUser />
             </span>
             <span className={`text-sm transition-opacity duration-300 ${showNav ? "opacity-100" : "opacity-0 hidden"}`}>PROFILE</span>
-          </div>
+          </Link>
 
-          <div className="flex gap-5 self-start px-5 hover:text-black cursor-pointer text-sky-500 items-center text-xl">
+         
+         <Link to={'/dashboard'} className={`flex gap-5 self-start ${location.pathname === '/dashboard' ? 'text-black' : 'text-sky-500'} px-5 hover:text-black cursor-pointer items-center text-xl`}>
+         
             <span>
               <RxDashboard />
             </span>
             <span className={`text-sm transition-opacity duration-300 ${showNav ? "opacity-100" : "opacity-0 hidden"}`}>DASHBOARD</span>
-          </div>
+            
+         
+          </Link>
 
           <div className="flex gap-5 self-start px-5 hover:text-black cursor-pointer text-sky-500 items-center text-xl">
             <span>

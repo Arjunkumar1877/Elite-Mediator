@@ -1,7 +1,7 @@
 import { Request as Req, Response as Res } from 'express';
 import { MongoAdminRepository } from '../../repositories/admin/AdminRepository'; 
 import { AdminUseSignupUseCase } from '../../../useCases/Admin/AdminSignUseCase';
-import { IAdminSignUp } from '../../../entities/useCasesInterfaces/Admin/AdminSignup';
+import { IAdminSignUp } from '../../../entities/useCasesInterfaces/Admin/IAdminSignupUseCase';
 
 
 const adminRepository = new MongoAdminRepository()

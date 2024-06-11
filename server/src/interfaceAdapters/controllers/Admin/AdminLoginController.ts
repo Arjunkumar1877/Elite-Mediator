@@ -1,4 +1,4 @@
-import { IAdminLogin } from "../../../entities/useCasesInterfaces/Admin/IAdminLogin";
+import { IAdminLoginUseCase } from "../../../entities/useCasesInterfaces/Admin/IAdminLoginUseCase";
 import { Req, Res } from "../../../frameworks/types/ServerTypes";
 import { AdminLoginUseCase } from "../../../useCases/Admin/AdminLoginUseCase";
 import { MongoAdminRepository } from "../../repositories/admin/AdminRepository";

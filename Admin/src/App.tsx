@@ -11,6 +11,7 @@ import ProfilePage from "./component/ProfilePage";
 import EditProfilePage from "./component/EditProfilePage";
 import AdminPrivateRoute from "./component/AdminPrivateRoute";
 import  { Toaster } from "react-hot-toast";
+import DashboardPage from "./component/DashboardPage";
 
 
 export default function App() {
@@ -30,9 +31,12 @@ export default function App() {
             <Route path="/admin-data" element={<UserVerifyData />} />
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/editprofile" element={<EditProfilePage />} />
+            <Route path="/dashboard" element={<DashboardPage />} />
           </Route>
+
         </Routes>
       </BrowserRouter>
+     
     </div>
   );
 }

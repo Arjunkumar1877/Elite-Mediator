@@ -258,14 +258,15 @@ const EditProfileSection: React.FC = () => {
   <div className="absolute z-0 rounded-2xl -top-14 sm:ml-30 md:ml-28 lg:left-20 transform translate-x-1/2 -translate-y-1/2 bg-sky-500 w-40 h-40 lg:w-72 lg:h-72 rotate-45"></div>
 
     <div className="flex flex-col justify-center items-center w-full bg-white rounded-md shadow-md p-6 md:p-8 lg:p-10 relative z-20">
-      <div className="flex flex-col md:flex-row justify-between items-center w-full mb-10 px-10">
+      <div className="flex flex-col  md:flex-row justify-between items-center w-full mb-10 px-10">
       <div className="mb-6 md:mb-0 relative">
               <label htmlFor="profile-image" className="cursor-pointer">
                 <div className="relative h-24 w-24 md:h-32 md:w-32 lg:h-48 lg:w-48">
+                <div className="absolute inset-0 flex items-center justify-center">
                   {imageUploadProgress && (
-                    <div className="absolute inset-0 flex items-center justify-center">
+                    
                       <CircularProgressbar
-                        value={imageUploadProgress || 0}
+                        value={imageUploadProgress}
                         text={`${imageUploadProgress}%`}
                         strokeWidth={5}
                         styles={{
@@ -278,12 +279,13 @@ const EditProfileSection: React.FC = () => {
                           },
                         }}
                       />
-                    </div>
                   )}
+                    </div>
+
                  <img
   src={profileData.image && profileData.image}
   alt='user'
-  className={`h-full w-full rounded-full object-cover ${imageUploadProgress && imageUploadProgress < 100 && 'opacity-60'}`}
+  className={`h-full w-full rounded-full  border-2 object-cover ${imageUploadProgress && imageUploadProgress < 100 && 'opacity-60'}`}
 />
 
                 </div>
@@ -322,7 +324,7 @@ const EditProfileSection: React.FC = () => {
               <div className = "flex relative" >
                 <FaRegUser className = "absolute right-4 top-1/2 transform -translate-y-1/2 text-lg md:text-xl" />
                 <input type = "text"
-                  className = "border-2 w-full rounded-md placeholder-text-black placeholder-gray-400 py-2 px-4 md:py-3 md:px-5"
+                  className = "border-2 w-full rounded-md   placeholder-text-black placeholder-gray-400 py-2 px-4 md:py-3 md:px-5"
                   placeholder = "Enter your username"
                   value = {
                     profileData.username
@@ -576,8 +578,8 @@ const EditProfileSection: React.FC = () => {
 
 
       </div>
-      <div className="w-full flex justify-end mt-10">
-        <button onClick={handleSave} className="bg-sky-500 text-white py-2 px-6 rounded-md">
+      <div className="w-full flex justify-center mt-10">
+        <button onClick={handleSave} className="bg-sky-500 text-white py-2 px-9 rounded-md">
           Save
         </button>
       </div>

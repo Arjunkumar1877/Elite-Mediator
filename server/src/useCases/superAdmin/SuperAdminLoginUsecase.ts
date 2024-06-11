@@ -1,5 +1,5 @@
 import { SuperAdmin } from "../../entities/models/superAdmin/SuperAdmin";
-import { ISuperAdminLogin } from "../../entities/useCasesInterfaces/superAdmin/SuperAdminLogin";
+import { ISuperAdminLogin } from "../../entities/useCasesInterfaces/superAdmin/ISuperAdminLoginUseCase";
 import { AdminLoginController } from "../../interfaceAdapters/controllers/Admin/AdminLoginController";
 import { ISuperAdminRepository } from "../../interfaceAdapters/repositories/superAdmin/ISuperAdminRepository";
 import { AdminLoginUseCase } from "../Admin/AdminLoginUseCase";

@@ -185,7 +185,7 @@ const UserVerifyData = () => {
                 <img
                   src={formData.image}
                   alt="user"
-                  className={`h-full w-full rounded-full object-cover ${
+                  className={`h-full w-full rounded-full border-2 object-cover ${
                     imageUploadProgress !== null &&
                     imageUploadProgress < 100 &&
                     "opacity-60"

@@ -1,5 +1,5 @@
 import { Admin } from "../../entities/models/admin/Admin";
-import { IUpdateAdminProfileUseCase } from "../../entities/useCasesInterfaces/Admin/AdminUpdateProfile";
+import { IUpdateAdminProfileUseCase } from "../../entities/useCasesInterfaces/Admin/IAdminUpdateProfileUseCase";
 import { IAdminRepository } from "../../interfaceAdapters/repositories/admin/IAdminRepository";
 
 export class UpdateAdminProfileUseCase implements IUpdateAdminProfileUseCase{

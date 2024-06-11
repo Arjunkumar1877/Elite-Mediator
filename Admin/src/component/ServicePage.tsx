@@ -24,12 +24,12 @@ const ServicePage = () => {
           <h1 className="text-3xl lg:text-5xl font-bold text-zinc-600">
             DOMESTIC
           </h1>
-          <p className=" text-zinc-700 text-sm lg:text-base z-20">
+          <p className=" text-zinc-700 text-sm  lg:text-lg z-20">
             Acting as the perfect mediator, our service helps visitors reach you
             through a generated QR code when you're not at home, ensuring a
             seamless experience while keeping your personal data private.
           </p>
-          <p className="text-slate-300 text-sm lg:text-base z-20">
+          <p className="text-slate-300 text-sm lg:text-lg z-20">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
             eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem
             ipsum dolor sit amet
@@ -47,7 +47,7 @@ const ServicePage = () => {
               <h1 className="text-3xl lg:text-5xl font-bold text-zinc-600 uppercase">
                 Business
               </h1>
-              <p className="w-[800px]  text-zinc-700">
+              <p className="w-[800px] text-sm mt-5  text-zinc-700 lg:text-lg">
                 Acting as the perfect mediator, our services facilitate renting
                 and selling your properties seamlessly. Users can reach you
                 through a generated QR code, ensuring your private phone number
@@ -76,7 +76,7 @@ const ServicePage = () => {
             </h2>
           </div>
           <div className="h-40 w-[600px] lg:w-[900px] pr-40 mr-10">
-            <p className="pr-10 text-zinc-700">
+            <p className="pr-10 text-sm text-zinc-700 lg:text-lg">
               Experience a seamless user interface with our web app, offering
               integrated chat, voice call, and video call functionalities.
               Effortlessly communicate in real-time, whether you prefer texting,

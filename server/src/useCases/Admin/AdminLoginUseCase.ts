@@ -1,10 +1,10 @@
 import { Admin } from "../../entities/models/admin/Admin";
-import { IAdminLogin } from "../../entities/useCasesInterfaces/Admin/IAdminLogin";
+import { IAdminLoginUseCase } from "../../entities/useCasesInterfaces/Admin/IAdminLoginUseCase";
 import { IAdminRepository } from "../../interfaceAdapters/repositories/admin/IAdminRepository";
 import bcrypt from 'bcrypt';
 
 
-export class AdminLoginUseCase implements IAdminLogin{
+export class AdminLoginUseCase implements IAdminLoginUseCase{
     constructor(private adminRepository: IAdminRepository){};
     async LoginVerifyAdmin(email: string, password: string): Promise<any> {
 

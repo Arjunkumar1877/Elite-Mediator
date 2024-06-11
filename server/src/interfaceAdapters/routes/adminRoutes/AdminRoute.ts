@@ -3,11 +3,11 @@ import { Route } from "../../../frameworks/types/ServerTypes";
 import { SignupController } from "../../controllers/Admin/SignUpController";
 import { GetUnVerifiedAdminController } from "../../controllers/Admin/GetUnverifiedAdminController";
 import { UpdateUnverifiedAdminController } from "../../controllers/Admin/UpdateUnverifiedAdminController";
-import { AdminLoginController } from "../../controllers/Admin/AdminLoginController";
 import { GoogleAthController } from "../../controllers/Admin/GoogleOAuthController";
 import { UpdateAdminProfileController } from "../../controllers/Admin/UpdateAdminProfileController";
 import { GetAdminController } from "../../controllers/Admin/GetAdminDataController";
 import { JwtTokenAdapter } from "../../../frameworks/services/jwtService/TokenService";
+import { AdminLoginController } from "../../controllers/Admin/AdminLoginController";
 const router: Route = Router();
 
 const JwtToken = new JwtTokenAdapter();

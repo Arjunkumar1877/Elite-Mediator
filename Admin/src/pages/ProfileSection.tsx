@@ -51,7 +51,7 @@ const ProfileSection = () => {
           <img
             src={adminData?.image}
             alt="User Icon"
-            className="h-24 w-24 md:h-32 md:w-32 lg:h-48 lg:w-48 rounded-full object-cover"
+            className="h-24 w-24 rounded-full  border-2 md:h-32 md:w-32 lg:h-48 lg:w-48  object-cover"
           />
         </div>
 
