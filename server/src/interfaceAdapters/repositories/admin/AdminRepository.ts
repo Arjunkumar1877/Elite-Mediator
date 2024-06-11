@@ -4,6 +4,7 @@ import { AdminModel } from "../../../frameworks/database/models/AdminModel";
 import { IAdminRepository } from "./IAdminRepository";
 
 export class MongoAdminRepository implements IAdminRepository {
+  
   async CreateAdmin(admin: Admin): Promise<any> {
     console.log("repository file mongo db functions 🤷‍♂️🤷‍♂️🤷‍♂️");
     return AdminModel.create(admin);

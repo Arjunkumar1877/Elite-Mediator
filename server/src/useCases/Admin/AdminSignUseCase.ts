@@ -4,13 +4,16 @@ import { IAdminRepository } from "../../interfaceAdapters/repositories/admin/IAd
 import bcrypt from "bcrypt";
 import { IAdminSignUp } from "../../entities/useCasesInterfaces/Admin/IAdminSignupUseCase";
 
-
-export class AdminUseSignupUseCase implements IAdminSignUp {
+export class AdminSignupUseCase implements IAdminSignUp {
   constructor(private adminRepository: IAdminRepository) {}
 
   async AdminSignupExecut(admin: Admin): Promise<Admin | string> {
-    const ExisitingEmail = await this.adminRepository.FindAdminByEmail(admin.email);
-    const ExisitingPhone = await this.adminRepository.FindAdminByPhone(admin.phone);
+    const ExisitingEmail = await this.adminRepository.FindAdminByEmail(
+      admin.email
+    );
+    const ExisitingPhone = await this.adminRepository.FindAdminByPhone(
+      admin.phone
+    );
 
     if (ExisitingPhone || ExisitingEmail) {
       return "Credentials already exist";
@@ -22,5 +25,4 @@ export class AdminUseSignupUseCase implements IAdminSignUp {
       return adminData;
     }
   }
-  
 }

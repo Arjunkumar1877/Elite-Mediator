@@ -161,7 +161,7 @@ const UserVerifyData = () => {
       </h1>
       <div className="p-10 z-10">
         <div className="flex flex-col justify-center items-center border-2 relative rounded-md z-10 px-8">
-          <div className="mb-6 md:mb-0 relative">
+          <div className="mb-6 md:mb-0 relative mt-9 P-3">
             <label htmlFor="profile-image" className="cursor-pointer">
               <div className="relative h-24 w-24 md:h-32 md:w-32 lg:h-48 lg:w-48">
                 {imageUploadProgress !== null && (
@@ -200,12 +200,13 @@ const UserVerifyData = () => {
               className="hidden"
               onChange={handleImageChange}
             />
+            <h1 className="text-center p-3 text-zinc-500">Upload Profile Image</h1>
           </div>
           {imageUploadError && (
             <div className="text-red-500 mt-2">{imageUploadError}</div>
           )}
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-28 mb-20">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-10 mb-20">
             {Object.keys(formData).map((key) => {
               if (key !== "image") {
                 const error = formErrors[key as keyof FormDataType];

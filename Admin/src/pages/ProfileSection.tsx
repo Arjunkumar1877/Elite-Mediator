@@ -9,6 +9,8 @@ import { MdMyLocation } from "react-icons/md";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
+import { ImCross } from "react-icons/im";
+
 
 
 
@@ -57,16 +59,17 @@ const ProfileSection = () => {
 
         <Link to={'/editprofile'}>
           <div className="flex flex-col md:flex-row text-zinc-400 items-center md:items-end justify-end w-full text-center md:text-right cursor-pointer hover:text-zinc-800">
-            <span className="uppercase text-lg md:text-xl lg:text-2xl font-semibold">Edit</span>
-            <span className="flex text-center justify-center items-center text-2xl mt-2 md:mt-0 md:ml-2">
-              <IoSettingsOutline className='self-center' />
-            </span>
+          <button className="bg-sky-500 text-white px-4 flex py-1 gap-1 rounded lg:py-2 lg:px-4 lg:gap-2">
+          <span className="">Edit</span><IoSettingsOutline className='self-center' />
+
+          </button>
+            
           </div>
         </Link>
       </div>
 
-      <div className="grid grid-cols-1 gap-6 xl:grid-cols-2 w-full">
-        <div className="flex flex-col w-full px-4 py-6 md:px-6 md:py-8 lg:px-10 lg:py-10 rounded-md shadow-sm">
+      <div className="grid grid-cols-1 gap-3 xl:grid-cols-2 w-full">
+        <div className="flex flex-col w-full px-2 py-3 md:px-3 md:py-4 lg:px-5 lg:py-5 rounded-md shadow-sm">
           <div className="flex justify-between items-center mb-4 px-2">
             <span className="text-gray-500 text-lg md:text-xl">Name</span>
             <div className="flex items-center gap-2">
@@ -85,7 +88,7 @@ const ProfileSection = () => {
           </div>
         </div>
 
-        <div className="flex flex-col w-full px-4 py-6 md:px-6 md:py-8 lg:px-10 lg:py-10 rounded-md shadow-sm">
+        <div className="flex flex-col w-full px-2 py-3 md:px-3 md:py-4 lg:px-5 lg:py-5 rounded-md shadow-sm">
           <div className="flex justify-between items-center mb-4 px-2">
             <span className="text-gray-500 text-lg md:text-xl">Email</span>
             <div className="flex items-center gap-2">
@@ -104,7 +107,7 @@ const ProfileSection = () => {
           </div>
         </div>
 
-        <div className="flex flex-col w-full px-4 py-6 md:px-6 md:py-8 lg:px-10 lg:py-10 rounded-md shadow-sm">
+        <div className="flex flex-col w-full px-2 py-3 md:px-3 md:py-4 lg:px-5 lg:py-5 rounded-md shadow-sm">
           <div className="flex justify-between items-center mb-4 px-2">
             <span className="text-gray-500 text-lg md:text-xl">Address</span>
             <div className="flex items-center gap-2">
@@ -123,12 +126,25 @@ const ProfileSection = () => {
           </div>
         </div>
 
-        <div className="flex flex-col w-full px-4 py-6 md:px-6 md:py-8 lg:px-10 lg:py-10 rounded-md shadow-sm">
+        <div className="flex flex-col w-full px-2 py-3 md:px-3 md:py-4 lg:px-5 lg:py-5 rounded-md shadow-sm">
           <div className="flex justify-between items-center mb-4 px-2">
             <span className="text-gray-500 text-lg md:text-xl">Phone</span>
             <div className="flex items-center gap-2">
-              <BsCheckCircleFill className="text-green-600 text-sm" />
-              <span className="text-xs text-green-500">Valid</span>
+             {
+              adminData && adminData?.phone === 910000000000 ? (
+                <>
+                 <ImCross className="text-red-600 text-sm" />
+                 <span className="text-xs text-red-500">Invalid</span>
+                </>
+              ) : (
+                <>
+                 <BsCheckCircleFill className="text-green-600 text-sm" />
+                 <span className="text-xs text-green-500">Valid</span>
+                </>
+              )
+             }
+
+             
             </div>
           </div>
           <div className="flex relative">
@@ -142,7 +158,7 @@ const ProfileSection = () => {
           </div>
         </div>
 
-        <div className="flex flex-col w-full px-4 py-6 md:px-6 md:py-8 lg:px-10 lg:py-10 rounded-md shadow-sm">
+        <div className="flex flex-col w-full px-2 py-3 md:px-3 md:py-4 lg:px-5 lg:py-5 rounded-md shadow-sm">
           <div className="flex justify-between items-center mb-4 px-2">
             <span className="text-gray-500 text-lg md:text-xl">State</span>
             <div className="flex items-center gap-2">
@@ -161,7 +177,7 @@ const ProfileSection = () => {
           </div>
         </div>
 
-        <div className="flex flex-col w-full px-4 py-6 md:px-6 md:py-8 lg:px-10 lg:py-10 rounded-md shadow-sm">
+        <div className="flex flex-col w-full px-2 py-3 md:px-3 md:py-4 lg:px-5 lg:py-5 rounded-md shadow-sm">
           <div className="flex justify-between items-center mb-4 px-2">
             <span className="text-gray-500 text-lg md:text-xl">City</span>
             <div className="flex items-center gap-2">
@@ -180,7 +196,7 @@ const ProfileSection = () => {
           </div>
         </div>
 
-        <div className="flex flex-col w-full px-4 py-6 md:px-6 md:py-8 lg:px-10 lg:py-10 rounded-md shadow-sm">
+        <div className="flex flex-col w-full px-2 py-3 md:px-3 md:py-4 lg:px-5 lg:py-5 rounded-md shadow-sm">
           <div className="flex justify-between items-center mb-4 px-2">
             <span className="text-gray-500 text-lg md:text-xl">Landmark</span>
             <div className="flex items-center gap-2">
@@ -199,7 +215,7 @@ const ProfileSection = () => {
           </div>
         </div>
 
-        <div className="flex flex-col w-full px-4 py-6 md:px-6 md:py-8 lg:px-10 lg:py-10 rounded-md shadow-sm">
+        <div className="flex flex-col w-full px-2 py-3 md:px-3 md:py-4 lg:px-5 lg:py-5 rounded-md shadow-sm">
           <div className="flex justify-between items-center mb-4 px-2">
             <span className="text-gray-500 text-lg md:text-xl">Pincode</span>
             <div className="flex items-center gap-2">

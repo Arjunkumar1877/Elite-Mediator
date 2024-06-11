@@ -1,8 +1,8 @@
 import { Admin } from "../../entities/models/admin/Admin";
-import { IGetAdmin } from "../../entities/useCasesInterfaces/Admin/IGetAdminUseCase";
+import {  IGetAdminUseCase } from "../../entities/useCasesInterfaces/Admin/IGetAdminUseCase";
 import { IAdminRepository } from "../../interfaceAdapters/repositories/admin/IAdminRepository";
 
-export class GetAdminDataUseCase implements IGetAdmin{
+export class GetAdminDataUseCase implements IGetAdminUseCase{
     constructor(private adminRepository: IAdminRepository){};
 
  async FindAdminById(id: string): Promise<Admin | null> {

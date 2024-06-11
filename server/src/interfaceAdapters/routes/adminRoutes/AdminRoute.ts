@@ -1,36 +1,30 @@
 import { Router } from "express";
 import { Route } from "../../../frameworks/types/ServerTypes";
-import { SignupController } from "../../controllers/Admin/SignUpController";
-import { GetUnVerifiedAdminController } from "../../controllers/Admin/GetUnverifiedAdminController";
-import { UpdateUnverifiedAdminController } from "../../controllers/Admin/UpdateUnverifiedAdminController";
-import { GoogleAthController } from "../../controllers/Admin/GoogleOAuthController";
-import { UpdateAdminProfileController } from "../../controllers/Admin/UpdateAdminProfileController";
-import { GetAdminController } from "../../controllers/Admin/GetAdminDataController";
 import { JwtTokenAdapter } from "../../../frameworks/services/jwtService/TokenService";
-import { AdminLoginController } from "../../controllers/Admin/AdminLoginController";
+import { InjectedAdminSignUpController, InjectedAdminlogincontroller, InjectedGetAdminDataController, InjectedGetUnverifiedAdminController, InjectedGoogleLoginController, InjectedUpdateAdminProfileController, InjectedUpdateVerifyAdminController } from "../../../frameworks/injection/Injects";
 const router: Route = Router();
 
 const JwtToken = new JwtTokenAdapter();
 
 // -------------------------------------| ADMIN SIGN UP-----------------------------------------------------------------------------------|
-router.post("/signup", SignupController.signUpAdmin);
+router.post("/signup", InjectedAdminSignUpController.signUpAdmin.bind(InjectedAdminSignUpController));
 
 // -------------------------------------| GET THE UNVERIFIED ADMIN------------------------------------------------------------------------|
-router.get("/unverified_admin/:phone", GetUnVerifiedAdminController.getUnverifiedAdminController);
+router.get("/unverified_admin/:phone", InjectedGetUnverifiedAdminController.getUnverifiedAdminController.bind(InjectedGetUnverifiedAdminController));
 
 // -------------------------------------| VERIFY THE ADMIN BY THE FIREBASE VERIFICATION ID -----------------------------------------------|
-router.post("/update_firebase_verify", UpdateUnverifiedAdminController.UpdateAdminVerifyController);
+router.post("/update_firebase_verify", InjectedUpdateVerifyAdminController.UpdateAdminVerifyController.bind(InjectedUpdateVerifyAdminController));
 
 // -------------------------------------| VERIFY THE ADMIN AND LOGIN ---------------------------------------------------------------------|
-router.post("/admin_login", AdminLoginController.AdminLoginController);
+router.post("/admin_login", InjectedAdminlogincontroller.login.bind(InjectedAdminlogincontroller));
 
 // -------------------------------------| GOOGLE AUTHENTICATION --------------------------------------------------------------------------|
-router.post("/google_oauth",JwtToken.CreateJwtToken,  GoogleAthController.GoogleAuthController);
+router.post("/google_oauth",JwtToken.CreateJwtToken,  InjectedGoogleLoginController.GoogleoauthController.bind(InjectedGoogleLoginController));
 
 // -------------------------------------| UPDATE THE ADDMIN PROFILE ----------------------------------------------------------------------|
-router.post("/update_admin/:id",JwtToken.verifyToken,  UpdateAdminProfileController.UpdateAdminProfileData);
+router.post("/update_admin/:id",JwtToken.verifyToken,  InjectedUpdateAdminProfileController.UpdateAdminProfileData.bind(InjectedUpdateAdminProfileController));
 
 // -------------------------------------| GET THE ADMIN DATA BY THE ADMIN ID -------------------------------------------------------------|
-router.get("/get_admin/:id",JwtToken.verifyToken, GetAdminController.GetAdminDataByIdController);
+router.get("/get_admin/:id",JwtToken.verifyToken, InjectedGetAdminDataController.GetAdminDataByIdController.bind(InjectedGetAdminDataController));
 
 export default router;

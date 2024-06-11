@@ -55,13 +55,13 @@ console.log(
     <div className="fixed z-20">
       <div className={`flex p-1 gap-1 transition-all duration-300 ${showNav ? "bg-sky-50 w-[250px]" : "w-[60px]"}`}>
         <div className="p-4 rounded bg-sky-500 font-sans text-center">EM</div>
-        <span className={`flex justify-center items-center text-2xl transition-opacity duration-300 ${showNav ? "opacity-100" : "opacity-0 hidden"}`}>
+        <span className={`flex justify-center items-center text-2xl transition-all duration-300 whitespace-nowrap ${showNav ? "opacity-100" : "opacity-0"}`}>
           ELITE MEDIATOR
         </span>
       </div>
 
       <div className={`transition-all duration-300 ${showNav ? "h-screen w-[250px] bg-sky-50" : "h-screen w-[60px] bg-sky-50"}  `}>
-        <span className="hidden md:flex justify-center items-center bg-sky-500 rounded-full w-5 h-5 absolute -right-2 cursor-pointer"
+        <span className="hidden md:flex justify-center items-center bg-sky-500 rounded-full w-7 h-7 absolute -right-2 cursor-pointer"
           onClick={() => setShowNav(!showNav)}>
           {showNav ? <MdKeyboardArrowLeft className="text-3xl" /> : <FaAngleRight className="text-xs" />}
         </span>

@@ -1,17 +1,16 @@
+import { IGetUnverifiedAdmin } from "../../../entities/useCasesInterfaces/Admin/IGetUnverifiedAdminUseCase";
 import { Req, Res } from "../../../frameworks/types/ServerTypes";
-import { GetUnverifiedAdminDataUsecase } from "../../../useCases/Admin/GetUnverifiedAdminUseCase";
-import { MongoAdminRepository } from "../../repositories/admin/AdminRepository";
 
-const adminrepository = new MongoAdminRepository();
-export class GetUnVerifiedAdminController{
- 
-  static async getUnverifiedAdminController(req: Req, res: Res): Promise<void> {
+export class GetUnverifiedAdminController {
+  constructor(private getunverifiedadminusecase: IGetUnverifiedAdmin) {}
+
+  async getUnverifiedAdminController(req: Req, res: Res): Promise<void> {
     try {
       const phone = parseInt(req.params.phone);
-      const result = new GetUnverifiedAdminDataUsecase(adminrepository);
-     const data = await  result.GetUnverifiedAdminData(phone)
+      const data = await this.getunverifiedadminusecase.GetUnverifiedAdminData(
+        phone
+      );
       if (data) {
-        // const { password: pass, ...restData } = data;
         res.json(data);
       } else {
         res.json("error finding data");

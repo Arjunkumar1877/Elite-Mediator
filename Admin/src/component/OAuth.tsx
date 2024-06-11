@@ -51,16 +51,27 @@ const OAuth = () => {
     }
   };
   return (
-    <div>
-      <button
-        onClick={handleGoogleClick}
-        className="relative bg-zinc-300 w-full rounded py-1 px-5 text-slate-600 hover:bg-zinc-400"
-      >
-        <FcGoogle className="absolute left-2 top-2" />
-        Google
-      </button>
-    </div>
+    <div className="flex justify-center">
+    <button
+      onClick={handleGoogleClick}
+      className="relative flex items-center justify-center bg-white w-full max-w-sm rounded-full py-2 px-4 text-gray-600 hover:bg-gray-100 hover:shadow-md transition duration-300 ease-in-out border border-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+    >
+      <FcGoogle className="w-6 h-6 mr-3" />
+      <span className="font-medium">Sign in with Google</span>
+    </button>
+  </div>
   );
 };
 
 export default OAuth;
+
+
+// <div>
+// <button
+//   onClick={handleGoogleClick}
+//   className="relative bg-zinc-300 w-full rounded py-1 px-5 text-slate-600 hover:bg-zinc-400"
+// >
+//   <FcGoogle className="absolute left-2 top-2" />
+//   Google
+// </button>
+// </div>
