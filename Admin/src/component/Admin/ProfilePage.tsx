@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import SideNavBar from '../pages/SideNavBar';
-import ProfileSection from '../pages/ProfileSection';
+import SideNavBar from '../../pages/Admin/SideNavBar';
+import ProfileSection from '../../pages/Admin/ProfileSection';
 
 const ProfilePage = () => {
   const [navShow, setNavShow] = useState<boolean>(true);

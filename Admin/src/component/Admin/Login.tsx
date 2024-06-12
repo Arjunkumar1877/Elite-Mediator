@@ -2,9 +2,9 @@ import React, { useEffect, useState } from "react";
 import { BsCheckCircleFill, BsXCircleFill } from "react-icons/bs";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import { signInStart, signInSuccess } from "../redux/user/userSlice";
+import { signInStart,signInSuccess } from "../../redux/user/userSlice";
 import { FaEyeSlash } from "react-icons/fa";
-import OAuth from "../component/OAuth";
+import OAuth from "../../pages/Admin/OAuth";
 import { IoEyeSharp } from "react-icons/io5";
 
 import toast from "react-hot-toast";

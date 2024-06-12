@@ -40,7 +40,7 @@ const ProfileSection = () => {
   return (
     <div className="w-full h-screen flex flex-col relative z-10 overflow-x-hidden">
   <div className="p-6 bg-white shadow-sm">
-    <h1 className="text-xl">Account Information</h1>
+    <h1 className="text-3xl font-bold">Account Information</h1>
   </div>
 
   <div className="flex flex-col items-center p-6 overflow-y-auto bg-gray-100 relative z-20">

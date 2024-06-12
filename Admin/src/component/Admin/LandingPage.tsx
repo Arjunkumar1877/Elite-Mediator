@@ -1,5 +1,5 @@
 import { HiOutlineUsers } from "react-icons/hi";
-import Footer from "../pages/Footer";
+import Footer from "../../pages/Admin/Footer";
 import { IoBusiness } from "react-icons/io5";
 import { Link } from "react-router-dom";
 

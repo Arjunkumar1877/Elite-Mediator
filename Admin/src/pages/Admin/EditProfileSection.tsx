@@ -15,7 +15,7 @@ import {
   ref,
   uploadBytesResumable,
 } from "firebase/storage";
-import app from "../firebase/firebase";
+import app from "../../firebase/firebase";
 import { CircularProgressbar } from "react-circular-progressbar";
 import toast from "react-hot-toast";
 

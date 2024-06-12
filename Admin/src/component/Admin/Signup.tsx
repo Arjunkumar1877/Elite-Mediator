@@ -3,9 +3,9 @@ import { BsCheckCircleFill } from "react-icons/bs";
 import { Link, useNavigate } from "react-router-dom";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
-import { auth } from "../firebase/firebase";
+import { auth } from "../../firebase/firebase";
 import { signInWithPhoneNumber, RecaptchaVerifier } from "firebase/auth";
-import OAuth from "../component/OAuth";
+import OAuth from "../../pages/Admin/OAuth";
 import toast from "react-hot-toast";
 import { FaEyeSlash } from "react-icons/fa";
 import { IoEyeSharp } from "react-icons/io5";
@@ -81,7 +81,7 @@ const Signup: React.FC = () => {
         }
 
         toast("Verification message sucessfully send to your mobile");
-        navigate(`/verifyOtpPage/${phone}`);
+        navigate(`/verify_otp_page/${phone}`);
       }
     } catch (error) {
       console.log(error);

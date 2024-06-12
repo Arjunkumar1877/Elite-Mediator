@@ -1,17 +1,21 @@
 import "./App.css";
-import Landing from "./component/LandingPage";
-import Login from "./pages/Login";
+import Landing from "./component/Admin/LandingPage";
+import Login from "./component/Admin/Login";
 // import Landing from './pages/LandingPage'
-import ServicePage from "./component/ServicePage";
+import ServicePage from "./component/Admin/ServicePage";
 import { Route, Routes, BrowserRouter } from "react-router-dom";
-import Signup from "./pages/Signup";
-import OtpVerification from "./pages/VerifyOtp";
-import UserVerifyData from "./pages/UserVerifyData";
-import ProfilePage from "./component/ProfilePage";
-import EditProfilePage from "./component/EditProfilePage";
-import AdminPrivateRoute from "./component/AdminPrivateRoute";
+import Signup from "./component/Admin/Signup";
+import OtpVerification from "./component/Admin/VerifyOtp";
+import UserVerifyData from "./component/Admin/UserVerifyData";
+import ProfilePage from "./component/Admin/ProfilePage";
+import EditProfilePage from "./component/Admin/EditProfilePage";
+import AdminPrivateRoute from "./component/Admin/AdminPrivateRoute";
 import  { Toaster } from "react-hot-toast";
-import DashboardPage from "./component/DashboardPage";
+import DashboardPage from "./component/Admin/DashboardPage";
+import QrCodesPage from "./component/Admin/QrCodesPage";
+import GenerateQrCodePage from "./component/Admin/GenerateQrCodePage";
+// import AdminChatListPage from "./component/Admin/AdminChatListPage";
+// import AdminChatPage from "./component/Admin/AdminChatPage";
 
 
 export default function App() {
@@ -25,13 +29,17 @@ export default function App() {
           <Route path="/service" element={<ServicePage />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
-          <Route path="/verifyOtpPage/:ph" element={<OtpVerification />} />
+          <Route path="/verify_otp_page/:ph" element={<OtpVerification />} />
 
           <Route element={<AdminPrivateRoute />}>
             <Route path="/admin-data" element={<UserVerifyData />} />
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/editprofile" element={<EditProfilePage />} />
             <Route path="/dashboard" element={<DashboardPage />} />
+            <Route path="/qrcodes" element={<QrCodesPage />} />
+            <Route path="/generate_qr" element={<GenerateQrCodePage />} />
+            {/* <Route path="/chat_list" element={<AdminChatListPage />} />
+            <Route path="/admin_chat/:id" element={<AdminChatPage />} /> */}
           </Route>
 
         </Routes>

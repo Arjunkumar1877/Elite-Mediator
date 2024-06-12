@@ -8,7 +8,7 @@ import { RiLogoutBoxLine } from "react-icons/ri";
 import { FaAngleRight } from "react-icons/fa6";
 import { MdKeyboardArrowLeft } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
-import { signoutSuccess } from "../redux/user/userSlice";
+import { signoutSuccess } from "../../redux/user/userSlice";
 import { Link, useLocation } from "react-router-dom";
 
 const SideNavBar = ({ navShowSet }: { navShowSet: (showNav: boolean) => void; }) => {
@@ -68,7 +68,7 @@ console.log(
         <br />
         <br />
         <div className="flex flex-col gap-10 items-center justify-center">
-          <Link to={"/profile"} className={`flex gap-5 ${location.pathname === '/profile' ? 'text-black' : 'text-sky-500'} self-start   px-5 hover:text-black cursor-pointer items-center text-xl`}>
+          <Link to={"/profile"} className={`flex gap-5 ${location.pathname === '/profile' || location.pathname ===  '/editprofile' ? 'text-black' : 'text-sky-500'} self-start   px-5 hover:text-black cursor-pointer items-center text-xl`}>
             <span>
               <FaRegUser />
             </span>
@@ -93,19 +93,19 @@ console.log(
             <span className={`text-sm transition-opacity duration-300 ${showNav ? "opacity-100" : "opacity-0 hidden"}`}>ALL USERS</span>
           </div>
 
-          <div className="flex gap-5 self-start px-5 hover:text-black cursor-pointer text-sky-500 items-center text-xl">
+          <Link to={'/chat_list'} className={`flex gap-5 self-start px-5 hover:text-black cursor-pointer ${location.pathname === '/chat_list' ? 'text-black' : 'text-sky-500'}  items-center text-xl`}>
             <span>
               <PiChatsTeardropBold />
             </span>
             <span className={`text-sm transition-opacity duration-300 ${showNav ? "opacity-100" : "opacity-0 hidden"}`}>CHATS</span>
-          </div>
+          </Link>
 
-          <div className="flex gap-5 self-start px-5 hover:text-black cursor-pointer text-sky-500 items-center text-xl">
+          <Link to={'/qrCodes'} className={`flex gap-5 self-start px-5 hover:text-black cursor-pointer  ${location.pathname === '/qrCodes' || location.pathname === '/generate_qr' ? 'text-black' : 'text-sky-500'} items-center text-xl`}>
             <span>
               <BsQrCodeScan />
             </span>
             <span className={`text-sm transition-opacity duration-300 ${showNav ? "opacity-100" : "opacity-0 hidden"}`}>QR CODE'S</span>
-          </div>
+          </Link>
 
           <div className="flex gap-5 self-start px-5 hover:text-black cursor-pointer text-sky-500 items-center text-xl" onClick={handleSignout}>
             <span>
