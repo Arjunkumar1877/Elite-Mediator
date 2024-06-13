@@ -1,4 +1,5 @@
 import { Admin } from "../../../entities/models/admin/Admin";
+import { PropertyData } from "../../../entities/models/admin/PropertyData";
 
 export interface IAdminRepository {
     CreateAdmin(admin: Admin): Promise<Admin>;
@@ -9,5 +10,6 @@ export interface IAdminRepository {
     UpdateUnverifiedAdmin(firebaseCode: string, phone: number): Promise<Admin | null>;
     GoogleOAuth(admin: Admin): Promise<Admin | null>;
     UpdateAdminData(admin: Admin, id: string): Promise<Admin | null>;
+    CreatePropertyData(propertyData: PropertyData): Promise<PropertyData | null>;
     // GenerateQrCode(qrCode: string): Promise<string>
 }

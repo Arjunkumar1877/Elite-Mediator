@@ -3,6 +3,7 @@ import { GenerateQrController } from '../../interfaceAdapters/controllers/Admin/
 import { GetAdminDataController } from '../../interfaceAdapters/controllers/Admin/GetAdminDataController';
 import { GetUnverifiedAdminController } from '../../interfaceAdapters/controllers/Admin/GetUnverifiedAdminController';
 import { GoogleOAthController } from '../../interfaceAdapters/controllers/Admin/GoogleOAuthController';
+import { SavePropertDataController } from '../../interfaceAdapters/controllers/Admin/SavePropertyDataController';
 import { AdminSignupController } from '../../interfaceAdapters/controllers/Admin/SignUpController';
 import { UpdateAdminProfileController } from '../../interfaceAdapters/controllers/Admin/UpdateAdminProfileController';
 import { UpdateUnverifiedAdminController } from '../../interfaceAdapters/controllers/Admin/UpdateUnverifiedAdminController';
@@ -12,6 +13,7 @@ import { AdminSignupUseCase } from '../../useCases/admin/AdminSignUseCase';
 import { GetAdminDataUseCase } from '../../useCases/admin/GetAdminDataUseCase';
 import { GetUnverifiedAdminDataUsecase } from '../../useCases/admin/GetUnverifiedAdminUseCase';
 import { GoogleAuthUseCase } from '../../useCases/admin/GoogleAuthUseCase';
+import { SavePropertyDataUseCase } from '../../useCases/admin/SavePropertyDataUseCase';
 import { UpdateAdminProfileUseCase } from '../../useCases/admin/UpdateAdminUseCase';
 import { UpdateUnverifiedUseCase } from '../../useCases/admin/UpdateUnverifiedUserUseCase';
 import { GenerateQrCode } from '../services/QrGenerateService/GenerateQrCode.';
@@ -51,8 +53,13 @@ const getAdminDataByIdUse = new GetAdminDataUseCase(mongoRepo);
 export const InjectedGetAdminDataController = new GetAdminDataController(getAdminDataByIdUse);
 
 
-// -----------------------------| GENERATE AND SEND QRCODE TO THE CLIENT ----------------------------------------------------------------------------------------
+// -----------------------------| GENERATE AND SEND QRCODE TO THE CLIENT INJECTION ----------------------------------------------------------------------------------------
 const generateQrCodeUse = new GenerateQrCode();
 export const InjectedGenerateQrCodeController = new GenerateQrController(generateQrCodeUse);
+
+
+// -----------------------------| GENERATE AND SEND QRCODE TO THE CLIENT INJECTION ----------------------------------------------------------------------------------------
+const savePropertDataUse = new SavePropertyDataUseCase(mongoRepo);
+export const InjectedSavePropertyDataController = new SavePropertDataController(savePropertDataUse);
 
 

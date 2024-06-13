@@ -3,6 +3,7 @@ import { Admin } from "../../../entities/models/admin/Admin";
 import { AdminModel } from "../../../frameworks/database/models/admin/AdminModel";
 import { IAdminRepository } from "./IAdminRepository";
 import { QrModel } from "../../../frameworks/database/models/admin/QrDataModel";
+import { PropertyData } from "../../../entities/models/admin/PropertyData";
 
 export class MongoAdminRepository implements IAdminRepository {
   
@@ -66,8 +67,11 @@ export class MongoAdminRepository implements IAdminRepository {
     const adminData = await AdminModel.findOne({_id: id});
     return adminData;     
   }
+  
+  async CreatePropertyData(propertyData: PropertyData): Promise<any> {
+     return  await  QrModel.create(propertyData);
+  }
 
-  // async GenerateQrCode(qrCode: string): Promise<string>{
-  //   return QrModel.create(qrCode);
-  // }
+
+
 }

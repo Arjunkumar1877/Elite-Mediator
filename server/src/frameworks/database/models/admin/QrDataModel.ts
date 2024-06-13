@@ -2,6 +2,15 @@ import mongoose from "mongoose";
 
 
 const qrDataSchema = new mongoose.Schema({
+    adminId: {
+        type: String,
+        required: true
+    },
+    propId: {
+        type: String,
+        required: true,
+        unique: true
+    },
     propertyName:{
         type: String,
         required: true,
