@@ -1,6 +1,7 @@
 import { AdminLoginController } from '../../interfaceAdapters/controllers/Admin/AdminLoginController';
 import { GenerateQrController } from '../../interfaceAdapters/controllers/Admin/GenerateQrCodeController';
 import { GetAdminDataController } from '../../interfaceAdapters/controllers/Admin/GetAdminDataController';
+import { GetAdminPropertyDataController } from '../../interfaceAdapters/controllers/Admin/GetAdminPropertyDataController';
 import { GetUnverifiedAdminController } from '../../interfaceAdapters/controllers/Admin/GetUnverifiedAdminController';
 import { GoogleOAthController } from '../../interfaceAdapters/controllers/Admin/GoogleOAuthController';
 import { SavePropertDataController } from '../../interfaceAdapters/controllers/Admin/SavePropertyDataController';
@@ -11,6 +12,7 @@ import { MongoAdminRepository } from '../../interfaceAdapters/repositories/admin
 import { AdminLoginUseCase } from '../../useCases/admin/AdminLoginUseCase';
 import { AdminSignupUseCase } from '../../useCases/admin/AdminSignUseCase';
 import { GetAdminDataUseCase } from '../../useCases/admin/GetAdminDataUseCase';
+import { GetAdminPropertDataUseCase } from '../../useCases/admin/GetAdminPropertyDataUseCase';
 import { GetUnverifiedAdminDataUsecase } from '../../useCases/admin/GetUnverifiedAdminUseCase';
 import { GoogleAuthUseCase } from '../../useCases/admin/GoogleAuthUseCase';
 import { SavePropertyDataUseCase } from '../../useCases/admin/SavePropertyDataUseCase';
@@ -59,7 +61,12 @@ export const InjectedGenerateQrCodeController = new GenerateQrController(generat
 
 
 // -----------------------------| GENERATE AND SEND QRCODE TO THE CLIENT INJECTION ----------------------------------------------------------------------------------------
-const savePropertDataUse = new SavePropertyDataUseCase(mongoRepo);
-export const InjectedSavePropertyDataController = new SavePropertDataController(savePropertDataUse);
+const savePropertyDataUse = new SavePropertyDataUseCase(mongoRepo);
+export const InjectedSavePropertyDataController = new SavePropertDataController(savePropertyDataUse);
+
+
+// -----------------------------| GET EACH ADMIN'S PROPERTY DATA AND QRCODE'S INJECTION ----------------------------------------------------------------------------------------
+const getAdminPropertyDataUse = new GetAdminPropertDataUseCase(mongoRepo);
+export const InjectedGetAdminPropertyDataController = new GetAdminPropertyDataController(getAdminPropertyDataUse);
 
 

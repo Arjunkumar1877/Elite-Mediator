@@ -1,5 +1,5 @@
 import { PropertyData } from "../../entities/models/admin/PropertyData";
-import { ISavePropertDataUseCase } from "../../entities/useCasesInterfaces/Admin/ISAvePropertyDataUseCase";
+import { ISavePropertDataUseCase } from "../../entities/useCasesInterfaces/Admin/ISavePropertyDataUseCase";
 import { IAdminRepository } from "../../interfaceAdapters/repositories/admin/IAdminRepository";
 
 

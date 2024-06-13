@@ -72,6 +72,8 @@ export class MongoAdminRepository implements IAdminRepository {
      return  await  QrModel.create(propertyData);
   }
 
-
+  async FindAdminsPropertDatas(id: string): Promise<PropertyData[] | null> {
+    return await QrModel.find({adminId: id});
+ }
 
 }

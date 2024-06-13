@@ -11,5 +11,5 @@ export interface IAdminRepository {
     GoogleOAuth(admin: Admin): Promise<Admin | null>;
     UpdateAdminData(admin: Admin, id: string): Promise<Admin | null>;
     CreatePropertyData(propertyData: PropertyData): Promise<PropertyData | null>;
-    // GenerateQrCode(qrCode: string): Promise<string>
+    FindAdminsPropertDatas(id: string): Promise<PropertyData[] | null>;
 }

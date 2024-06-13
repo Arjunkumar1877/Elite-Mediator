@@ -1,5 +1,5 @@
-import { ISavePropertDataUseCase } from "../../../entities/useCasesInterfaces/Admin/ISAvePropertyDataUseCase";
 import { Req, Res } from "../../../frameworks/types/ServerTypes";
+import { ISavePropertDataUseCase } from "../../../entities/useCasesInterfaces/Admin/ISavePropertyDataUseCase";
 
 export class SavePropertDataController {
   constructor(private isavepropertydatausecase: ISavePropertDataUseCase) {}
