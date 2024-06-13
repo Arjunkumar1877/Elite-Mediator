@@ -5,7 +5,7 @@ export class AdminLoginController {
   constructor(private iadminloginusecase: IAdminLoginUseCase) {}
 
   async login(req: Req, res: Res) {
-    console.log("login ❤️❤️❤️❤️")
+    console.log("login ❤️❤️❤️❤️");
     try {
       const data = await this.iadminloginusecase.LoginVerifyAdmin(req.body.email, req.body.password);
       console.log(data);

@@ -1,7 +1,7 @@
 import { Admin } from "../../../entities/models/admin/Admin";
 import { SuperAdmin } from "../../../entities/models/superAdmin/SuperAdmin";
-import { AdminModel } from "../../../frameworks/database/models/AdminModel";
-import { SuperAdminModel } from "../../../frameworks/database/models/SuperAdminModel";
+import { AdminModel } from "../../../frameworks/database/models/admin/AdminModel";
+import { SuperAdminModel } from "../../../frameworks/database/models/superAdmin/SuperAdminModel";
 import { ISuperAdminRepository } from "./ISuperAdminRepository";
 
 export class MongoSuperAdminRepository implements ISuperAdminRepository{

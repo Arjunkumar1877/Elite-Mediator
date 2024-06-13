@@ -1,4 +1,5 @@
 import { AdminLoginController } from '../../interfaceAdapters/controllers/Admin/AdminLoginController';
+import { GenerateQrController } from '../../interfaceAdapters/controllers/Admin/GenerateQrCodeController';
 import { GetAdminDataController } from '../../interfaceAdapters/controllers/Admin/GetAdminDataController';
 import { GetUnverifiedAdminController } from '../../interfaceAdapters/controllers/Admin/GetUnverifiedAdminController';
 import { GoogleOAthController } from '../../interfaceAdapters/controllers/Admin/GoogleOAuthController';
@@ -6,13 +7,14 @@ import { AdminSignupController } from '../../interfaceAdapters/controllers/Admin
 import { UpdateAdminProfileController } from '../../interfaceAdapters/controllers/Admin/UpdateAdminProfileController';
 import { UpdateUnverifiedAdminController } from '../../interfaceAdapters/controllers/Admin/UpdateUnverifiedAdminController';
 import { MongoAdminRepository } from '../../interfaceAdapters/repositories/admin/AdminRepository';
-import { AdminLoginUseCase } from '../../useCases/Admin/AdminLoginUseCase';
-import { AdminSignupUseCase } from '../../useCases/Admin/AdminSignUseCase';
-import { GetAdminDataUseCase } from '../../useCases/Admin/GetAdminDataUseCase';
-import { GetUnverifiedAdminDataUsecase } from '../../useCases/Admin/GetUnverifiedAdminUseCase';
-import { GoogleAuthUseCase } from '../../useCases/Admin/GoogleAuthUseCase';
-import { UpdateAdminProfileUseCase } from '../../useCases/Admin/UpdateAdminUseCase';
-import { UpdateUnverifiedUseCase } from '../../useCases/Admin/UpdateUnverifiedUserUseCase';
+import { AdminLoginUseCase } from '../../useCases/admin/AdminLoginUseCase';
+import { AdminSignupUseCase } from '../../useCases/admin/AdminSignUseCase';
+import { GetAdminDataUseCase } from '../../useCases/admin/GetAdminDataUseCase';
+import { GetUnverifiedAdminDataUsecase } from '../../useCases/admin/GetUnverifiedAdminUseCase';
+import { GoogleAuthUseCase } from '../../useCases/admin/GoogleAuthUseCase';
+import { UpdateAdminProfileUseCase } from '../../useCases/admin/UpdateAdminUseCase';
+import { UpdateUnverifiedUseCase } from '../../useCases/admin/UpdateUnverifiedUserUseCase';
+import { GenerateQrCode } from '../services/QrGenerateService/GenerateQrCode.';
 const mongoRepo = new MongoAdminRepository();
 
 // -----------------------------| ADMIN SIGNUP INJECTION ----------------------------------------------------------------------------------------
@@ -47,5 +49,10 @@ export const InjectedUpdateAdminProfileController = new UpdateAdminProfileContro
 // -----------------------------| UPDATE ADMIN PROFILE DETAILS INJECTION ----------------------------------------------------------------------------------------
 const getAdminDataByIdUse = new GetAdminDataUseCase(mongoRepo);
 export const InjectedGetAdminDataController = new GetAdminDataController(getAdminDataByIdUse);
+
+
+// -----------------------------| GENERATE AND SEND QRCODE TO THE CLIENT ----------------------------------------------------------------------------------------
+const generateQrCodeUse = new GenerateQrCode();
+export const InjectedGenerateQrCodeController = new GenerateQrController(generateQrCodeUse);
 
 

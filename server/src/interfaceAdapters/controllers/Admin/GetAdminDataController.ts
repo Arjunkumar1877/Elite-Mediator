@@ -1,7 +1,6 @@
 import {  IGetAdminUseCase } from "../../../entities/useCasesInterfaces/Admin/IGetAdminUseCase";
 import { Req, Res } from "../../../frameworks/types/ServerTypes";
-import { GetAdminDataUseCase } from "../../../useCases/Admin/GetAdminDataUseCase";
-import { MongoAdminRepository } from "../../repositories/admin/AdminRepository";
+
 
 export class GetAdminDataController {
   constructor(private igetadmindatausecase: IGetAdminUseCase){}

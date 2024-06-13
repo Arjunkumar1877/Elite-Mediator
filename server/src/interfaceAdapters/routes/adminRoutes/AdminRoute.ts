@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { Route } from "../../../frameworks/types/ServerTypes";
 import { JwtTokenAdapter } from "../../../frameworks/services/jwtService/TokenService";
-import { InjectedAdminSignUpController, InjectedAdminlogincontroller, InjectedGetAdminDataController, InjectedGetUnverifiedAdminController, InjectedGoogleLoginController, InjectedUpdateAdminProfileController, InjectedUpdateVerifyAdminController } from "../../../frameworks/injection/Injects";
+import { InjectedAdminSignUpController, InjectedAdminlogincontroller, InjectedGenerateQrCodeController, InjectedGetAdminDataController, InjectedGetUnverifiedAdminController, InjectedGoogleLoginController, InjectedUpdateAdminProfileController, InjectedUpdateVerifyAdminController } from "../../../frameworks/injection/Injects";
 const router: Route = Router();
 
 const JwtToken = new JwtTokenAdapter();
@@ -26,5 +26,9 @@ router.post("/update_admin/:id",JwtToken.verifyToken,  InjectedUpdateAdminProfil
 
 // -------------------------------------| GET THE ADMIN DATA BY THE ADMIN ID -------------------------------------------------------------|
 router.get("/get_admin/:id",JwtToken.verifyToken, InjectedGetAdminDataController.GetAdminDataByIdController.bind(InjectedGetAdminDataController));
+
+// -------------------------------------| GET THE GENRATED ADMIN CODE --------------------------------------------------------------------|
+router.get("/generate_code/:adminId/:propertyId", InjectedGenerateQrCodeController.GenerateQrCode.bind(InjectedGenerateQrCodeController));
+
 
 export default router;
