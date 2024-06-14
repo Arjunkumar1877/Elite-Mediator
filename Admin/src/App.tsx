@@ -17,6 +17,7 @@ import GenerateQrCodePage from "./component/Admin/GenerateQrCodePage";
 import AdminChatListPage from "./component/Admin/AdminChatListPage";
 import AdminChatPage from "./component/Admin/AdminChatPage";
 import InitialDataPage from "./component/User/UserInitialLogin";
+import UserLoginOtpVerify from "./component/User/UserLoginOtpVerify";
 
 
 export default function App() {
@@ -44,7 +45,7 @@ export default function App() {
           </Route>
 
           <Route path='/new_user' element={<InitialDataPage/>} />
-          {/* <Route path="/user_verify_otp_page/:id" element={} /> */}
+          <Route path="/user_verify_otp_page/:id" element={<UserLoginOtpVerify />} />
 
         </Routes>
       </BrowserRouter>

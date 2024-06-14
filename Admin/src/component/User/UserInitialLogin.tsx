@@ -17,6 +17,95 @@ type UserType = {
 };
 
 const InitialDataPage = () => {
+  const navigate = useNavigate();
+  const useQuery = () => {
+    return new URLSearchParams(useLocation().search);
+  };
+  const query = useQuery();
+  const adminIdQ = query.get('adminId');
+  const propIdQ = query.get('propId');
+  const [confirmOtp, setConfirmOtp] = useState<any>(null);
+  const [formData, setFormData] = useState<UserType>({
+    userId: "",
+    adminId: adminIdQ || "",
+    propId: propIdQ || "",
+    username: "",
+    purpose: "",
+    phone: "",
+    firebaseCode: "",
+  });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+console.log(propIdQ  + "   " + adminIdQ)
+
+  const validateForm = () => {
+    return formData.username && formData.purpose && formData.phone;
+  };
+
+  const onSubmit = async (updatedFormData: UserType) => {
+    try {
+      const res = await fetch("/user/create_user", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(updatedFormData),
+      });
+  
+      if (res.ok) {
+        const data = await res.json();
+        console.log(data);
+  
+        toast.success("Verification message successfully sent to your mobile");
+        navigate(`/user_verify_otp_page/${data.userId}`);
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("Something went wrong. Please try again.");
+    }
+  };
+  
+  const onSendOtp = async () => {
+    if (!validateForm()) {
+      return toast.error("Please fill out all fields.");
+    }
+  
+    try {
+      const recaptchaVerifier = new RecaptchaVerifier(auth, "recaptcha", {});
+      const phoneNum = "+91" + formData.phone;
+      const confirmationResult = await signInWithPhoneNumber(
+        auth,
+        phoneNum,
+        recaptchaVerifier
+      );
+  
+      if (confirmationResult) {
+        const userIdS = formData.phone + "" + Date.now();
+        const updatedFormData = {
+          ...formData,
+          userId: userIdS,
+          firebaseCode: confirmationResult.verificationId,
+        };
+  
+        setFormData(updatedFormData);
+        onSubmit(updatedFormData);
+      } else {
+        console.log("Error confirming the captcha.");
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("Failed to send OTP. Please try again.");
+    }
+  };
+  
+
+  console.log(formData)
 
   return (
     <div className="relative min-h-screen flex flex-col items-center justify-center bg-gray-100 p-4">

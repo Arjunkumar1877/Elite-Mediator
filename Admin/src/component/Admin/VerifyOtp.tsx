@@ -8,7 +8,7 @@ import toast from 'react-hot-toast';
 
 const OtpVerification: React.FC = () => {
   const [otp, setOtp] = useState<string[]>(new Array(6).fill(""));
-  const [seconds, setSeconds] = useState(0);
+  const [seconds, setSeconds] = useState(30);
   const [adminData, setAdminData] = useState<any>({});
   const params = useParams<{ ph: string  } >();
   const navigate = useNavigate();
