@@ -16,7 +16,7 @@ type PropertyDataType = {
   code: string;
 };
 const PropertyDataSection = () => {
-  const { currentUser } = useSelector((state: any) => state.user);
+  const { currentAdmin } = useSelector((state: any) => state.admin);
   const [propertyData, setPropertyData] = useState<PropertyDataType[]>([]);
   // const [qrCode, setQrCode] = useState();
  
@@ -25,7 +25,7 @@ const PropertyDataSection = () => {
     const fetchPropertyData = async () => {
       try {
         const res = await axios.get(
-          `/api/get_admin_property_data/${currentUser._id}`
+          `/api/get_admin_property_data/${currentAdmin._id}`
         );
         if (res.status === 200) {
           const data: PropertyDataType[] = res.data;
@@ -49,9 +49,9 @@ const PropertyDataSection = () => {
 
   const handleDelete = async (id: string) => {
     try {
-      const res = axios.delete(`/api/get_admin_property_data/${id}`);
+      const res = axios.get(`/api/delete_admin_property_data/${id}`);
 
-      const data: PropertyDataType[] = res?.data;
+      const data:any = res?.data;
     } catch (error) {}
     y;
   };

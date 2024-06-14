@@ -16,6 +16,7 @@ import PropertyDataPage from "./component/Admin/PropertyDataPage";
 import GenerateQrCodePage from "./component/Admin/GenerateQrCodePage";
 import AdminChatListPage from "./component/Admin/AdminChatListPage";
 import AdminChatPage from "./component/Admin/AdminChatPage";
+import InitialDataPage from "./component/User/UserInitialLogin";
 
 
 export default function App() {
@@ -41,6 +42,9 @@ export default function App() {
             <Route path="/chat_list" element={<AdminChatListPage />} />
             <Route path="/admin_chat/:id" element={<AdminChatPage />} />
           </Route>
+
+          <Route path='/new_user' element={<InitialDataPage/>} />
+          {/* <Route path="/user_verify_otp_page/:id" element={} /> */}
 
         </Routes>
       </BrowserRouter>

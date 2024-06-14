@@ -17,12 +17,12 @@ import { ImCross } from "react-icons/im";
 
 
 const ProfileSection = () => {
-  const { currentUser } = useSelector((state: any)=> state.user);
+  const { currentAdmin } = useSelector((state: any)=> state.admin);
   const [adminData, setAdminData] = useState<any>()
 
   useEffect(()=>{
     const fetchUser = async()=>{
-    const res = await fetch(`/api/get_admin/${currentUser._id}`);
+    const res = await fetch(`/api/get_admin/${currentAdmin._id}`);
 
     if(res.ok){
       const data = await res.json();

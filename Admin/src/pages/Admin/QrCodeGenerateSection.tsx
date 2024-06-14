@@ -10,34 +10,32 @@ type FormDataType = {
   propertyName: string;
   propertyAddress: string;
   allowVedioCalls: boolean;
-  verifyUsers?: boolean;
   url: string;
   code: string;
 };
 
 const QrCodeGenerateSection = () => {
-  const { currentUser } = useSelector((state: any) => state.user);
+  const { currentAdmin } = useSelector((state: any) => state.admin);
   const navigate = useNavigate()
-  const propId = currentUser._id + Date.now();
+  const propId = currentAdmin._id + Date.now();
   const [QrCode, setQrCode] = useState<string>();
   const protocol = window.location.protocol;
   const host = window.location.host;
-  const url = `${protocol}//${host}/new_user?admin=${currentUser._id}&propertyTime=${propId}`;
+  const url = `${protocol}//${host}/new_user?adminId=${currentAdmin._id}&propId=${propId}`;
   
   const [formData, setFormData] = useState<FormDataType>({
-    adminId: currentUser._id,
+    adminId: currentAdmin._id,
     propId: propId,
     propertyName: "",
     propertyAddress: "",
     allowVedioCalls: false,
-    verifyUsers: false,
     url: url,
     code: "",
   });
 
   const handleGenerateCode = async () => {
     try {
-      const res = await fetch(`/api/generate_code/${currentUser._id}/${propId}`);
+      const res = await fetch(`/api/generate_code/${currentAdmin._id}/${propId}`);
 
       if (res.ok) {
         const data = await res.json();
@@ -166,37 +164,6 @@ const QrCodeGenerateSection = () => {
                 </div>
               </div>
 
-              <div className="flex flex-col w-full lg:w-1/2">
-                <div className="flex">
-                  <p className="font-medium">Allow Only Verified Users?</p>
-                </div>
-                <div className="border-2 flex rounded-lg justify-around py-4 gap-10">
-                  <div className="flex items-center">
-                    <input 
-                      type="radio" 
-                      name="verifyUsers" 
-                      id="verifiedYes" 
-                      className="mr-2" 
-                      value="true"
-                      checked={formData.verifyUsers === true}
-                      onChange={() => setFormData({ ...formData, verifyUsers: true })}
-                    />
-                    <label htmlFor="verifiedYes">Yes</label>
-                  </div>
-                  <div className="flex items-center">
-                    <input 
-                      type="radio" 
-                      name="verifyUsers" 
-                      id="verifiedNo" 
-                      className="mr-2" 
-                      value="false"
-                      checked={formData.verifyUsers === false}
-                      onChange={() => setFormData({ ...formData, verifyUsers: false })}
-                    />
-                    <label htmlFor="verifiedNo">No</label>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
 

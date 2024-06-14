@@ -4,6 +4,7 @@ import cookieParser from "cookie-parser";
 // import { serverPackage } from '../types/ServerTypes';
 import adminRoutes from "../../../interfaceAdapters/routes/adminRoutes/AdminRoute";
 import superAdminRoute from "../../../interfaceAdapters/routes/superAdminRoutes/SuperAdminRoute";
+import userRoutes from '../../../interfaceAdapters/routes/userRoutes/UserRoute';
 import { serverPackage } from "../../types/ServerTypes";
 import { Request, Response, NextFunction, ErrorRequestHandler } from "express";
 import cors from "cors";
@@ -17,6 +18,7 @@ export class ExpressServer {
     app.use(cookieParser());
 
     app.use("/api", adminRoutes);
+    app.use("/user", userRoutes);
     app.use("/superadmin", superAdminRoute);
     // app.post("/data", (req, res)=>{
     //     console.log(req.body)

@@ -23,10 +23,6 @@ const qrDataSchema = new mongoose.Schema({
         type: Boolean,
         required: true
     },
-    verifyUsers: {
-        type: Boolean,
-        required: true
-    },
     url: {
         type: String,
         required: true

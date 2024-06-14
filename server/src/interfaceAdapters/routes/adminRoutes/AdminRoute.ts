@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { Route } from "../../../frameworks/types/ServerTypes";
 import { JwtTokenAdapter } from "../../../frameworks/services/jwtService/TokenService";
-import { InjectedAdminSignUpController, InjectedAdminlogincontroller, InjectedGenerateQrCodeController, InjectedGetAdminDataController, InjectedGetAdminPropertyDataController, InjectedGetUnverifiedAdminController, InjectedGoogleLoginController, InjectedSavePropertyDataController, InjectedUpdateAdminProfileController, InjectedUpdateVerifyAdminController } from "../../../frameworks/injection/Injects";
+import { InjectedAdminSignUpController, InjectedAdminlogincontroller, InjectedGenerateQrCodeController, InjectedGetAdminDataController, InjectedGetAdminPropertyDataController, InjectedGetUnverifiedAdminController, InjectedGoogleLoginController, InjectedSavePropertyDataController, InjectedUpdateAdminProfileController, InjectedUpdateVerifyAdminController } from "../../../frameworks/injection/AdminInjects";
 const router: Route = Router();
 
 const JwtToken = new JwtTokenAdapter();
@@ -35,6 +35,9 @@ router.post("/save_property_data", InjectedSavePropertyDataController.SaveProper
 
 // -------------------------------------| GET ADMINS PROPERTY DATA AND QRCODE --------------------------------------------------------------------|
 router.get("/get_admin_property_data/:id", InjectedGetAdminPropertyDataController.GetAdminPropertyDataControl.bind(InjectedGetAdminPropertyDataController));
+
+
+
 
 
 export default router;

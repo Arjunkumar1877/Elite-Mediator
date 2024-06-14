@@ -1,43 +1,42 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 type InitialStateType = {
-    currentUser: string | null;
+    currentAdmin: string | null;
     error: null | string;
     loading: boolean;
-}
+};
 
 const initialState: InitialStateType = {
-    currentUser: null,
+    currentAdmin: null,
     error: null,
     loading: false
-}
-
+};
 
 const userSlice = createSlice({
-    name: 'user',
+    name: 'admin',
     initialState,
     reducers: {
-        signInStart: (state)=>{
+        signInStart: (state) => {
             state.loading = true;
             state.error = null;
         },
-        signInSuccess: (state, action: PayloadAction<string>)=>{
-            state.currentUser = action.payload;
+        signInSuccess: (state, action: PayloadAction<string>) => {
+            state.currentAdmin = action.payload;
             state.loading = false;
             state.error = null;
         },
-        signInFailure: (state, action: PayloadAction<string>)=>{
+        signInFailure: (state, action: PayloadAction<string>) => {
             state.loading = false;
             state.error = action.payload;
         },
-        signoutSuccess: (state)=>{
-            state.currentUser = null;
+        signoutSuccess: (state) => {
+            state.currentAdmin = null;
             state.error = null;
             state.loading = false;
         }
     }
-})
+});
 
 export const { signInSuccess, signInStart, signInFailure, signoutSuccess } = userSlice.actions;
-export default userSlice.reducer;
 
+export default userSlice.reducer;

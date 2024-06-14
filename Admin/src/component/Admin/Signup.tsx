@@ -93,19 +93,7 @@ const Signup: React.FC = () => {
       return;
     } else {
       try {
-        const recaptchaVerifier = new RecaptchaVerifier(auth, "recaptcha", {});
-        const confirmationResult = await signInWithPhoneNumber(
-          auth,
-          phone,
-          recaptchaVerifier
-        );
-
-        if (confirmationResult) {
-          setConfirmOtp(confirmationResult);
-          onSubmit(confirmationResult);
-        } else {
-          console.log("Error confirming the captcha.");
-        }
+      
       } catch (error) {
         console.log(error);
       }

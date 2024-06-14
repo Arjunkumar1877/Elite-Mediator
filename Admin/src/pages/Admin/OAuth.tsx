@@ -2,7 +2,7 @@ import { auth } from "../../firebase/firebase";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
-import { signInSuccess } from "../../redux/user/userSlice";
+import { signInSuccess } from "../../redux/admin/adminSlice";
 import { FcGoogle } from "react-icons/fc";
 import toast from "react-hot-toast";
 

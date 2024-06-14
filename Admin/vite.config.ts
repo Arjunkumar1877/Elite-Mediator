@@ -9,6 +9,10 @@ export default defineConfig({
         target: 'http://localhost:7000',
         secure: false,
       },
+      '/user':{
+        target: 'http://localhost:7000',
+        secure: false,
+      },
     },
   },
   plugins: [react()],

@@ -50,7 +50,7 @@ const EditProfileSection: React.FC = () => {
   const [imageUploadError, setImageUploadError] = useState<string | null>(null);
 
   // const [profileImage, setProfileImage] = useState < string | null > (null);
-  const { currentUser } = useSelector((state: any) => state.user);
+  const { currentAdmin } = useSelector((state: any) => state.admin);
   const navigate = useNavigate();
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -103,7 +103,7 @@ const EditProfileSection: React.FC = () => {
 
   useEffect(() => {
     const fetchUser = async () => {
-      const res = await fetch(`/api/get_admin/${currentUser._id}`);
+      const res = await fetch(`/api/get_admin/${currentAdmin._id}`);
 
       if (res.ok) {
         const data = await res.json();
@@ -123,7 +123,7 @@ const EditProfileSection: React.FC = () => {
       }
     };
     fetchUser();
-  }, [currentUser._id]);
+  }, [currentAdmin._id]);
 
   const [validity, setValidity] = useState<Record<keyof ProfileData, boolean>>({
     username: true,
@@ -219,7 +219,7 @@ const EditProfileSection: React.FC = () => {
 
   const handleSave = async () => {
     try {
-      const res = await fetch(`/api/update_admin/${currentUser._id}`, {
+      const res = await fetch(`/api/update_admin/${currentAdmin._id}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -276,7 +276,7 @@ const EditProfileSection: React.FC = () => {
 
                   <img
                     src={profileData.image && profileData.image}
-                    alt="user"
+                    alt="admin"
                     className={`h-full w-full rounded-full  border-2 object-cover ${
                       imageUploadProgress &&
                       imageUploadProgress < 100 &&

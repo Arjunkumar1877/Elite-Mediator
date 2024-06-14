@@ -22,7 +22,7 @@ interface FormDataType {
 
 const UserVerifyData = () => {
   const navigate = useNavigate();
-  const { currentUser } = useSelector((state: any) => state.user);
+  const { currentAdmin } = useSelector((state: any) => state.admin);
   const [file, setFile] = useState<File | null>(null);
   const [imageUploadProgress, setImageUploadProgress] = useState<number | null>(
     null
@@ -34,11 +34,11 @@ const UserVerifyData = () => {
     city: "",
     pincode: "",
     landmark: "",
-    image: currentUser?.image || "",
+    image: currentAdmin?.image || "",
   });
 
   console.log(formData);
-  console.log(currentUser._id);
+  console.log(currentAdmin._id);
 
   const [formErrors, setFormErrors] = useState({
     address: false,
@@ -134,7 +134,7 @@ const UserVerifyData = () => {
     }
 
     try {
-      const res = await fetch(`/api/update_admin/${currentUser._id}`, {
+      const res = await fetch(`/api/update_admin/${currentAdmin._id}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

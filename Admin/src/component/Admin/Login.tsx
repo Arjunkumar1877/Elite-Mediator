@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { BsCheckCircleFill, BsXCircleFill } from "react-icons/bs";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import { signInStart,signInSuccess } from "../../redux/user/userSlice";
+import { signInStart,signInSuccess } from "../../redux/admin/adminSlice";
 import { FaEyeSlash } from "react-icons/fa";
 import OAuth from "../../pages/Admin/OAuth";
 import { IoEyeSharp } from "react-icons/io5";
@@ -16,14 +16,14 @@ const Login: React.FC = () => {
   const [passwordValid, setPasswordValid] = useState<boolean>(true);
   const [loginError, setLoginError] = useState<string>("");
   const [viewPassword, setViewPassword] = useState<boolean>(false);
-  const { currentUser } = useSelector((state: any) => state.user);
+  const { currentAdmin } = useSelector((state: any) => state.admin);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   useEffect(()=>{
-  if(currentUser && currentUser.address){
+  if(currentAdmin && currentAdmin.address){
     navigate('/profile')
-  }else if(currentUser && !currentUser.address){
+  }else if(currentAdmin && !currentAdmin.address){
     navigate('/admin-data')
   }
   },[])

@@ -7,12 +7,12 @@ import { Link } from "react-router-dom";
 
 function DashboardSection() {
   const [adminData, setAdminData] = useState<any>({})
-  const { currentUser } = useSelector((state: any)=> state.user);
+  const { currentAdmin } = useSelector((state: any)=> state.admin);
 
 
  useEffect(()=>{
     const fetchUser = async()=>{
-    const res = await fetch(`/api/get_admin/${currentUser._id}`);
+    const res = await fetch(`/api/get_admin/${currentAdmin._id}`);
 
     if(res.ok){
       const data = await res.json();

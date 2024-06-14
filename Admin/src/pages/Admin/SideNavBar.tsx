@@ -8,7 +8,7 @@ import { RiLogoutBoxLine } from "react-icons/ri";
 import { FaAngleRight } from "react-icons/fa6";
 import { MdKeyboardArrowLeft } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
-import { signoutSuccess } from "../../redux/user/userSlice";
+import { signoutSuccess } from "../../redux/admin/adminSlice";
 import { Link, useLocation } from "react-router-dom";
 
 const SideNavBar = ({ navShowSet }: { navShowSet: (showNav: boolean) => void; }) => {
