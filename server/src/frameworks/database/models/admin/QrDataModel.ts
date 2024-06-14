@@ -14,7 +14,6 @@ const qrDataSchema = new mongoose.Schema({
     propertyName:{
         type: String,
         required: true,
-        unique: true
     },
     propertyAddress: {
         type: String,

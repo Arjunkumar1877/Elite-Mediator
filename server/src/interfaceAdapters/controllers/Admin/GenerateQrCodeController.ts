@@ -6,7 +6,7 @@ export class GenerateQrController {
 
     async GenerateQrCode(req: Req, res: Res): Promise<void> {
         try {
-            const url: string = `${req.protocol}://${req.headers.host}/user?admin=${req.params.adminId}&propertyTime=${req.params.propertyId}`;
+            const url: string = `${req.protocol}://${req.headers.host}/new_user?admin=${req.params.adminId}&propertyTime=${req.params.propertyId}`;
             const qrCodeUrl = await this.igenerateqrcode.GenerateQrCode(url);
             res.json({ qrCodeUrl });
         } catch (error) {

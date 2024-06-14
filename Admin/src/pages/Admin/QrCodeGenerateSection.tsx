@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import toast from "react-hot-toast";
 import { TfiSave } from "react-icons/tfi";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 type FormDataType = {
   adminId: string;
@@ -16,11 +17,12 @@ type FormDataType = {
 
 const QrCodeGenerateSection = () => {
   const { currentUser } = useSelector((state: any) => state.user);
+  const navigate = useNavigate()
   const propId = currentUser._id + Date.now();
   const [QrCode, setQrCode] = useState<string>();
   const protocol = window.location.protocol;
   const host = window.location.host;
-  const url = `${protocol}//${host}/user?admin=${currentUser._id}&propertyTime=${propId}`;
+  const url = `${protocol}//${host}/new_user?admin=${currentUser._id}&propertyTime=${propId}`;
   
   const [formData, setFormData] = useState<FormDataType>({
     adminId: currentUser._id,
@@ -73,7 +75,8 @@ const QrCodeGenerateSection = () => {
       if (res.ok) {
         console.log("Data saved successfully");
         downloadQRCode();
-        toast("Property data saved successfully..")
+        toast("Property data saved successfully..");
+        navigate('/qrCodes')
       }
     } catch (error) {
       console.log(error);

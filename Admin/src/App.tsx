@@ -12,7 +12,7 @@ import EditProfilePage from "./component/Admin/EditProfilePage";
 import AdminPrivateRoute from "./component/Admin/AdminPrivateRoute";
 import  { Toaster } from "react-hot-toast";
 import DashboardPage from "./component/Admin/DashboardPage";
-import QrCodesPage from "./component/Admin/QrCodesPage";
+import PropertyDataPage from "./component/Admin/PropertyDataPage";
 import GenerateQrCodePage from "./component/Admin/GenerateQrCodePage";
 import AdminChatListPage from "./component/Admin/AdminChatListPage";
 import AdminChatPage from "./component/Admin/AdminChatPage";
@@ -36,7 +36,7 @@ export default function App() {
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/editprofile" element={<EditProfilePage />} />
             <Route path="/dashboard" element={<DashboardPage />} />
-            <Route path="/qrcodes" element={<QrCodesPage />} />
+            <Route path="/qrcodes" element={<PropertyDataPage />} />
             <Route path="/generate_qr" element={<GenerateQrCodePage />} />
             <Route path="/chat_list" element={<AdminChatListPage />} />
             <Route path="/admin_chat/:id" element={<AdminChatPage />} />
@@ -48,7 +48,6 @@ export default function App() {
     </div>
   );
 }
-
 
 
 
