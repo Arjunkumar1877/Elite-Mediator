@@ -1,5 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
-import userReducer from './admin/adminSlice';
+import adminReducer from './admin/adminSlice';
+import userReducer from './user/UserSlice';
 import storage from 'redux-persist/lib/storage';
 import { persistReducer, persistStore, PersistConfig } from "redux-persist";
 
@@ -11,11 +12,13 @@ const persistConfig: PersistConfig<any> = {
 }
 
 
-const persistedReducer = persistReducer(persistConfig, userReducer);
+const persistedReducer = persistReducer(persistConfig, adminReducer);
+const persistedReduce = persistReducer(persistConfig, userReducer);
 
 export const store = configureStore({
     reducer: {
-        admin: persistedReducer
+        admin: persistedReducer,
+        user: persistedReduce
     },
     middleware: (getDefaultMiddleware)=>
         getDefaultMiddleware({

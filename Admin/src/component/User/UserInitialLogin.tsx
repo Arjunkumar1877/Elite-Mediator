@@ -1,11 +1,13 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { BsCheckCircleFill } from "react-icons/bs";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { auth } from "../../firebase/firebase";
 import { signInWithPhoneNumber, RecaptchaVerifier } from "firebase/auth";
+import { useSelector } from "react-redux";
 
 type UserType = {
+  _id?: string;
   userId: string;
   adminId: string;
   propId: string;
@@ -17,6 +19,7 @@ type UserType = {
 };
 
 const InitialDataPage = () => {
+  const { currentUser } = useSelector((state: any)=> state.user);
   const navigate = useNavigate();
   const useQuery = () => {
     return new URLSearchParams(useLocation().search);
@@ -24,7 +27,7 @@ const InitialDataPage = () => {
   const query = useQuery();
   const adminIdQ = query.get('adminId');
   const propIdQ = query.get('propId');
-  const [confirmOtp, setConfirmOtp] = useState<any>(null);
+  // const [confirmOtp, setConfirmOtp] = useState<any>(null);
   const [formData, setFormData] = useState<UserType>({
     userId: "",
     adminId: adminIdQ || "",
@@ -34,6 +37,49 @@ const InitialDataPage = () => {
     phone: "",
     firebaseCode: "",
   });
+  
+  const [exisitingUserData, setExistingUserData] = useState<UserType>({
+    userId: "",
+    adminId: adminIdQ || "",
+    propId: propIdQ || "",
+    username: "",
+    purpose: "",
+    phone: "",
+    firebaseCode: "",
+  });
+  
+  const [userverified, setUserVerified] = useState<boolean>(false);
+  // const fetchIUserExisits = async()=>{
+  //   try {
+  //     const res = await fetch("/user/get_user_phone", {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify({phone: formData.phone}),
+  //     });
+  
+  //     if (res.ok) {
+  //       const data: UserType = await res.json();
+  //       console.log(data);
+  //     setExistingUserData(data); 
+       
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //     toast.error("Something went wrong. Please try again.");
+  //   }
+  // }
+
+
+
+  // useEffect(()=>{
+  // if(currentUser){
+  //   fetchIUserExisits();
+  // }
+  // }, [formData.phone])
+  
+
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -42,33 +88,42 @@ const InitialDataPage = () => {
       [name]: value,
     }));
   };
-console.log(propIdQ  + "   " + adminIdQ)
 
   const validateForm = () => {
     return formData.username && formData.purpose && formData.phone;
   };
 
   const onSubmit = async (updatedFormData: UserType) => {
-    try {
-      const res = await fetch("/user/create_user", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(updatedFormData),
-      });
-  
-      if (res.ok) {
-        const data = await res.json();
-        console.log(data);
-  
-        toast.success("Verification message successfully sent to your mobile");
-        navigate(`/user_verify_otp_page/${data.userId}`);
+  try {
+    const res = await fetch("/user/create_user", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(updatedFormData),
+    });
+
+    if (res.ok) {
+      const data: UserType = await res.json();
+      console.log(data);
+      if(currentUser){
+        if(currentUser.userId === data.userId){
+          if(data.verified){
+            setUserVerified(true);
+            navigate("/heyyy")
+          }
+        }else{
+          toast.success("Verification message successfully sent to your mobile");
+          navigate(`/user_verify_otp_page/${data.userId}`);
+        }
       }
-    } catch (error) {
-      console.log(error);
-      toast.error("Something went wrong. Please try again.");
+
+     
     }
+  } catch (error) {
+    console.log(error);
+    toast.error("Something went wrong. Please try again.");
+  }
   };
   
   const onSendOtp = async () => {
@@ -105,7 +160,7 @@ console.log(propIdQ  + "   " + adminIdQ)
   };
   
 
-  console.log(formData)
+  console.log(exisitingUserData)
 
   return (
     <div className="relative min-h-screen flex flex-col items-center justify-center bg-gray-100 p-4">
@@ -115,6 +170,8 @@ console.log(propIdQ  + "   " + adminIdQ)
           Register
         </button>
       </div>
+
+
       <div className="w-full max-w-4xl mx-auto p-1 px-4 lg:px-16">
         <div className="p-6 lg:p-10 flex flex-col justify-center items-center rounded relative z-10 border-2 bg-white gap-5 shadow-md">
           <h1 className="uppercase text-lg lg:text-4xl font-semibold text-center p-4 lg:p-10 w-full">

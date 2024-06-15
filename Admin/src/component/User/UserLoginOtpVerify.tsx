@@ -3,6 +3,8 @@ import { ChangeEvent, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { auth } from "../../firebase/firebase";
 import toast from "react-hot-toast";
+import { useDispatch, useSelector } from "react-redux";
+import { signInSuccess } from "../../redux/user/UserSlice";
 
 type UserDataType = {
   _id?: string;
@@ -19,9 +21,12 @@ type UserDataType = {
 const UserLoginOtpVerify = () => {
     const [otp, setOtp] = useState<string[]>(new Array(6).fill(""));
     const [seconds, setSeconds] = useState(30);
-    const [userData, setUserData] = useState<UserDataType>({});
+    const [userData, setUserData] = useState<any>();
     const params = useParams<{ id: string  } >();
     const navigate = useNavigate();
+    const { currentUser} = useSelector((state: any)=> state.user);
+    const dispatch = useDispatch();
+
   
     useEffect(() => {
       if (seconds > 0) {
@@ -33,7 +38,7 @@ const UserLoginOtpVerify = () => {
     useEffect(() => {
       const fetchUser = async () => {
         try {
-          const res = await fetch(`/user/unverified_user/${params.id}`);
+          const res = await fetch(`/user/get_user_by_id/${params.id}`);
           if (res.ok) {
             const data = await res.json();
             setUserData(data);
@@ -65,7 +70,7 @@ const UserLoginOtpVerify = () => {
       setSeconds(60);
       try {
         const recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha', {});
-        const confirmationResult = await signInWithPhoneNumber(auth, "+"+userData?.phone, recaptchaVerifier);
+        const confirmationResult = await signInWithPhoneNumber(auth, "+"+userData[0]?.phone, recaptchaVerifier);
           console.log(confirmationResult)
         if (confirmationResult) {
           const res = await fetch('/user/user_update_firebase_verify', {
@@ -73,7 +78,7 @@ const UserLoginOtpVerify = () => {
             headers: {
               "Content-Type": "application/json"
             },
-            body: JSON.stringify({ firebaseConfirm: confirmationResult.verificationId, phone: userData.phone })
+            body: JSON.stringify({ firebaseConfirm: confirmationResult.verificationId, phone: userData[0]?.phone })
           });
   
           if (res.ok) {
@@ -93,7 +98,7 @@ const UserLoginOtpVerify = () => {
   
     const handleVerifyOtp = async () => {
       const enteredOtp = otp.join('');
-      const verificationId = userData.firebaseCode;
+      const verificationId = userData[0]?.firebaseCode;
 
   
       if (!verificationId) {
@@ -105,10 +110,31 @@ const UserLoginOtpVerify = () => {
         const credential = PhoneAuthProvider.credential(verificationId, enteredOtp);
         const verifyResult = await signInWithCredential(auth, credential);
         console.log('Verification result:', verifyResult);
-  
+        
         // Post-verification logic here
        toast('OTP verification successful!');
-        navigate('/')
+       dispatch(signInSuccess(userData[0]));
+       if(verifyResult){
+        try {
+          const res = await fetch(`/user/user_update_verify/${userData[0].userId}`, {
+            method: "POST"
+          });
+
+          if(res.ok){
+            const data = await res.json();
+
+            if(data.verified){
+              setUserData(data)
+       dispatch(signInSuccess(userData[0]));
+
+              navigate("/user_chat")
+            }
+          }
+        } catch (error) {
+          
+        }
+       }
+
       } catch (error: any) {
         if (error.code === 'auth/code-expired') {
           toast('The OTP has expired. Please request a new one.');
@@ -121,7 +147,8 @@ const UserLoginOtpVerify = () => {
       }
     };
 
-    console.log(userData)
+    console.log(userData);
+    console.log(currentUser);
     return (
       <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4">
         <div className="bg-white shadow-lg rounded-lg p-8 max-w-sm w-full">

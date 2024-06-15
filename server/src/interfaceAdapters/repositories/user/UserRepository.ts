@@ -13,7 +13,7 @@ export class MongoUserRepository implements IUserRepository{
         return data;
     }
 
-    async UpdateUserData(userId: string): Promise<any> {
+    async FindByIdAndVerify(userId: string): Promise<any> {
         const savedData = await UserModel.findOneAndUpdate({userId: userId}, {
             $set: {
                 verified: true
@@ -23,7 +23,13 @@ export class MongoUserRepository implements IUserRepository{
         if(savedData){
             const data = await UserModel.findOne({userId: userId});
             return data;
+        }else{
+            return 'User data unavailable'
         }
     }
     
+    async FindUserByPhone(phone: number): Promise<User | null> {
+        return await UserModel.findOne({phone: phone});
+    }
+
 }

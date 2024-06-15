@@ -18,6 +18,7 @@ import AdminChatListPage from "./component/Admin/AdminChatListPage";
 import AdminChatPage from "./component/Admin/AdminChatPage";
 import InitialDataPage from "./component/User/UserInitialLogin";
 import UserLoginOtpVerify from "./component/User/UserLoginOtpVerify";
+import UserChatPage from "./component/User/UserChatPage";
 
 
 export default function App() {
@@ -46,6 +47,7 @@ export default function App() {
 
           <Route path='/new_user' element={<InitialDataPage/>} />
           <Route path="/user_verify_otp_page/:id" element={<UserLoginOtpVerify />} />
+          <Route path="/user_chat" element={<UserChatPage />} />
 
         </Routes>
       </BrowserRouter>
