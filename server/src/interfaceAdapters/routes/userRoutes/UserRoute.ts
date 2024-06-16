@@ -42,7 +42,7 @@ router.post('/start_conversation', InjectedCreateConversation.CreateConversation
 // })
 
 
-router.post('/send-message', async (req, res) => {
+router.post('/send_message', async (req, res) => {
     const { conversationId, senderId, senderModel, text } = req.body;
 
     try {
@@ -67,7 +67,7 @@ router.get('/get_messages/:convId', async (req, res) => {
       // Fetch messages associated with the conversation
       const messages = await MessageModel.find({ conversationId: conversation._id }).sort({ createdAt: 1 });
   
-      res.status(200).json({ conversation, messages });
+      res.status(200).json(messages);
     } catch (error) {
       res.status(500).json({ message: 'An error occurred', error });
     }

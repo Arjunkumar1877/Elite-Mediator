@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { BsCheckCircleFill } from "react-icons/bs";
-import { useLocation, useNavigate } from "react-router-dom";
+import { json, useLocation, useNavigate } from "react-router-dom";
 import { auth } from "../../firebase/firebase";
 import { signInWithPhoneNumber, RecaptchaVerifier } from "firebase/auth";
 import { useDispatch, useSelector } from "react-redux";
@@ -42,6 +42,10 @@ const InitialDataPage = () => {
     firebaseCode: "",
   });
 
+
+
+
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -54,87 +58,44 @@ const InitialDataPage = () => {
     return formData.username && formData.purpose && formData.phone;
   };
 
-  const fetchMessages = async (convId: string) => {
-    try {
-      const response = await axios.get(`/user/get_messages/${convId}`);
-      dispatch(setMessages(response.data.messages));
-    } catch (error) {
-      console.error("Error fetching messages:", error);
+
+
+
+const onSubmit = async (updatedFormData: UserType) => {
+  try {
+    const res = await fetch("/user/create_user", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(updatedFormData),
+    });
+
+    if (!res.ok) {
+      throw new Error("Network response was not ok");
     }
-  };
 
-  const onSubmit = async (updatedFormData: UserType) => {
-    try {
-      const res = await fetch("/user/create_user", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(updatedFormData),
-      });
+    const data = await res.json();
 
-      if (res.ok) {
-        const data: any = await res.json();
-        console.log(data);
-
-        if (data?.message === "User created") {
-          toast.success(
-            "Verification message successfully sent to your mobile"
-          );
-          navigate(`/user_verify_otp_page/${data.data._id}`);
-        } else if (data?.message === "User already exists") {
-          toast("User already exists. Redirecting to chat...");
-          console.log(data);
-
-          if (data.data.propId === propIdQ) {
-            if (data.data.conversationId) {
-              dispatch(signInSuccess(data.data));
-
-              navigate(`/user_chat/${data.data.conversationId}`);
-              console.log("💕🤷‍♂️🤷‍♂️🤷‍♂️🤷‍♂️🤷‍♂️🤷‍♂️⛔⛔⛔ already conversation id exist");
-              console.log(data);
-            } else {
-              console.log("😂😂💹💹📊📊📈🤷‍♂️💕 conversation id doesnot  exist");
-
-              const startConversation = async () => {
-                try {
-                  const response = await axios.post(
-                    "/user/start_conversation",
-                    {
-                      userId: data.data._id,
-                      adminId: data.data.adminId,
-                      propertyId: data.data.propId,
-                    }
-                  );
-
-                  await fetchMessages(response.data.conversation._id);
-
-                  if (response.data) {
-                    console.log("conversation created 📉💕💕💕🔥🔥🔥🔥");
-                    console.log(response.data);
-
-                    navigate(`/user_chat/${response.data.conversationId}`);
-                  }
-                } catch (error) {
-                  console.error("Error starting conversation:", error);
-                }
-              };
-              startConversation();
-            }
-          } else {
-            toast.error("User data does not match the current property ID.");
-          }
+    if (data.message === 'User already exists') {
+      if (currentUser) {
+        if (currentUser.propId === propIdQ && currentUser.phone === data.data.phone && currentUser?.conversationId === data.data.coversationId) {
+          // dispatch(signInSuccess(data.data));
+          navigate(`/user_chat?convId=${data.data.conversationId}`);
         } else {
-          toast.error("Unexpected response from the server. Please try again.");
+          navigate(`/user_verify_otp_page/${data.data._id}`);
         }
       } else {
-        toast.error("Failed to create user. Please try again.");
+        navigate(`/user_verify_otp_page/${data.data._id}`);
       }
-    } catch (error) {
-      console.error(error);
-      toast.error("Something went wrong. Please try again.");
+    } else {
+      navigate(`/user_verify_otp_page/${data.data._id}`);
     }
-  };
+  } catch (error) {
+    console.error(error);
+    toast.error("Something went wrong. Please try again.");
+  }
+};
 
   const onSendOtp = async () => {
     if (!validateForm()) {

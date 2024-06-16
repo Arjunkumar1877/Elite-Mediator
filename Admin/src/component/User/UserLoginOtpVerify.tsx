@@ -154,7 +154,7 @@ const UserLoginOtpVerify = () => {
                   console.log("Conversation created:", response.data);
       toast("OTP verification successful!");
 
-                  navigate(`/user_chat/${response.data._id}`);
+                  navigate(`/user_chat?conId=${response.data._id}`);
                 }
               } catch (error) {
                 console.error("Error starting conversation:", error);

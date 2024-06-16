@@ -47,13 +47,9 @@ export default function App() {
           </Route>
 
           <Route path='/new_user' element={<InitialDataPage/>} />
-       
-          <Route element={<UserPrivateRoute/>} >
           <Route path="/user_verify_otp_page/:id" element={<UserLoginOtpVerify />} />
-
-          <Route path="/user_chat/:id" element={<UserChatPage />} />
+          <Route path="/user_chat" element={<UserChatPage />} />
           
-          </Route>
 
         </Routes>
       </BrowserRouter>

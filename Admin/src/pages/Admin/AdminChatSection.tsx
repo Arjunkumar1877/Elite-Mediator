@@ -5,7 +5,7 @@ import { FaVideo } from "react-icons/fa";
 import { HiDotsVertical } from "react-icons/hi";
 import { HiOutlinePaperClip } from "react-icons/hi2";
 import { BsSend } from "react-icons/bs";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import axios from "axios";
 import { useSelector } from "react-redux";
 
@@ -34,12 +34,13 @@ const AdminChatSection: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { currentAdmin } = useSelector((state: any) => state?.admin);
-
+  const params = useParams();
+console.log(params.id + "")
   useEffect(() => {
     const fetchConversations = async () => {
       try {
         const response = await axios.get('/api/conversations', {
-          params: { adminId: currentAdmin?._id }
+          params: { conversationId: params.id }
         });
         setConversations(response.data); // Assuming response.data is an array of conversations
       } catch (error) {
@@ -70,7 +71,7 @@ const AdminChatSection: React.FC = () => {
     if (newMessage.trim() === "" || !selectedConversation) return;
 
     try {
-      const response = await axios.post<Message>('/api/send-message', {
+      const response = await axios.post<Message>('/user/send-message', {
         conversationId: selectedConversation._id,
         senderId: currentAdmin._id,
         senderModel: "Admin",

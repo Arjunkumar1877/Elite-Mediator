@@ -6,7 +6,7 @@ import { IoCall } from "react-icons/io5";
 import { FiLogOut } from "react-icons/fi";
 import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { signoutSuccess, setMessages } from "../../redux/user/UserSlice";
 
 interface Message {
@@ -21,16 +21,27 @@ interface Message {
 
 const UserChatPage: React.FC = () => {
   const [newMessage, setNewMessage] = useState<string>("");
-  const params = useParams();
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const { currentUser, messages } = useSelector((state: any) => state?.user);
+  const { currentUser, messages } = useSelector((state: any) => state.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
+  const query = new URLSearchParams(location.search);
+  const conIdQ = query.get("conId");
+  console.log(currentUser);
+
+  useEffect(() => {
+    if (currentUser) {
+      navigate(`/user_chat?conId=${conIdQ}`);
+    }
+  }, [currentUser, navigate, conIdQ]);
+
 
   const fetchMessages = async () => {
     try {
-      const res = await fetch(`/user/get_messages/${currentUser.conversationId}`);
+      const res = await fetch(`/user/get_messages/${conIdQ}`);
       const data = await res.json();
+      console.log(data)
       if (res.ok) {
         dispatch(setMessages(data));
       }
@@ -40,25 +51,18 @@ const UserChatPage: React.FC = () => {
   };
 
 
-  useEffect(()=>{
-    if(currentUser && currentUser.conversationId === params.id){
-      navigate(`/user_chat/${params.id}`)
-    }
-  },[])
-
-
   useEffect(() => {
-    if (!messages.length) {
+    if (conIdQ) {
       fetchMessages();
     }
-  }, [currentUser.conversationId, messages.length, dispatch]);
+  }, [conIdQ]);
 
   const sendMessage = async () => {
-    if (newMessage.trim() === "" || !currentUser.conversationId) return;
+    if (newMessage.trim() === "" || !currentUser?.conversationId) return;
 
     try {
-      const response = await axios.post<Message>("/user/send-message", {
-        conversationId: currentUser.conversationId,
+      const response = await axios.post("/user/send_message", {
+        conversationId: conIdQ,
         senderId: currentUser._id,
         senderModel: "User",
         text: newMessage,
@@ -85,6 +89,9 @@ const UserChatPage: React.FC = () => {
     navigate("/new_user");
   };
 
+
+  console.log(messages)
+
   return (
     <div className="pt-1 h-screen bg-gray-50 flex flex-col">
       <div className="border-2 flex flex-col h-full p-4 bg-white shadow-lg">
@@ -95,7 +102,7 @@ const UserChatPage: React.FC = () => {
               className="w-10 h-10 rounded-full"
               alt="User"
             />
-            <span className="text-xl font-bold">{currentUser.username}</span>
+            {currentUser && <span className="text-xl font-bold">{currentUser.username}</span>}
           </div>
           <div className="flex gap-5 items-center text-2xl text-sky-500">
             <IoCall className="cursor-pointer" />
@@ -105,48 +112,38 @@ const UserChatPage: React.FC = () => {
           </div>
         </div>
 
+        
         <div className="flex-1 overflow-y-auto py-4">
           <div className="flex flex-col gap-4 px-5">
-            {messages.length > 0 && messages?.map((message: any) => (
-              <div
-                key={message._id}
-                className={`flex ${
-                  message.senderModel === "User"
-                    ? "justify-end"
-                    : "justify-start"
-                } gap-3`}
-              >
-                {message.senderModel !== "User" && (
-                  <img
-                    src="/public/userIcon.webp"
-                    alt="User"
-                    className="w-10 h-10 rounded-full"
-                  />
-                )}
-                <div className="flex flex-col">
-                  <div className="flex justify-between text-xs text-slate-400">
-                    <span>
-                      {new Date(message.createdAt).toLocaleTimeString()}
-                    </span>
-                    <span>
-                      {message.senderModel === "User"
-                        ? "You"
-                        : message.senderName}
-                    </span>
+            {messages?.length > 0 &&
+              messages?.map((message: Message) => (
+                <div
+                  key={message?._id}
+                  className={`flex ${message?.senderModel === "User" ? "justify-end" : "justify-start"} gap-3`}
+                >
+                  {message?.senderModel !== "User" && (
+                    <img
+                      src="/public/userIcon.webp"
+                      alt="User"
+                      className="w-10 h-10 rounded-full"
+                    />
+                  )}
+                  <div className="flex flex-col">
+                    <div className="flex justify-between text-xs text-slate-400">
+                      <span>{new Date(message?.createdAt).toLocaleTimeString()}</span>
+                      <span>{message?.senderModel === "User" ? "You" : message?.senderName || "Admin"}</span>
+                    </div>
+                    <div className="p-3 rounded-xl bg-sky-100 text-sm max-w-xs">{message?.text}</div>
                   </div>
-                  <div className="p-3 rounded-xl bg-sky-100 text-sm max-w-xs">
-                    {message.text}
-                  </div>
+                  {message?.senderModel === "User" && (
+                    <img
+                      src="/public/userIcon.webp"
+                      alt="User"
+                      className="w-10 h-10 rounded-full"
+                    />
+                  )}
                 </div>
-                {message.senderModel === "User" && (
-                  <img
-                    src="/public/userIcon.webp"
-                    alt="User"
-                    className="w-10 h-10 rounded-full"
-                  />
-                )}
-              </div>
-            ))}
+              ))}
             <div ref={messagesEndRef}></div>
           </div>
         </div>
@@ -173,6 +170,8 @@ const UserChatPage: React.FC = () => {
             <BsSend className="text-white text-2xl" />
           </div>
         </div>
+
+
       </div>
     </div>
   );
