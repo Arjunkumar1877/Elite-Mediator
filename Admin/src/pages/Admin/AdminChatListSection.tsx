@@ -1,14 +1,53 @@
 import { IoIosArrowDropdownCircle } from "react-icons/io";
-import { FaCalendarDays } from "react-icons/fa6";
+import { FaCalendarDays, FaArrowLeft, FaArrowRight } from "react-icons/fa6";
 import { IoSearch } from "react-icons/io5";
-import { FaArrowLeft } from "react-icons/fa6";
-import { FaArrowRight } from "react-icons/fa6";
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect, ChangeEvent } from "react";
+import axios from "axios";
+import { useSelector } from "react-redux";
+import { RootState } from "../../redux/store"; // Adjust the import according to your store's location
 
-const AdminChatListSection = () => {
-  const [currentPage, setCurrentPage] = useState(1);
-  const totalPages = 5; // This is an example; replace it with the actual number of pages
+// Define the Conversation type
+interface Conversation {
+  _id: string;
+  userId: string;
+  adminId: string;
+  propId: string;
+  createdAt: string;
+  updatedAt: string;
+  lastMessage: {
+    text: string;
+    time: string;
+  };
+}
+
+const AdminChatListSection: React.FC = () => {
+  const [conversations, setConversations] = useState<Conversation[]>([]);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [totalPages, setTotalPages] = useState<number>(1);
+  const [filter, setFilter] = useState<string>('all');
+  const [searchTerm, setSearchTerm] = useState<string>('');
+  const { currentAdmin } = useSelector((state: any) => state.admin);
+
+  const fetchConversations = async () => {
+    try {
+      const response = await axios.get('/api/conversations_list', {
+        params: {
+          adminId: currentAdmin._id, // Use the actual admin ID
+          page: currentPage,
+          filter: filter,
+        },
+      });
+      setConversations(response.data.conversations);
+      setTotalPages(response.data.totalPages);
+    } catch (error) {
+      console.error('Error fetching conversations:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchConversations();
+  }, [currentPage, filter]);
 
   const handlePreviousPage = () => {
     setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
@@ -16,6 +55,16 @@ const AdminChatListSection = () => {
 
   const handleNextPage = () => {
     setCurrentPage((prevPage) => Math.min(prevPage + 1, totalPages));
+  };
+
+  const handleFilterChange = (newFilter: string) => {
+    setFilter(newFilter);
+    setCurrentPage(1);
+  };
+
+  const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
+    // Implement search functionality if required
   };
 
   return (
@@ -30,9 +79,9 @@ const AdminChatListSection = () => {
         <div className="flex flex-col gap-4">
           <div className="flex flex-col lg:flex-row justify-between bg-sky-500 p-4 rounded">
             <div className="flex gap-4 lg:gap-16 justify-center items-center px-2 lg:px-5">
-              <span className="cursor-pointer font-semibold text-white">Today</span>
-              <span className="cursor-pointer font-semibold text-white">This Week</span>
-              <span className="cursor-pointer font-semibold text-white">This Month</span>
+              <span onClick={() => handleFilterChange('today')} className="cursor-pointer font-semibold text-white">Today</span>
+              <span onClick={() => handleFilterChange('this_week')} className="cursor-pointer font-semibold text-white">This Week</span>
+              <span onClick={() => handleFilterChange('this_month')} className="cursor-pointer font-semibold text-white">This Month</span>
             </div>
 
             <div className="flex flex-col lg:flex-row gap-4 mt-4 lg:mt-0">
@@ -56,13 +105,15 @@ const AdminChatListSection = () => {
               type="text"
               className="p-4 border-2 w-full rounded focus:outline-none focus:ring-2 focus:ring-sky-500"
               placeholder="Search..."
+              value={searchTerm}
+              onChange={handleSearchChange}
             />
             <IoSearch className="absolute top-1/2 transform -translate-y-1/2 text-xl right-8" />
           </div>
 
           <div className="flex flex-col gap-4 overflow-y-auto h-[calc(100vh-270px)]">
-            {[...Array(8)].map((_, index) => (
-              <Link to={"/admin_chat/123"} key={index}>
+            {conversations.map((conversation) => (
+              <Link to={`/admin_chat/${conversation._id}`} key={conversation._id}>
                 <div className="flex items-center justify-between border-2 p-4 rounded hover:bg-gray-100 transition">
                   <div className="flex items-center gap-3">
                     <img src="public/userIcon.webp" alt="User" className="h-14 w-14 rounded-full" />
@@ -82,11 +133,26 @@ const AdminChatListSection = () => {
               </Link>
             ))}
           </div>
+
+          <div className="flex justify-between items-center mt-4">
+            <button
+              className="p-2 bg-sky-500 text-white rounded"
+              onClick={handlePreviousPage}
+              disabled={currentPage === 1}
+            >
+              <FaArrowLeft />
+            </button>
+            <span>Page {currentPage} of {totalPages}</span>
+            <button
+              className="p-2 bg-sky-500 text-white rounded"
+              onClick={handleNextPage}
+              disabled={currentPage === totalPages}
+            >
+              <FaArrowRight />
+            </button>
+          </div>
         </div>
-
-     
       </div>
-
     </div>
   );
 };

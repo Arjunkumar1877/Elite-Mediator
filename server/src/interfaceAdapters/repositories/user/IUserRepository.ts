@@ -1,8 +1,13 @@
-import { User } from "../../../entities/models/admin/User";
+import { Conversation } from "../../../entities/models/user/Conversation";
+import { User } from "../../../entities/models/user/User";
 
 export interface IUserRepository{
     CreateNewUser(user: User): Promise<User | null>;
     FindUserByUserId(userId: string): Promise<User | null>;
     FindUserByPhone(phone: number): Promise<User | null>;
     FindByIdAndVerify(userId: string): Promise<User>;
+    FindByPhoneAndPropId(phone: number, propId: string): Promise<any>
+    FindByPhoneAndPropIdAndDelete(phone: number, propId: string): Promise<any>;
+    CreateConversation(userId: string, adminId: string, propertyId: string): Promise<any>;
+    FindConversation(userId: string, adminId: string, propertyId: string): Promise<Conversation | null>;
 }

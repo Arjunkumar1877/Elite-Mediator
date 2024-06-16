@@ -1,4 +1,4 @@
-import { User } from "../../models/admin/User";
+import { User } from "../../models/user/User";
 
 export interface ISaveNewUserDataUseCase{
     SaveNewUser(user: User): Promise<User>;

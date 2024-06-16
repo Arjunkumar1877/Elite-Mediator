@@ -16,6 +16,7 @@ type FormDataType = {
 
 const QrCodeGenerateSection = () => {
   const { currentAdmin } = useSelector((state: any) => state.admin);
+  const [propIdS, setPorpIdS] = useState<string>();
   const navigate = useNavigate()
   const propId = currentAdmin._id + Date.now();
   const [QrCode, setQrCode] = useState<string>();
@@ -25,16 +26,17 @@ const QrCodeGenerateSection = () => {
   
   const [formData, setFormData] = useState<FormDataType>({
     adminId: currentAdmin._id,
-    propId: propId,
+    propId: '',
     propertyName: "",
     propertyAddress: "",
     allowVedioCalls: false,
-    url: url,
+    url: '',
     code: "",
   });
 
   const handleGenerateCode = async () => {
     try {
+      setFormData({...formData, url: url, propId: propId})
       const res = await fetch(`/api/generate_code/${currentAdmin._id}/${propId}`);
 
       if (res.ok) {
@@ -87,6 +89,8 @@ const QrCodeGenerateSection = () => {
     link.download = 'qr_code.png';
     link.click();
   };
+  
+  console.log(formData)
 
   return (
     <div className="flex flex-col p-5 bg-gray-50 min-h-screen">

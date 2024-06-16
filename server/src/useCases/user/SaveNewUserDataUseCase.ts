@@ -1,4 +1,4 @@
-import { User } from "../../entities/models/admin/User";
+import { User } from "../../entities/models/user/User";
 import { ISaveNewUserDataUseCase } from "../../entities/useCasesInterfaces/user/ISaveNewUserDataUseCase";
 import { IUserRepository } from "../../interfaceAdapters/repositories/user/IUserRepository";
 

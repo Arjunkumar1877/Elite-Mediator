@@ -7,4 +7,5 @@ export interface User{
     phone: number;
     firebaseCode?: string;
     verified: boolean;
+    conversationId?: string;
 }

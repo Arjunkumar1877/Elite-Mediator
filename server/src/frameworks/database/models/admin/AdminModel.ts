@@ -2,11 +2,6 @@ import mongoose from "mongoose";
 
 const AdminSchema = new mongoose.Schema(
   {
-    propId: {
-      type: String,
-      required: true,
-      unique: true,
-    },
     username: {
       type: String,
       required: true,

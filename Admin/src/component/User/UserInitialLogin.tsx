@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { BsCheckCircleFill } from "react-icons/bs";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { auth } from "../../firebase/firebase";
 import { signInWithPhoneNumber, RecaptchaVerifier } from "firebase/auth";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { setMessages, signInSuccess } from "../../redux/user/UserSlice";
+import axios from "axios";
 
 type UserType = {
   _id?: string;
@@ -16,18 +18,20 @@ type UserType = {
   phone: number | string;
   firebaseCode?: string;
   verified?: boolean;
+  conversationId?: string;
 };
 
 const InitialDataPage = () => {
-  const { currentUser } = useSelector((state: any)=> state.user);
+  const { currentUser } = useSelector((state: any) => state.user);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const useQuery = () => {
     return new URLSearchParams(useLocation().search);
   };
   const query = useQuery();
-  const adminIdQ = query.get('adminId');
-  const propIdQ = query.get('propId');
-  // const [confirmOtp, setConfirmOtp] = useState<any>(null);
+  const adminIdQ = query.get("adminId");
+  const propIdQ = query.get("propId");
+
   const [formData, setFormData] = useState<UserType>({
     userId: "",
     adminId: adminIdQ || "",
@@ -37,49 +41,6 @@ const InitialDataPage = () => {
     phone: "",
     firebaseCode: "",
   });
-  
-  const [exisitingUserData, setExistingUserData] = useState<UserType>({
-    userId: "",
-    adminId: adminIdQ || "",
-    propId: propIdQ || "",
-    username: "",
-    purpose: "",
-    phone: "",
-    firebaseCode: "",
-  });
-  
-  const [userverified, setUserVerified] = useState<boolean>(false);
-  // const fetchIUserExisits = async()=>{
-  //   try {
-  //     const res = await fetch("/user/get_user_phone", {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify({phone: formData.phone}),
-  //     });
-  
-  //     if (res.ok) {
-  //       const data: UserType = await res.json();
-  //       console.log(data);
-  //     setExistingUserData(data); 
-       
-  //     }
-  //   } catch (error) {
-  //     console.log(error);
-  //     toast.error("Something went wrong. Please try again.");
-  //   }
-  // }
-
-
-
-  // useEffect(()=>{
-  // if(currentUser){
-  //   fetchIUserExisits();
-  // }
-  // }, [formData.phone])
-  
-
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -93,44 +54,93 @@ const InitialDataPage = () => {
     return formData.username && formData.purpose && formData.phone;
   };
 
-  const onSubmit = async (updatedFormData: UserType) => {
-  try {
-    const res = await fetch("/user/create_user", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(updatedFormData),
-    });
-
-    if (res.ok) {
-      const data: UserType = await res.json();
-      console.log(data);
-      if(currentUser){
-        if(currentUser.userId === data.userId){
-          if(data.verified){
-            setUserVerified(true);
-            navigate("/heyyy")
-          }
-        }else{
-          toast.success("Verification message successfully sent to your mobile");
-          navigate(`/user_verify_otp_page/${data.userId}`);
-        }
-      }
-
-     
+  const fetchMessages = async (convId: string) => {
+    try {
+      const response = await axios.get(`/user/get_messages/${convId}`);
+      dispatch(setMessages(response.data.messages));
+    } catch (error) {
+      console.error("Error fetching messages:", error);
     }
-  } catch (error) {
-    console.log(error);
-    toast.error("Something went wrong. Please try again.");
-  }
   };
-  
+
+  const onSubmit = async (updatedFormData: UserType) => {
+    try {
+      const res = await fetch("/user/create_user", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(updatedFormData),
+      });
+
+      if (res.ok) {
+        const data: any = await res.json();
+        console.log(data);
+
+        if (data?.message === "User created") {
+          toast.success(
+            "Verification message successfully sent to your mobile"
+          );
+          navigate(`/user_verify_otp_page/${data.data._id}`);
+        } else if (data?.message === "User already exists") {
+          toast("User already exists. Redirecting to chat...");
+          console.log(data);
+
+          if (data.data.propId === propIdQ) {
+            if (data.data.conversationId) {
+              dispatch(signInSuccess(data.data));
+
+              navigate(`/user_chat/${data.data.conversationId}`);
+              console.log("💕🤷‍♂️🤷‍♂️🤷‍♂️🤷‍♂️🤷‍♂️🤷‍♂️⛔⛔⛔ already conversation id exist");
+              console.log(data);
+            } else {
+              console.log("😂😂💹💹📊📊📈🤷‍♂️💕 conversation id doesnot  exist");
+
+              const startConversation = async () => {
+                try {
+                  const response = await axios.post(
+                    "/user/start_conversation",
+                    {
+                      userId: data.data._id,
+                      adminId: data.data.adminId,
+                      propertyId: data.data.propId,
+                    }
+                  );
+
+                  await fetchMessages(response.data.conversation._id);
+
+                  if (response.data) {
+                    console.log("conversation created 📉💕💕💕🔥🔥🔥🔥");
+                    console.log(response.data);
+
+                    navigate(`/user_chat/${response.data.conversationId}`);
+                  }
+                } catch (error) {
+                  console.error("Error starting conversation:", error);
+                }
+              };
+              startConversation();
+            }
+          } else {
+            toast.error("User data does not match the current property ID.");
+          }
+        } else {
+          toast.error("Unexpected response from the server. Please try again.");
+        }
+      } else {
+        toast.error("Failed to create user. Please try again.");
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Something went wrong. Please try again.");
+    }
+  };
+
   const onSendOtp = async () => {
     if (!validateForm()) {
       return toast.error("Please fill out all fields.");
     }
-  
+
     try {
       const recaptchaVerifier = new RecaptchaVerifier(auth, "recaptcha", {});
       const phoneNum = "+91" + formData.phone;
@@ -139,7 +149,7 @@ const InitialDataPage = () => {
         phoneNum,
         recaptchaVerifier
       );
-  
+
       if (confirmationResult) {
         const userIdS = formData.phone + "" + Date.now();
         const updatedFormData = {
@@ -147,7 +157,7 @@ const InitialDataPage = () => {
           userId: userIdS,
           firebaseCode: confirmationResult.verificationId,
         };
-  
+
         setFormData(updatedFormData);
         onSubmit(updatedFormData);
       } else {
@@ -158,9 +168,8 @@ const InitialDataPage = () => {
       toast.error("Failed to send OTP. Please try again.");
     }
   };
-  
 
-  console.log(exisitingUserData)
+  console.log(currentUser);
 
   return (
     <div className="relative min-h-screen flex flex-col items-center justify-center bg-gray-100 p-4">
@@ -170,7 +179,6 @@ const InitialDataPage = () => {
           Register
         </button>
       </div>
-
 
       <div className="w-full max-w-4xl mx-auto p-1 px-4 lg:px-16">
         <div className="p-6 lg:p-10 flex flex-col justify-center items-center rounded relative z-10 border-2 bg-white gap-5 shadow-md">

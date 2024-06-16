@@ -1,19 +1,22 @@
 import mongoose from "mongoose";
 
-
-const usreSchema =  new mongoose.Schema({
+const userSchema = new mongoose.Schema({
     userId: {
         type: String,
         required: true,
         unique: true
     },
     adminId: {
-        type: String,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Admin',
         required: true
     },
     propId: {
-        type: String,
+       type: String,
         required: true
+    },
+    conversationId: {
+        type: String
     },
     username: {
         type: String,
@@ -28,15 +31,12 @@ const usreSchema =  new mongoose.Schema({
         required: true
     },
     firebaseCode: {
-        type: String,
+        type: String
     },
     verified: {
         type: Boolean,
         default: false
     }
-});
+}, { timestamps: true });
 
-
-export const UserModel = mongoose.model("User", usreSchema);
-
-
+export const UserModel = mongoose.model("User", userSchema);

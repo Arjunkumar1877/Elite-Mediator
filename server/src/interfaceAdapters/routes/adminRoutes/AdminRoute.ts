@@ -2,6 +2,10 @@ import { Router } from "express";
 import { Route } from "../../../frameworks/types/ServerTypes";
 import { JwtTokenAdapter } from "../../../frameworks/services/jwtService/TokenService";
 import { InjectedAdminSignUpController, InjectedAdminlogincontroller, InjectedGenerateQrCodeController, InjectedGetAdminDataController, InjectedGetAdminPropertyDataController, InjectedGetUnverifiedAdminController, InjectedGoogleLoginController, InjectedSavePropertyDataController, InjectedUpdateAdminProfileController, InjectedUpdateVerifyAdminController } from "../../../frameworks/injection/AdminInjects";
+import { ConversationModel } from "../../../frameworks/database/models/admin/ConversationModel";
+import { MessageModel } from "../../../frameworks/database/models/admin/MessageModel";
+import moment from 'moment';
+
 const router: Route = Router();
 
 const JwtToken = new JwtTokenAdapter();
@@ -39,5 +43,98 @@ router.get("/get_admin_property_data/:id", InjectedGetAdminPropertyDataControlle
 
 
 
+
+// // Route to start a new conversation
+// router.post('/start-conversation', async (req, res) => {
+//     const { userId, adminId, propId } = req.body;
+//     try {
+//       let conversation = await ConversationModel.findOne({ userId, adminId, propId });
+//       if (!conversation) {
+//         conversation = new ConversationModel({ userId, adminId, propId });
+//         await conversation.save();
+//       }
+//       res.status(200).json(conversation);
+//     } catch (error) {
+//       res.status(500).json({ error: 'Failed to start conversation' });
+//     }
+//   });
+
+// // Route to get all conversations for an admin
+// router.get('/conversations', async (req, res) => {
+//     const { adminId } = req.query;
+//     console.log("🤷‍♀️🤷‍♀️🤷‍♀️🤷‍♀️🤷‍♀️🤷‍♀️")
+//     try {
+//       const conversations = await ConversationModel.findOne({ adminId });
+//       res.status(200).json(conversations);
+//     } catch (error) {
+//       res.status(500).json({ error: 'Failed to fetch conversations' });
+//     }
+//   });
+
+// // Route to get messages for a conversation
+// router.get('/admin/messages/:conversationId', async (req, res) => {
+//     const { conversationId } = req.params;
+//     try {
+//       const messages = await MessageModel.find({ conversationId }).sort({ createdAt: 1 });
+//       res.status(200).json(messages);
+//     } catch (error) {
+//       res.status(500).json({ error: 'Failed to fetch messages' });
+//     }
+//   });
+
+// // Route to send a message
+// router.post('/admin/send-message', async (req, res) => {
+//     const { conversationId, senderId, senderModel, text } = req.body;
+//     try {
+//       const message = new MessageModel({ conversationId, senderId, senderModel, text });
+//       await message.save();
+//       res.status(200).json(message);
+//     } catch (error) {
+//       res.status(500).json({ error: 'Failed to send message' });
+//     }
+//   });
+
+
+//   router.get('/conversations_list', async (req, res) => {
+//     const { adminId, page = '1', limit = '10', filter = 'all' } = req.query as {
+//       adminId: string,
+//       page?: string,
+//       limit?: string,
+//       filter?: string
+//     };
+  
+//     const startOfToday = moment().startOf('day');
+//     const startOfWeek = moment().startOf('week');
+//     const startOfMonth = moment().startOf('month');
+    
+//     let filterQuery: any = { adminId };
+    
+//     if (filter === 'today') {
+//       filterQuery.createdAt = { $gte: startOfToday.toDate() };
+//     } else if (filter === 'this_week') {
+//       filterQuery.createdAt = { $gte: startOfWeek.toDate() };
+//     } else if (filter === 'this_month') {
+//       filterQuery.createdAt = { $gte: startOfMonth.toDate() };
+//     }
+    
+//     try {
+//       const conversations = await ConversationModel.find(filterQuery)
+//         .skip((parseInt(page) - 1) * parseInt(limit))
+//         .limit(parseInt(limit))
+//         .sort({ createdAt: -1 });
+//       const totalConversations = await ConversationModel.countDocuments(filterQuery);
+//       res.status(200).json({
+//         conversations,
+//         totalPages: Math.ceil(totalConversations / parseInt(limit)),
+//         currentPage: parseInt(page)
+//       });
+//     } catch (error) {
+//       console.error('Error fetching conversations:', error);
+//       res.status(500).json({ error: 'Failed to fetch conversations' });
+//     }
+//   });
+  
+  
+  
 
 export default router;

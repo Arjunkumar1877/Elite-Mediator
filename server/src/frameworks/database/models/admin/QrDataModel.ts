@@ -1,9 +1,9 @@
 import mongoose from "mongoose";
 
-
 const qrDataSchema = new mongoose.Schema({
     adminId: {
-        type: String,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Admin',
         required: true
     },
     propId: {
@@ -11,13 +11,13 @@ const qrDataSchema = new mongoose.Schema({
         required: true,
         unique: true
     },
-    propertyName:{
+    propertyName: {
         type: String,
-        required: true,
+        required: true
     },
     propertyAddress: {
         type: String,
-        required: true,
+        required: true
     },
     allowVedioCalls: {
         type: Boolean,
@@ -31,7 +31,6 @@ const qrDataSchema = new mongoose.Schema({
         type: String,
         required: true
     }
-}, {timestamps: true});
+}, { timestamps: true });
 
-
-export const QrModel = mongoose.model('qrdata', qrDataSchema);
+export const QrModel = mongoose.model('QrModel', qrDataSchema);
