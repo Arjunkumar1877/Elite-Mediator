@@ -5,7 +5,7 @@ import { json, useLocation, useNavigate } from "react-router-dom";
 import { auth } from "../../firebase/firebase";
 import { signInWithPhoneNumber, RecaptchaVerifier } from "firebase/auth";
 import { useDispatch, useSelector } from "react-redux";
-import { setMessages, signInSuccess } from "../../redux/user/UserSlice";
+import { setMessages, signInSuccess, signoutSuccess } from "../../redux/user/UserSlice";
 import axios from "axios";
 
 type UserType = {
@@ -43,7 +43,12 @@ const InitialDataPage = () => {
   });
 
 
-
+useEffect(()=>{
+  if(currentUser){
+    dispatch(signoutSuccess());
+    console.log("Signed out the redux user")
+  }
+},[])
 
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -78,17 +83,8 @@ const onSubmit = async (updatedFormData: UserType) => {
     const data = await res.json();
 
     if (data.message === 'User already exists') {
-      if (currentUser) {
-        if (currentUser.propId === propIdQ && currentUser.phone === data.data.phone && currentUser?.conversationId === data.data.coversationId) {
-          // dispatch(signInSuccess(data.data));
-          navigate(`/user_chat?convId=${data.data.conversationId}`);
-        } else {
-          navigate(`/user_verify_otp_page/${data.data._id}`);
-        }
-      } else {
-        navigate(`/user_verify_otp_page/${data.data._id}`);
-      }
-    } else {
+      navigate(`/user_verify_otp_page/${data.data._id}`);
+    }else{
       navigate(`/user_verify_otp_page/${data.data._id}`);
     }
   } catch (error) {

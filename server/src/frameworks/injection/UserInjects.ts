@@ -1,13 +1,12 @@
 import { CreateConversationController } from "../../interfaceAdapters/controllers/user/CreateConversationController";
 import { CreateUserController } from "../../interfaceAdapters/controllers/user/CreateUserController";
-import { GetUnverifiedUserDataController } from "../../interfaceAdapters/controllers/user/GetUnverifiedUserDataController";
+import { GetUserDataByIdController } from "../../interfaceAdapters/controllers/user/GetUserDataByIdController";
 import { GetUserDataByPhoneController } from "../../interfaceAdapters/controllers/user/GetUserDataByPhoneController";
 import { VerifyAndUpdateUserController } from "../../interfaceAdapters/controllers/user/UserVerifyAndUpdateController";
 import { MongoUserRepository } from "../../interfaceAdapters/repositories/user/UserRepository";
-import { GetUnverifiedAdminDataUsecase } from "../../useCases/admin/GetUnverifiedAdminUseCase";
 import { CheckExisitingUserUseCase } from "../../useCases/user/CheckExisitingUserUseCase";
 import { CreateConversationUseCase } from "../../useCases/user/CreateConversationUseCase";
-import { GetUserDataUseCase } from "../../useCases/user/GetUnverifiedUserDataUseCase";
+import { GetUserDataByIdUseCase } from "../../useCases/user/GetUserDataByIdUseCase";
 import { GetUserDataByPhoneUseCase } from "../../useCases/user/GetUserDataByPhoneUseCase";
 import { SaveNewUserDataUseCase } from "../../useCases/user/SaveNewUserDataUseCase";
 import { VerifyUserUseCase } from "../../useCases/user/VerifyUserUseCase";
@@ -24,8 +23,8 @@ export const InjectedCreateNewUserData = new CreateUserController(saveUserUse, c
 
 
 // -----------------------------| GET UNVERIFIED USER DATA BY ID INJECTION ----------------------------------------------------------------------------------------
-const getUserDataByIdUse = new GetUserDataUseCase(mongoRepo);
-export const InjectedGetUnverifiedUserData = new GetUnverifiedUserDataController(getUserDataByIdUse);
+const getUserDataByIdUse = new GetUserDataByIdUseCase(mongoRepo);
+export const InjectedGetUnverifiedUserData = new GetUserDataByIdController(getUserDataByIdUse);
 
 
 // -----------------------------| VERIFY AND UPDATE USER DATA INJECTION ----------------------------------------------------------------------------------------
@@ -38,8 +37,8 @@ const getUserDataByPhoneUse = new GetUserDataByPhoneUseCase(mongoRepo)
 export const InjectedGetUserDataByPHone = new GetUserDataByPhoneController(getUserDataByPhoneUse)
 
 
-// -----------------------------| CHECK AND SEND CONVERSATION OR CREATE NEW CONVERSATION INJECTION ----------------------------------------------------------------------------------------
+// -----------------------------| CHECK AND SEND CONVERSATION AND USER OR CREATE NEW CONVERSATION AND UPDATE USER WITH CONVERSATION ID INJECTION ----------------------------------------------------------------------------------------
 const createConversationUse = new CreateConversationUseCase(mongoRepo)
-export const InjectedCreateConversation = new CreateConversationController(createConversationUse)
+export const InjectedCreateConversation = new CreateConversationController(createConversationUse, getUserDataByIdUse);
 
 

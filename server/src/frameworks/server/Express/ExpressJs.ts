@@ -8,10 +8,14 @@ import userRoutes from '../../../interfaceAdapters/routes/userRoutes/UserRoute';
 import { serverPackage } from "../../types/ServerTypes";
 import { Request, Response, NextFunction, ErrorRequestHandler } from "express";
 import cors from "cors";
+import path from "path";
 
 export class ExpressServer {
   constructor() {
     const app: serverPackage = express();
+// app.use(express.static(path.join(__dirname, 'client/build')));
+
+
 
     app.use(express.json());
     app.use(cors());
@@ -32,6 +36,11 @@ export class ExpressServer {
         message,
       });
     });
+
+    // app.get('*', (req, res) => {
+    //   res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
+    // });
+    
 
     app.listen(7000, () => {
       console.log("Express server connected on 7000");

@@ -1,4 +1,5 @@
-import { Conversation } from "../../../entities/models/user/Conversation";
+import { Conversation } from "../../../entities/models/common/Conversation";
+import { Message } from "../../../entities/models/common/Message";
 import { User } from "../../../entities/models/user/User";
 
 export interface IUserRepository{

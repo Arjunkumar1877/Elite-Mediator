@@ -1,265 +1,240 @@
-import React, { useEffect, useState } from "react";
-import toast from "react-hot-toast";
-import { BsCheckCircleFill } from "react-icons/bs";
-import { useLocation, useNavigate } from "react-router-dom";
+import {
+  PhoneAuthProvider,
+  RecaptchaVerifier,
+  signInWithCredential,
+  signInWithPhoneNumber,
+} from "firebase/auth";
+import { ChangeEvent, useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { auth } from "../../firebase/firebase";
-import { signInWithPhoneNumber, RecaptchaVerifier } from "firebase/auth";
+import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import { setMessages, signInSuccess } from "../../redux/user/UserSlice";
 import axios from "axios";
 
-type UserType = {
+type UserDataType = {
   _id?: string;
   userId: string;
   adminId: string;
   propId: string;
   username: string;
   purpose: string;
-  phone: number | string;
+  phone: number;
   firebaseCode?: string;
-  verified?: boolean;
-  conversationId?: string;
+  verified: boolean;
 };
 
-const InitialDataPage = () => {
-  const { currentUser } = useSelector((state: any) => state.user);
+const UserLoginOtpVerify = () => {
+  const [otp, setOtp] = useState<string[]>(new Array(6).fill(""));
+  const [seconds, setSeconds] = useState(30);
+  const [userData, setUserData] = useState<any>();
+  const params = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { currentUser } = useSelector((state: any) => state.user);
   const dispatch = useDispatch();
-  const useQuery = () => {
-    return new URLSearchParams(useLocation().search);
-  };
-  const query = useQuery();
-  const adminIdQ = query.get("adminId");
-  const propIdQ = query.get("propId");
+  console.log(userData);
+  console.log(params.id);
 
-  const [formData, setFormData] = useState<UserType>({
-    userId: "",
-    adminId: adminIdQ || "",
-    propId: propIdQ || "",
-    username: "",
-    purpose: "",
-    phone: "",
-    firebaseCode: "",
-  });
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-
-  const validateForm = () => {
-    return formData.username && formData.purpose && formData.phone;
-  };
-
-  const fetchMessages = async (convId: string) => {
-    try {
-      const response = await axios.get(`/user/get_messages/${convId}`);
-      dispatch(setMessages(response.data));
-    } catch (error) {
-      console.error("Error fetching messages:", error);
+  useEffect(() => {
+    if (seconds > 0) {
+      const timer = setTimeout(() => setSeconds(seconds - 1), 1000);
+      return () => clearTimeout(timer);
     }
-  };
+  }, [seconds]);
 
-  const onSubmit = async (updatedFormData: UserType) => {
-    try {
-      const res = await fetch("/user/create_user", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(updatedFormData),
-      });
-
-      if (res.ok) {
-        const data: any = await res.json();
-        console.log(data);
-
-        if (data?.message === "User created") {
-          toast.success(
-            "Verification message successfully sent to your mobile"
-          );
-          navigate(`/user_verify_otp_page/${data.data._id}`);
-        } else if (data?.message === "User already exists") {
-          toast("User already exists. Redirecting to chat...");
-          console.log(data);
-
-          if (data.data.propId === propIdQ) {
-            if (data.data.conversationId) {
-              dispatch(signInSuccess(data.data));
-
-              navigate(`/user_chat/${data.data.conversationId}`);
-              console.log("💕🤷‍♂️🤷‍♂️🤷‍♂️🤷‍♂️🤷‍♂️🤷‍♂️⛔⛔⛔ already conversation id exist");
-              console.log(data);
-            } else {
-              console.log("😂😂💹💹📊📊📈🤷‍♂️💕 conversation id doesnot  exist");
-
-              const startConversation = async () => {
-                try {
-                  const response = await axios.post(
-                    "/user/start_conversation",
-                    {
-                      userId: data.data._id,
-                      adminId: data.data.adminId,
-                      propertyId: data.data.propId,
-                    }
-                  );
-
-                  await fetchMessages(response.data.conversation._id);
-
-                  if (response.data) {
-                    console.log("conversation created 📉💕💕💕🔥🔥🔥🔥");
-                    console.log(response.data);
-
-                    navigate(`/user_chat/${response.data.conversationId}`);
-                  }
-                } catch (error) {
-                  console.error("Error starting conversation:", error);
-                }
-              };
-              startConversation();
-            }
-          } else {
-            toast.error("User data does not match the current property ID.");
-          }
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const res = await fetch(`/user/get_user_by_id/${params.id}`);
+        if (res.ok) {
+          const data = await res.json();
+          setUserData(data);
         } else {
-          toast.error("Unexpected response from the server. Please try again.");
+          console.log("Error fetching user data:", res.status);
         }
-      } else {
-        toast.error("Failed to create user. Please try again.");
+      } catch (error) {
+        console.log("Error fetching user data:", error);
       }
-    } catch (error) {
-      console.error(error);
-      toast.error("Something went wrong. Please try again.");
+    };
+    fetchUser();
+  }, [params.id]);
+
+  console.log(userData)
+
+  const handleChange = (element: HTMLInputElement, index: number) => {
+    if (isNaN(Number(element.value))) return;
+
+    const newOtp = [...otp];
+    newOtp[index] = element.value;
+    setOtp(newOtp);
+
+    if (element.nextSibling && element.value !== "") {
+      (element.nextSibling as HTMLInputElement).focus();
     }
   };
 
-  const onSendOtp = async () => {
-    if (!validateForm()) {
-      return toast.error("Please fill out all fields.");
-    }
-
+  const handleResendOtp = async () => {
+    setSeconds(60);
     try {
       const recaptchaVerifier = new RecaptchaVerifier(auth, "recaptcha", {});
-      const phoneNum = "+91" + formData.phone;
       const confirmationResult = await signInWithPhoneNumber(
         auth,
-        phoneNum,
+        "+" + userData?.phone,
         recaptchaVerifier
       );
-
+      console.log(confirmationResult);
       if (confirmationResult) {
-        const userIdS = formData.phone + "" + Date.now();
-        const updatedFormData = {
-          ...formData,
-          userId: userIdS,
-          firebaseCode: confirmationResult.verificationId,
-        };
+        const res = await fetch("/user/user_update_firebase_verify", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            firebaseConfirm: confirmationResult.verificationId,
+            phone: userData?.phone,
+          }),
+        });
 
-        setFormData(updatedFormData);
-        onSubmit(updatedFormData);
+        if (res.ok) {
+          const data = await res.json();
+          setUserData(data);
+          toast("otp resended sucessfully");
+        } else {
+          console.log("Error updating firebase verification:", res.status);
+        }
       } else {
         console.log("Error confirming the captcha.");
       }
     } catch (error) {
-      console.log(error);
-      toast.error("Failed to send OTP. Please try again.");
+      console.log("Error resending OTP:", error);
     }
   };
 
-  console.log(currentUser);
+  const handleVerifyOtp = async () => {
+    const enteredOtp = otp.join("");
+    const verificationId = userData?.firebaseCode;
+  
+    if (!verificationId) {
+      console.log("Verification ID is missing.");
+      return;
+    }
+  
+    try {
+      const credential = PhoneAuthProvider.credential(verificationId, enteredOtp);
+      const verifyResult = await signInWithCredential(auth, credential);
+      console.log("Verification result:", verifyResult);
+  
+  
+      try {
+        // Check if userData._id exists before making the request
+        if (!userData._id) {
+          console.log("User ID is missing.");
+          return;
+        }
+  
+        const res = await fetch(`/user/user_update_verify/${userData._id}`, {
+          method: "POST",
+        });
+  
+        if (res.ok) {
+          const data = await res.json();
+          console.log("Verification update response data:", data);
+  
+          if (data.verified) {
+            setUserData(data);
+            dispatch(signInSuccess(data));
+              try {
+                const response = await axios.post("/user/start_conversation", {
+                  userId: data._id,
+                  adminId: data.adminId,
+                  propertyId: data.propId,
+                });
+  
+                if (response.data) {
+                  console.log("Conversation created:", response.data);
+      toast("OTP verification successful!");
 
+                  navigate(`/user_chat?conId=${response.data._id}`);
+                }
+              } catch (error) {
+                console.error("Error starting conversation:", error);
+              }
+         
+          } else {
+            console.log("Error verifying the user");
+          }
+        } else {
+          const errorText = await res.text(); 
+          console.log("Error updating verification status:", res.statusText, errorText);
+          toast("Error updating verification status");
+        }
+      } catch (error) {
+        console.log("Error during verification update:", error);
+        toast("Error during verification update");
+      }
+    } catch (error: any) {
+      if (error.code === "auth/code-expired") {
+        toast("The OTP has expired. Please request a new one.");
+      } else if (error.code === "auth/invalid-verification-code") {
+        toast("The OTP entered is invalid. Please try again.");
+      } else {
+        toast("Error verifying OTP. Please try again.");
+      }
+      console.log("Error verifying OTP:", error);
+    }
+  };
+  
+
+  console.log(userData);
+  // console.log(currentUser);
   return (
-    <div className="relative min-h-screen flex flex-col items-center justify-center bg-gray-100 p-4">
-      <div className="absolute z-0 rounded-2xl -top-40 left-1/2 transform -translate-x-1/2 bg-sky-500 w-60 h-40 lg:h-96 rotate-45"></div>
-      <div className="w-full flex justify-end p-4">
-        <button className="bg-sky-500 py-2 px-3 rounded text-white hover:bg-sky-700">
-          Register
-        </button>
-      </div>
-
-      <div className="w-full max-w-4xl mx-auto p-1 px-4 lg:px-16">
-        <div className="p-6 lg:p-10 flex flex-col justify-center items-center rounded relative z-10 border-2 bg-white gap-5 shadow-md">
-          <h1 className="uppercase text-lg lg:text-4xl font-semibold text-center p-4 lg:p-10 w-full">
-            Now onward you don’t need to wait to reach out{" "}
-            <span className="uppercase text-sky-500">the people you need</span>
-          </h1>
-          <div className="w-full flex flex-col gap-1 justify-center text-zinc-400">
-            <div className="flex justify-between px-2 lg:px-10">
-              <span>Name</span>
-              {formData.username && (
-                <div className="flex gap-2 items-center">
-                  <BsCheckCircleFill className="text-green-600 text-xs" />
-                  <span>Valid</span>
-                </div>
-              )}
-            </div>
-            <input
-              type="text"
-              onChange={handleChange}
-              value={formData?.username}
-              name="username"
-              className="rounded border-2 w-full px-5 lg:w-[600px] py-3 placeholder:font-semibold placeholder:px-2 lg:placeholder:px-6"
-              placeholder="Enter your name"
-            />
-          </div>
-
-          <div className="w-full flex flex-col gap-1 text-zinc-400">
-            <div className="flex justify-between px-2 lg:px-6">
-              <span>Purpose</span>
-              {formData?.purpose && (
-                <div className="flex gap-2 items-center">
-                  <BsCheckCircleFill className="text-green-600 text-xs" />
-                  <span>Valid</span>
-                </div>
-              )}
-            </div>
-            <input
-              type="text"
-              onChange={handleChange}
-              value={formData?.purpose}
-              name="purpose"
-              className="rounded border-2 w-full px-5 lg:w-[600px] py-3 placeholder:font-semibold placeholder:px-2 lg:placeholder:px-6"
-              placeholder="Enter purpose of contacting"
-            />
-          </div>
-
-          <div className="w-full flex flex-col gap-1 text-zinc-400">
-            <div className="flex justify-between px-2 lg:px-6">
-              <span>Phone</span>
-              {formData.phone && (
-                <div className="flex gap-2 items-center">
-                  <BsCheckCircleFill className="text-green-600 text-xs" />
-                  <span>Valid</span>
-                </div>
-              )}
-            </div>
-            <input
-              type="text"
-              onChange={handleChange}
-              value={formData?.phone}
-              name="phone"
-              className="rounded border-2 w-full px-5 lg:w-[600px] py-3 placeholder:font-semibold placeholder:px-2 lg:placeholder:px-6"
-              placeholder="Enter your phone"
-            />
-          </div>
-
-          <div id="recaptcha" className="recaptcha"></div>
-
-          <div>
-            <button
-              className="bg-sky-500 py-2 px-4 rounded text-white hover:bg-sky-700"
-              onClick={onSendOtp}
-            >
-              Proceed
-            </button>
-          </div>
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4">
+      <div className="bg-white shadow-lg rounded-lg p-8 max-w-sm w-full">
+        <div className="flex justify-center mb-6">
+          <img
+            src="/public/otpverify.jpg"
+            alt="OTP Icon"
+            className="w-50 h-60 object-cover"
+          />
         </div>
+        <h2 className="text-center text-lg font-semibold mb-4">
+          Enter the OTP sent to your mobile
+        </h2>
+        <div className="flex justify-center mb-4 space-x-2">
+          {otp.map((data, index) => (
+            <input
+              key={index}
+              type="text"
+              name="otp"
+              maxLength={1}
+              className="w-12 h-12 text-center text-lg border border-gray-300 rounded-md focus:ring-2 focus:ring-sky-500 focus:border-transparent"
+              value={data}
+              onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                handleChange(e.target, index)
+              }
+              onFocus={(e) => e.target.select()}
+            />
+          ))}
+        </div>
+        <button
+          onClick={handleVerifyOtp}
+          className="w-full py-2 bg-sky-500 text-white font-semibold rounded-md hover:bg-sky-600 transition duration-300"
+        >
+          Verify
+        </button>
+        <div className="mt-4 flex justify-center">
+          <button
+            disabled={seconds !== 0}
+            onClick={handleResendOtp}
+            className="text-sky-500 underline"
+          >
+            {seconds === 0 ? "Resend OTP" : `Resend OTP in ${seconds} seconds`}
+          </button>
+        </div>
+        <div className="" id="recaptcha"></div>
       </div>
     </div>
   );
 };
 
-export default InitialDataPage;
+export default UserLoginOtpVerify;

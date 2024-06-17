@@ -22,18 +22,27 @@ type UserDataType = {
   phone: number;
   firebaseCode?: string;
   verified: boolean;
+  conversationId?: string;
 };
 
 const UserLoginOtpVerify = () => {
   const [otp, setOtp] = useState<string[]>(new Array(6).fill(""));
   const [seconds, setSeconds] = useState(30);
-  const [userData, setUserData] = useState<any>();
+  const [userData, setUserData] = useState<UserDataType | null>(null);
   const params = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { currentUser } = useSelector((state: any) => state.user);
   const dispatch = useDispatch();
-  console.log(userData);
-  console.log(params.id);
+
+  
+  useEffect(()=>{
+    if(currentUser){
+      console.log(currentUser)
+      navigate(`/chat_user?conId=${currentUser.conversationId}`);
+    }
+  }, [])
+
+
 
   useEffect(() => {
     if (seconds > 0) {
@@ -59,8 +68,6 @@ const UserLoginOtpVerify = () => {
     fetchUser();
   }, [params.id]);
 
-  // console.log(userData)
-
   const handleChange = (element: HTMLInputElement, index: number) => {
     if (isNaN(Number(element.value))) return;
 
@@ -82,7 +89,6 @@ const UserLoginOtpVerify = () => {
         "+" + userData?.phone,
         recaptchaVerifier
       );
-      console.log(confirmationResult);
       if (confirmationResult) {
         const res = await fetch("/user/user_update_firebase_verify", {
           method: "POST",
@@ -98,7 +104,7 @@ const UserLoginOtpVerify = () => {
         if (res.ok) {
           const data = await res.json();
           setUserData(data);
-          toast("otp resended sucessfully");
+          toast("OTP resended successfully");
         } else {
           console.log("Error updating firebase verification:", res.status);
         }
@@ -113,58 +119,56 @@ const UserLoginOtpVerify = () => {
   const handleVerifyOtp = async () => {
     const enteredOtp = otp.join("");
     const verificationId = userData?.firebaseCode;
-  
+
     if (!verificationId) {
       console.log("Verification ID is missing.");
       return;
     }
-  
+
     try {
       const credential = PhoneAuthProvider.credential(verificationId, enteredOtp);
       const verifyResult = await signInWithCredential(auth, credential);
       console.log("Verification result:", verifyResult);
-  
-  
+
       try {
-        // Check if userData._id exists before making the request
-        if (!userData._id) {
+        if (!userData?._id) {
           console.log("User ID is missing.");
           return;
         }
-  
+
         const res = await fetch(`/user/user_update_verify/${userData._id}`, {
           method: "POST",
         });
-  
+
         if (res.ok) {
           const data = await res.json();
+          setUserData(data);
           console.log("Verification update response data:", data);
-  
-          if (data.verified) {
-            setUserData(data);
-            dispatch(signInSuccess(data));
-              try {
-                const response = await axios.post("/user/start_conversation", {
-                  userId: data._id,
-                  adminId: data.adminId,
-                  propertyId: data.propId,
-                });
-  
-                if (response.data) {
-                  console.log("Conversation created:", response.data);
-      toast("OTP verification successful!");
 
-                  navigate(`/user_chat?conId=${response.data._id}`);
-                }
-              } catch (error) {
-                console.error("Error starting conversation:", error);
+          if (data.verified && !data.conversationId) {
+            dispatch(signInSuccess(data));
+            try {
+              const response = await axios.post("/user/start_conversation", {
+                userId: data._id,
+                adminId: data.adminId,
+                propertyId: data.propId,
+              });
+
+              if (response.data) {
+                console.log("Conversation created:", response.data);
+                toast("OTP verification successful!");
+                dispatch(signInSuccess(response.data.user));
+                navigate(`/chat_user?conId=${response.data.user.conversationId}`);
               }
-         
-          } else {
-            console.log("Error verifying the user");
+            } catch (error) {
+              console.error("Error starting conversation:", error);
+            }
+          } else if (data.conversationId) {
+            dispatch(signInSuccess(data));
+            navigate(`/chat_user?conId=${data.conversationId}`);
           }
         } else {
-          const errorText = await res.text(); 
+          const errorText = await res.text();
           console.log("Error updating verification status:", res.statusText, errorText);
           toast("Error updating verification status");
         }
@@ -183,10 +187,7 @@ const UserLoginOtpVerify = () => {
       console.log("Error verifying OTP:", error);
     }
   };
-  
 
-  console.log(userData);
-  // console.log(currentUser);
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4">
       <div className="bg-white shadow-lg rounded-lg p-8 max-w-sm w-full">
@@ -231,7 +232,7 @@ const UserLoginOtpVerify = () => {
             {seconds === 0 ? "Resend OTP" : `Resend OTP in ${seconds} seconds`}
           </button>
         </div>
-        <div className="" id="recaptcha"></div>
+        <div id="recaptcha"></div>
       </div>
     </div>
   );

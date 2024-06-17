@@ -1,6 +1,8 @@
-import { Conversation } from "../../../entities/models/user/Conversation";
+import { Conversation } from "../../../entities/models/common/Conversation";
+import { Message } from "../../../entities/models/common/Message";
 import { User } from "../../../entities/models/user/User";
 import { ConversationModel } from "../../../frameworks/database/models/admin/ConversationModel";
+import { MessageModel } from "../../../frameworks/database/models/admin/MessageModel";
 import { UserModel } from "../../../frameworks/database/models/user/User";
 import { IUserRepository } from "./IUserRepository";
 
@@ -80,4 +82,5 @@ export class MongoUserRepository implements IUserRepository {
   ): Promise<Conversation | null> {
     return await ConversationModel.findOne({ userId, adminId, propertyId });
   }
+  
 }

@@ -5,6 +5,7 @@ import { InjectedAdminSignUpController, InjectedAdminlogincontroller, InjectedGe
 import { MessageModel } from "../../../frameworks/database/models/admin/MessageModel";
 import moment from 'moment';
 import { ConversationModel } from "../../../frameworks/database/models/admin/ConversationModel";
+import { InjectedSendMesssage } from "../../../frameworks/injection/CommonInjects";
 
 const router: Route = Router();
 
@@ -39,6 +40,9 @@ router.post("/save_property_data", InjectedSavePropertyDataController.SaveProper
 
 // -------------------------------------| GET ADMINS PROPERTY DATA AND QRCODE --------------------------------------------------------------------|
 router.get("/get_admin_property_data/:id", InjectedGetAdminPropertyDataController.GetAdminPropertyDataControl.bind(InjectedGetAdminPropertyDataController));
+
+// -------------------------------------| SEND MESSAGE FROM ADMIN SIDE TO USER --------------------------------------------------------------------|
+router.post('/send_message', InjectedSendMesssage.SendMessageControl.bind(InjectedSendMesssage));
 
 
 

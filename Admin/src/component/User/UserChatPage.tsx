@@ -28,13 +28,9 @@ const UserChatPage: React.FC = () => {
   const location = useLocation();
   const query = new URLSearchParams(location.search);
   const conIdQ = query.get("conId");
+  console.log(conIdQ)
   console.log(currentUser);
 
-  useEffect(() => {
-    if (currentUser) {
-      navigate(`/user_chat?conId=${conIdQ}`);
-    }
-  }, [currentUser, navigate, conIdQ]);
 
 
   const fetchMessages = async () => {
@@ -49,6 +45,14 @@ const UserChatPage: React.FC = () => {
       console.error("Error fetching messages:", error);
     }
   };
+
+
+  useEffect(()=>{
+    if(currentUser){
+      console.log(currentUser)
+      navigate(`/chat_user?conId=${conIdQ}`);
+    }
+  }, [])
 
 
   useEffect(() => {
@@ -86,7 +90,7 @@ const UserChatPage: React.FC = () => {
 
   const handleSignOut = () => {
     dispatch(signoutSuccess());
-    navigate("/new_user");
+    navigate("/");
   };
 
 
@@ -178,3 +182,5 @@ const UserChatPage: React.FC = () => {
 };
 
 export default UserChatPage;
+
+

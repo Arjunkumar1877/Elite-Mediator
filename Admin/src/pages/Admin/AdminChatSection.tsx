@@ -36,27 +36,27 @@ const AdminChatSection: React.FC = () => {
   const { currentAdmin } = useSelector((state: any) => state?.admin);
   const params = useParams();
 console.log(params.id + "")
-  useEffect(() => {
-    const fetchConversations = async () => {
-      try {
-        const response = await axios.get('/api/conversations', {
-          params: { conversationId: params.id }
-        });
-        setConversations(response.data); // Assuming response.data is an array of conversations
-      } catch (error) {
-        console.error("Error fetching conversations:", error);
-      }
-    };
+  // useEffect(() => {
+  //   const fetchConversations = async () => {
+  //     try {
+  //       const response = await axios.get('/api/conversations', {
+  //         params: { conversationId: params.id }
+  //       });
+  //       setConversations(response.data); // Assuming response.data is an array of conversations
+  //     } catch (error) {
+  //       console.error("Error fetching conversations:", error);
+  //     }
+  //   };
   
-    if (currentAdmin?._id) {
-      fetchConversations();
-    }
-  }, [currentAdmin]); // Ensure fetchConversations runs when currentAdmin changes
+  //   if (currentAdmin?._id) {
+  //     fetchConversations();
+  //   }
+  // }, [currentAdmin]); // Ensure fetchConversations runs when currentAdmin changes
   
-  const handleConversationSelect = async (conversation: Conversation) => {
-    setSelectedConversation(conversation); // Update selectedConversation state
+  const handleConversationSelect = async () => {
+    // setSelectedConversation(conversation); // Update selectedConversation state
     try {
-      const response = await axios.get(`/api/messages/${conversation._id}`);
+      const response = await axios.get(`/user/get_messages/${params.id}`);
       setMessages(response.data); // Assuming response.data is an array of messages
       setLoading(false);
       scrollToBottom();
@@ -67,12 +67,17 @@ console.log(params.id + "")
   };
   
 
-  const sendMessage = async () => {
-    if (newMessage.trim() === "" || !selectedConversation) return;
+  useEffect(()=>{
+    handleConversationSelect();
+  },[])
 
+
+  const sendMessage = async () => {
+    // if (newMessage.trim() === "" || !selectedConversation) return;
+console.log("sending message clicked")
     try {
-      const response = await axios.post<Message>('/user/send-message', {
-        conversationId: selectedConversation._id,
+      const response = await axios.post<Message>('/api/send_message', {
+        conversationId: params.id,
         senderId: currentAdmin._id,
         senderModel: "Admin",
         text: newMessage
@@ -159,20 +164,7 @@ console.log(params.id + "")
         </div>
       </div>
 
-      <div className="flex flex-col border-2 p-4 bg-white shadow-lg w-full md:w-1/4">
-        <h2 className="text-xl font-bold mb-4">Conversations</h2>
-        <div className="flex flex-col gap-2 overflow-y-auto">
-          {conversations.map((conversation) => (
-            <div
-              key={conversation._id}
-              className={`p-2 rounded-lg cursor-pointer ${selectedConversation?._id === conversation._id ? 'bg-sky-200' : 'bg-gray-100'}`}
-              onClick={() => handleConversationSelect(conversation)}
-            >
-              Conversation with {conversation.userId}
-            </div>
-          ))}
-        </div>
-      </div>
+   
     </div>
   );
 };
