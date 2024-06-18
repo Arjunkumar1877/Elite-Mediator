@@ -1,9 +1,10 @@
 import { IGetMessageUseCase } from "../../../entities/useCasesInterfaces/common/IGetMessagesUseCase";
+import { Server as SocketIOServer } from 'socket.io';
 import { Req, Res } from "../../../frameworks/types/ServerTypes";
 
 
 export class GetMessagesController{
-    constructor(private igetmessagesusecase: IGetMessageUseCase){};
+    constructor(private igetmessagesusecase: IGetMessageUseCase, private io: SocketIOServer){};
 
     async GetMessagesControl(req: Req, res: Res): Promise<void>{
         console.log("fetching messages ")

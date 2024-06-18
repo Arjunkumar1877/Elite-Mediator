@@ -9,10 +9,11 @@ import { serverPackage } from "../../types/ServerTypes";
 import { Request, Response, NextFunction, ErrorRequestHandler } from "express";
 import cors from "cors";
 import path from "path";
+import { app, server } from "../../services/socketIo/SocketIo";
 
 export class ExpressServer {
   constructor() {
-    const app: serverPackage = express();
+    // const app: serverPackage = express();
 // app.use(express.static(path.join(__dirname, 'client/build')));
 
 
@@ -42,7 +43,7 @@ export class ExpressServer {
     // });
     
 
-    app.listen(7000, () => {
+    server.listen(7000, () => {
       console.log("Express server connected on 7000");
     });
   }
