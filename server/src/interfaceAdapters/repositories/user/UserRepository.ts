@@ -1,8 +1,10 @@
+import { PropertyData } from "../../../entities/models/admin/PropertyData";
 import { Conversation } from "../../../entities/models/common/Conversation";
 import { Message } from "../../../entities/models/common/Message";
 import { User } from "../../../entities/models/user/User";
 import { ConversationModel } from "../../../frameworks/database/models/admin/ConversationModel";
 import { MessageModel } from "../../../frameworks/database/models/admin/MessageModel";
+import { QrModel } from "../../../frameworks/database/models/admin/QrDataModel";
 import { UserModel } from "../../../frameworks/database/models/user/User";
 import { IUserRepository } from "./IUserRepository";
 
@@ -26,6 +28,8 @@ export class MongoUserRepository implements IUserRepository {
       }
     );
 
+    console.log('😣😣😣🔥🔥🔥🔥📀📀📀📀 user verification')
+
     if (savedData) {
       return savedData;
     } else {
@@ -46,6 +50,11 @@ export class MongoUserRepository implements IUserRepository {
     propId: string
   ): Promise<any> {
     return await UserModel.findOneAndDelete({ phone, propId });
+  }
+  
+  async FindPropertyData(propId: string, adminId: string): Promise<PropertyData | any> {
+    const data = await QrModel.findOne({adminId: adminId, propId: propId});
+    return  data;
   }
 
   async CreateConversation(

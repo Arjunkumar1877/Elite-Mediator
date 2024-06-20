@@ -36,4 +36,13 @@ export class CreateUserController {
       res.status(500).json({ error: "Internal server error" });
     }
   }
+
+  async SaveUnverifiedUsderControl(req: Req, res: Res): Promise<void>{
+    try {
+      const data = await this.isavenewuserdatausecase.SaveNewUser(req.body);
+      res.json(data)
+    } catch (error) {
+      console.log(error)
+    }
+  }
 }

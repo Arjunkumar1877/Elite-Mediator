@@ -1,5 +1,5 @@
 import { PropertyData } from "../../models/admin/PropertyData";
 
-export interface IGetAdminPropertyDataUseCase{
+export interface IGetAdminAllPropertyDataUseCase{
     GetAdminsPropertyDatas(id: string): Promise<any>;
 }

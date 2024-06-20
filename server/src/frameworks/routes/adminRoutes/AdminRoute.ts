@@ -1,12 +1,12 @@
 import { Router } from "express";
 import { Route } from "../../../frameworks/types/ServerTypes";
 import { JwtTokenAdapter } from "../../../frameworks/services/jwtService/TokenService";
-import { InjectedAdminSignUpController, InjectedAdminlogincontroller, InjectedGenerateQrCodeController, InjectedGetAdminDataController, InjectedGetAdminPropertyDataController, InjectedGetUnverifiedAdminController, InjectedGoogleLoginController, InjectedSavePropertyDataController, InjectedUpdateAdminProfileController, InjectedUpdateVerifyAdminController } from "../../../frameworks/injection/AdminInjects";
+import { InjectedAdminSignUpController, InjectedAdminlogincontroller, InjectedGenerateQrCodeController, InjectedGetAdminDataController, InjectedGetAdminAllPropertyDataController, InjectedGetUnverifiedAdminController, InjectedGoogleLoginController, InjectedSavePropertyDataController, InjectedUpdateAdminProfileController, InjectedUpdateVerifyAdminController } from "../../../frameworks/injection/AdminInjects";
 import { MessageModel } from "../../../frameworks/database/models/admin/MessageModel";
 import moment from 'moment';
 import { ConversationModel } from "../../../frameworks/database/models/admin/ConversationModel";
 import { InjectedSendMesssage } from "../../../frameworks/injection/CommonInjects";
-import { InjectedCreateConversation } from "../../../frameworks/injection/UserInjects";
+import { InjectedCreateConversationController } from "../../../frameworks/injection/UserInjects";
 
 const router: Route = Router();
 
@@ -40,13 +40,13 @@ router.get("/generate_code/:adminId/:propertyId", InjectedGenerateQrCodeControll
 router.post("/save_property_data", InjectedSavePropertyDataController.SavePropertyDataControl.bind(InjectedSavePropertyDataController));
 
 // -------------------------------------| GET ADMINS PROPERTY DATA AND QRCODE --------------------------------------------------------------------|
-router.get("/get_admin_property_data/:id", InjectedGetAdminPropertyDataController.GetAdminPropertyDataControl.bind(InjectedGetAdminPropertyDataController));
+router.get("/get_admin_property_data/:id", InjectedGetAdminAllPropertyDataController.GetAdminPropertyDataControl.bind(InjectedGetAdminAllPropertyDataController));
 
 // -------------------------------------| SEND MESSAGE FROM ADMIN SIDE TO USER --------------------------------------------------------------------|
 router.post('/send_message', InjectedSendMesssage.SendMessageControl.bind(InjectedSendMesssage));
 
 // -------------------------------------| FETCH THE EXSISTING CONVERSATION ON THE ADMIN SIDE ----------------------------------------------------------------------------|
-router.post('/start_conversation', InjectedCreateConversation.CreateConversationControl.bind(InjectedCreateConversation));
+router.post('/start_conversation', InjectedCreateConversationController.CreateConversationControl.bind(InjectedCreateConversationController));
 
 
 

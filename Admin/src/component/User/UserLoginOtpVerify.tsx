@@ -35,12 +35,7 @@ const UserLoginOtpVerify = () => {
   const dispatch = useDispatch();
 
   
-  useEffect(()=>{
-    if(currentUser){
-      console.log(currentUser)
-      navigate(`/chat_user?conId=${currentUser.conversationId}`);
-    }
-  }, [])
+
 
   useEffect(() => {
     if (seconds > 0) {
@@ -84,7 +79,7 @@ const UserLoginOtpVerify = () => {
       const recaptchaVerifier = new RecaptchaVerifier(auth, "recaptcha", {});
       const confirmationResult = await signInWithPhoneNumber(
         auth,
-        "+" + userData?.phone,
+        "+91" + userData?.phone,
         recaptchaVerifier
       );
       if (confirmationResult) {
@@ -115,78 +110,108 @@ const UserLoginOtpVerify = () => {
     }
   };
 
-
   const handleVerifyOtp = async () => {
     const enteredOtp = otp.join("");
     const verificationId = userData?.firebaseCode;
-
+    console.log(verificationId);
+  
     if (!verificationId) {
       console.log("Verification ID is missing.");
       return;
     }
-
+  
     try {
       const credential = PhoneAuthProvider.credential(verificationId, enteredOtp);
       const verifyResult = await signInWithCredential(auth, credential);
-      console.log("Verification result:", verifyResult);
+      console.log('Verification result:', verifyResult);
 
-      try {
-        if (!userData?._id) {
-          console.log("User ID is missing.");
-          return;
-        }
+      toast("OTP verification successful!");
+  
+      // Proceed with user verification update
 
-        const res = await fetch(`/user/user_update_verify/${userData._id}`, {
-          method: "POST",
-        });
-
-        if (res.ok) {
-          const data = await res.json();
-          setUserData(data);
-          console.log("Verification update response data:", data);
-
-          if (data.verified && !data.conversationId) {
-            dispatch(signInSuccess(data));
-            try {
-              const response = await axios.post("/user/start_conversation", {
-                userId: data._id,
-                adminId: data.adminId,
-                propertyId: data.propId,
-              });
-
-              if (response.data) {
-                console.log("Conversation created:", response.data);
-                toast("OTP verification successful!");
-                dispatch(signInSuccess(response.data.user));
-                navigate(`/chat_user?conId=${response.data.user.conversationId}`);
-              }
-            } catch (error) {
-              console.error("Error starting conversation:", error);
-            }
-          } else if (data.conversationId) {
-            dispatch(signInSuccess(data));
-            navigate(`/chat_user?conId=${data.conversationId}`);
+      if(verifyResult){
+        try {
+          if (!userData?._id) {
+            console.log("User ID is missing.");
+            return;
           }
-        } else {
-          const errorText = await res.text();
-          console.log("Error updating verification status:", res.statusText, errorText);
-          toast("Error updating verification status");
+    
+          const res = await fetch(`/user/user_update_verify/${userData._id}`, {
+            method: "POST",
+          });
+    
+          if (res.ok) {
+            const data = await res.json();
+            setUserData(data);
+            console.log("Verification update response data:", data);
+    
+            if (data) {
+              dispatch(signInSuccess(data));
+              try {
+                const response = await axios.post("/user/start_conversation", {
+                  userId: data._id,
+                  adminId: data.adminId,
+                  propertyId: data.propId,
+                });
+    
+                if (response.data) {
+                  console.log("Conversation created:", response.data);
+                  toast("OTP verification successful!");
+                  dispatch(signInSuccess(response.data.user));
+                  navigate(`/chat_user?conId=${response.data.user.conversationId}`);
+                }
+              } catch (error) {
+                console.error("Error starting conversation:", error);
+              }
+            } else if (data?.conversationId) {
+              dispatch(signInSuccess(data));
+              navigate(`/chat_user?conId=${data.conversationId}`);
+            }
+          } else {
+            const errorText = await res.text();
+            console.log("Error updating verification status:", res.statusText, errorText);
+            toast("Error updating verification status");
+          }
+        } catch (error) {
+          console.log("Error during verification update:", error);
+          toast("Error during verification update");
         }
-      } catch (error) {
-        console.log("Error during verification update:", error);
-        toast("Error during verification update");
+    
       }
+
+
+  
     } catch (error: any) {
+      console.log("Error verifying OTP:", error);
       if (error.code === "auth/code-expired") {
         toast("The OTP has expired. Please request a new one.");
+        // Optionally trigger a new OTP request here
       } else if (error.code === "auth/invalid-verification-code") {
         toast("The OTP entered is invalid. Please try again.");
       } else {
         toast("Error verifying OTP. Please try again.");
       }
-      console.log("Error verifying OTP:", error);
     }
   };
+  
+  // // Example function to request a new OTP (if needed)
+  // const requestNewOtp = async () => {
+  //   try {
+  //     const phoneNumber = userData?.phoneNumber; // Assuming phoneNumber is available in userData
+  //     if (!phoneNumber) {
+  //       throw new Error("Phone number is missing.");
+  //     }
+  //     const appVerifier = window.recaptchaVerifier; // Assuming reCAPTCHA verifier is set up
+  //     const verificationResult = await signInWithPhoneNumber(auth, phoneNumber, appVerifier);
+  //     userData.firebaseCode = verificationResult.verificationId;
+  //     toast("A new OTP has been sent to your phone.");
+  //   } catch (error) {
+  //     console.log("Error requesting new OTP:", error);
+  //     toast("Error requesting new OTP. Please try again.");
+  //   }
+  // };
+  
+
 
 
   return (

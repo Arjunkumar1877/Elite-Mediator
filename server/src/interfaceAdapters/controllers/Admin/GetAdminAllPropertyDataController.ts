@@ -1,9 +1,9 @@
-import { IGetAdminPropertyDataUseCase } from "../../../entities/useCasesInterfaces/Admin/IGetAdminPropertyDataUseCase";
+import { IGetAdminAllPropertyDataUseCase } from "../../../entities/useCasesInterfaces/Admin/IGetAdminAllPropertyDataUseCase";
 import { Req, Res } from "../../../frameworks/types/ServerTypes";
 
 
-export class GetAdminPropertyDataController{
-    constructor(private igetadminpropertydatausecase: IGetAdminPropertyDataUseCase){};
+export class GetAdminAllPropertyDataController{
+    constructor(private igetadminpropertydatausecase: IGetAdminAllPropertyDataUseCase){};
 
     async GetAdminPropertyDataControl(req: Req, res: Res): Promise<void>{
         const data = await this.igetadminpropertydatausecase.GetAdminsPropertyDatas(req.params.id);

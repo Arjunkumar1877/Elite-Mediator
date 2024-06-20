@@ -7,4 +7,5 @@ export interface PropertyData {
     userType: string;
     url: string;
     code: string;
+    deleted?: boolean;
 }

@@ -34,6 +34,10 @@ const qrDataSchema = new mongoose.Schema({
     code: {
         type: String,
         required: true
+    },
+    deleted: {
+        type: Boolean,
+        default: false
     }
 }, { timestamps: true });
 

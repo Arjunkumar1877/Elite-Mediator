@@ -30,6 +30,7 @@ export interface PropertyDataType {
   allowVedioCalls: boolean;
   userType: string;
   url: string;
+  verified?: boolean;
   code: string;
 }
 
@@ -52,24 +53,84 @@ const InitialDataPage = () => {
     username: "",
     purpose: "",
     phone: "",
+    verified: false,
     firebaseCode: "",
   });
 
 
-useEffect(()=>{
-  if(currentUser){
-    dispatch(signoutSuccess());
-    console.log("Signed out the redux user")
-  }
-},[])
+  useEffect(()=>{
+    if(currentUser){
 
-// useEffect(()=>{
-//   const fetchPropertyData = async()=>{
-//     const res = await fetch("/user/fetchpropertyData/")
-//   }
-// })
+      if(currentUser.propId === propIdQ){
+        console.log(currentUser)
+        toast("You have an old chat list here")
+        navigate(`/chat_user?conId=${currentUser.conversationId}`);
+      }
+    }else{
+      const fetchPropertyData = async()=>{
+        const res = await fetch("/user/get_admins_property_data", {
+          method: "POST",
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({propId: propIdQ, adminId: adminIdQ})
+        })
+    
+        if(res.ok){
+          const adminsPropertyData = await res.json();
+          setPropertyData(adminsPropertyData);
+          if(adminsPropertyData.userType === 'Unknown' && !adminsPropertyData?.deleted){
+            const userIdS = Date.now() + '000000'
+            const res = await fetch("/user/create_user", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                userId: userIdS,
+                adminId: adminIdQ,
+                propId: propIdQ,
+                username: "Unknown",
+                purpose: "Unknown contact",
+                phone: Date.now(),
+                firebaseCode: "0000000000",
+                verified: true
+              }),
+            });
+    
+            if(res.ok){
+              const createdUserData = await res.json();
+              console.log(createdUserData)
+              if(createdUserData.data){
+                try {
+                  const response = await axios.post("/user/start_conversation", {
+                    userId: createdUserData.data._id,
+                    adminId: createdUserData.data.adminId,
+                    propertyId: createdUserData.data.propId,
+                  });
+    
+                  if (response.data) {
+                    console.log("Conversation created:", response.data);
+                    toast("successful!");
+                    dispatch(signInSuccess(response.data.user));
+                    navigate(`/chat_user?conId=${response.data.user.conversationId}`);
+                  }
+                } catch (error) {
+                  console.error("Error starting conversation:", error);
+                }
+              }
+            }
+          }   
+        }
+      }
+    
+      fetchPropertyData();
+    
+    }
+  }, [])
 
 
+console.log(propertyData)
 
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -85,9 +146,60 @@ useEffect(()=>{
   };
 
 
+  const formSubmit = async()=>{
+    if (!validateForm()) {
+      return toast.error("Please fill out all fields.");
+    }
+
+    if(propertyData?.userType === 'Unverified'){
+      const userIdS = formData.phone + "" + Date.now();
+      const updatedFormData = {
+        ...formData,
+        username: formData.username + '(unverified)',
+        userId: userIdS,
+      };
+      const res = await fetch("/user/create_unverified_user", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(updatedFormData),
+      });
+  
+      if (!res.ok) {
+        throw new Error("Network response was not ok");
+      }
+  
+      const createdUnverifieduserData = await res.json();
+
+    if(createdUnverifieduserData){
+      try {
+        const response = await axios.post("/user/start_conversation", {
+          userId: createdUnverifieduserData._id,
+          adminId: createdUnverifieduserData.adminId,
+          propertyId: createdUnverifieduserData.propId,
+        });
+
+        if (response.data) {
+          console.log("Conversation created:", response.data);
+          toast("successful!");
+          dispatch(signInSuccess(response.data.user));
+          navigate(`/chat_user?conId=${response.data.user.conversationId}`);
+        }
+      } catch (error) {
+        console.error("Error starting conversation:", error);
+      }
+    }
 
 
-const onSubmit = async (updatedFormData: UserType) => {
+
+    }else{
+      onSendOtp();
+    }
+  }
+
+
+const createUserData = async (updatedFormData: UserType) => {
   try {
     const res = await fetch("/user/create_user", {
       method: "POST",
@@ -137,7 +249,7 @@ const onSubmit = async (updatedFormData: UserType) => {
         };
 
         setFormData(updatedFormData);
-        onSubmit(updatedFormData);
+        createUserData(updatedFormData);
       } else {
         console.log("Error confirming the captcha.");
       }
@@ -229,7 +341,8 @@ const onSubmit = async (updatedFormData: UserType) => {
           <div>
             <button
               className="bg-sky-500 py-2 px-4 rounded text-white hover:bg-sky-700"
-              onClick={onSendOtp}
+              onClick={formSubmit}
+              disabled={!validateForm}
             >
               Proceed
             </button>

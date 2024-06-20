@@ -1,10 +1,10 @@
 import { PropertyData } from "../../entities/models/admin/PropertyData";
-import { IGetAdminPropertyDataUseCase } from "../../entities/useCasesInterfaces/Admin/IGetAdminPropertyDataUseCase";
+import { IGetAdminAllPropertyDataUseCase } from "../../entities/useCasesInterfaces/Admin/IGetAdminAllPropertyDataUseCase";
 import { IAdminRepository } from "../../interfaceAdapters/repositories/admin/IAdminRepository";
 
 
 
-export class GetAdminPropertDataUseCase implements IGetAdminPropertyDataUseCase{
+export class GetAdminAllPropertDataUseCase implements IGetAdminAllPropertyDataUseCase{
 
     constructor(private iadminRepository: IAdminRepository){};
 
