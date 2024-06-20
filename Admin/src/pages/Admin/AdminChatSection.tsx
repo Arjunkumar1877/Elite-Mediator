@@ -8,6 +8,9 @@ import { BsSend } from "react-icons/bs";
 import { Link, useParams } from "react-router-dom";
 import axios from "axios";
 import { useSelector } from "react-redux";
+import io from 'socket.io-client';
+
+const socket = io('http://localhost:7000');
 
 interface Message {
   _id: string;
@@ -35,26 +38,8 @@ const AdminChatSection: React.FC = () => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { currentAdmin } = useSelector((state: any) => state?.admin);
   const params = useParams();
-console.log(params.id + "")
-  // useEffect(() => {
-  //   const fetchConversations = async () => {
-  //     try {
-  //       const response = await axios.get('/api/conversations', {
-  //         params: { conversationId: params.id }
-  //       });
-  //       setConversations(response.data); // Assuming response.data is an array of conversations
-  //     } catch (error) {
-  //       console.error("Error fetching conversations:", error);
-  //     }
-  //   };
-  
-  //   if (currentAdmin?._id) {
-  //     fetchConversations();
-  //   }
-  // }, [currentAdmin]); // Ensure fetchConversations runs when currentAdmin changes
-  
+
   const handleConversationSelect = async () => {
-    // setSelectedConversation(conversation); // Update selectedConversation state
     try {
       const response = await axios.get(`/user/get_messages/${params.id}`);
       setMessages(response.data); // Assuming response.data is an array of messages
@@ -65,16 +50,32 @@ console.log(params.id + "")
       setLoading(false);
     }
   };
-  
 
-  useEffect(()=>{
+  useEffect(() => {
     handleConversationSelect();
-  },[])
+  }, []);
+
+  const conId = params?.id;
+
+  useEffect(() => {
+    // Listener for chat messages
+    const handleChatMessage = (msg: any, convId: any) => {
+      setMessages((prevMessages) => [...prevMessages, msg]);
+    };
+
+    socket.on('chat message', handleChatMessage);
+
+    // Cleanup listener on component unmount
+    return () => {
+      socket.off('chat message', handleChatMessage);
+    };
+  }, [socket]);
 
 
+  
   const sendMessage = async () => {
-    // if (newMessage.trim() === "" || !selectedConversation) return;
-console.log("sending message clicked")
+    if (newMessage.trim() === "" || !params.id) return;
+
     try {
       const response = await axios.post<Message>('/api/send_message', {
         conversationId: params.id,
@@ -83,7 +84,9 @@ console.log("sending message clicked")
         text: newMessage
       });
 
-      setMessages([...messages, response.data]);
+      socket.emit('join room', conId)
+      socket.emit('chat message', response.data, conId);
+      // setMessages([...messages, response.data]);
       setNewMessage("");
       scrollToBottom();
     } catch (error) {
@@ -122,29 +125,28 @@ console.log("sending message clicked")
         </div>
 
         <div className="flex-1 overflow-y-auto py-4">
-        <div className="flex flex-col gap-4 px-5">
-  {messages.map((message) => (
-    <div key={message._id} className={`flex ${message.senderModel === "Admin" ? "justify-end" : "justify-start"} gap-3`}>
-      {message.senderModel !== "Admin" && (
-        <img src="/public/userIcon.webp" alt="User" className="w-10 h-10 rounded-full" />
-      )}
-      <div className="flex flex-col">
-        <div className="flex justify-between text-xs text-slate-400">
-          <span>{new Date(message.createdAt).toLocaleTimeString()}</span>
-          <span>{message.senderModel === "Admin" ? "You" : message.senderName}</span>
-        </div>
-        <div className="p-3 rounded-xl bg-sky-100 text-sm max-w-xs">
-          {message.text}
-        </div>
-      </div>
-      {message.senderModel === "Admin" && (
-        <img src="/public/userIcon.webp" alt="User" className="w-10 h-10 rounded-full" />
-      )}
-    </div>
-  ))}
-  <div ref={messagesEndRef}></div>
-</div>
-
+          <div className="flex flex-col gap-4 px-5">
+            {messages.map((message) => (
+              <div key={message._id} className={`flex ${message.senderModel === "Admin" ? "justify-end" : "justify-start"} gap-3`}>
+                {message.senderModel !== "Admin" && (
+                  <img src="/public/userIcon.webp" alt="User" className="w-10 h-10 rounded-full" />
+                )}
+                <div className="flex flex-col max-w-[300px] md:max-w-[350px] lg:max-w-[650px]">
+                  <div className="flex justify-between text-xs text-slate-400">
+                    <span>{new Date(message.createdAt).toLocaleTimeString()}</span>
+                    <span>{message.senderModel === "Admin" ? "You" : message.senderName}</span>
+                  </div>
+                  <div className="p-3 rounded-xl bg-sky-100 text-sm break-words">
+                    {message.text}
+                  </div>
+                </div>
+                {message.senderModel === "Admin" && (
+                  <img src="/public/userIcon.webp" alt="User" className="w-10 h-10 rounded-full" />
+                )}
+              </div>
+            ))}
+            <div ref={messagesEndRef}></div>
+          </div>
         </div>
 
         <div className="flex justify-between items-center px-5 py-2 bg-sky-200 rounded-lg mt-2">
@@ -158,13 +160,14 @@ console.log("sending message clicked")
             onKeyPress={(e) => e.key === 'Enter' && sendMessage()}
           />
           <HiOutlinePaperClip className="text-sky-500 text-2xl cursor-pointer" />
-          <div className="p-2 rounded-full bg-sky-500 ml-3 cursor-pointer" onClick={sendMessage}>
+          <div
+            className="p-2 rounded-full bg-sky-500 ml-3 cursor-pointer"
+            onClick={sendMessage}
+          >
             <BsSend className="text-white text-2xl" />
           </div>
         </div>
       </div>
-
-   
     </div>
   );
 };

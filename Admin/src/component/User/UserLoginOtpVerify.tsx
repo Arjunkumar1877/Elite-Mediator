@@ -42,8 +42,6 @@ const UserLoginOtpVerify = () => {
     }
   }, [])
 
-
-
   useEffect(() => {
     if (seconds > 0) {
       const timer = setTimeout(() => setSeconds(seconds - 1), 1000);
@@ -90,6 +88,7 @@ const UserLoginOtpVerify = () => {
         recaptchaVerifier
       );
       if (confirmationResult) {
+        console.log(confirmationResult)
         const res = await fetch("/user/user_update_firebase_verify", {
           method: "POST",
           headers: {
@@ -115,6 +114,7 @@ const UserLoginOtpVerify = () => {
       console.log("Error resending OTP:", error);
     }
   };
+
 
   const handleVerifyOtp = async () => {
     const enteredOtp = otp.join("");
@@ -187,6 +187,7 @@ const UserLoginOtpVerify = () => {
       console.log("Error verifying OTP:", error);
     }
   };
+
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4">

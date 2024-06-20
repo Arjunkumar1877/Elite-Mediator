@@ -8,6 +8,9 @@ import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import { signoutSuccess, setMessages } from "../../redux/user/UserSlice";
+import io from 'socket.io-client';
+
+const socket = io('http://localhost:7000');
 
 interface Message {
   _id: string;
@@ -28,16 +31,21 @@ const UserChatPage: React.FC = () => {
   const location = useLocation();
   const query = new URLSearchParams(location.search);
   const conIdQ = query.get("conId");
-  console.log(conIdQ)
-  console.log(currentUser);
 
+  useEffect(() => {
+    socket.on('chat message', (msg: Message, conIdQ: string) => {
+      dispatch(setMessages([...messages, msg]));
+    });
 
+    return () => {
+      socket.off('chat message');
+    };
+  }, [messages, dispatch]);
 
   const fetchMessages = async () => {
     try {
       const res = await fetch(`/user/get_messages/${conIdQ}`);
       const data = await res.json();
-      console.log(data)
       if (res.ok) {
         dispatch(setMessages(data));
       }
@@ -46,14 +54,11 @@ const UserChatPage: React.FC = () => {
     }
   };
 
-
-  useEffect(()=>{
-    if(currentUser){
-      console.log(currentUser)
+  useEffect(() => {
+    if (currentUser) {
       navigate(`/chat_user?conId=${conIdQ}`);
     }
-  }, [])
-
+  }, [currentUser, conIdQ, navigate]);
 
   useEffect(() => {
     if (conIdQ) {
@@ -62,17 +67,18 @@ const UserChatPage: React.FC = () => {
   }, [conIdQ]);
 
   const sendMessage = async () => {
-    if (newMessage.trim() === "" || !currentUser?.conversationId) return;
+    if (newMessage.trim() === "" || !conIdQ) return;
 
     try {
-      const response = await axios.post("/user/send_message", {
+      const response = await axios.post<Message>("/user/send_message", {
         conversationId: conIdQ,
         senderId: currentUser._id,
         senderModel: "User",
         text: newMessage,
       });
+      socket.emit('join room', conIdQ);
 
-      dispatch(setMessages([...messages, response.data]));
+      socket.emit('chat message', response.data, conIdQ);
       setNewMessage("");
       scrollToBottom();
     } catch (error) {
@@ -92,9 +98,6 @@ const UserChatPage: React.FC = () => {
     dispatch(signoutSuccess());
     navigate("/");
   };
-
-
-  console.log(messages)
 
   return (
     <div className="pt-1 h-screen bg-gray-50 flex flex-col">
@@ -116,30 +119,31 @@ const UserChatPage: React.FC = () => {
           </div>
         </div>
 
-        
         <div className="flex-1 overflow-y-auto py-4">
           <div className="flex flex-col gap-4 px-5">
             {messages?.length > 0 &&
-              messages?.map((message: Message) => (
+              messages.map((message: Message) => (
                 <div
-                  key={message?._id}
-                  className={`flex ${message?.senderModel === "User" ? "justify-end" : "justify-start"} gap-3`}
+                  key={message._id}
+                  className={`flex ${message.senderModel === "User" ? "justify-end" : "justify-start"} gap-3`}
                 >
-                  {message?.senderModel !== "User" && (
+                  {message.senderModel !== "User" && (
                     <img
                       src="/public/userIcon.webp"
                       alt="User"
                       className="w-10 h-10 rounded-full"
                     />
                   )}
-                  <div className="flex flex-col">
+                  <div className="flex flex-col max-w-[300px] md:max-w-[350px] lg:max-w-[650px]">
                     <div className="flex justify-between text-xs text-slate-400">
-                      <span>{new Date(message?.createdAt).toLocaleTimeString()}</span>
-                      <span>{message?.senderModel === "User" ? "You" : message?.senderName || "Admin"}</span>
+                      <span>{new Date(message.createdAt).toLocaleTimeString()}</span>
+                      <span>{message.senderModel === "User" ? "You" : message.senderName || "Admin"}</span>
                     </div>
-                    <div className="p-3 rounded-xl bg-sky-100 text-sm max-w-xs">{message?.text}</div>
+                    <div className="p-3 rounded-xl bg-sky-100 text-sm overflow-hidden break-words">
+                      {message.text}
+                    </div>
                   </div>
-                  {message?.senderModel === "User" && (
+                  {message.senderModel === "User" && (
                     <img
                       src="/public/userIcon.webp"
                       alt="User"
@@ -174,13 +178,9 @@ const UserChatPage: React.FC = () => {
             <BsSend className="text-white text-2xl" />
           </div>
         </div>
-
-
       </div>
     </div>
   );
 };
 
 export default UserChatPage;
-
-

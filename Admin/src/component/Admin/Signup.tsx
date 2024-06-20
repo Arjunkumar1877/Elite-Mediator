@@ -87,18 +87,27 @@ const Signup: React.FC = () => {
       console.log(error);
     }
   };
-
   const onSendOtp = async () => {
     if (!validateForm()) {
       return;
     } else {
       try {
-      
+        const recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha', {});
+        const confirmationResult = await signInWithPhoneNumber(auth, phone, recaptchaVerifier);
+
+        if (confirmationResult) {
+          setConfirmOtp(confirmationResult);
+          onSubmit(confirmationResult);
+        } else {
+          console.log('Error confirming the captcha.');
+        }
       } catch (error) {
         console.log(error);
       }
     }
   };
+
+
 
   console.log(confirmOtp);
 

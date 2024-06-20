@@ -6,6 +6,7 @@ import { MessageModel } from "../../../frameworks/database/models/admin/MessageM
 import moment from 'moment';
 import { ConversationModel } from "../../../frameworks/database/models/admin/ConversationModel";
 import { InjectedSendMesssage } from "../../../frameworks/injection/CommonInjects";
+import { InjectedCreateConversation } from "../../../frameworks/injection/UserInjects";
 
 const router: Route = Router();
 
@@ -27,7 +28,7 @@ router.post("/admin_login", InjectedAdminlogincontroller.login.bind(InjectedAdmi
 router.post("/google_oauth",JwtToken.CreateJwtToken,  InjectedGoogleLoginController.GoogleoauthController.bind(InjectedGoogleLoginController));
 
 // -------------------------------------| UPDATE THE ADDMIN PROFILE ----------------------------------------------------------------------|
-router.post("/update_admin/:id",JwtToken.verifyToken,  InjectedUpdateAdminProfileController.UpdateAdminProfileData.bind(InjectedUpdateAdminProfileController));
+router.post("/update_admin/:id",  InjectedUpdateAdminProfileController.UpdateAdminProfileData.bind(InjectedUpdateAdminProfileController));
 
 // -------------------------------------| GET THE ADMIN DATA BY THE ADMIN ID -------------------------------------------------------------|
 router.get("/get_admin/:id",JwtToken.verifyToken, InjectedGetAdminDataController.GetAdminDataByIdController.bind(InjectedGetAdminDataController));
@@ -44,31 +45,19 @@ router.get("/get_admin_property_data/:id", InjectedGetAdminPropertyDataControlle
 // -------------------------------------| SEND MESSAGE FROM ADMIN SIDE TO USER --------------------------------------------------------------------|
 router.post('/send_message', InjectedSendMesssage.SendMessageControl.bind(InjectedSendMesssage));
 
+// -------------------------------------| FETCH THE EXSISTING CONVERSATION ON THE ADMIN SIDE ----------------------------------------------------------------------------|
+router.post('/start_conversation', InjectedCreateConversation.CreateConversationControl.bind(InjectedCreateConversation));
 
 
 
 
-// Route to start a new conversation
-router.post('/start-conversation', async (req, res) => {
-    const { userId, adminId, propId } = req.body;
-    try {
-      let conversation = await ConversationModel.findOne({ userId, adminId, propId });
-      if (!conversation) {
-        conversation = new ConversationModel({ userId, adminId, propId });
-        await conversation.save();
-      }
-      res.status(200).json(conversation);
-    } catch (error) {
-      res.status(500).json({ error: 'Failed to start conversation' });
-    }
-  });
 
 // Route to get all conversations for an admin
 router.get('/conversations/:id', async (req, res) => {
     // const { conversationId } = req.query;
     console.log("🤷‍♀️🤷‍♀️🤷‍♀️🤷‍♀️🤷‍♀️🤷‍♀️")
     try {
-      const conversations = await ConversationModel.findOne({ _id: req.params.id });
+      const conversations = await ConversationModel.findOne({ _id: req.params.id }).populate('User')
       console.log(conversations)
       res.status(200).json(conversations);
     } catch (error) {
@@ -123,7 +112,7 @@ router.post('/send-message', async (req, res) => {
     }
     
     try {
-      const conversations = await ConversationModel.find(filterQuery)
+      const conversations = await ConversationModel.find(filterQuery).populate('userId')
         .skip((parseInt(page) - 1) * parseInt(limit))
         .limit(parseInt(limit))
         .sort({ createdAt: -1 });

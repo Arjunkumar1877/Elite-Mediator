@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { SuperAdminLoginController } from "../../controllers/superAdmin/SuperAdminLoginController";
+import { SuperAdminLoginController } from "../../../interfaceAdapters/controllers/superAdmin/SuperAdminLoginController";
 
 const router = Router();
 

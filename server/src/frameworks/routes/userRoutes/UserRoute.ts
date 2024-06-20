@@ -23,7 +23,7 @@ router.get("/get_user_by_id/:id", InjectedGetUnverifiedUserData.GetUnverifiedUse
 router.post("/get_user_phone", InjectedGetUserDataByPHone.GetUserDataByPhone.bind(InjectedGetUserDataByPHone));
 
 
-// -------------------------------------| GET THE USER DATA BY USING PHONE ----------------------------------------------------------------------------|
+// -------------------------------------| START A NEW CONVERSATION OR FETCH THE EXSISTING CHAT ----------------------------------------------------------------------------|
 router.post('/start_conversation', InjectedCreateConversation.CreateConversationControl.bind(InjectedCreateConversation));
 
 

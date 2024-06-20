@@ -4,7 +4,7 @@ import { Req, Res } from "../../../frameworks/types/ServerTypes";
 
 
 export class GetMessagesController{
-    constructor(private igetmessagesusecase: IGetMessageUseCase, private io: SocketIOServer){};
+    constructor(private igetmessagesusecase: IGetMessageUseCase){};
 
     async GetMessagesControl(req: Req, res: Res): Promise<void>{
         console.log("fetching messages ")

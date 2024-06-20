@@ -33,12 +33,13 @@ const AdminChatListSection: React.FC = () => {
     try {
       const response = await axios.get('/api/conversations_list', {
         params: {
-          adminId: currentAdmin._id, // Use the actual admin ID
+          adminId: currentAdmin._id, 
           page: currentPage,
           filter: filter,
         },
       });
       setConversations(response.data.conversations);
+      console.log(response.data.conversations);
       setTotalPages(response.data.totalPages);
     } catch (error) {
       console.error('Error fetching conversations:', error);
@@ -64,8 +65,10 @@ const AdminChatListSection: React.FC = () => {
 
   const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
-    // Implement search functionality if required
   };
+
+
+  console.log(conversations)
 
   return (
     <div className="bg-gray-50 min-h-screen p-4">
@@ -118,7 +121,7 @@ const AdminChatListSection: React.FC = () => {
                   <div className="flex items-center gap-3">
                     <img src="public/userIcon.webp" alt="User" className="h-14 w-14 rounded-full" />
                     <div className="flex flex-col">
-                      <h2 className="text-lg font-medium">Arjun Kumar VS</h2>
+                      <h2 className="text-lg font-medium">{conversation?.userId?.username}</h2>
                       <p className="text-sm text-gray-600">hai, how are you</p>
                     </div>
                   </div>
