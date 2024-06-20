@@ -4,6 +4,7 @@ export interface PropertyData {
     propertyName: string;
     propertyAddress: string;
     allowVedioCalls: boolean;
+    userType: string;
     url: string;
     code: string;
 }

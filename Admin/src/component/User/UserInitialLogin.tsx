@@ -21,8 +21,21 @@ type UserType = {
   conversationId?: string;
 };
 
+export interface PropertyDataType {
+  _id: string;
+  adminId: string;
+  propId: string;
+  propertyName: string;
+  propertyAddress: string;
+  allowVedioCalls: boolean;
+  userType: string;
+  url: string;
+  code: string;
+}
+
 const InitialDataPage = () => {
   const { currentUser } = useSelector((state: any) => state.user);
+  const [propertyData, setPropertyData] = useState<PropertyDataType>();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const useQuery = () => {
@@ -49,6 +62,14 @@ useEffect(()=>{
     console.log("Signed out the redux user")
   }
 },[])
+
+// useEffect(()=>{
+//   const fetchPropertyData = async()=>{
+//     const res = await fetch("/user/fetchpropertyData/")
+//   }
+// })
+
+
 
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {

@@ -23,6 +23,10 @@ const qrDataSchema = new mongoose.Schema({
         type: Boolean,
         required: true
     },
+    userType: {
+        type: String,
+        enum: ['Verified', 'Unverified', 'Unknown']
+    },
     url: {
         type: String,
         required: true
