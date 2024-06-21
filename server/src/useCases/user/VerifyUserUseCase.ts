@@ -7,6 +7,23 @@ export class VerifyUserUseCase implements IVerifyUserUseCase{
     constructor(private iuserRepository: IUserRepository){};
     
     async FindUserAndUpdate(userId: string): Promise<User> {
-        return this.iuserRepository.FindByIdAndVerify(userId)
+   
+
+        const userData = await this.iuserRepository.FindUserByUserId(userId);
+
+        if(userData?.verified){
+            console.log("user already verified and data sended")
+            return userData;
+        }else{
+            console.log("user  verified now and data sended")
+
+            return this.iuserRepository.FindByIdAndVerify(userId);
+
+        }
+
+
+        
+
+
     }
 }

@@ -1,3 +1,5 @@
+
+
 import { Server as HTTPServer } from 'http';
 import { Socket, Server as SocketIoServer } from 'socket.io';
 
@@ -29,7 +31,7 @@ function initializeSocket(server: HTTPServer): SocketIoServer {
         // Handle chat messages
         socket.on('chat message', (msg, convId) => {
             console.log(`Message received in room ${convId}: ${msg}`);
-            io.to(convId).emit('chat message', msg);
+            io.to(convId).emit('chat message', msg); 
         });
     });
 

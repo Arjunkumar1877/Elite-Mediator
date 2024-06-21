@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import { useState, useEffect, ChangeEvent } from "react";
 import axios from "axios";
 import { useSelector } from "react-redux";
-import { RootState } from "../../redux/store"; // Adjust the import according to your store's location
+// import { RootState } from "../../redux/store"; // Adjust the import according to your store's location
 
 // Define the Conversation type
 interface Conversation {
@@ -121,7 +121,7 @@ const AdminChatListSection: React.FC = () => {
                   <div className="flex items-center gap-3">
                     <img src="public/userIcon.webp" alt="User" className="h-14 w-14 rounded-full" />
                     <div className="flex flex-col">
-                      <h2 className="text-lg font-medium">{conversation?.userId?.username}</h2>
+                      {/* <h2 className="text-lg font-medium">{conversation?.userId?.username}</h2> */}
                       <p className="text-sm text-gray-600">hai, how are you</p>
                     </div>
                   </div>

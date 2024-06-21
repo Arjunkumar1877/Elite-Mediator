@@ -34,7 +34,6 @@ export default function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/verify_otp_page/:ph" element={<OtpVerification />} />
-          <Route path="/chat_user" element={<UserChatPage />} />
 
           <Route element={<AdminPrivateRoute />}>
             <Route path="/admin-data" element={<UserVerifyData />} />
@@ -49,8 +48,10 @@ export default function App() {
 
           <Route path='/new_user' element={<InitialDataPage/>} />
           <Route path="/user_verify_otp_page/:id" element={<UserLoginOtpVerify />} />
-          {/* <Route element={<UserPrivateRoute />}> */}
-        {/* </Route> */}
+          <Route element={<UserPrivateRoute />}>
+          <Route path="/chat_user" element={<UserChatPage />} />
+
+        </Route>
           
 
         </Routes>

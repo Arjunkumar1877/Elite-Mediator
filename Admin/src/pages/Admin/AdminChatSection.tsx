@@ -38,11 +38,13 @@ const AdminChatSection: React.FC = () => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { currentAdmin } = useSelector((state: any) => state?.admin);
   const params = useParams();
+  const conId = params?.id;
 
   const handleConversationSelect = async () => {
     try {
       const response = await axios.get(`/user/get_messages/${params.id}`);
       setMessages(response.data); // Assuming response.data is an array of messages
+      socket.emit('join room', conId);
       setLoading(false);
       scrollToBottom();
     } catch (error) {
@@ -52,41 +54,36 @@ const AdminChatSection: React.FC = () => {
   };
 
   useEffect(() => {
+    socket.emit('join room', conId);
     handleConversationSelect();
-  }, []);
-
-  const conId = params?.id;
+  }, [conId]);
 
   useEffect(() => {
-    // Listener for chat messages
-    const handleChatMessage = (msg: any, convId: any) => {
-      setMessages((prevMessages) => [...prevMessages, msg]);
+    const handleChatMessage = (msg: Message) => {
+      if (msg.conversationId === conId) {
+        setMessages((prevMessages) => [...prevMessages, msg]);
+      }
     };
 
     socket.on('chat message', handleChatMessage);
 
-    // Cleanup listener on component unmount
     return () => {
       socket.off('chat message', handleChatMessage);
     };
-  }, [socket]);
+  }, [conId]);
 
-
-  
   const sendMessage = async () => {
-    if (newMessage.trim() === "" || !params.id) return;
+    if (newMessage.trim() === "" || !conId) return;
 
     try {
       const response = await axios.post<Message>('/api/send_message', {
-        conversationId: params.id,
+        conversationId: conId,
         senderId: currentAdmin._id,
         senderModel: "Admin",
         text: newMessage
       });
 
-      socket.emit('join room', conId)
       socket.emit('chat message', response.data, conId);
-      // setMessages([...messages, response.data]);
       setNewMessage("");
       scrollToBottom();
     } catch (error) {

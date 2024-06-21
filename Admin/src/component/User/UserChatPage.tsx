@@ -33,14 +33,16 @@ const UserChatPage: React.FC = () => {
   const conIdQ = query.get("conId");
 
   useEffect(() => {
-    socket.on('chat message', (msg: Message, conIdQ: string) => {
-      dispatch(setMessages([...messages, msg]));
+    socket.on('chat message', (msg: Message) => {
+      if (msg.conversationId === conIdQ) {
+        dispatch(setMessages([...messages, msg]));
+      }
     });
 
     return () => {
       socket.off('chat message');
     };
-  }, [messages, dispatch]);
+  }, [messages, dispatch, conIdQ]);
 
   const fetchMessages = async () => {
     try {
@@ -57,11 +59,14 @@ const UserChatPage: React.FC = () => {
   useEffect(() => {
     if (currentUser) {
       navigate(`/chat_user?conId=${conIdQ}`);
+    } else {
+      navigate('/');
     }
   }, [currentUser, conIdQ, navigate]);
 
   useEffect(() => {
     if (conIdQ) {
+      socket.emit('join room', conIdQ);
       fetchMessages();
     }
   }, [conIdQ]);
@@ -76,7 +81,6 @@ const UserChatPage: React.FC = () => {
         senderModel: "User",
         text: newMessage,
       });
-      socket.emit('join room', conIdQ);
 
       socket.emit('chat message', response.data, conIdQ);
       setNewMessage("");
