@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import { useState, useEffect, ChangeEvent } from "react";
 import axios from "axios";
 import { useSelector } from "react-redux";
-// import { RootState } from "../../redux/store"; // Adjust the import according to your store's location
+import io from 'socket.io-client';
 
 // Define the Conversation type
 interface Conversation {
@@ -18,8 +18,11 @@ interface Conversation {
   lastMessage: {
     text: string;
     time: string;
+    unread: number;
   };
 }
+
+const socket = io('http://localhost:7000');
 
 const AdminChatListSection: React.FC = () => {
   const [conversations, setConversations] = useState<Conversation[]>([]);
@@ -33,13 +36,12 @@ const AdminChatListSection: React.FC = () => {
     try {
       const response = await axios.get('/api/conversations_list', {
         params: {
-          adminId: currentAdmin._id, 
+          adminId: currentAdmin._id,
           page: currentPage,
           filter: filter,
         },
       });
       setConversations(response.data.conversations);
-      console.log(response.data.conversations);
       setTotalPages(response.data.totalPages);
     } catch (error) {
       console.error('Error fetching conversations:', error);
@@ -47,8 +49,57 @@ const AdminChatListSection: React.FC = () => {
   };
 
   useEffect(() => {
+    socket.emit('join room', currentAdmin._id);
     fetchConversations();
   }, [currentPage, filter]);
+
+  useEffect(() => {
+    socket.on('connect', () => {
+      console.log('Connected to socket server with ID:', socket.id);
+    });
+
+    socket.on('chat message', async (msg: any, convId: string, adminId: string) => {
+      console.log(`Message received in room ${convId}: ${msg}`);
+      console.log(msg);
+
+      // Update last message in conversation
+      try {
+        await axios.put(`/api/conversations/${msg.conversationId}`, {
+          lastMessage: {
+            text: msg.text,
+            time: msg.createdAt,
+          },
+        });
+
+        // if (msg.senderModel === 'User') {
+        //   await axios.put(`/api/conversations/${msg.conversationId}`, {
+        //     lastMessage: {
+        //       text: msg.text,
+        //       time: msg.createdAt,
+        //       unread: conversations.find(conv => conv._id === msg.conversationId)?.lastMessage.unread + 1 || 1,
+        //     },
+        //   });
+        // }
+
+        // Emit event to update all admin clients with new message
+        socket.emit('chat message', msg);
+        // Emit event to update all admin clients to fetch updated conversation list
+        socket.emit('update conversation', adminId);
+      } catch (error) {
+        console.error('Error updating conversation:', error);
+      }
+    });
+
+    socket.on('update conversation', () => {
+      fetchConversations();
+    });
+
+    return () => {
+      socket.off('connect');
+      socket.off('chat message');
+      socket.off('update conversation');
+    };
+  }, [conversations]);
 
   const handlePreviousPage = () => {
     setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
@@ -66,9 +117,6 @@ const AdminChatListSection: React.FC = () => {
   const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
   };
-
-
-  console.log(conversations)
 
   return (
     <div className="bg-gray-50 min-h-screen p-4">
@@ -121,16 +169,17 @@ const AdminChatListSection: React.FC = () => {
                   <div className="flex items-center gap-3">
                     <img src="public/userIcon.webp" alt="User" className="h-14 w-14 rounded-full" />
                     <div className="flex flex-col">
-                      {/* <h2 className="text-lg font-medium">{conversation?.userId?.username}</h2> */}
-                      <p className="text-sm text-gray-600">hai, how are you</p>
+                      <p className="text-sm text-gray-600">{conversation.lastMessage.text}</p>
                     </div>
                   </div>
 
                   <div className="flex flex-col justify-center items-center gap-1">
-                    <span className="text-sm">12:58 PM</span>
-                    <span className="bg-sky-500 text-white w-6 h-6 rounded-full flex justify-center items-center">
-                      3
-                    </span>
+                    <span className="text-sm">{new Date(conversation.lastMessage.time).toLocaleTimeString()}</span>
+                    {conversation.lastMessage.unread > 0 && (
+                      <span className="bg-sky-500 text-white w-6 h-6 rounded-full flex justify-center items-center">
+                        {conversation.lastMessage.unread}
+                      </span>
+                    )}
                   </div>
                 </div>
               </Link>

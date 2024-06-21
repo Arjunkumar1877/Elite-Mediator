@@ -43,4 +43,18 @@ router.post('/send_message', InjectedSendMesssage.SendMessageControl.bind(Inject
 router.get('/get_messages/:convId', InjectedGetMessagesController.GetMessagesControl.bind(InjectedGetMessagesController));
 
 
+router.get('/update_readmessage_conversation/:id', async(req, res)=>{
+    try {
+        const user = await ConversationModel.findOneAndUpdate({_id: req.params.id}, {
+            $set: {
+                lastMessage: {
+                    unread: 0
+                }
+            }
+        }, {new: true})
+    } catch (error) {
+        console.log(error)
+    }
+})
+
 export default router;

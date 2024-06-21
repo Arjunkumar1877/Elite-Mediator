@@ -1,27 +1,28 @@
-import mongoose from 'mongoose';
-const { Schema } = mongoose;
+const mongoose = require("mongoose");
 
-const messageSchema = new Schema({
+const MessageSchema = new mongoose.Schema({
   conversationId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Conversation',
+    ref: "Conversation",
     required: true,
   },
-  senderId: {
-    type: mongoose.Schema.Types.ObjectId,
-    refPath: 'senderModel',
-    required: true,
+  senderId: { 
+    type: mongoose.Schema.Types.ObjectId, 
+    required: true
+   },
+  senderModel: { 
+    type: String, 
+    enum: ["User", "Admin"], 
+    required: true 
   },
-  senderModel: {
-    type: String,
-    required: true,
-    enum: ['User', 'Admin'],
+  text: { 
+    type: String, 
+    required: true 
   },
-  text: {
-    type: String,
-    required: true,
+  createdAt: { 
+    type: Date, 
+    default: Date.now 
   },
-}, { timestamps: true });
+});
 
-
-export const MessageModel = mongoose.model('Message', messageSchema);
+export const MessageModel = mongoose.model("Message", MessageSchema);

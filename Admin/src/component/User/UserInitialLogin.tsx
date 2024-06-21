@@ -60,11 +60,9 @@ const InitialDataPage = () => {
   });
 
   useEffect(() => {
-    if (currentUser) {
-      if (currentUser.propId === propIdQ) {
+    if (currentUser && currentUser.propId === propIdQ) {
         toast("You have an old chat list here");
         navigate(`/chat_user?conId=${currentUser.conversationId}`);
-      }
     } else {
       const fetchPropertyData = async () => {
         const res = await fetch("/user/get_admins_property_data", {
@@ -143,7 +141,9 @@ const InitialDataPage = () => {
   const validateForm = () => {
     return formData.username && formData.purpose && formData.phone;
   };
-console.log(formData)
+console.log(formData);
+
+console.log(propertyData)
   const formSubmit = async () => {
     if (!validateForm()) {
       return toast.error("Please fill out all fields.");

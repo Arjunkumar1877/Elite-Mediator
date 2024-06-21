@@ -43,7 +43,7 @@ const AdminChatSection: React.FC = () => {
   const handleConversationSelect = async () => {
     try {
       const response = await axios.get(`/user/get_messages/${params.id}`);
-      setMessages(response.data); // Assuming response.data is an array of messages
+      setMessages(response.data); 
       socket.emit('join room', conId);
       setLoading(false);
       scrollToBottom();
@@ -54,6 +54,19 @@ const AdminChatSection: React.FC = () => {
   };
 
   useEffect(() => {
+
+    const updateReadCount = async()=>{
+      const res = await fetch(`/api/update_conversation_unread_count/${conId}`);
+
+
+      const data = await res.json();
+
+      console.log(data)
+      
+    }
+
+    updateReadCount()
+
     socket.emit('join room', conId);
     handleConversationSelect();
   }, [conId]);
@@ -64,6 +77,9 @@ const AdminChatSection: React.FC = () => {
         setMessages((prevMessages) => [...prevMessages, msg]);
       }
     };
+
+    socket.emit('update conversation', currentAdmin._id);
+
 
     socket.on('chat message', handleChatMessage);
 

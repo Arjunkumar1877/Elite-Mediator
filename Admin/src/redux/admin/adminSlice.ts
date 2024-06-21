@@ -4,15 +4,17 @@ type InitialStateType = {
     currentAdmin: string | null;
     error: null | string;
     loading: boolean;
+    conversation: any[]; 
 };
 
 const initialState: InitialStateType = {
     currentAdmin: null,
     error: null,
-    loading: false
+    loading: false,
+    conversation: [] 
 };
 
-const userSlice = createSlice({
+const adminSlice = createSlice({
     name: 'admin',
     initialState,
     reducers: {
@@ -29,6 +31,9 @@ const userSlice = createSlice({
             state.loading = false;
             state.error = action.payload;
         },
+        setConversation: (state, action: PayloadAction<any[]>) => {
+            state.conversation = Array.isArray(action.payload) ? action.payload : [];
+        },
         signoutSuccess: (state) => {
             state.currentAdmin = null;
             state.error = null;
@@ -37,6 +42,6 @@ const userSlice = createSlice({
     }
 });
 
-export const { signInSuccess, signInStart, signInFailure, signoutSuccess } = userSlice.actions;
+export const { signInSuccess, signInStart, signInFailure, setConversation, signoutSuccess } = adminSlice.actions;
 
-export default userSlice.reducer;
+export default adminSlice.reducer;

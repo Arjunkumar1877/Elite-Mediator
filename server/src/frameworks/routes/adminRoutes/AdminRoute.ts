@@ -49,6 +49,45 @@ router.post('/send_message', InjectedSendMesssage.SendMessageControl.bind(Inject
 router.post('/start_conversation', InjectedCreateConversationController.CreateConversationControl.bind(InjectedCreateConversationController));
 
 
+router.get('/update_conversation_unread_count/:id', async (req, res) => {
+  try {
+      // Fetch the existing conversation
+      const exConv = await ConversationModel.findOne({ _id: req.params.id });
+
+      if (!exConv) {
+          return res.status(404).json({ error: 'Conversation not found' });
+      }
+
+      // Update lastMessage with unread count reset to 0
+      const conversation = await ConversationModel.findOneAndUpdate(
+          { _id: req.params.id },
+          {
+              $set: {
+                  lastMessage: {
+                      text: exConv.lastMessage?.text,
+                      time: exConv.lastMessage?.time,
+                      unread: 0 // Reset unread count to 0 after update
+                  }
+              }
+          },
+          { new: true }
+      );
+
+      if (!conversation) {
+          return res.status(404).json({ error: 'Conversation not found after update' });
+      }
+
+      // Fetch all conversations related to the admin after updating lastMessage
+      const conversations = await ConversationModel.find({ adminId: conversation.adminId });
+
+      // Send the updated conversations as a response
+      res.json(conversations);
+  } catch (error) {
+      console.error("Error updating lastMessage and fetching conversations:", error);
+      res.status(500).json({ error: 'Server error' }); // Handle or throw the error as needed
+  }
+});
+
 
 
 

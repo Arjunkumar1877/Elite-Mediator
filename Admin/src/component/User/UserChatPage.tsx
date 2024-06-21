@@ -46,7 +46,7 @@ const UserChatPage: React.FC = () => {
 
   const fetchMessages = async () => {
     try {
-      const res = await fetch(`/user/get_messages/${conIdQ}`);
+      const res:any = await axios.get(`/user/get_messages/${conIdQ}`);
       const data = await res.json();
       if (res.ok) {
         dispatch(setMessages(data));
@@ -83,6 +83,7 @@ const UserChatPage: React.FC = () => {
       });
 
       socket.emit('chat message', response.data, conIdQ);
+      socket.emit('update conversation', currentUser.adminId);
       setNewMessage("");
       scrollToBottom();
     } catch (error) {
