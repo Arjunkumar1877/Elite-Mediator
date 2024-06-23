@@ -10,7 +10,7 @@ import io from 'socket.io-client';
 // Define the Conversation type
 interface Conversation {
   _id: string;
-  userId: string;
+  userId: any;
   adminId: string;
   propId: string;
   createdAt: string;
@@ -71,18 +71,10 @@ const AdminChatListSection: React.FC = () => {
           },
         });
 
-        // if (msg.senderModel === 'User') {
-        //   await axios.put(`/api/conversations/${msg.conversationId}`, {
-        //     lastMessage: {
-        //       text: msg.text,
-        //       time: msg.createdAt,
-        //       unread: conversations.find(conv => conv._id === msg.conversationId)?.lastMessage.unread + 1 || 1,
-        //     },
-        //   });
-        // }
+ 
 
         // Emit event to update all admin clients with new message
-        socket.emit('chat message', msg);
+        socket.emit('chat message', msg, convId, currentAdmin._id);
         // Emit event to update all admin clients to fetch updated conversation list
         socket.emit('update conversation', adminId);
       } catch (error) {
@@ -169,12 +161,13 @@ const AdminChatListSection: React.FC = () => {
                   <div className="flex items-center gap-3">
                     <img src="public/userIcon.webp" alt="User" className="h-14 w-14 rounded-full" />
                     <div className="flex flex-col">
-                      <p className="text-sm text-gray-600">{conversation.lastMessage.text}</p>
+                      <p className="text-md  text-gray-600 font-semibold md:text-xl">{conversation?.userId?.username }</p>
+                      <p className="text-xs text-gray-600 md:text-sm">{conversation.lastMessage.text}</p>
                     </div>
                   </div>
 
                   <div className="flex flex-col justify-center items-center gap-1">
-                    <span className="text-sm">{new Date(conversation.lastMessage.time).toLocaleTimeString()}</span>
+                    <span className="text-xs md:text-md">{new Date(conversation.lastMessage.time).toLocaleTimeString()}</span>
                     {conversation.lastMessage.unread > 0 && (
                       <span className="bg-sky-500 text-white w-6 h-6 rounded-full flex justify-center items-center">
                         {conversation.lastMessage.unread}

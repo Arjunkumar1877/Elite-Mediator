@@ -59,11 +59,14 @@ const InitialDataPage = () => {
     firebaseCode: "",
   });
 
+  
+
   useEffect(() => {
     if (currentUser && currentUser.propId === propIdQ) {
         toast("You have an old chat list here");
         navigate(`/chat_user?conId=${currentUser.conversationId}`);
     } else {
+      dispatch(signoutSuccess());
       const fetchPropertyData = async () => {
         const res = await fetch("/user/get_admins_property_data", {
           method: "POST",

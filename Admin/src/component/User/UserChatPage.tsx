@@ -33,24 +33,25 @@ const UserChatPage: React.FC = () => {
   const conIdQ = query.get("conId");
 
   useEffect(() => {
-    socket.on('chat message', (msg: Message) => {
+    socket.on('recieve_message', (msg: Message) => {
       if (msg.conversationId === conIdQ) {
         dispatch(setMessages([...messages, msg]));
       }
     });
 
     return () => {
-      socket.off('chat message');
+      socket.off('recieve_message');
     };
   }, [messages, dispatch, conIdQ]);
 
   const fetchMessages = async () => {
     try {
       const res:any = await axios.get(`/user/get_messages/${conIdQ}`);
-      const data = await res.json();
-      if (res.ok) {
-        dispatch(setMessages(data));
-      }
+      console.log(res)
+      console.log(res.data)
+     
+        dispatch(setMessages(res.data));
+      
     } catch (error) {
       console.error("Error fetching messages:", error);
     }
@@ -63,6 +64,7 @@ const UserChatPage: React.FC = () => {
       navigate('/');
     }
   }, [currentUser, conIdQ, navigate]);
+
 
   useEffect(() => {
     if (conIdQ) {
@@ -82,7 +84,7 @@ const UserChatPage: React.FC = () => {
         text: newMessage,
       });
 
-      socket.emit('chat message', response.data, conIdQ);
+      socket.emit('chat message', response.data, conIdQ, currentUser.adminId);
       socket.emit('update conversation', currentUser.adminId);
       setNewMessage("");
       scrollToBottom();
@@ -96,6 +98,7 @@ const UserChatPage: React.FC = () => {
   };
 
   useEffect(() => {
+    // fetchMessages()
     scrollToBottom();
   }, [messages]);
 
@@ -103,6 +106,8 @@ const UserChatPage: React.FC = () => {
     dispatch(signoutSuccess());
     navigate("/");
   };
+
+  console.log(messages)
 
   return (
     <div className="pt-1 h-screen bg-gray-50 flex flex-col">

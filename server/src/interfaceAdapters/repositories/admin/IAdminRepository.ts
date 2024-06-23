@@ -1,5 +1,6 @@
 import { Admin } from "../../../entities/models/admin/Admin";
 import { PropertyData } from "../../../entities/models/admin/PropertyData";
+import { Conversation } from "../../../entities/models/common/Conversation";
 
 export interface IAdminRepository {
     CreateAdmin(admin: Admin): Promise<Admin>;
@@ -12,4 +13,7 @@ export interface IAdminRepository {
     UpdateAdminData(admin: Admin, id: string): Promise<Admin | null>;
     CreatePropertyData(propertyData: PropertyData): Promise<PropertyData | null>;
     FindAdminsPropertDatas(id: string): Promise<PropertyData[] | null>;
+    UpdateLastMessageUnreadToZero(id: string, text: string, time: Date, unread: number): Promise<Conversation | any>;
+    FindConversationById(id: string): Promise<Conversation | null>;
+    FindAdminsConversationByAdminId(adminId: string): Promise<any>;
 }

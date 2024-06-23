@@ -19,6 +19,8 @@ import { SavePropertyDataUseCase } from '../../useCases/admin/SavePropertyDataUs
 import { UpdateAdminProfileUseCase } from '../../useCases/admin/UpdateAdminUseCase';
 import { UpdateUnverifiedUseCase } from '../../useCases/admin/UpdateUnverifiedUserUseCase';
 import { GenerateQrCode } from '../services/QrGenerateService/GenerateQrCode.';
+import { UpdateConversationReadToZeroController } from '../../interfaceAdapters/controllers/Admin/UpdateConversationReadToZeroController';
+import { UpdateConversationReadCountToZeroUseCase } from '../../useCases/admin/UpdateConversationReadCountToZeroUseCase';
 const mongoRepo = new MongoAdminRepository();
 
 // -----------------------------| ADMIN SIGNUP INJECTION ----------------------------------------------------------------------------------------
@@ -69,4 +71,8 @@ export const InjectedSavePropertyDataController = new SavePropertDataController(
 const getAdminPropertyDataUse = new GetAdminAllPropertDataUseCase(mongoRepo);
 export const InjectedGetAdminAllPropertyDataController = new GetAdminAllPropertyDataController(getAdminPropertyDataUse);
 
+
+// -----------------------------| GET EACH ADMIN'S PROPERTY DATA AND QRCODE'S INJECTION ----------------------------------------------------------------------------------------
+const updateConversationReadCountUse = new UpdateConversationReadCountToZeroUseCase(mongoRepo);
+export const InjectedUpdateConversationReadCountToZeroController = new UpdateConversationReadToZeroController(updateConversationReadCountUse);
 

@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { Route } from "../../../frameworks/types/ServerTypes";
 import { JwtTokenAdapter } from "../../../frameworks/services/jwtService/TokenService";
-import { InjectedAdminSignUpController, InjectedAdminlogincontroller, InjectedGenerateQrCodeController, InjectedGetAdminDataController, InjectedGetAdminAllPropertyDataController, InjectedGetUnverifiedAdminController, InjectedGoogleLoginController, InjectedSavePropertyDataController, InjectedUpdateAdminProfileController, InjectedUpdateVerifyAdminController } from "../../../frameworks/injection/AdminInjects";
+import { InjectedAdminSignUpController, InjectedAdminlogincontroller, InjectedGenerateQrCodeController, InjectedGetAdminDataController, InjectedGetAdminAllPropertyDataController, InjectedGetUnverifiedAdminController, InjectedGoogleLoginController, InjectedSavePropertyDataController, InjectedUpdateAdminProfileController, InjectedUpdateVerifyAdminController, InjectedUpdateConversationReadCountToZeroController } from "../../../frameworks/injection/AdminInjects";
 import { MessageModel } from "../../../frameworks/database/models/admin/MessageModel";
 import moment from 'moment';
 import { ConversationModel } from "../../../frameworks/database/models/admin/ConversationModel";
@@ -31,7 +31,7 @@ router.post("/google_oauth",JwtToken.CreateJwtToken,  InjectedGoogleLoginControl
 router.post("/update_admin/:id",  InjectedUpdateAdminProfileController.UpdateAdminProfileData.bind(InjectedUpdateAdminProfileController));
 
 // -------------------------------------| GET THE ADMIN DATA BY THE ADMIN ID -------------------------------------------------------------|
-router.get("/get_admin/:id",JwtToken.verifyToken, InjectedGetAdminDataController.GetAdminDataByIdController.bind(InjectedGetAdminDataController));
+router.get("/get_admin/:id", InjectedGetAdminDataController.GetAdminDataByIdController.bind(InjectedGetAdminDataController));
 
 // -------------------------------------| GET THE GENRATED ADMIN CODE --------------------------------------------------------------------|
 router.get("/generate_code/:adminId/:propertyId", InjectedGenerateQrCodeController.GenerateQrCode.bind(InjectedGenerateQrCodeController));
@@ -49,55 +49,62 @@ router.post('/send_message', InjectedSendMesssage.SendMessageControl.bind(Inject
 router.post('/start_conversation', InjectedCreateConversationController.CreateConversationControl.bind(InjectedCreateConversationController));
 
 
-router.get('/update_conversation_unread_count/:id', async (req, res) => {
-  try {
-      // Fetch the existing conversation
-      const exConv = await ConversationModel.findOne({ _id: req.params.id });
 
-      if (!exConv) {
-          return res.status(404).json({ error: 'Conversation not found' });
-      }
-
-      // Update lastMessage with unread count reset to 0
-      const conversation = await ConversationModel.findOneAndUpdate(
-          { _id: req.params.id },
-          {
-              $set: {
-                  lastMessage: {
-                      text: exConv.lastMessage?.text,
-                      time: exConv.lastMessage?.time,
-                      unread: 0 // Reset unread count to 0 after update
-                  }
-              }
-          },
-          { new: true }
-      );
-
-      if (!conversation) {
-          return res.status(404).json({ error: 'Conversation not found after update' });
-      }
-
-      // Fetch all conversations related to the admin after updating lastMessage
-      const conversations = await ConversationModel.find({ adminId: conversation.adminId });
-
-      // Send the updated conversations as a response
-      res.json(conversations);
-  } catch (error) {
-      console.error("Error updating lastMessage and fetching conversations:", error);
-      res.status(500).json({ error: 'Server error' }); // Handle or throw the error as needed
-  }
-});
+router.get('/update_conversation_unread_count/:id', InjectedUpdateConversationReadCountToZeroController.updateConversationReadToZeroControl.bind(InjectedUpdateConversationReadCountToZeroController));
 
 
 
 
-// Route to get all conversations for an admin
-router.get('/conversations/:id', async (req, res) => {
+// router.get('/update_conversation_unread_count/:id', async (req, res) => {
+//   try {
+//       // Fetch the existing conversation
+//       const exConv = await ConversationModel.findOne({ _id: req.params.id });
+
+//       if (!exConv) {
+//           return res.status(404).json({ error: 'Conversation not found' });
+//       }
+
+//       // Update lastMessage with unread count reset to 0
+//       const conversation = await ConversationModel.findOneAndUpdate(
+//           { _id: req.params.id },
+//           {
+//               $set: {
+//                   lastMessage: {
+//                       text: exConv.lastMessage?.text,
+//                       time: exConv.lastMessage?.time,
+//                       unread: 0 
+//                   }
+//               }
+//           },
+//           { new: true }
+//       );
+
+//       if (!conversation) {
+//           return res.status(404).json({ error: 'Conversation not found after update' });
+//       }
+
+//       // Fetch all conversations related to the admin after updating lastMessage
+//       const conversations = await ConversationModel.find({ adminId: conversation.adminId });
+
+//       // Send the updated conversations as a response
+//       res.json(conversations);
+//   } catch (error) {
+//       console.error("Error updating lastMessage and fetching conversations:", error);
+//       res.status(500).json({ error: 'Server error' }); // Handle or throw the error as needed
+//   }
+// });
+
+
+
+
+
+router.get('/selected_conversation/:id', async (req, res) => {
     // const { conversationId } = req.query;
     console.log("🤷‍♀️🤷‍♀️🤷‍♀️🤷‍♀️🤷‍♀️🤷‍♀️")
     try {
-      const conversations = await ConversationModel.findOne({ _id: req.params.id }).populate('User')
-      console.log(conversations)
+      console.log(req.params.id)
+      const conversations = await ConversationModel.findOne({ _id: req.params.id }).populate('userId')
+      console.log(conversations + "💕💕💕💕💕")
       res.status(200).json(conversations);
     } catch (error) {
       res.status(500).json({ error: 'Failed to fetch conversations' });

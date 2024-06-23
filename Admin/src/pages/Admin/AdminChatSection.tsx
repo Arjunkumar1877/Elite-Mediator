@@ -24,7 +24,7 @@ interface Message {
 
 interface Conversation {
   _id: string;
-  userId: string;
+  userId: any;
   adminId: string;
   propId: string;
 }
@@ -39,7 +39,7 @@ const AdminChatSection: React.FC = () => {
   const { currentAdmin } = useSelector((state: any) => state?.admin);
   const params = useParams();
   const conId = params?.id;
-
+// console.log(conId)
   const handleConversationSelect = async () => {
     try {
       const response = await axios.get(`/user/get_messages/${params.id}`);
@@ -53,16 +53,21 @@ const AdminChatSection: React.FC = () => {
     }
   };
 
-  useEffect(() => {
+  const fetchselectedConversation = async()=>{
+    try {
+      const res = await fetch(`/api/selected_conversation/${conId}`);
+      const data = await res.json();
+      setSelectedConversation(data)
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
+  useEffect(() => {
     const updateReadCount = async()=>{
       const res = await fetch(`/api/update_conversation_unread_count/${conId}`);
-
-
       const data = await res.json();
-
-      console.log(data)
-      
+      console.log(data);
     }
 
     updateReadCount()
@@ -72,6 +77,8 @@ const AdminChatSection: React.FC = () => {
   }, [conId]);
 
   useEffect(() => {
+    fetchselectedConversation()
+
     const handleChatMessage = (msg: Message) => {
       if (msg.conversationId === conId) {
         setMessages((prevMessages) => [...prevMessages, msg]);
@@ -81,10 +88,10 @@ const AdminChatSection: React.FC = () => {
     socket.emit('update conversation', currentAdmin._id);
 
 
-    socket.on('chat message', handleChatMessage);
+    socket.on('recieve_message', handleChatMessage);
 
     return () => {
-      socket.off('chat message', handleChatMessage);
+      socket.off('recieve_message', handleChatMessage);
     };
   }, [conId]);
 
@@ -99,7 +106,7 @@ const AdminChatSection: React.FC = () => {
         text: newMessage
       });
 
-      socket.emit('chat message', response.data, conId);
+      socket.emit('chat message', response.data, conId, currentAdmin._id);
       setNewMessage("");
       scrollToBottom();
     } catch (error) {
@@ -119,6 +126,8 @@ const AdminChatSection: React.FC = () => {
     return <div>Loading...</div>;
   }
 
+  console.log(selectedConversation)
+
   return (
     <div className="pt-16 h-screen bg-gray-50 flex flex-col">
       <div className="border-2 flex flex-col h-full p-4 bg-white shadow-lg">
@@ -128,7 +137,7 @@ const AdminChatSection: React.FC = () => {
               <MdArrowBackIosNew className="text-xl cursor-pointer" />
             </Link>
             <img src="/public/userIcon.webp" className="w-10 h-10 rounded-full" alt="User" />
-            <span className="text-xl font-bold">Arjun Kumar VS</span>
+            <span className="text-xl font-bold">{selectedConversation?.userId?.username}</span>
           </div>
           <div className="flex gap-5 items-center text-2xl text-sky-500">
             <IoCall className="cursor-pointer" />

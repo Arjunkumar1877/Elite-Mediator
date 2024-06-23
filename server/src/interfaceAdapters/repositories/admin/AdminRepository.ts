@@ -4,6 +4,8 @@ import { AdminModel } from "../../../frameworks/database/models/admin/AdminModel
 import { IAdminRepository } from "./IAdminRepository";
 import { QrModel } from "../../../frameworks/database/models/admin/QrDataModel";
 import { PropertyData } from "../../../entities/models/admin/PropertyData";
+import { ConversationModel } from "../../../frameworks/database/models/admin/ConversationModel";
+import { Conversation } from "../../../entities/models/common/Conversation";
 
 export class MongoAdminRepository implements IAdminRepository {
   
@@ -75,5 +77,59 @@ export class MongoAdminRepository implements IAdminRepository {
   async FindAdminsPropertDatas(id: string): Promise<PropertyData[] | null> {
     return await QrModel.find({adminId: id});
  }
+
+ async FindConversationById(id: string): Promise<Conversation | null> {
+  console.log("Finding admin singleConversation by conversation id 💕💕💕💕💕🔥🔥🔥🔥🔥")
+  return await ConversationModel.findById(id);
+}
+
+async UpdateLastMessageUnreadToZero(id: string, text: string, time: Date, unread: number): Promise<Conversation | any> {
+  try {
+      console.log("Updating conversation...");
+      
+      const updateCon = await ConversationModel.findOneAndUpdate(
+          { _id: id },
+          {
+              $set: {
+                  'lastMessage.text': text,
+                  'lastMessage.time': time,
+                  'lastMessage.unread': unread
+              }
+          },
+          { new: true } 
+      );
+
+      if (updateCon) {
+          console.log("Updated conversation 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥");
+      } else {
+          console.log("No conversation found with the provided ID.");
+      }
+
+      return updateCon;
+  } catch (error) {
+      console.error("Error updating conversation:", error);
+      throw new Error("Failed to update conversation");
+  }
+}
+
+async FindAdminsConversationByAdminId(adminId: string): Promise<Conversation[] | any> {
+  try {
+      console.log("Finding conversations of the admin by using adminId 😣😣😣💕💕💕");
+      
+      const conversations = await ConversationModel.find({ adminId: adminId });
+
+      if (conversations.length === 0) {
+          console.log("No conversations found for the given admin ID.");
+      } else {
+          console.log(`Found ${conversations.length} conversations for the admin.`);
+      }
+
+      return conversations;
+  } catch (error) {
+      console.error("Error finding conversations by admin ID:", error);
+      throw new Error("Failed to find conversations by admin ID");
+  }
+}
+
 
 }

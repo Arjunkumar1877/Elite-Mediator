@@ -21,8 +21,9 @@ export class MongoCommonRepository implements ICommonRepository{
     }
 
     async GetMessagesFromDb(conversationId: string): Promise<Message[] | any> {
+      console.log("😣😣😣😣🔥🔥🔥🔥🔥 fetching messages in repository data");
       const messages = await MessageModel.find({ conversationId: conversationId }).sort({ createdAt: 1 });
-
+        // console.log(messages);
       return messages;
     }
 

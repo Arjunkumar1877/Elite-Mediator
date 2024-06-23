@@ -4,7 +4,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "npx nodemon"
+    "start": "npx nodemon",
+     "build": "npm install && npm install --prefix Admin && npm run build --prefix Admin"
   },
   "author": "",
   "license": "ISC",
