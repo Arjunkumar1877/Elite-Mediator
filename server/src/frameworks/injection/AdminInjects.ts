@@ -21,6 +21,10 @@ import { UpdateUnverifiedUseCase } from '../../useCases/admin/UpdateUnverifiedUs
 import { GenerateQrCode } from '../services/QrGenerateService/GenerateQrCode.';
 import { UpdateConversationReadToZeroController } from '../../interfaceAdapters/controllers/Admin/UpdateConversationReadToZeroController';
 import { UpdateConversationReadCountToZeroUseCase } from '../../useCases/admin/UpdateConversationReadCountToZeroUseCase';
+import { GetSelectedConversationUseCase } from '../../useCases/admin/GetSelectedConversationUseCase';
+import { GetSelectedConversationController } from '../../interfaceAdapters/controllers/Admin/GetSelectedConversationController';
+import { GetConversationListUseCase } from '../../useCases/admin/GetConversationListUseCase';
+import { GetAdminConversationListController } from '../../interfaceAdapters/controllers/Admin/GetAdminConversationListController';
 const mongoRepo = new MongoAdminRepository();
 
 // -----------------------------| ADMIN SIGNUP INJECTION ----------------------------------------------------------------------------------------
@@ -76,3 +80,14 @@ export const InjectedGetAdminAllPropertyDataController = new GetAdminAllProperty
 const updateConversationReadCountUse = new UpdateConversationReadCountToZeroUseCase(mongoRepo);
 export const InjectedUpdateConversationReadCountToZeroController = new UpdateConversationReadToZeroController(updateConversationReadCountUse);
 
+
+
+// -----------------------------| GET ADMIN'S SELECTED CONVERSATION INJECTION ----------------------------------------------------------------------------------------
+const getSelectedConversationUse = new GetSelectedConversationUseCase(mongoRepo);
+export const InjectedGetSelectedConversationController = new GetSelectedConversationController(getSelectedConversationUse);
+
+
+
+// -----------------------------| GET ADMIN'S SELECTED CONVERSATION INJECTION ----------------------------------------------------------------------------------------
+const getConversationListUse = new GetConversationListUseCase(mongoRepo);
+export const InjectedGetConversationListController = new GetAdminConversationListController(getConversationListUse);

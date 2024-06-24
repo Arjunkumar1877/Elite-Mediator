@@ -7,7 +7,6 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 import io from 'socket.io-client';
 
-// Define the Conversation type
 interface Conversation {
   _id: string;
   userId: any;

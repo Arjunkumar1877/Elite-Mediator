@@ -11,6 +11,7 @@ async updateConversationReadToZeroControl(req: Req, res: Res): Promise<void>{
     const { id } = req.params;
 
     const conversation = await this.iupdateconversationreadcounttozerousecase.UpdateConversationReadCount(id);
+    
     res.json(conversation);
    } catch (error) {
     console.log(error)

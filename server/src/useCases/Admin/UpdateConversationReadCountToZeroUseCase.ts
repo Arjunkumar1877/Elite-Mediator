@@ -16,7 +16,7 @@ export class UpdateConversationReadCountToZeroUseCase implements IUpdateConversa
             if (update) {
 
               console.log(update)
-                const conversations = await this.iadminrepository.FindAdminsConversationByAdminId(update.adminId);
+                const conversations = await this.iadminrepository.FindAdminsConversationsByAdminId(update.adminId);
                 return conversations;
             } else {
                 // Handle the case where the update fails

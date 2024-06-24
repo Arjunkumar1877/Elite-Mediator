@@ -18,23 +18,23 @@ const adminSlice = createSlice({
     name: 'admin',
     initialState,
     reducers: {
-        signInStart: (state) => {
+        signInStart: (state: any) => {
             state.loading = true;
             state.error = null;
         },
-        signInSuccess: (state, action: PayloadAction<string>) => {
+        signInSuccess: (state: any, action: PayloadAction<string>) => {
             state.currentAdmin = action.payload;
             state.loading = false;
             state.error = null;
         },
-        signInFailure: (state, action: PayloadAction<string>) => {
+        signInFailure: (state: any, action: PayloadAction<string>) => {
             state.loading = false;
             state.error = action.payload;
         },
-        setConversation: (state, action: PayloadAction<any[]>) => {
+        setConversation: (state: any, action: PayloadAction<any[]>) => {
             state.conversation = Array.isArray(action.payload) ? action.payload : [];
         },
-        signoutSuccess: (state) => {
+        signoutSuccess: (state: any) => {
             state.currentAdmin = null;
             state.error = null;
             state.loading = false;

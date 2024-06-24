@@ -15,5 +15,8 @@ export interface IAdminRepository {
     FindAdminsPropertDatas(id: string): Promise<PropertyData[] | null>;
     UpdateLastMessageUnreadToZero(id: string, text: string, time: Date, unread: number): Promise<Conversation | any>;
     FindConversationById(id: string): Promise<Conversation | null>;
-    FindAdminsConversationByAdminId(adminId: string): Promise<any>;
+    FindAdminsConversationsByAdminId(adminId: string): Promise<any>;
+    FindSelectedConversation(id: string): Promise<any>;
+    FilterConversationList(adminId: string, page: string, limit: string, filter: string): Promise<any>;
+    FindConversationListCount(adminId: string): Promise<any>;
 }
