@@ -23,7 +23,6 @@ const SideNavBar: React.FC<SideNavBarProps> = ({ navShowSet }) => {
   const { currentAdmin } = useSelector((state: any) => state.admin);
   const [count, setCount] = useState<number>(0);
   const [isHovered, setIsHovered] = useState<boolean>(false);
-
   const location = useLocation();
   const dispatch = useDispatch();
 

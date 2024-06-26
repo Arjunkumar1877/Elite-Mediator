@@ -32,6 +32,7 @@ interface Conversation {
 const AdminChatSection: React.FC = () => {
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [selectedConversation, setSelectedConversation] = useState<Conversation | null>(null);
+  const [callActive, setCallActive] = useState<boolean>(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(true);
@@ -39,6 +40,16 @@ const AdminChatSection: React.FC = () => {
   const { currentAdmin } = useSelector((state: any) => state?.admin);
   const params = useParams();
   const conId = params?.id;
+
+  const localVideoRef = useRef<HTMLVideoElement>(null);
+  const remoteVideoRef = useRef<HTMLVideoElement>(null);
+  const pc = useRef<RTCPeerConnection>(new RTCPeerConnection({
+    iceServers: [{ urls: 'stun:stun.l.google.com:19302' }]
+  }));
+
+
+
+
 // console.log(conId)
   const handleConversationSelect = async () => {
     try {
@@ -63,6 +74,77 @@ const AdminChatSection: React.FC = () => {
     }
   }
 
+
+  const startCall = async (isVideo = false) => {
+    const constraints = { audio: true, video: isVideo };
+    const stream = await navigator.mediaDevices.getUserMedia(constraints);
+    stream.getTracks().forEach((track) => pc.current.addTrack(track, stream));
+    if (localVideoRef.current) {
+      localVideoRef.current.srcObject = stream;
+    }
+
+    const offer = await pc.current.createOffer();
+    await pc.current.setLocalDescription(offer);
+    socket.emit("webrtc-offer", { room: conId, offer });
+  };
+
+  useEffect(() => {
+    socket.on("webrtc-offer", async (offer) => {
+      setCallActive(true)
+
+      console.log("Received WebRTC offer");
+      if (pc.current.signalingState !== "stable") {
+        console.warn("Signaling state is not stable. Current state: ", pc.current.signalingState);
+        return;
+      }
+      await pc.current.setRemoteDescription(new RTCSessionDescription(offer));
+      const answer = await pc.current.createAnswer();
+      await pc.current.setLocalDescription(answer);
+      socket.emit("webrtc-answer", { room: conId, answer });
+    });
+
+    socket.on("webrtc-answer", async (answer) => {
+      console.log("Received WebRTC answer");
+      console.log(answer)
+      if (pc.current.signalingState !== "have-local-offer") {
+        console.warn("Signaling state is not 'have-local-offer'. Current state: ", pc.current.signalingState);
+        return;
+      }
+      await pc.current.setRemoteDescription(new RTCSessionDescription(answer));
+    });
+
+    socket.on("webrtc-ice-candidate", async (candidate) => {
+      try {
+        await pc.current.addIceCandidate(new RTCIceCandidate(candidate));
+      startCall(true)
+
+      } catch (e) {
+        console.error("Error adding received ice candidate", e);
+      }
+    });
+
+    pc.current.onicecandidate = (event) => {
+      if (event.candidate) {
+        socket.emit("webrtc-ice-candidate", { room: conId, candidate: event.candidate });
+      }
+    };
+
+    pc.current.ontrack = (event) => {
+      if (event.streams && event.streams.length > 0) {
+        remoteVideoRef.current.srcObject = event.streams[0];
+      }
+    };
+
+    return () => {
+      socket.off("webrtc-offer");
+      socket.off("webrtc-answer");
+      socket.off("webrtc-ice-candidate");
+    };
+  }, [conId]);
+
+
+
+
   useEffect(() => {
     const updateReadCount = async()=>{
       const res = await fetch(`/api/update_conversation_unread_count/${conId}`);
@@ -84,10 +166,7 @@ const AdminChatSection: React.FC = () => {
         setMessages((prevMessages) => [...prevMessages, msg]);
       }
     };
-
     socket.emit('update conversation', currentAdmin._id);
-
-
     socket.on('recieve_message', handleChatMessage);
 
     return () => {
@@ -122,11 +201,21 @@ const AdminChatSection: React.FC = () => {
     scrollToBottom();
   }, [messages]);
 
+
+
+
+
   if (loading) {
     return <div>Loading...</div>;
   }
 
   console.log(selectedConversation)
+
+
+
+
+  console.log(localVideoRef)
+
 
   return (
     <div className="pt-16 h-screen bg-gray-50 flex flex-col">
@@ -140,8 +229,8 @@ const AdminChatSection: React.FC = () => {
             <span className="text-xl font-bold">{selectedConversation?.userId?.username}</span>
           </div>
           <div className="flex gap-5 items-center text-2xl text-sky-500">
-            <IoCall className="cursor-pointer" />
-            <FaVideo className="cursor-pointer" />
+          <IoCall className="cursor-pointer" onClick={() => startCall(false)} />
+          <FaVideo className="cursor-pointer" onClick={() => startCall(true)} />
             <HiDotsVertical className="cursor-pointer" />
           </div>
         </div>
@@ -170,7 +259,12 @@ const AdminChatSection: React.FC = () => {
             <div ref={messagesEndRef}></div>
           </div>
         </div>
-
+       {
+        callActive && <div className="flex justify-center items-center">
+        <video ref={localVideoRef} autoPlay muted className="w-1/4"></video>
+        <video ref={remoteVideoRef} autoPlay className="w-1/2"></video>
+      </div>
+       }
         <div className="flex justify-between items-center px-5 py-2 bg-sky-200 rounded-lg mt-2">
           <img src="/public/userIcon.webp" className="w-10 h-10 rounded-full" alt="User" />
           <input
@@ -190,6 +284,7 @@ const AdminChatSection: React.FC = () => {
           </div>
         </div>
       </div>
+    
     </div>
   );
 };

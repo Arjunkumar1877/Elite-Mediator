@@ -13,7 +13,6 @@ function initializeSocket(server: HTTPServer): SocketIoServer {
     },
   });
 
-  // Handle socket connection
   io.on("connection", (socket) => {
     console.log("A user connected: " + socket.id);
 
@@ -21,14 +20,9 @@ function initializeSocket(server: HTTPServer): SocketIoServer {
       console.log("User disconnected: " + socket.id);
     });
 
-    socket.on("join room", (convId) => {
-      console.log(`Socket ${socket.id} joining room ${convId} 😣😣😣😣`);
-      socket.join(convId);
-    });
-
-    socket.on("join room", (adminId) => {
-      console.log(`Socket ${socket.id} joining room ${adminId} 🔥🤷‍♂️😥📀`);
-      socket.join(adminId);
+    socket.on("join room", (roomId) => {
+      console.log(`Socket ${socket.id} joining room ${roomId}`);
+      socket.join(roomId);
     });
 
     socket.on("chat message", async (msg: any, convId, adminId) => {
@@ -50,7 +44,6 @@ function initializeSocket(server: HTTPServer): SocketIoServer {
           `User message. Incrementing unread count to ${newUnreadCount} for conversation ${msg.conversationId}`
         );
       }
-      // Update last message in conversation
       await ConversationModel.findByIdAndUpdate(msg.conversationId, {
         lastMessage: {
           text: msg.text,
@@ -71,9 +64,29 @@ function initializeSocket(server: HTTPServer): SocketIoServer {
       io.to(adminId).emit("notify", totalUnreadCount);
     });
 
-    socket.on('vedio-call', async()=>{
-      console.log("call has started");
-    })
+    socket.on("webrtc-offer", (data) => {
+
+      console.log("A start call offer came to server socket 📉💕💕💕💕⛔⛔⛔⛔📀📀📀📀📀📀");
+      // console.log(data)
+      io.to(data.room).emit("webrtc-offer", data.offer);
+    });
+
+    socket.on("webrtc-answer", (data) => {
+      console.log("answered call 📀📀📀📀📀📀📀📀✌️✌️✌️✌️✌️✌️✌️✌️✌️");
+      console.log(data);
+      io.to(data.room).emit("webrtc-answer", data.answer);
+    });
+
+    socket.on("webrtc-ice-candidate", (data) => {
+      console.log(data) 
+      io.to(data.room).emit("webrtc-ice-candidate", data.candidate);
+    });
+
+
+    socket.on("incoming-call", (data) => {
+      io.to(data.room).emit("incoming-call", data);
+    });
+
   });
 
   return io;

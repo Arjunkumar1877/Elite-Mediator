@@ -8,9 +8,9 @@ import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import { signoutSuccess, setMessages } from "../../redux/user/UserSlice";
-import io from 'socket.io-client';
+import io from "socket.io-client";
 
-const socket = io('http://localhost:7000');
+const socket = io("http://localhost:7000");
 
 interface Message {
   _id: string;
@@ -30,11 +30,97 @@ const UserChatPage: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const query = new URLSearchParams(location.search);
-  const conIdQ = query.get("conId");
+  const conId = query.get("conId");
+  const localVideoRef = useRef<HTMLVideoElement>(null);
+  const remoteVideoRef = useRef<HTMLVideoElement>(null);
+  const [callActive, setCallActive] = useState<boolean>(false)
+  const pc = useRef<RTCPeerConnection>(new RTCPeerConnection({
+    iceServers: [{ urls: 'stun:stun.l.google.com:19302' }]
+  }));
+
+
+
+
+  const startCall = async (isVideo = false) => {
+    const constraints = { audio: true, video: isVideo };
+    const stream = await navigator.mediaDevices.getUserMedia(constraints);
+    stream.getTracks().forEach((track) => pc.current.addTrack(track, stream));
+    if (localVideoRef.current) {
+      localVideoRef.current.srcObject = stream;
+    }
+
+    const offer = await pc.current.createOffer();
+    await pc.current.setLocalDescription(offer);
+    socket.emit("webrtc-offer", { room: conId, offer });
+  };
 
   useEffect(() => {
-    socket.on('recieve_message', (msg: Message) => {
-      if (msg.conversationId === conIdQ) {
+    socket.on("webrtc-offer", async (offer) => {
+      setCallActive(true)
+
+      console.log("Received WebRTC offer");
+      if (pc.current.signalingState !== "stable") {
+        console.warn("Signaling state is not stable. Current state: ", pc.current.signalingState);
+        return;
+      }
+      await pc.current.setRemoteDescription(new RTCSessionDescription(offer));
+      const answer = await pc.current.createAnswer();
+      await pc.current.setLocalDescription(answer);
+      socket.emit("webrtc-answer", { room: conId, answer });
+    });
+
+    socket.on("webrtc-answer", async (answer) => {
+      console.log("Received WebRTC answer");
+      console.log(answer)
+      if (pc.current.signalingState !== "have-local-offer") {
+        console.warn("Signaling state is not 'have-local-offer'. Current state: ", pc.current.signalingState);
+        return;
+      }
+      await pc.current.setRemoteDescription(new RTCSessionDescription(answer));
+    });
+
+    socket.on("webrtc-ice-candidate", async (candidate) => {
+      try {
+        await pc.current.addIceCandidate(new RTCIceCandidate(candidate));
+      startCall(true)
+
+      } catch (e) {
+        console.error("Error adding received ice candidate", e);
+      }
+    });
+
+    pc.current.onicecandidate = (event) => {
+      if (event.candidate) {
+        socket.emit("webrtc-ice-candidate", { room: conId, candidate: event.candidate });
+      }
+    };
+
+    pc.current.ontrack = (event) => {
+      if (event.streams && event.streams.length > 0) {
+        remoteVideoRef.current.srcObject = event.streams[0];
+      }
+    };
+
+    return () => {
+      socket.off("webrtc-offer");
+      socket.off("webrtc-answer");
+      socket.off("webrtc-ice-candidate");
+    };
+  }, [conId]);
+
+  const handleCutheCall = ()=>{
+    socket.off("webrtc-offer");
+      socket.off("webrtc-answer");
+      socket.off("webrtc-ice-candidate");
+  } 
+
+
+
+
+
+  useEffect(() => {
+    socket.on("recieve_message", (msg: Message) => {
+      if (msg.conversationId === conId) {
         dispatch(setMessages([...messages, msg]));
       }
     });
@@ -42,50 +128,46 @@ const UserChatPage: React.FC = () => {
     return () => {
       socket.off('recieve_message');
     };
-  }, [messages, dispatch, conIdQ]);
+  }, [messages, dispatch, conId]);
 
   const fetchMessages = async () => {
     try {
-      const res:any = await axios.get(`/user/get_messages/${conIdQ}`);
-      console.log(res)
-      console.log(res.data)
-     
-        dispatch(setMessages(res.data));
-      
+      const res: any = await axios.get(`/user/get_messages/${conId}`);
+      console.log(res);
+      console.log(res.data);
+
+      dispatch(setMessages(res.data));
     } catch (error) {
       console.error("Error fetching messages:", error);
     }
   };
 
   useEffect(() => {
-    if (currentUser) {
-      navigate(`/chat_user?conId=${conIdQ}`);
-    } else {
-      navigate('/');
-    }
-  }, [currentUser, conIdQ, navigate]);
-
-
-  useEffect(() => {
-    if (conIdQ) {
-      socket.emit('join room', conIdQ);
+    if (conId) {
+      socket.emit("join room", conId);
       fetchMessages();
     }
-  }, [conIdQ]);
+
+    if (currentUser) {
+      navigate(`/chat_user?conId=${conId}`);
+    } else {
+      navigate("/");
+    }
+  }, [currentUser, conId, navigate]);
 
   const sendMessage = async () => {
-    if (newMessage.trim() === "" || !conIdQ) return;
+    if (newMessage.trim() === "" || !conId) return;
 
     try {
       const response = await axios.post<Message>("/user/send_message", {
-        conversationId: conIdQ,
+        conversationId: conId,
         senderId: currentUser._id,
         senderModel: "User",
         text: newMessage,
       });
 
-      socket.emit('chat message', response.data, conIdQ, currentUser.adminId);
-      socket.emit('update conversation', currentUser.adminId);
+      socket.emit("chat message", response.data, conId, currentUser.adminId);
+      socket.emit("update conversation", currentUser.adminId);
       setNewMessage("");
       scrollToBottom();
     } catch (error) {
@@ -98,7 +180,6 @@ const UserChatPage: React.FC = () => {
   };
 
   useEffect(() => {
-    // fetchMessages()
     scrollToBottom();
   }, [messages]);
 
@@ -107,7 +188,7 @@ const UserChatPage: React.FC = () => {
     navigate("/");
   };
 
-  console.log(messages)
+  console.log(messages);
 
   return (
     <div className="pt-1 h-screen bg-gray-50 flex flex-col">
@@ -119,11 +200,13 @@ const UserChatPage: React.FC = () => {
               className="w-10 h-10 rounded-full"
               alt="User"
             />
-            {currentUser && <span className="text-xl font-bold">{currentUser.username}</span>}
+            {currentUser && (
+              <span className="text-xl font-bold">{currentUser.username}</span>
+            )}
           </div>
           <div className="flex gap-5 items-center text-2xl text-sky-500">
-            <IoCall className="cursor-pointer" />
-            <FaVideo className="cursor-pointer" />
+            <IoCall className="cursor-pointer" onClick={() => startCall(false)} />
+            <FaVideo className="cursor-pointer" onClick={() => startCall(true)} />
             <HiDotsVertical className="cursor-pointer" />
             <FiLogOut className="cursor-pointer" onClick={handleSignOut} />
           </div>
@@ -135,7 +218,11 @@ const UserChatPage: React.FC = () => {
               messages.map((message: Message) => (
                 <div
                   key={message._id}
-                  className={`flex ${message.senderModel === "User" ? "justify-end" : "justify-start"} gap-3`}
+                  className={`flex ${
+                    message.senderModel === "User"
+                      ? "justify-end"
+                      : "justify-start"
+                  } gap-3`}
                 >
                   {message.senderModel !== "User" && (
                     <img
@@ -146,8 +233,14 @@ const UserChatPage: React.FC = () => {
                   )}
                   <div className="flex flex-col max-w-[300px] md:max-w-[350px] lg:max-w-[650px]">
                     <div className="flex justify-between text-xs text-slate-400">
-                      <span>{new Date(message.createdAt).toLocaleTimeString()}</span>
-                      <span>{message.senderModel === "User" ? "You" : message.senderName || "Admin"}</span>
+                      <span>
+                        {new Date(message.createdAt).toLocaleTimeString()}
+                      </span>
+                      <span>
+                        {message.senderModel === "User"
+                          ? "You"
+                          : message.senderName || "Admin"}
+                      </span>
                     </div>
                     <div className="p-3 rounded-xl bg-sky-100 text-sm overflow-hidden break-words">
                       {message.text}
@@ -166,6 +259,15 @@ const UserChatPage: React.FC = () => {
           </div>
         </div>
 
+{
+  callActive &&  <div className="flex flex-col justify-center items-center ">
+
+  <video ref={localVideoRef} autoPlay muted className="w-1/4 absolute bottom-24 z-10 right-24  md:right-96 md:bottom-0 md:w-[250px]"></video>
+  <video ref={remoteVideoRef} autoPlay className="w-1/1 relative md:w-[900px] md:h-[600px]"></video>
+  
+   <button className="absolute bg-sky-500 bottom-0 rounded-full w-16 h-16" onClick={handleCutheCall}>C</button>
+  </div>
+}
         <div className="flex justify-between items-center px-5 py-2 bg-sky-200 rounded-lg mt-2">
           <img
             src="/public/userIcon.webp"
@@ -189,6 +291,7 @@ const UserChatPage: React.FC = () => {
           </div>
         </div>
       </div>
+     
     </div>
   );
 };
