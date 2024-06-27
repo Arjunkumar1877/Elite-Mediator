@@ -1,5 +1,5 @@
 import { Server as HTTPServer } from "http";
-import { Socket, Server as SocketIoServer } from "socket.io";
+import { Server as SocketIoServer } from "socket.io";
 import { ConversationModel } from "../../database/models/admin/ConversationModel";
 import { UnreadMessageModel } from "../../database/models/admin/UnreadMessageCountModel";
 
@@ -25,25 +25,23 @@ function initializeSocket(server: HTTPServer): SocketIoServer {
       socket.join(roomId);
     });
 
-    socket.on("chat message", async (msg: any, convId, adminId) => {
+    socket.on("chat message", async (msg, convId, adminId) => {
       console.log(`Message received in room ${convId}:`, msg);
       const conversation = await ConversationModel.findById(msg.conversationId);
       if (!conversation) {
         console.error(`Conversation with ID ${msg.conversationId} not found`);
         return;
       }
+
       let newUnreadCount = 0;
       if (msg.senderModel === "Admin") {
-        console.log(
-          `Admin message. Resetting unread count to 0 for conversation ${msg.conversationId}`
-        );
+        console.log(`Admin message. Resetting unread count to 0 for conversation ${msg.conversationId}`);
         newUnreadCount = 0;
       } else if (msg.senderModel === "User") {
         newUnreadCount = (conversation?.lastMessage?.unread || 0) + 1;
-        console.log(
-          `User message. Incrementing unread count to ${newUnreadCount} for conversation ${msg.conversationId}`
-        );
+        console.log(`User message. Incrementing unread count to ${newUnreadCount} for conversation ${msg.conversationId}`);
       }
+
       await ConversationModel.findByIdAndUpdate(msg.conversationId, {
         lastMessage: {
           text: msg.text,
@@ -58,45 +56,34 @@ function initializeSocket(server: HTTPServer): SocketIoServer {
       io.to(adminId).emit("notify", totalUnreadCount);
     });
 
-    socket.on("notify", async (adminId: string) => {
+    socket.on("notify", async (adminId) => {
       const totalUnreadCount = await calculateTotalUnreadMessages(adminId);
       console.log(`${totalUnreadCount} 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥`);
       io.to(adminId).emit("notify", totalUnreadCount);
     });
 
     socket.on("webrtc-offer", (data) => {
-
-      console.log("A start call offer came to server socket 📉💕💕💕💕⛔⛔⛔⛔📀📀📀📀📀📀");
-      // console.log(data)
-      io.to(data.room).emit("webrtc-offer", data.offer);
+      console.log("Received WebRTC offer:", data);
+      io.to(data.room).emit("webrtc-offer", data);
     });
 
     socket.on("webrtc-answer", (data) => {
-      console.log("answered call 📀📀📀📀📀📀📀📀✌️✌️✌️✌️✌️✌️✌️✌️✌️");
-      console.log(data);
-      io.to(data.room).emit("webrtc-answer", data.answer);
+      console.log("Received WebRTC answer:", data);
+      io.to(data.room).emit("webrtc-answer", data);
     });
 
     socket.on("webrtc-ice-candidate", (data) => {
-      console.log(data) 
+      console.log("Received WebRTC ICE candidate:", data);
       io.to(data.room).emit("webrtc-ice-candidate", data.candidate);
     });
-
-
-    socket.on("incoming-call", (data) => {
-      io.to(data.room).emit("incoming-call", data);
-    });
-
   });
 
   return io;
 }
 
-async function calculateTotalUnreadMessages(adminId: string): Promise<number> {
+async function calculateTotalUnreadMessages(adminId: any) {
   const conversations = await ConversationModel.find({ adminId });
-  return conversations
-    .map((conversation) => conversation?.lastMessage?.unread || 0)
-    .reduce((total, unreadCount) => total + unreadCount, 0);
+  return conversations.reduce((total, conversation) => total + (conversation?.lastMessage?.unread || 0), 0);
 }
 
 export { initializeSocket };

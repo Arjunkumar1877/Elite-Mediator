@@ -20,6 +20,7 @@ import InitialDataPage from "./component/User/UserInitialLogin";
 import UserLoginOtpVerify from "./component/User/UserLoginOtpVerify";
 import UserChatPage from "./component/User/UserChatPage";
 import UserPrivateRoute from "./component/User/UserPrivateRoute";
+import CallPage from "./component/User/CallPage";
 
 
 export default function App() {
@@ -52,8 +53,9 @@ export default function App() {
           <Route path="/chat_user" element={<UserChatPage />} />
 
         </Route>
-          
 
+
+  <Route path="/call_page" element={<CallPage />} />
         </Routes>
       </BrowserRouter>
      

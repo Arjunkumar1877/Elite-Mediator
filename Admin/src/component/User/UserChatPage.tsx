@@ -26,94 +26,178 @@ const UserChatPage: React.FC = () => {
   const [newMessage, setNewMessage] = useState<string>("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { currentUser, messages } = useSelector((state: any) => state.user);
+  const [callActive, setCallActive] = useState<boolean>(false)
+  const [videoCall, setVideoCall] = useState<boolean>(false);
+  const [incomminCall, setIncommingCall] = useState<boolean>(false);
+  const [acceptedCall, setAcceptedCall] = useState<boolean>();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
   const query = new URLSearchParams(location.search);
   const conId = query.get("conId");
-  const localVideoRef = useRef<HTMLVideoElement>(null);
-  const remoteVideoRef = useRef<HTMLVideoElement>(null);
-  const [callActive, setCallActive] = useState<boolean>(false)
-  const pc = useRef<RTCPeerConnection>(new RTCPeerConnection({
-    iceServers: [{ urls: 'stun:stun.l.google.com:19302' }]
-  }));
-
-
-
-
-  const startCall = async (isVideo = false) => {
-    const constraints = { audio: true, video: isVideo };
-    const stream = await navigator.mediaDevices.getUserMedia(constraints);
-    stream.getTracks().forEach((track) => pc.current.addTrack(track, stream));
-    if (localVideoRef.current) {
-      localVideoRef.current.srcObject = stream;
-    }
-
-    const offer = await pc.current.createOffer();
-    await pc.current.setLocalDescription(offer);
-    socket.emit("webrtc-offer", { room: conId, offer });
-  };
-
+  const localVideoRef: any = useRef<HTMLVideoElement>(null);
+  const remoteVideoRef: any= useRef<HTMLVideoElement>(null);
+  const pc = useRef<RTCPeerConnection>(
+    new RTCPeerConnection({
+      iceServers: [{ urls: "stun:stun.l.google.com:19302" }],
+    })
+  );
+  
   useEffect(() => {
-    socket.on("webrtc-offer", async (offer) => {
-      setCallActive(true)
-
-      console.log("Received WebRTC offer");
-      if (pc.current.signalingState !== "stable") {
-        console.warn("Signaling state is not stable. Current state: ", pc.current.signalingState);
-        return;
+    socket.emit("join room", conId);
+  
+    const handleOffer = async (offer: any) => {
+      if (offer.name !== currentUser.username) {
+        const acceptCall = window.confirm(`You have a call from ${offer.name}. Do you want to accept the call?`);
+  
+        if (acceptCall) {
+          setCallActive(true);
+          const constraints = { audio: true, video: offer.isVideo };
+          const stream = await navigator.mediaDevices.getUserMedia(constraints);
+          stream.getTracks().forEach((track) => pc.current.addTrack(track, stream));
+  
+          if (localVideoRef.current) {
+            localVideoRef.current.srcObject = stream;
+          }
+  
+          await pc.current.setRemoteDescription(new RTCSessionDescription(offer.offer));
+          const answer = await pc.current.createAnswer();
+          await pc.current.setLocalDescription(answer);
+          socket.emit("webrtc-answer", { room: conId, answer, name: currentUser.username });
+        } else {
+          socket.emit("webrtc-disconnect", conId);
+        }
       }
-      await pc.current.setRemoteDescription(new RTCSessionDescription(offer));
-      const answer = await pc.current.createAnswer();
-      await pc.current.setLocalDescription(answer);
-      socket.emit("webrtc-answer", { room: conId, answer });
-    });
-
-    socket.on("webrtc-answer", async (answer) => {
-      console.log("Received WebRTC answer");
-      console.log(answer)
-      if (pc.current.signalingState !== "have-local-offer") {
-        console.warn("Signaling state is not 'have-local-offer'. Current state: ", pc.current.signalingState);
-        return;
+    };
+  
+    const handleAnswer = async (data: any) => {
+      const { name, answer } = data;
+      if (currentUser.username !== name) {
+        if (pc.current.signalingState === "have-local-offer") {
+          try {
+            await pc.current.setRemoteDescription(new RTCSessionDescription(answer));
+          } catch (error) {
+            console.error("Error setting remote description:", error);
+          }
+        } else {
+          console.warn("Signaling state is not 'have-local-offer'. Current state: ", pc.current.signalingState);
+        }
       }
-      await pc.current.setRemoteDescription(new RTCSessionDescription(answer));
-    });
-
-    socket.on("webrtc-ice-candidate", async (candidate) => {
+    };
+  
+    const handleIceCandidate = async (candidate: any) => {
       try {
         await pc.current.addIceCandidate(new RTCIceCandidate(candidate));
-      startCall(true)
-
-      } catch (e) {
-        console.error("Error adding received ice candidate", e);
+      } catch (error) {
+        console.error("Error adding received ice candidate", error);
       }
-    });
-
+    };
+  
+    const handleDisconnect = () => {
+      setCallActive(false);
+  
+      if (localVideoRef.current && localVideoRef.current.srcObject) {
+        const localStream = localVideoRef.current.srcObject as MediaStream;
+        localStream.getTracks().forEach((track) => track.stop());
+        localVideoRef.current.srcObject = null;
+      }
+  
+      if (pc.current) {
+        pc.current.getSenders().forEach((sender) => sender.track && sender.track.stop());
+        pc.current.close();
+        pc.current = new RTCPeerConnection({
+          iceServers: [{ urls: "stun:stun.l.google.com:19302" }],
+        });
+      }
+  
+      if (remoteVideoRef.current) {
+        remoteVideoRef.current.srcObject = null;
+      }
+  
+      socket.off("webrtc-offer", handleOffer);
+      socket.off("webrtc-answer", handleAnswer);
+      socket.off("webrtc-ice-candidate", handleIceCandidate);
+    };
+  
+    socket.on("webrtc-offer", handleOffer);
+    socket.on("webrtc-answer", handleAnswer);
+    socket.on("webrtc-ice-candidate", handleIceCandidate);
+    socket.on("webrtc-disconnect", handleDisconnect);
+  
     pc.current.onicecandidate = (event) => {
       if (event.candidate) {
         socket.emit("webrtc-ice-candidate", { room: conId, candidate: event.candidate });
       }
     };
-
+  
     pc.current.ontrack = (event) => {
       if (event.streams && event.streams.length > 0) {
         remoteVideoRef.current.srcObject = event.streams[0];
       }
     };
-
+  
     return () => {
-      socket.off("webrtc-offer");
-      socket.off("webrtc-answer");
-      socket.off("webrtc-ice-candidate");
+      socket.off("webrtc-offer", handleOffer);
+      socket.off("webrtc-answer", handleAnswer);
+      socket.off("webrtc-ice-candidate", handleIceCandidate);
+      socket.off("webrtc-disconnect", handleDisconnect);
     };
-  }, [conId]);
+  }, [conId, currentUser.username]);
+  
+  const startCall = async (isVideo = false) => {
+    try {
+      setVideoCall(isVideo);
+      setCallActive(true);
+  
+      const constraints = { audio: true, video: isVideo };
+      const stream = await navigator.mediaDevices.getUserMedia(constraints);
+      stream.getTracks().forEach((track) => pc.current.addTrack(track, stream));
+  
+      if (localVideoRef.current) {
+        localVideoRef.current.srcObject = stream;
+      }
+  
+      const offer = await pc.current.createOffer();
+      await pc.current.setLocalDescription(offer);
+      socket.emit("webrtc-offer", { name: currentUser.username, room: conId, isVideo, offer });
+    } catch (error) {
+      console.error("Error starting call:", error);
+    }
+  };
+  
 
-  const handleCutheCall = ()=>{
-    socket.off("webrtc-offer");
-      socket.off("webrtc-answer");
-      socket.off("webrtc-ice-candidate");
-  } 
+// ------------------| END AN AUDIO OR VIDEO CALL ----------------------------------------------------------------------------------------------------------------------------->  
+const handleCutTheCall = () => {
+  setCallActive(false);
 
+  // Stop all local media tracks
+  if (localVideoRef.current && localVideoRef.current.srcObject) {
+    const localStream = localVideoRef.current.srcObject as MediaStream;
+    localStream.getTracks().forEach((track) => track.stop());
+    localVideoRef.current.srcObject = null;
+  }
+
+  // Close the RTCPeerConnection
+  if (pc.current) {
+    // Stop all tracks added to the peer connection
+    pc.current
+      .getSenders()
+      .forEach((sender) => sender.track && sender.track.stop());
+    pc.current.close();
+  }
+  socket.emit("webrtc-disconnect", conId);
+
+  // Remove socket event listeners
+  socket.off("webrtc-offer");
+  socket.off("webrtc-answer");
+  socket.off("webrtc-ice-candidate");
+  // navigate(`/admin_chat/${conId}`);
+
+  // Clear the remote video element's source
+  if (remoteVideoRef.current) {
+    remoteVideoRef.current.srcObject = null;
+  }
+};
 
 
 
@@ -265,7 +349,7 @@ const UserChatPage: React.FC = () => {
   <video ref={localVideoRef} autoPlay muted className="w-1/4 absolute bottom-24 z-10 right-24  md:right-96 md:bottom-0 md:w-[250px]"></video>
   <video ref={remoteVideoRef} autoPlay className="w-1/1 relative md:w-[900px] md:h-[600px]"></video>
   
-   <button className="absolute bg-sky-500 bottom-0 rounded-full w-16 h-16" onClick={handleCutheCall}>C</button>
+   <button className="absolute bg-sky-500 bottom-0 rounded-full w-16 h-16" onClick={handleCutTheCall}>C</button>
   </div>
 }
         <div className="flex justify-between items-center px-5 py-2 bg-sky-200 rounded-lg mt-2">
