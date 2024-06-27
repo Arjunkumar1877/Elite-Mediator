@@ -20,7 +20,9 @@ import InitialDataPage from "./component/User/UserInitialLogin";
 import UserLoginOtpVerify from "./component/User/UserLoginOtpVerify";
 import UserChatPage from "./component/User/UserChatPage";
 import UserPrivateRoute from "./component/User/UserPrivateRoute";
-import CallPage from "./component/User/CallPage";
+import SocketProvider from "./contexts/AdminContext";
+import UserCallPage from "./component/User/UserCallPage";
+import AdminCallPage from "./component/Admin/AdminCallPage";
 
 
 export default function App() {
@@ -28,7 +30,9 @@ export default function App() {
     <div className="">
       {/* <ServicePage /> */}
       <Toaster />
-      <BrowserRouter>
+     <SocketProvider>
+
+     <BrowserRouter>
         <Routes>
           <Route path="/" element={<Landing />} />
           <Route path="/service" element={<ServicePage />} />
@@ -46,18 +50,22 @@ export default function App() {
             <Route path="/chat_list" element={<AdminChatListPage />} />
             <Route path="/admin_chat/:id" element={<AdminChatPage />} />
           </Route>
+          <Route path="/admin_call_page" element={<AdminCallPage />} />
+
 
           <Route path='/new_user' element={<InitialDataPage/>} />
           <Route path="/user_verify_otp_page/:id" element={<UserLoginOtpVerify />} />
           <Route element={<UserPrivateRoute />}>
           <Route path="/chat_user" element={<UserChatPage />} />
-
+          
         </Route>
+  <Route path="/call_page_user" element={<UserCallPage />} />
 
 
-  <Route path="/call_page" element={<CallPage />} />
+
         </Routes>
       </BrowserRouter>
+     </SocketProvider>
      
     </div>
   );

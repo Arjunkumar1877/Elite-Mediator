@@ -9,10 +9,11 @@ import { FaAngleRight } from "react-icons/fa6";
 import { MdKeyboardArrowLeft } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
 import { signoutSuccess } from "../../redux/admin/adminSlice";
-import { Link, useLocation } from "react-router-dom";
-import io from 'socket.io-client';
+import { Link, useLocation, useNavigate } from "react-router-dom";
+// import io from 'socket.io-client';
+import { useSocket } from "../../contexts/AdminContext";
 
-const socket = io('http://localhost:7000');
+// const socket = io('http://localhost:7000');
 
 interface SideNavBarProps {
   navShowSet: (show: boolean) => void;
@@ -23,8 +24,12 @@ const SideNavBar: React.FC<SideNavBarProps> = ({ navShowSet }) => {
   const { currentAdmin } = useSelector((state: any) => state.admin);
   const [count, setCount] = useState<number>(0);
   const [isHovered, setIsHovered] = useState<boolean>(false);
-  const location = useLocation();
   const dispatch = useDispatch();
+  const navigate = useNavigate()
+  const  {socket } = useSocket();
+  const location = useLocation()
+console.log(location.pathname)
+  console.log(socket);
 
   useEffect(() => {
     navShowSet(showNav);
@@ -33,6 +38,7 @@ const SideNavBar: React.FC<SideNavBarProps> = ({ navShowSet }) => {
   useEffect(() => {
     socket.emit('join room', currentAdmin._id);
     socket.emit('notify', currentAdmin._id);
+    
 
     socket.on('notify', (unreadCount) => {
       setCount(unreadCount);
@@ -42,6 +48,10 @@ const SideNavBar: React.FC<SideNavBarProps> = ({ navShowSet }) => {
       socket.off('notify');
     };
   }, [currentAdmin._id]);
+
+
+
+
 
   useEffect(() => {
     const handleResize = () => {

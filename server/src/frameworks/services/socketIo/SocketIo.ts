@@ -60,10 +60,21 @@ function initializeSocket(server: HTTPServer): SocketIoServer {
       const totalUnreadCount = await calculateTotalUnreadMessages(adminId);
       console.log(`${totalUnreadCount} 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥`);
       io.to(adminId).emit("notify", totalUnreadCount);
+      // io.to(adminId).emit("webrtc-offer", adminId);
+
+
     });
+
+
+    // socket.on("incoming-call", (data)=>{
+    //   console.log("icomming call " + data)
+    //   io.to(data).emit("incoming-call", data);
+    // })
+
 
     socket.on("webrtc-offer", (data) => {
       console.log("Received WebRTC offer:", data);
+      io.to(data.adminId).emit('webrtc-offer', data);
       io.to(data.room).emit("webrtc-offer", data);
     });
 
@@ -73,7 +84,7 @@ function initializeSocket(server: HTTPServer): SocketIoServer {
     });
 
     socket.on("webrtc-ice-candidate", (data) => {
-      console.log("Received WebRTC ICE candidate:", data);
+      // console.log("Received WebRTC ICE candidate:", data);
       io.to(data.room).emit("webrtc-ice-candidate", data.candidate);
     });
   });

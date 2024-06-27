@@ -318,7 +318,7 @@ console.log(propertyData)
               </div>
               <PhoneInput
                 country={"in"}
-                value={formData?.phone}
+                value={formData?.phone as any}
                 onChange={handlePhoneChange}
                 containerClass="rounded border-2 w-full px-5 lg:w-[600px] py-3 placeholder:font-semibold placeholder:px-2 lg:placeholder:px-6"
                 inputClass="w-full"
