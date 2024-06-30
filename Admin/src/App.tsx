@@ -18,11 +18,11 @@ import AdminChatListPage from "./component/Admin/AdminChatListPage";
 import AdminChatPage from "./component/Admin/AdminChatPage";
 import InitialDataPage from "./component/User/UserInitialLogin";
 import UserLoginOtpVerify from "./component/User/UserLoginOtpVerify";
-import UserChatPage from "./component/User/UserChatPage";
 import UserPrivateRoute from "./component/User/UserPrivateRoute";
 import SocketProvider from "./contexts/AdminContext";
-import UserCallPage from "./component/User/UserCallPage";
 import AdminCallPage from "./component/Admin/AdminCallPage";
+import UserCallPage from "./component/User/UserCallPage";
+import UserChatPage from "./component/User/UserChatPage";
 
 
 export default function App() {
@@ -48,7 +48,7 @@ export default function App() {
             <Route path="/qrcodes" element={<PropertyDataPage />} />
             <Route path="/generate_qr" element={<GenerateQrCodePage />} />
             <Route path="/chat_list" element={<AdminChatListPage />} />
-            <Route path="/admin_chat/:id" element={<AdminChatPage />} />
+            <Route path="/admin_chat" element={<AdminChatPage />} />
           </Route>
           <Route path="/admin_call_page" element={<AdminCallPage />} />
 
@@ -57,9 +57,9 @@ export default function App() {
           <Route path="/user_verify_otp_page/:id" element={<UserLoginOtpVerify />} />
           <Route element={<UserPrivateRoute />}>
           <Route path="/chat_user" element={<UserChatPage />} />
+  <Route path="/call_page_user" element={<UserCallPage />} />
           
         </Route>
-  <Route path="/call_page_user" element={<UserCallPage />} />
 
 
 

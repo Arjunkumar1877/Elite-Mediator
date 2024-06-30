@@ -59,6 +59,10 @@ router.get('/selected_conversation/:id',  InjectedGetSelectedConversationControl
 router.get('/conversations_list', InjectedGetConversationListController.GetConversationListControl.bind(InjectedGetConversationListController));
 
 
+// // -------------------------------------| FECH ALL AND FILTERED ADMINS CHAT LIST  ----------------------------------------------------------------------------|
+// router.get('/conversations_list', InjectedGetConversationListController.GetConversationListControl.bind(InjectedGetConversationListController));
+
+
   // router.get('/conversations_list', async (req, res) => {
   //   const { adminId, page = '1', limit = '10', filter = 'all' } = req.query as {
   //     adminId: string,

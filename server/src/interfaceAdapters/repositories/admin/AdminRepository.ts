@@ -183,6 +183,8 @@ export class MongoAdminRepository implements IAdminRepository {
       .limit(parseInt(limit))
       .sort({ createdAt: -1 });
 
+      console.log(conversations)
+
       return conversations;
 
     } catch (error) {

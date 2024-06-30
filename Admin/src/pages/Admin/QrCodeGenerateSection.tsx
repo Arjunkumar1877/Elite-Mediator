@@ -55,7 +55,7 @@ const QrCodeGenerateSection = () => {
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLSelectElement>) => {
-    const { name, value, type, checked } = e.target;
+    const { name, value, type, checked }: any = e.target;
 
     setFormData((prev) => ({
       ...prev,

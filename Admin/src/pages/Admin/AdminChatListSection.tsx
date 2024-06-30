@@ -6,6 +6,7 @@ import { useState, useEffect, ChangeEvent } from "react";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import io from 'socket.io-client';
+import { useSocket } from "../../contexts/AdminContext";
 
 interface Conversation {
   _id: string;
@@ -30,7 +31,8 @@ const AdminChatListSection: React.FC = () => {
   const [filter, setFilter] = useState<string>('all');
   const [searchTerm, setSearchTerm] = useState<string>('');
   const { currentAdmin } = useSelector((state: any) => state.admin);
-
+  const { notificationCount, setNotificationCount }: any = useSocket();
+  
   const fetchConversations = async () => {
     try {
       const response = await axios.get('/api/conversations_list', {
@@ -40,16 +42,31 @@ const AdminChatListSection: React.FC = () => {
           filter: filter,
         },
       });
-      setConversations(response.data.conversations);
+  
+      const fetchedConversations = response.data.conversations;
+      setConversations(fetchedConversations);
+  
+      let total = 0;
+      fetchedConversations.forEach((conversation: any) => {
+        total += conversation.lastMessage.unread;
+      });
+  
+      setNotificationCount(total);
+      console.log(notificationCount); // This might still log the previous state due to the asynchronous nature of state updates
+  
       setTotalPages(response.data.totalPages);
     } catch (error) {
       console.error('Error fetching conversations:', error);
     }
   };
+  
+
+
 
   useEffect(() => {
-    socket.emit('join room', currentAdmin._id);
+    // socket.emit('join room', currentAdmin._id);
     fetchConversations();
+
   }, [currentPage, filter]);
 
   useEffect(() => {
@@ -71,6 +88,7 @@ const AdminChatListSection: React.FC = () => {
         });
 
  
+     
 
         // Emit event to update all admin clients with new message
         socket.emit('chat message', msg, convId, currentAdmin._id);
@@ -155,13 +173,13 @@ const AdminChatListSection: React.FC = () => {
 
           <div className="flex flex-col gap-4 overflow-y-auto h-[calc(100vh-270px)]">
             {conversations.map((conversation) => (
-              <Link to={`/admin_chat/${conversation._id}`} key={conversation._id}>
+              <Link to={`/admin_chat?conId=${conversation._id}`} key={conversation._id}>
                 <div className="flex items-center justify-between border-2 p-4 rounded hover:bg-gray-100 transition">
                   <div className="flex items-center gap-3">
                     <img src="public/userIcon.webp" alt="User" className="h-14 w-14 rounded-full" />
                     <div className="flex flex-col">
                       <p className="text-md  text-gray-600 font-semibold md:text-xl">{conversation?.userId?.username }</p>
-                      <p className="text-xs text-gray-600 md:text-sm">{conversation.lastMessage.text}</p>
+                      <p className="text-xs text-gray-400 md:text-sm">{conversation.lastMessage.text}</p>
                     </div>
                   </div>
 

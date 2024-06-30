@@ -14,7 +14,7 @@ export class MongoUserRepository implements IUserRepository {
   }
 
   async FindUserByUserId(userId: string): Promise<any> {
-    const data = await UserModel.findOne({ _id: userId });
+    const data = await UserModel.findOne({ _id: userId }).populate('adminId');
     return data;
   }
 

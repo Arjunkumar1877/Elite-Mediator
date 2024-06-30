@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useState, ReactNode, useRef } from "react";
+import React, { createContext, useContext, useState, ReactNode, useRef, useEffect } from "react";
+// import { useSelector } from "react-redux";
 import io, { Socket } from "socket.io-client";
 
 type SocketContextType = {
@@ -16,9 +17,12 @@ const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
   const localVideoRef: any = useRef<HTMLVideoElement>(null);
   const remoteVideoRef: any= useRef<HTMLVideoElement>(null);
   const [isVideoCall, setIsVideoCall] = useState<boolean>();
+  const [notificationCount, setNotificationCount] = useState<number>();
+  // const { currentAdmin } = useSelector((state: any)=> state.admin);
+
 
   return (
-    <SocketContext.Provider value={{ socket, localVideoRef, remoteVideoRef, setIsVideoCall, isVideoCall }}>
+    <SocketContext.Provider value={{ socket, localVideoRef, remoteVideoRef, setIsVideoCall, isVideoCall, notificationCount, setNotificationCount }}>
       {children}
     </SocketContext.Provider>
   );

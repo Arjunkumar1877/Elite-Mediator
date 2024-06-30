@@ -5,6 +5,7 @@ import { ConversationModel } from "../../../frameworks/database/models/admin/Con
 import { MessageModel } from "../../../frameworks/database/models/admin/MessageModel";
 import { UserModel } from "../../../frameworks/database/models/user/User";
 import { InjectedGetMessagesController, InjectedSendMesssage } from "../../../frameworks/injection/CommonInjects";
+import { CallModel } from "../../database/models/admin/CallModel";
 const router:Route = Router();
 
 // -------------------------------------| SAVE NEW USER DATA INTO THE DATABASE --------------------------------------------------------------------|
@@ -55,6 +56,26 @@ router.get('/update_readmessage_conversation/:id', async(req, res)=>{
     } catch (error) {
         console.log(error)
     }
+})
+
+
+router.post("/start_call", async(req,res)=>{
+  console.log(req.body);
+
+  const callerData = await CallModel.create(req.body);
+
+  if(callerData){
+    res.json(callerData);
+  }
+
+})
+
+router.post('/accept_call', async(req,res)=>{
+
+})
+
+router.post('/decline_call', async(req,res)=>{
+
 })
 
 export default router;
