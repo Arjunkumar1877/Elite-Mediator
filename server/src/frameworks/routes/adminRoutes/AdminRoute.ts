@@ -1,11 +1,11 @@
 import { Router } from "express";
 import { Route } from "../../../frameworks/types/ServerTypes";
 import { JwtTokenAdapter } from "../../../frameworks/services/jwtService/TokenService";
-import { InjectedAdminSignUpController, InjectedAdminlogincontroller, InjectedGenerateQrCodeController, InjectedGetAdminDataController, InjectedGetAdminAllPropertyDataController, InjectedGetUnverifiedAdminController, InjectedGoogleLoginController, InjectedSavePropertyDataController, InjectedUpdateAdminProfileController, InjectedUpdateVerifyAdminController, InjectedUpdateConversationReadCountToZeroController, InjectedGetSelectedConversationController, InjectedGetConversationListController } from "../../../frameworks/injection/AdminInjects";
+import { InjectedAdminSignUpController, InjectedAdminlogincontroller, InjectedGenerateQrCodeController, InjectedGetAdminDataController, InjectedGetAdminAllPropertyDataController, InjectedGetUnverifiedAdminController, InjectedGoogleLoginController, InjectedSavePropertyDataController, InjectedUpdateAdminProfileController, InjectedUpdateVerifyAdminController, InjectedUpdateConversationReadCountToZeroController, InjectedGetSelectedConversationController, InjectedGetConversationListController, InjectedGetAdminsCallListController } from "../../../frameworks/injection/AdminInjects";
 import { MessageModel } from "../../../frameworks/database/models/admin/MessageModel";
 import moment from 'moment';
 import { ConversationModel } from "../../../frameworks/database/models/admin/ConversationModel";
-import { InjectedSendMesssage } from "../../../frameworks/injection/CommonInjects";
+import { InjectedCallingFunctionalitiesController, InjectedGetMessagesController, InjectedSendMesssage } from "../../../frameworks/injection/CommonInjects";
 import { InjectedCreateConversationController } from "../../../frameworks/injection/UserInjects";
 
 const router: Route = Router();
@@ -55,53 +55,38 @@ router.get('/update_conversation_unread_count/:id', InjectedUpdateConversationRe
 router.get('/selected_conversation/:id',  InjectedGetSelectedConversationController.GetSelectedConversationControl.bind(InjectedGetSelectedConversationController));
 
 
+// -------------------------------------| GETTING ALL THE MESSAGES FROM THE DATABASE  --------------------------------------------------------------------|
+router.get('/get_messages/:convId', InjectedGetMessagesController.GetMessagesControl.bind(InjectedGetMessagesController));
+
+
 // -------------------------------------| FECH ALL AND FILTERED ADMINS CHAT LIST  ----------------------------------------------------------------------------|
 router.get('/conversations_list', InjectedGetConversationListController.GetConversationListControl.bind(InjectedGetConversationListController));
+
+
+// -------------------------------------| STARTING A CALL AND SAVING THE DATA TO THE DATABASE  --------------------------------------------------------------------|
+router.post("/start_call", InjectedCallingFunctionalitiesController.StartingCallControl.bind(InjectedCallingFunctionalitiesController));
+
+
+// -------------------------------------| ACCEPTING THE CALL AND UPDATING THE DATABASE  --------------------------------------------------------------------|
+router.post("/accept_call/:callerId", InjectedCallingFunctionalitiesController.AcceptingCallControl.bind(InjectedCallingFunctionalitiesController));
+
+
+// -------------------------------------| DECLINING THE CALL BY THE USER AND UPDATING IT TO THE DATABASE  --------------------------------------------------------------------|
+router.post("/decline_call/:callerId", InjectedCallingFunctionalitiesController.DecliningCallControl.bind(InjectedCallingFunctionalitiesController));
+
+
+// -------------------------------------| DISCONNECT THE CONNECTED CALL BY THE USER AND UPDATING IT TO THE DATABASE  --------------------------------------------------------------------|
+router.post("/disconnect_call/:callerId", InjectedCallingFunctionalitiesController.DisconnectingControl.bind(InjectedCallingFunctionalitiesController));
+
+
+router.get("/get_calls/:adminId", InjectedGetAdminsCallListController.GetAdminsCallListControl.bind(InjectedGetAdminsCallListController));
+
 
 
 // // -------------------------------------| FECH ALL AND FILTERED ADMINS CHAT LIST  ----------------------------------------------------------------------------|
 // router.get('/conversations_list', InjectedGetConversationListController.GetConversationListControl.bind(InjectedGetConversationListController));
 
 
-  // router.get('/conversations_list', async (req, res) => {
-  //   const { adminId, page = '1', limit = '10', filter = 'all' } = req.query as {
-  //     adminId: string,
-  //     page?: string,
-  //     limit?: string,
-  //     filter?: string
-  //   };
-  
-  //   const startOfToday = moment().startOf('day');
-  //   const startOfWeek = moment().startOf('week');
-  //   const startOfMonth = moment().startOf('month');
-    
-  //   let filterQuery: any = { adminId };
-    
-  //   if (filter === 'today') {
-  //     filterQuery.createdAt = { $gte: startOfToday.toDate() };
-  //   } else if (filter === 'this_week') {
-  //     filterQuery.createdAt = { $gte: startOfWeek.toDate() };
-  //   } else if (filter === 'this_month') {
-  //     filterQuery.createdAt = { $gte: startOfMonth.toDate() };
-  //   }
-    
-  //   try {
-  //     const conversations = await ConversationModel.find(filterQuery).populate('userId')
-  //       .skip((parseInt(page) - 1) * parseInt(limit))
-  //       .limit(parseInt(limit))
-  //       .sort({ createdAt: -1 });
-  //     const totalConversations = await ConversationModel.countDocuments(filterQuery);
-  //     res.status(200).json({
-  //       conversations,
-  //       totalPages: Math.ceil(totalConversations / parseInt(limit)),
-  //       currentPage: parseInt(page)
-  //     });
-  //   } catch (error) {
-  //     console.error('Error fetching conversations:', error);
-  //     res.status(500).json({ error: 'Failed to fetch conversations' });
-  //   }
-  // });
-  
   
   
 

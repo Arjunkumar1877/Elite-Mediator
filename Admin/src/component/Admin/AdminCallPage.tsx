@@ -35,7 +35,7 @@ const AdminCallPage: React.FC = () => {
   );
   const updateCallCancelling = async (callerId: any) => {
     try {
-      const res = await fetch(`/user/decline_call/${callerId}`, {
+      const res = await fetch(`/api/decline_call/${callerId}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -56,7 +56,7 @@ const AdminCallPage: React.FC = () => {
 
   const updateCallAnswering= async (callerId: any) => {
     try {
-      const res = await fetch(`/user/accept_call/${callerId}`, {
+      const res = await fetch(`/api/accept_call/${callerId}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -76,7 +76,7 @@ const AdminCallPage: React.FC = () => {
 
   const updateCallDisconnecting = async (callerId: any) => {
     try {
-      const res = await fetch(`/user/disconnect_call/${callerId}`, {
+      const res = await fetch(`/api/disconnect_call/${callerId}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

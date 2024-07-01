@@ -25,6 +25,8 @@ import { GetSelectedConversationUseCase } from '../../useCases/admin/GetSelected
 import { GetSelectedConversationController } from '../../interfaceAdapters/controllers/Admin/GetSelectedConversationController';
 import { GetConversationListUseCase } from '../../useCases/admin/GetConversationListUseCase';
 import { GetAdminConversationListController } from '../../interfaceAdapters/controllers/Admin/GetAdminConversationListController';
+import { GetAdminCallListUseCase } from '../../useCases/admin/GetAdminCallListUseCase';
+import { GetAdminsCallListController } from '../../interfaceAdapters/controllers/Admin/GetAdminsCallListController';
 const mongoRepo = new MongoAdminRepository();
 
 // -----------------------------| ADMIN SIGNUP INJECTION ----------------------------------------------------------------------------------------
@@ -89,3 +91,8 @@ export const InjectedGetSelectedConversationController = new GetSelectedConversa
 // -----------------------------| GET ADMIN'S SELECTED CONVERSATION INJECTION ----------------------------------------------------------------------------------------
 const getConversationListUse = new GetConversationListUseCase(mongoRepo);
 export const InjectedGetConversationListController = new GetAdminConversationListController(getConversationListUse);
+
+
+// -----------------------------| GET ADMIN'S  CALL LIST INJECTION ----------------------------------------------------------------------------------------
+const getAdminsCallListUse = new GetAdminCallListUseCase(mongoRepo);
+export const InjectedGetAdminsCallListController = new GetAdminsCallListController(getAdminsCallListUse);

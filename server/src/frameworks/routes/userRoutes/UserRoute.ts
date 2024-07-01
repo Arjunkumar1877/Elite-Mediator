@@ -4,7 +4,7 @@ import { InjectedCreateConversationController, InjectedCreateNewUserDataControll
 import { ConversationModel } from "../../../frameworks/database/models/admin/ConversationModel";
 import { MessageModel } from "../../../frameworks/database/models/admin/MessageModel";
 import { UserModel } from "../../../frameworks/database/models/user/User";
-import { InjectedGetMessagesController, InjectedSendMesssage } from "../../../frameworks/injection/CommonInjects";
+import { InjectedCallingFunctionalitiesController, InjectedGetMessagesController, InjectedSendMesssage } from "../../../frameworks/injection/CommonInjects";
 import { CallModel } from "../../database/models/admin/CallModel";
 const router:Route = Router();
 
@@ -44,6 +44,24 @@ router.post('/send_message', InjectedSendMesssage.SendMessageControl.bind(Inject
 router.get('/get_messages/:convId', InjectedGetMessagesController.GetMessagesControl.bind(InjectedGetMessagesController));
 
 
+// -------------------------------------| STARTING A CALL AND SAVING THE DATA TO THE DATABASE  --------------------------------------------------------------------|
+router.post("/start_call", InjectedCallingFunctionalitiesController.StartingCallControl.bind(InjectedCallingFunctionalitiesController));
+
+
+// -------------------------------------| ACCEPTING THE CALL AND UPDATING THE DATABASE  --------------------------------------------------------------------|
+router.post("/accept_call/:callerId", InjectedCallingFunctionalitiesController.AcceptingCallControl.bind(InjectedCallingFunctionalitiesController));
+
+
+// -------------------------------------| DECLINING THE CALL BY THE USER AND UPDATING IT TO THE DATABASE  --------------------------------------------------------------------|
+router.post("/decline_call/:callerId", InjectedCallingFunctionalitiesController.DecliningCallControl.bind(InjectedCallingFunctionalitiesController));
+
+
+// -------------------------------------| DISCONNECT THE CONNECTED CALL BY THE USER AND UPDATING IT TO THE DATABASE  --------------------------------------------------------------------|
+router.post("/disconnect_call/:callerId", InjectedCallingFunctionalitiesController.DisconnectingControl.bind(InjectedCallingFunctionalitiesController));
+
+
+
+
 router.get('/update_readmessage_conversation/:id', async(req, res)=>{
     try {
         const user = await ConversationModel.findOneAndUpdate({_id: req.params.id}, {
@@ -59,116 +77,18 @@ router.get('/update_readmessage_conversation/:id', async(req, res)=>{
 })
 
 
-// Start a call
-router.post('/start_call', async (req, res) => {
-  try {
-    console.log(req.body);
 
-    const callerData = await CallModel.create(req.body);
+// router.get("/get_calls/:id", async(req,res)=>{
+//   try {
+//     const id = req.params.id;
 
-    if (callerData) {
-      res.json(callerData);
-    }
-  } catch (error: any) {
-    console.error('Error starting call:', error);
-    res.status(500).json({ message: 'Server error', error: error.message });
-  }
-});
-
-// Decline a call
-router.post('/decline_call/:id', async (req, res) => {
-  const id = req.params.id;
-
-  try {
-    const call = await CallModel.findById(id);
-
-    if (!call) {
-      return res.status(404).json({ message: 'Call not found' });
-    }
-
-    const update = await CallModel.findByIdAndUpdate(
-      id,
-      { callStatus: 'declined' },
-      { new: true }
-    );
-
-if(update){
-  console.log("call declined📉📉📉📉📉😥😥😥❤️❤️❤️✌️✌️😣😣😣😂😂⛔💕💕🤷‍♂️🤷‍♂️🤷‍♂️🤷‍♂️ ")
-
-}
-
-
-    res.json(update);
-  } catch (error: any) {
-    console.error('Error declining call:', error);
-    res.status(500).json({ message: 'Server error', error: error.message });
-  }
-});
-
-// Accept a call
-router.post('/accept_call/:id', async (req, res) => {
-  const id = req.params.id;
-
-  try {
-    const update = await CallModel.findByIdAndUpdate(
-      id,
-      {
-        callStarted: Date.now(),
-        callStatus: 'answered',
-      },
-      { new: true }
-    );
-
-    res.json(update);
-  } catch (error: any) {
-    console.error('Error accepting call:', error);
-    res.status(500).json({ message: 'Server error', error: error.message });
-  }
-});
-
-// Disconnect a call
-router.post('/disconnect_call/:id', async (req, res) => {
-  const id = req.params.id;
-
-  try {
-    const call = await CallModel.findById(id);
-
-    if (!call) {
-      return res.status(404).json({ message: 'Call not found' });
-    }
-
-    const callEnded = new Date();
-    const callStarted = call.callStarted ? new Date(call.callStarted).getTime() : 0;
-    const callDuration = callStarted ? callEnded.getTime() - callStarted : 0;
-
-    const update = await CallModel.findByIdAndUpdate(
-      id,
-      {
-        callEnded: callEnded,
-        callDuration: callDuration,
-      },
-      { new: true }
-    );
-
-    res.json(update);
-  } catch (error: any) {
-    console.error('Error disconnecting call:', error);
-    res.status(500).json({ message: 'An error occurred', error: error.message });
-  }
-});
-
-
-router.get("/get_calls/:id", async(req,res)=>{
-  try {
-    const id = req.params.id;
-
-    const calles = await CallModel.find({adminId: id}).populate('userId').sort({createdAt: -1});
-    res.json(calles);
+//     const calles = await CallModel.find({adminId: id}).populate('userId').sort({createdAt: -1});
+//     res.json(calles);
     
-  } catch (error: any) {
-    console.log(error)
-  }
-})
+//   } catch (error: any) {
+//     console.log(error)
+//   }
+// })
 
 
 

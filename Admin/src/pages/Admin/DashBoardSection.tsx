@@ -14,7 +14,7 @@ function DashboardSection() {
 
   const fetchCalls = async()=>{
     try {
-      const res = await fetch(`/user/get_calls/${currentAdmin._id}`);
+      const res = await fetch(`/api/get_calls/${currentAdmin._id}`);
       const data: any = await res.json();
 
       if(data){
@@ -87,6 +87,62 @@ function DashboardSection() {
       <div className="flex flex-col gap-5 mt-5 lg:flex-row">
 
 
+      <div className="p-4 w-full lg:w-1/3 border-2 rounded-lg shadow-lg bg-white">
+      <div className="flex justify-between items-center px-5 py-2 border-b cursor-pointer">
+        <h2 className="text-2xl font-bold">Recent Calls</h2>
+        <h3 className="text-sky-500 font-bold">(10) All</h3>
+      </div>
+      <div className="overflow-y-scroll max-h-96">
+        {admincallList &&
+          admincallList.map((calls: any) => (
+            <div
+              key={calls._id}
+              className="flex items-center h-[70px] rounded-lg justify-between border-b mt-2 p-2 hover:bg-gray-100"
+            >
+              <div className="flex flex-col w-2/3">
+                <span className="text-xs md:text-sm text-gray-500">
+                  {new Date(calls.createdAt).toLocaleString()}
+                </span>
+                <span className="text-sm md:text-lg font-semibold">{calls?.userId?.username}</span>
+                <div className="flex items-center gap-2 text-xs md:text-sm text-gray-500">
+                  {calls.caller === 'Admin' ? (
+                    <FaPhone className="text-blue-500" />
+                  ) : (
+                    <FaClock className="text-green-500" />
+                  )}
+                  <span>
+                    {calls.caller === 'Admin' ? 'Outgoing' : 'Incoming'}
+                  </span>
+                </div>
+              </div>
+              <div className="flex flex-col items-center gap-1 w-1/3">
+                <div className="flex items-center gap-2">
+                  {calls.callType === 'video' ? (
+                    <FaVideo className="text-red-500" />
+                  ) : (
+                    <FaPhone className="text-green-500" />
+                  )}
+                </div>
+                <div className="flex items-center gap-2">
+                  {calls.callStatus === 'answered' && <FaCheck className="text-green-500" />}
+                  {calls.callStatus === 'declined' && <FaTimes className="text-red-500" />}
+                  {calls.callStatus !== 'answered' &&
+                    calls.callStatus !== 'declined' && (
+                      <FaClock className="text-yellow-500" />
+                    )}
+                  <span className="text-xs md:text-sm">
+                    {calls.callStatus === 'answered'
+                      ? 'Answered'
+                      : calls.callStatus === 'declined'
+                      ? 'Declined'
+                      : 'Missed'}
+                  </span>
+                </div>
+              </div>
+            </div>
+          ))}
+      </div>
+    </div>
 
         <div className="flex-1 p-4 border-2 rounded-lg">
           <div className="flex justify-between items-center px-5 py-2">

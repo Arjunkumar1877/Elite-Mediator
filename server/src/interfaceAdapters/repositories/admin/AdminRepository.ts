@@ -7,6 +7,7 @@ import { PropertyData } from "../../../entities/models/admin/PropertyData";
 import { ConversationModel } from "../../../frameworks/database/models/admin/ConversationModel";
 import { Conversation } from "../../../entities/models/common/Conversation";
 import moment from "moment";
+import { CallModel } from "../../../frameworks/database/models/admin/CallModel";
 
 export class MongoAdminRepository implements IAdminRepository {
   async CreateAdmin(admin: Admin): Promise<any> {
@@ -197,5 +198,11 @@ export class MongoAdminRepository implements IAdminRepository {
     
       const totalConversations = await ConversationModel.countDocuments(filterQuery);
       return totalConversations;
+  }
+
+
+  async FindAdminsCallListByAdminId(adminId: string): Promise<any> {
+    const calles = await CallModel.find({adminId: adminId}).populate('userId').sort({createdAt: -1});
+    return calles
   }
 }

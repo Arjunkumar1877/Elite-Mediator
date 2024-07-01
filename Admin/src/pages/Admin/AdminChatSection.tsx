@@ -8,7 +8,6 @@ import { BsSend } from "react-icons/bs";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { confirmAlert } from 'react-confirm-alert'; // Import
 import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
 import axios from "axios";
 import { useSelector } from "react-redux";
@@ -39,7 +38,7 @@ const AdminChatSection: React.FC = () => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { currentAdmin } = useSelector((state: any) => state?.admin);
   const navigate = useNavigate();
-  const  {socket, localVideoRef, remoteVideoRef, setIsVideoCall }: any = useSocket();
+  const  {socket, setIsVideoCall }: any = useSocket();
 
   const location = useLocation();
   const query = new URLSearchParams(location.search);
@@ -63,7 +62,7 @@ const AdminChatSection: React.FC = () => {
     try {
       setIsVideoCall(isVideo);
 
-      const res = await fetch("/user/start_call", {
+      const res = await fetch("/api/start_call", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -92,7 +91,7 @@ const AdminChatSection: React.FC = () => {
 
   const handleConversationSelect = async () => {
     try {
-      const response = await axios.get(`/user/get_messages/${conId}`);
+      const response = await axios.get(`/api/get_messages/${conId}`);
       setMessages(response.data);
       setLoading(false);
       scrollToBottom();
