@@ -6,31 +6,33 @@ const callSchema = new mongoose.Schema({
     ref: "Conversation",
     required: true
   },
-  callerId: {
-   type: mongoose.Types.ObjectId,
-   required: true
+  adminId: {
+    type: mongoose.Types.ObjectId,
+    ref: 'Admin',
+    required: true
   },
-  callerModel: { 
+  userId: {
+    type: mongoose.Types.ObjectId,
+    ref: 'User',
+    required: true
+  },
+  caller: { 
     type: String, 
     enum: ["User", "Admin"], 
     required: true 
   },
-  receiverId: {
-    type: mongoose.Types.ObjectId,
-    required: true
-  },
-  receiverModel:  {
+  receiver:  {
     type: String, 
     enum: ["User", "Admin"], 
     required: true 
   },
   callStatus: {
     type: String,
-    enum: ["declined", "answered", "missed", "canceled"]
+    enum: ["declined", "answered", "missed"]
   },
   callType: {
     type: String,
-    enum: ["outgoing", 'incomming']
+    enum: ["audio", 'video']
   },
   callStarted: {
     type: Date
@@ -39,8 +41,8 @@ const callSchema = new mongoose.Schema({
     type: Date
   },
   callDuration: {
-    type: Number
+    type: Date
   }
-});
+}, { timestamps: true});
 
 export const CallModel = mongoose.model("Call", callSchema);

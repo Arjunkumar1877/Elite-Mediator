@@ -59,23 +59,118 @@ router.get('/update_readmessage_conversation/:id', async(req, res)=>{
 })
 
 
-router.post("/start_call", async(req,res)=>{
-  console.log(req.body);
+// Start a call
+router.post('/start_call', async (req, res) => {
+  try {
+    console.log(req.body);
 
-  const callerData = await CallModel.create(req.body);
+    const callerData = await CallModel.create(req.body);
 
-  if(callerData){
-    res.json(callerData);
+    if (callerData) {
+      res.json(callerData);
+    }
+  } catch (error: any) {
+    console.error('Error starting call:', error);
+    res.status(500).json({ message: 'Server error', error: error.message });
   }
+});
 
+// Decline a call
+router.post('/decline_call/:id', async (req, res) => {
+  const id = req.params.id;
+
+  try {
+    const call = await CallModel.findById(id);
+
+    if (!call) {
+      return res.status(404).json({ message: 'Call not found' });
+    }
+
+    const update = await CallModel.findByIdAndUpdate(
+      id,
+      { callStatus: 'declined' },
+      { new: true }
+    );
+
+if(update){
+  console.log("call declined📉📉📉📉📉😥😥😥❤️❤️❤️✌️✌️😣😣😣😂😂⛔💕💕🤷‍♂️🤷‍♂️🤷‍♂️🤷‍♂️ ")
+
+}
+
+
+    res.json(update);
+  } catch (error: any) {
+    console.error('Error declining call:', error);
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+});
+
+// Accept a call
+router.post('/accept_call/:id', async (req, res) => {
+  const id = req.params.id;
+
+  try {
+    const update = await CallModel.findByIdAndUpdate(
+      id,
+      {
+        callStarted: Date.now(),
+        callStatus: 'answered',
+      },
+      { new: true }
+    );
+
+    res.json(update);
+  } catch (error: any) {
+    console.error('Error accepting call:', error);
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+});
+
+// Disconnect a call
+router.post('/disconnect_call/:id', async (req, res) => {
+  const id = req.params.id;
+
+  try {
+    const call = await CallModel.findById(id);
+
+    if (!call) {
+      return res.status(404).json({ message: 'Call not found' });
+    }
+
+    const callEnded = new Date();
+    const callStarted = call.callStarted ? new Date(call.callStarted).getTime() : 0;
+    const callDuration = callStarted ? callEnded.getTime() - callStarted : 0;
+
+    const update = await CallModel.findByIdAndUpdate(
+      id,
+      {
+        callEnded: callEnded,
+        callDuration: callDuration,
+      },
+      { new: true }
+    );
+
+    res.json(update);
+  } catch (error: any) {
+    console.error('Error disconnecting call:', error);
+    res.status(500).json({ message: 'An error occurred', error: error.message });
+  }
+});
+
+
+router.get("/get_calls/:id", async(req,res)=>{
+  try {
+    const id = req.params.id;
+
+    const calles = await CallModel.find({adminId: id}).populate('userId').sort({createdAt: -1});
+    res.json(calles);
+    
+  } catch (error: any) {
+    console.log(error)
+  }
 })
 
-router.post('/accept_call', async(req,res)=>{
 
-})
 
-router.post('/decline_call', async(req,res)=>{
-
-})
 
 export default router;

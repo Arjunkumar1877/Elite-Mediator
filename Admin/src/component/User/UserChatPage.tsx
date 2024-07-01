@@ -54,12 +54,11 @@ const UserChatPage: React.FC = () => {
         },
         body: JSON.stringify({
           conversationId: currentUser.conversationId,
-          callerId: currentUser._id,
-          callerModel: "User",
-          callType: "outgoing",
-          receiverId: currentUser.adminId._id,
-          receiverModel: "Admin",
-          callStarted: Date.now()
+          adminId: currentUser.adminId._id,
+          userId: currentUser._id,
+          caller: "User",
+          callType: isVideo ? 'video' : 'audio',
+          receiver: "Admin"
         }),
       });
 
@@ -73,8 +72,7 @@ const UserChatPage: React.FC = () => {
           adminId: currentUser.adminId,
           callerId: data._id
         })
-      }
-  ;
+      };
     } catch (error) {
       console.error("Error starting call:", error);
     }

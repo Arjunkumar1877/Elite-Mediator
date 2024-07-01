@@ -110,7 +110,6 @@
 import { Server as HTTPServer } from "http";
 import { Server as SocketIoServer } from "socket.io";
 import { ConversationModel } from "../../database/models/admin/ConversationModel";
-import { UnreadMessageModel } from "../../database/models/admin/UnreadMessageCountModel";
 import { CallModel } from "../../database/models/admin/CallModel";
 
 function initializeSocket(server: HTTPServer): SocketIoServer {
@@ -175,8 +174,9 @@ function initializeSocket(server: HTTPServer): SocketIoServer {
       try {
         const totalUnreadCount = await calculateTotalUnreadMessages(adminId);
         console.log(`Notify: ${totalUnreadCount}`);
-        console.log(adminId._id)
+        console.log(adminId)
         io.to(adminId._id).emit("notify", totalUnreadCount);
+        io.to(adminId).emit("notify", totalUnreadCount);
       } catch (error) {
         console.error('Error in notify:', error);
       }
@@ -189,13 +189,13 @@ function initializeSocket(server: HTTPServer): SocketIoServer {
     });
 
     socket.on("webrtc-offer", (data) => {
-      // console.log("Received WebRTC offer:", data);
+      console.log("Received WebRTC offer:", data);
       io.to(data.adminId).emit('webrtc-offer', data);
       io.to(data.room).emit("webrtc-offer", data);
     });
 
     socket.on("webrtc-answer", async(data) => {
-      console.log("Received WebRTC answer:", data);
+      // console.log("Received WebRTC answer:", data);
       io.to(data.room).emit("webrtc-answer", data);
     });
 
@@ -216,6 +216,15 @@ function initializeSocket(server: HTTPServer): SocketIoServer {
 
   return io;
 }
+
+
+process.on('uncaughtException', (error) => {
+  console.error('Uncaught Exception:', error);
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+});
 
 async function calculateTotalUnreadMessages(adminId: any) {
   try {

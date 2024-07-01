@@ -46,8 +46,12 @@ const SideNavBar: React.FC<SideNavBarProps> = ({ navShowSet }) => {
   useEffect(() => {
     if (currentAdmin && currentAdmin._id) {
       socket.emit("join room", currentAdmin._id);
+      // socket.emit("notify", currentAdmin._id);
       if(location.pathname !== '/chat_list'){
-        socket.on("notify", handleNotify);
+        if(location.pathname !== '/admin_chat'){
+          socket.on("notify", handleNotify);
+
+        }
       }
     }
 
@@ -190,7 +194,7 @@ const SideNavBar: React.FC<SideNavBarProps> = ({ navShowSet }) => {
               CHATS
             </span>
             {notificationCount > 0 && isHovered && (
-              <span className="absolute w-40 left-12 bottom-12 bg-sky-500 text-white text-sm   rounded-lg py-3 px-5 z-10">
+              <span className="absolute w-40 left-12 bottom-12 bg-slate-800 text-white text-xs md:text-sm   rounded-lg py-3 px-5 z-10">
                 You have {notificationCount} unread messages
               </span>
             )}

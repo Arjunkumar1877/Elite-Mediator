@@ -3,14 +3,34 @@ import { FaRegTrashCan } from "react-icons/fa6";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { FaPhone, FaVideo, FaCheck, FaTimes, FaClock } from 'react-icons/fa';
+
 
 
 function DashboardSection() {
   const [adminData, setAdminData] = useState<any>({})
   const { currentAdmin } = useSelector((state: any)=> state.admin);
+  const [admincallList, setAdminCallList] = useState<any>()
+
+  const fetchCalls = async()=>{
+    try {
+      const res = await fetch(`/user/get_calls/${currentAdmin._id}`);
+      const data: any = await res.json();
+
+      if(data){
+        setAdminCallList(data)
+      }
+
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+
 
 
  useEffect(()=>{
+  fetchCalls();
     const fetchUser = async()=>{
     const res = await fetch(`/api/get_admin/${currentAdmin._id}`);
 
@@ -25,7 +45,8 @@ function DashboardSection() {
     fetchUser()
   },[])
 
-  console.log(adminData)
+  console.log(adminData);
+  console.log(admincallList)
 
   return (
     <div className="container mx-auto p-4">
@@ -64,23 +85,8 @@ function DashboardSection() {
     </div>
 
       <div className="flex flex-col gap-5 mt-5 lg:flex-row">
-        <div className="p-4 w-full lg:w-1/3 border-2 rounded-lg">
-          <div className="flex justify-between px-5 py-2 cursor-pointer">
-            <h2 className="text-2xl font-bold">Recent Calls</h2>
-            <h3 className="text-sky-500 font-bold">(10) All</h3>
-          </div>
-          <hr className="w-full mt-4" />
-          <div className="overflow-y-scroll max-h-96">
-            {[...Array(12)].map((_, i) => (
-              <div key={i} className="flex flex-col h-[70px] rounded-lg justify-center items-start border-2 mt-2">
-                <div className="flex justify-between gap-8 px-6">
-                  <button className="bg-sky-500 py-1 px-2 rounded-2xl text-sm text-white">12:45PM</button>
-                  <p className="text-lg">Arjun Kumar VS</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
+
+
 
         <div className="flex-1 p-4 border-2 rounded-lg">
           <div className="flex justify-between items-center px-5 py-2">

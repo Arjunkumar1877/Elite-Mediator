@@ -27,7 +27,7 @@ const ConversationSchema = new Schema({
     },
     unread: {
       type: Number,
-      default: 0 // Ensure a default value for unread messages
+      default: 0
     }
   },
 }, {timestamps: true});

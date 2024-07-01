@@ -33,6 +33,67 @@ const AdminCallPage: React.FC = () => {
       iceServers: [{ urls: "stun:stun.l.google.com:19302" }],
     })
   );
+  const updateCallCancelling = async (callerId: any) => {
+    try {
+      const res = await fetch(`/user/decline_call/${callerId}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+  
+      if (!res.ok) {
+        throw new Error(`HTTP error! status: ${res.status}`);
+      }
+  
+      const data = await res.json();
+      console.log(data);
+    } catch (error) {
+      console.error('Error updating call status:', error);
+    }
+  };
+  
+
+  const updateCallAnswering= async (callerId: any) => {
+    try {
+      const res = await fetch(`/user/accept_call/${callerId}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+  
+      if (!res.ok) {
+        throw new Error(`HTTP error! status: ${res.status}`);
+      }
+  
+      const data = await res.json();
+      console.log(data);
+    } catch (error) {
+      console.error('Error updating call status:', error);
+    }
+  };
+
+  const updateCallDisconnecting = async (callerId: any) => {
+    try {
+      const res = await fetch(`/user/disconnect_call/${callerId}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+  
+      if (!res.ok) {
+        throw new Error(`HTTP error! status: ${res.status}`);
+      }
+  
+      const data = await res.json();
+      console.log(data);
+    } catch (error) {
+      console.error('Error updating call status:', error);
+    }
+  };
+
 
   useEffect(() => {
     socket.emit("join room", conId);
@@ -100,13 +161,15 @@ const AdminCallPage: React.FC = () => {
                   name: currentAdmin.username,
                   callerId: callerId
                 });
+                updateCallAnswering(offer.callerId);
 
               },
             },
             {
               label: "No",
-              onClick: () => {
+              onClick: async() => {
                 socket.emit("webrtc-disconnect", conId, callerId);
+                updateCallCancelling(offer.callerId)
               },
             },
           ],
@@ -229,6 +292,8 @@ const AdminCallPage: React.FC = () => {
     }
 
     navigate(`/admin_chat?conId=${conId}`);
+    updateCallDisconnecting(callerId);
+
   };
 
   return (

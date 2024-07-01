@@ -32,130 +32,122 @@ interface Conversation {
 }
 
 const AdminChatSection: React.FC = () => {
-  const [conversations, setConversations] = useState<Conversation[]>([]);
   const [selectedConversation, setSelectedConversation] = useState<Conversation | null>(null);
-  const [callActive, setCallActive] = useState<boolean>(false);
   const [messages, setMessages] = useState<Message[]>([]);
-  const [adminData, setAdminData] = useState<any>();
-  const [incomminCall, setIncommingCall] = useState<boolean>(false);
-  const [acceptedCall, setAcceptedCall] = useState<boolean>();
   const [newMessage, setNewMessage] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(true);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { currentAdmin } = useSelector((state: any) => state?.admin);
-  const params = useParams();
   const navigate = useNavigate();
   const  {socket, localVideoRef, remoteVideoRef, setIsVideoCall }: any = useSocket();
-  // console.log(socket);
 
   const location = useLocation();
   const query = new URLSearchParams(location.search);
   const conId = query.get("conId");
  
-
-
-useEffect(() => {
-  socket.emit("join room", conId); 
-    socket.on('incoming-call', (data: any)=>{
+  useEffect(() => {
+    socket.emit("join room", conId); 
+    const handleIncomingCall = (data: any) => {
       console.log(data);
       navigate(`/admin_call_page?conId=${data.conId}&name=${data.name}&callerId=${data.callerId}`);
-    })
+    };
+    
+    socket.on('incoming-call', handleIncomingCall);
 
-  
-}, [conId, currentAdmin.username]);
+    return () => {
+      socket.off('incoming-call', handleIncomingCall);
+    };
+  }, [conId, navigate]);
 
+  const startCall = async (isVideo = false) => {
+    try {
+      setIsVideoCall(isVideo);
 
+      const res = await fetch("/user/start_call", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          conversationId: conId,
+          callerId: currentAdmin._id,
+          adminId: currentAdmin._id,
+          userId: selectedConversation?.userId._id,
+          caller: "Admin",
+          callType:  isVideo ? 'video' : 'audio',
+          receiver: "User"
+        }),
+      });
 
-const startCall = async (isVideo = false) => {
-  try {
-    setIsVideoCall(isVideo);
-
-    const res = await fetch("/user/start_call", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        conversationId: conId,
-        callerId: currentAdmin._id,
-        callerModel: "Admin",
-        callType: "outgoing",
-        receiverId: selectedConversation?.userId?._id,
-        receiverModel: "User",
-        callStarted: Date.now()
-      }),
-    });
-
-    const data:any = await res.json();
-    console.log(data);
-
-   if(data){
-    socket.emit("incoming-call", {conId, name: currentAdmin.username, adminId: currentAdmin._id, callerId: data._id})
-
-   }
-  } catch (error) {
-    console.error("Error starting call:", error);
-  }
-};
-
-
-// ------------------| GET MESSAGES OF THE PERTICULAR CONVERSATION --------------------------------------------------------------------------------------------------------->
-const handleConversationSelect = async () => {
-  try {
-    const response = await axios.get(`/user/get_messages/${conId}`);
-    setMessages(response.data);
-    socket.emit("join room", conId);
-    setLoading(false);
-    scrollToBottom();
-  } catch (error) {
-    console.error("Error fetching messages:", error);
-    setLoading(false);
-  }
-};
-
-// ------------------| GET THE PERTICULAR CONVERSATION DATA ------------------------------------------------------------------------------------------------------------------>
-const fetchselectedConversation = async () => {
-  try {
-    const res = await fetch(`/api/selected_conversation/${conId}`);
-    const data = await res.json();
-    setSelectedConversation(data);
-  } catch (error) {
-    console.log(error);
-  }
-};
-
-// ------------------| USE EFFECT FOR HANDLING MESSAGES RECIEVE, UPDATE UNREAD MESSAGE COUNT TO ZERO AND TO UPDATE THE REALTIME MESSAGES --------------------------------------------------------------------------------------------------------->
-  useEffect(() => {
-
-    const updateReadCount = async () => {
-      const res = await fetch(`/api/update_conversation_unread_count/${conId}`);
       const data = await res.json();
       console.log(data);
+
+      if (data) {
+        socket.emit("incoming-call", { conId, name: currentAdmin.username, adminId: currentAdmin._id, callerId: data._id });
+      }
+    } catch (error) {
+      console.error("Error starting call:", error);
+    }
+  };
+
+  const handleConversationSelect = async () => {
+    try {
+      const response = await axios.get(`/user/get_messages/${conId}`);
+      setMessages(response.data);
+      setLoading(false);
+      scrollToBottom();
+    } catch (error) {
+      console.error("Error fetching messages:", error);
+      setLoading(false);
+    }
+  };
+
+  const fetchSelectedConversation = async () => {
+    try {
+      const res = await fetch(`/api/selected_conversation/${conId}`);
+      const data = await res.json();
+      setSelectedConversation(data);
+    } catch (error) {
+      console.error("Error fetching selected conversation:", error);
+    }
+  };
+
+  console.log(selectedConversation?.userId._id)
+
+  useEffect(() => {
+    const updateReadCount = async () => {
+      try {
+        const res = await fetch(`/api/update_conversation_unread_count/${conId}`);
+        const data = await res.json();
+        console.log(data);
+      } catch (error) {
+        console.error("Error updating unread count:", error);
+      }
     };
 
     updateReadCount();
     handleConversationSelect();
-    fetchselectedConversation();
+    fetchSelectedConversation();
 
-    const handleChatMessage = (msg: Message) => {
+    const handleChatMessage = (msg: any) => {
       if (msg.conversationId === conId) {
         setMessages((prevMessages) => [...prevMessages, msg]);
       }
     };
+
     socket.emit("update conversation", currentAdmin._id);
     socket.on("recieve_message", handleChatMessage);
 
     return () => {
       socket.off("recieve_message", handleChatMessage);
     };
-  }, [conId]);
+  }, [conId, currentAdmin._id]);
 
-// ------------------| SEND A MESSAGE TO THE USER AND UPDATE THE TO THE DATABASE WITH THE ADMIN ID AND CONVERSATIONID ----------------------------------------------------------------------------------------------------------------------------->  
   const sendMessage = async () => {
     if (newMessage.trim() === "" || !conId) return;
 
     try {
-      const response = await axios.post<Message>("/api/send_message", {
+      const response = await axios.post("/api/send_message", {
         conversationId: conId,
         senderId: currentAdmin._id,
         senderModel: "Admin",
@@ -170,23 +162,24 @@ const fetchselectedConversation = async () => {
     }
   };
 
-// ------------------| USE EFFECT FOR AUTOMATTICALLY SCROLLING TO THE LATEST MESSSAGE DOWN THE CHAT ----------------------------------------------------------------------------------------------------------------------------->  
-const scrollToBottom = () => {
-  messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-};  
+  // Scroll to the bottom of the messages
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
 
-
-useEffect(() => {
-    
+  // Automatically scroll to the latest message when messages change
+  useEffect(() => {
     scrollToBottom();
   }, [messages]);
-
-
-
 
   if (loading) {
     return <div>Loading...</div>;
   }
+
+
+
+
+
   return (
     <div className="pt-16 h-screen bg-gray-50 flex flex-col">
       <ToastContainer />
