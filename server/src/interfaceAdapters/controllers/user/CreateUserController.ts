@@ -18,12 +18,9 @@ export class CreateUserController {
         req.body.adminId
       );
 
-      if (userData === "user does not exist") {
+      if (userData === "user does not exist" ||  userData === "user not verified") {
         console.log("Saveuserdata controller 💕💕💕💕");
         console.log(req.body);
-        const data = await this.isavenewuserdatausecase.SaveNewUser(req.body);
-        res.status(201).json({ data: data, message: "User created" });
-      } else if (userData === "user not verified") {
         const data = await this.isavenewuserdatausecase.SaveNewUser(req.body);
         res.status(201).json({ data: data, message: "User created" });
       } else {
@@ -41,6 +38,15 @@ export class CreateUserController {
     try {
       const data = await this.isavenewuserdatausecase.SaveNewUser(req.body);
       res.json(data)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  async CreateUnknownUserControl(req: Req, res: Res): Promise<void>{
+    try {
+      const data = await this.isavenewuserdatausecase.SaveNewUser(req.body);
+      res.json(data);
     } catch (error) {
       console.log(error)
     }

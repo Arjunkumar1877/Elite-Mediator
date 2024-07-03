@@ -8,14 +8,13 @@ export class GetAdminConversationListController{
         try {
 
             console.log("HAI IAM CONVRESATION LIST CONTROLLER 🤷‍♂️🤷‍♂️🤷‍♂️💕💕💕💕💕💕💕💕💕💕💕💕💕💕💕💕💕💕💕💕💕💕💕")
-            const { adminId, page = '1', limit = '10', filter = 'all' } = req.query as {
+            const { adminId, page = '1', limit = '10' } = req.query as {
                 adminId: string,
                 page?: string,
                 limit?: string,
-                filter?: string
               };
             
-            const conversations = await this.igetconversationlistusecase.FilterOutAllConversationList(adminId, page, limit, filter);
+            const conversations = await this.igetconversationlistusecase.FilterOutAllConversationList(adminId, page, limit);
             const totalConversations  = await this.igetconversationlistusecase.FindConversationListCount(adminId);
 
             res.status(200).json({

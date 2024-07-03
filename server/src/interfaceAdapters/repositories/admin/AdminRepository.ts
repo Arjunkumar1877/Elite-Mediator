@@ -8,6 +8,8 @@ import { ConversationModel } from "../../../frameworks/database/models/admin/Con
 import { Conversation } from "../../../entities/models/common/Conversation";
 import moment from "moment";
 import { CallModel } from "../../../frameworks/database/models/admin/CallModel";
+import { UserModel } from "../../../frameworks/database/models/user/User";
+import { isBuffer } from "util";
 
 export class MongoAdminRepository implements IAdminRepository {
   async CreateAdmin(admin: Admin): Promise<any> {
@@ -162,24 +164,14 @@ export class MongoAdminRepository implements IAdminRepository {
     }
   }
 
-  async FilterConversationList(adminId: string, page: string, limit: string, filter: string): Promise<any> {
+  async FilterConversationList(adminId: string, page: string, limit: string): Promise<any> {
     try {
-      const startOfToday = moment().startOf('day');
-      const startOfWeek = moment().startOf('week');
-      const startOfMonth = moment().startOf('month');
       
-      let filterQuery: any = { adminId };
       
-      if (filter === 'today') {
-        filterQuery.createdAt = { $gte: startOfToday.toDate() };
-      } else if (filter === 'this_week') {
-        filterQuery.createdAt = { $gte: startOfWeek.toDate() };
-      } else if (filter === 'this_month') {
-        filterQuery.createdAt = { $gte: startOfMonth.toDate() };
-      }
+ 
       
 
-      const conversations = await ConversationModel.find(filterQuery).populate('userId')
+      const conversations = await ConversationModel.find({adminId: adminId}).populate('userId propertyId')
       .skip((parseInt(page) - 1) * parseInt(limit))
       .limit(parseInt(limit))
       .sort({ createdAt: -1 });
@@ -205,4 +197,16 @@ export class MongoAdminRepository implements IAdminRepository {
     const calles = await CallModel.find({adminId: adminId}).populate('userId').sort({createdAt: -1});
     return calles
   }
+
+
+ async FindUsersListByAdminId(adminId: string): Promise<any> {
+    const userData = await UserModel.find({adminId: adminId}).sort({createdAt: -1});
+    
+    if(userData.length > 0){
+      return userData
+    }else{
+      return 'Empty list'
+    }
+  }
+
 }

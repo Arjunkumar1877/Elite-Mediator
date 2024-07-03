@@ -141,6 +141,7 @@ const SideNavBar: React.FC<SideNavBarProps> = ({ navShowSet }) => {
               PROFILE
             </span>
           </Link>
+
           <Link
             to="/dashboard"
             className={`flex gap-5 self-start ${
@@ -158,7 +159,10 @@ const SideNavBar: React.FC<SideNavBarProps> = ({ navShowSet }) => {
               DASHBOARD
             </span>
           </Link>
-          <div className="flex gap-5 self-start px-5 hover:text-black cursor-pointer text-sky-500 items-center text-xl">
+
+          <Link to={'/visitors'} className={`flex gap-5 self-start px-5 hover:text-black cursor-pointer  items-center text-xl ${
+            location.pathname === '/visitors'  ? "text-black" : "text-sky-500"
+          }`}>
             <span>
               <TbUsersGroup />
             </span>
@@ -169,7 +173,8 @@ const SideNavBar: React.FC<SideNavBarProps> = ({ navShowSet }) => {
             >
               ALL USERS
             </span>
-          </div>
+          </Link>
+
           <Link
             to="/chat_list"
             onMouseEnter={() => setIsHovered(true)}
@@ -199,6 +204,7 @@ const SideNavBar: React.FC<SideNavBarProps> = ({ navShowSet }) => {
               </span>
             )}
           </Link>
+
           <Link
             to="/qrCodes"
             className={`flex gap-5 self-start px-5 hover:text-black cursor-pointer ${
@@ -219,6 +225,7 @@ const SideNavBar: React.FC<SideNavBarProps> = ({ navShowSet }) => {
               QR CODE'S
             </span>
           </Link>
+
           <div
             className="flex gap-5 self-start px-5 hover:text-black cursor-pointer text-sky-500 items-center text-xl"
             onClick={handleSignout}

@@ -1,12 +1,14 @@
 import { Router } from "express";
 import { Route } from "../../../frameworks/types/ServerTypes";
 import { JwtTokenAdapter } from "../../../frameworks/services/jwtService/TokenService";
-import { InjectedAdminSignUpController, InjectedAdminlogincontroller, InjectedGenerateQrCodeController, InjectedGetAdminDataController, InjectedGetAdminAllPropertyDataController, InjectedGetUnverifiedAdminController, InjectedGoogleLoginController, InjectedSavePropertyDataController, InjectedUpdateAdminProfileController, InjectedUpdateVerifyAdminController, InjectedUpdateConversationReadCountToZeroController, InjectedGetSelectedConversationController, InjectedGetConversationListController, InjectedGetAdminsCallListController } from "../../../frameworks/injection/AdminInjects";
+import { InjectedAdminSignUpController, InjectedAdminlogincontroller, InjectedGenerateQrCodeController, InjectedGetAdminDataController, InjectedGetAdminAllPropertyDataController, InjectedGetUnverifiedAdminController, InjectedGoogleLoginController, InjectedSavePropertyDataController, InjectedUpdateAdminProfileController, InjectedUpdateVerifyAdminController, InjectedUpdateConversationReadCountToZeroController, InjectedGetSelectedConversationController, InjectedGetConversationListController, InjectedGetAdminsCallListController, InjectedGetUsersListController } from "../../../frameworks/injection/AdminInjects";
 import { MessageModel } from "../../../frameworks/database/models/admin/MessageModel";
 import moment from 'moment';
 import { ConversationModel } from "../../../frameworks/database/models/admin/ConversationModel";
 import { InjectedCallingFunctionalitiesController, InjectedGetMessagesController, InjectedSendMesssage } from "../../../frameworks/injection/CommonInjects";
 import { InjectedCreateConversationController } from "../../../frameworks/injection/UserInjects";
+import { UserModel } from "../../database/models/user/User";
+import { QrModel } from "../../database/models/admin/QrDataModel";
 
 const router: Route = Router();
 
@@ -54,33 +56,75 @@ router.get('/update_conversation_unread_count/:id', InjectedUpdateConversationRe
 // -------------------------------------| FETCH THE CONVERSATION'S DOCUMENT USING THE ID ----------------------------------------------------------------------------|
 router.get('/selected_conversation/:id',  InjectedGetSelectedConversationController.GetSelectedConversationControl.bind(InjectedGetSelectedConversationController));
 
-
 // -------------------------------------| GETTING ALL THE MESSAGES FROM THE DATABASE  --------------------------------------------------------------------|
 router.get('/get_messages/:convId', InjectedGetMessagesController.GetMessagesControl.bind(InjectedGetMessagesController));
 
-
 // -------------------------------------| FECH ALL AND FILTERED ADMINS CHAT LIST  ----------------------------------------------------------------------------|
-router.get('/conversations_list', InjectedGetConversationListController.GetConversationListControl.bind(InjectedGetConversationListController));
+// router.get('/conversations_list', InjectedGetConversationListController.GetConversationListControl.bind(InjectedGetConversationListController));
+
+router.get('/conversations_list', async (req, res) => {
+    try {
+      const { adminId, page = 1, propertyFilter, startDate, endDate }:any = req.query;
+      const limit = 10;
+  
+      // Build the query object
+      let query: any = { adminId: adminId };
+  
+      // Apply search term filter
+     
+      
+      // Apply property filter
+      if (propertyFilter && propertyFilter !== 'All') {
+        query.propertyId = propertyFilter;
+      }
+  
+      // Apply date range filter
+      if (startDate && endDate) {
+        query.createdAt = { $gte: new Date(startDate), $lte: new Date(endDate) };
+      }
+  
+      const conversations = await ConversationModel.find(query)
+        .populate('userId propertyId')
+        .skip((parseInt(page) - 1) * limit)
+        .limit(limit)
+        .sort({ createdAt: -1 });
+  
+      const totalConversations = await ConversationModel.countDocuments(query);
+      const totalPages = Math.ceil(totalConversations / limit);
+  
+      res.json({ conversations, totalPages });
+    } catch (error) {
+      console.error('Error fetching conversations:', error);
+      res.status(500).send('Server error');
+    }
+  });
 
 
 // -------------------------------------| STARTING A CALL AND SAVING THE DATA TO THE DATABASE  --------------------------------------------------------------------|
 router.post("/start_call", InjectedCallingFunctionalitiesController.StartingCallControl.bind(InjectedCallingFunctionalitiesController));
 
-
 // -------------------------------------| ACCEPTING THE CALL AND UPDATING THE DATABASE  --------------------------------------------------------------------|
 router.post("/accept_call/:callerId", InjectedCallingFunctionalitiesController.AcceptingCallControl.bind(InjectedCallingFunctionalitiesController));
-
 
 // -------------------------------------| DECLINING THE CALL BY THE USER AND UPDATING IT TO THE DATABASE  --------------------------------------------------------------------|
 router.post("/decline_call/:callerId", InjectedCallingFunctionalitiesController.DecliningCallControl.bind(InjectedCallingFunctionalitiesController));
 
-
 // -------------------------------------| DISCONNECT THE CONNECTED CALL BY THE USER AND UPDATING IT TO THE DATABASE  --------------------------------------------------------------------|
 router.post("/disconnect_call/:callerId", InjectedCallingFunctionalitiesController.DisconnectingControl.bind(InjectedCallingFunctionalitiesController));
 
-
+// -------------------------------------| FETCH ALL THE CALL LIST OF THE ADMIN FROM THE DATABASE  --------------------------------------------------------------------|
 router.get("/get_calls/:adminId", InjectedGetAdminsCallListController.GetAdminsCallListControl.bind(InjectedGetAdminsCallListController));
 
+// -------------------------------------| FETCH ALL THE USER LIST OF THE ADMIN FROM THE DATABASE  --------------------------------------------------------------------|
+router.get("/get_users_list/:adminId", InjectedGetUsersListController.GetTheUserListControl.bind(InjectedGetUsersListController))
+
+
+router.get('/get_admin_properties/:adminId', async(req, res)=>{
+    const id = req.params.adminId;
+
+    const data = await QrModel.find({adminId: id});
+    res.json(data);
+})
 
 
 // // -------------------------------------| FECH ALL AND FILTERED ADMINS CHAT LIST  ----------------------------------------------------------------------------|

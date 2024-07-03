@@ -5,8 +5,8 @@ export class GetConversationListUseCase implements IGetConversationListUseCase{
 
     constructor(private iadminrepository: IAdminRepository){};
 
-     async FilterOutAllConversationList(adminId: string, page: string, limit: string, filter: string): Promise<any> {
-     return  await this.iadminrepository.FilterConversationList(adminId, page, limit, filter);
+     async FilterOutAllConversationList(adminId: string, page: string, limit: string): Promise<any> {
+     return  await this.iadminrepository.FilterConversationList(adminId, page, limit);
     }
 
     async FindConversationListCount(adminId: string): Promise<any>{

@@ -3,14 +3,15 @@ import { FaRegTrashCan } from "react-icons/fa6";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { FaPhone, FaVideo, FaCheck, FaTimes, FaClock } from 'react-icons/fa';
+import { FaPhone, FaVideo, FaCheck, FaTimes, FaClock, FaRegTrashAlt } from 'react-icons/fa';
 
 
 
 function DashboardSection() {
   const [adminData, setAdminData] = useState<any>({})
   const { currentAdmin } = useSelector((state: any)=> state.admin);
-  const [admincallList, setAdminCallList] = useState<any>()
+  const [admincallList, setAdminCallList] = useState<any>();
+  const [usersList, setUsersList] = useState<any>();
 
   const fetchCalls = async()=>{
     try {
@@ -26,10 +27,31 @@ function DashboardSection() {
     }
   }
 
-
+  const fetchUsers = async (): Promise<void> => {
+    try {
+      const res = await fetch(`/api/get_users_list/${currentAdmin._id}`);
+      if (!res.ok) {
+        throw new Error(`Error: ${res.statusText}`);
+      }
+      const data = await res.json();
+      
+      console.log(data); 
+      if(data !== 'Empty list'){
+        setUsersList(data);
+      }
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error(`Fetch error: ${error.message}`);
+      } else {
+        console.error('An unknown error occurred');
+      }
+    }
+  };
+  
 
 
  useEffect(()=>{
+  fetchUsers()
   fetchCalls();
     const fetchUser = async()=>{
     const res = await fetch(`/api/get_admin/${currentAdmin._id}`);
@@ -45,7 +67,8 @@ function DashboardSection() {
     fetchUser()
   },[])
 
-  console.log(adminData);
+  console.log(usersList)
+  // console.log(adminData);
   console.log(admincallList)
 
   return (
@@ -144,39 +167,43 @@ function DashboardSection() {
       </div>
     </div>
 
-        <div className="flex-1 p-4 border-2 rounded-lg">
-          <div className="flex justify-between items-center px-5 py-2">
-            <h2 className="text-lg font-bold lg:text-2xl">Recent Visitors</h2>
-            <p className="text-sky-500 text-sm font-bold">(10) All</p>
+      
+
+        <div className="flex-1 p-4 border-2 rounded-lg bg-white shadow-lg">
+      <div className="flex justify-between items-center px-5 py-2">
+        <h2 className="text-lg font-bold lg:text-2xl">Recent Visitors</h2>
+        <p className="text-sky-500 text-sm font-bold">({usersList?.length || 0}) All</p>
+      </div>
+      <hr className="w-full mt-4" />
+      <div className="overflow-y-scroll max-h-96 mt-4">
+        {usersList && usersList.map((user: any) => (
+          <div key={user._id} className="grid grid-cols-1 lg:grid-cols-4 border p-3 rounded-lg gap-4 mb-4 bg-gray-50 shadow-sm">
+            <div>
+              <h3 className="font-bold">Date</h3>
+              <p>{new Date(user?.createdAt).toLocaleDateString()}</p>
+            </div>
+            <div>
+              <h3 className="font-bold">Time</h3>
+              <p>{new Date(user?.createdAt).toLocaleTimeString()}</p>
+            </div>
+            <div>
+              <h3 className="font-bold">Name</h3>
+              <p>{user?.username}</p>
+              <h3 className="font-bold mt-2">Purpose</h3>
+              <p>{user?.purpose}</p>
+              <h3 className="font-bold mt-2">Phone</h3>
+              <p>{user?.phone === 0 ? 'unknown' : user?.phone}</p>
+            </div>
+            <div className="flex justify-end items-center text-xl p-1 cursor-pointer hover:text-slate-500">
+              <FaRegTrashAlt className="mr-2" />
+              <span>Delete</span>
+            </div>
           </div>
-          <hr className="w-full mt-4" />
-          <div className="overflow-y-scroll max-h-96">
-            {[...Array(5)].map((_, i) => (
-              <div key={i} className="grid grid-cols-1 lg:grid-cols-4 border-2 p-3 rounded-lg gap-4 mt-4">
-                <div>
-                  <h3 className="font-bold">Date</h3>
-                  <p>06/09/2024</p>
-                </div>
-                <div>
-                  <h3 className="font-bold">Time</h3>
-                  <p>05:30AM</p>
-                </div>
-                <div>
-                  <h3 className="font-bold">Name</h3>
-                  <p>Arjun Kumar VS</p>
-                  <h3 className="font-bold mt-2">Purpose</h3>
-                  <p>I came simply to see you</p>
-                  <h3 className="font-bold mt-2">Phone</h3>
-                  <p>8714251877</p>
-                </div>
-                <div className="flex justify-end items-center text-2xl p-1 cursor-pointer hover:text-slate-500">
-                  <FaRegTrashCan />
-                  <span>delete</span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
+        ))}
+      </div>
+    </div>
+
+
       </div>
     </div>
   );

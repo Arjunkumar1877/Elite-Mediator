@@ -14,7 +14,9 @@ const ConversationSchema = new Schema({
     required: true 
   },
   propertyId: { 
-    type: String
+    type: mongoose.Schema.Types.ObjectId, 
+    ref: 'QrModel', 
+    required: true 
   },
   lastMessage: {
     text: { 

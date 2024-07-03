@@ -27,12 +27,36 @@ const AdminCallPage: React.FC = () => {
   const conId = query.get("conId");
   const name = query.get("name");
   const callerId = query.get("callerId");
+  const [isMuted, setIsMuted] = useState<boolean>(false);
+
+  const fetchSelectedConversation = async()=>{
+    try {
+      const res = await fetch(`/api/selected_conversation/${conId}`);
+      const data:any = await res.json();
+      setCallerName(data.userId.username)
+      console.log(data)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const toggleMute = () => {
+    if (localVideoRef.current && localVideoRef.current.srcObject) {
+      const localStream = localVideoRef.current.srcObject as MediaStream;
+      console.log(localStream)
+      localStream.getAudioTracks().forEach(track => {
+        track.enabled = !track.enabled;
+      });
+      setIsMuted(prevState => !prevState);
+    }
+  };
 
   const pc = useRef<RTCPeerConnection>(
     new RTCPeerConnection({
       iceServers: [{ urls: "stun:stun.l.google.com:19302" }],
     })
   );
+
   const updateCallCancelling = async (callerId: any) => {
     try {
       const res = await fetch(`/api/decline_call/${callerId}`, {
@@ -53,7 +77,6 @@ const AdminCallPage: React.FC = () => {
     }
   };
   
-
   const updateCallAnswering= async (callerId: any) => {
     try {
       const res = await fetch(`/api/accept_call/${callerId}`, {
@@ -94,8 +117,8 @@ const AdminCallPage: React.FC = () => {
     }
   };
 
-
   useEffect(() => {
+    fetchSelectedConversation();
     socket.emit("join room", conId);
 
     const createOffer = async () => {
@@ -232,13 +255,11 @@ const AdminCallPage: React.FC = () => {
       navigate(`/admin_chat?conId=${conId}`);
     };
 
-    // Socket event listeners
     socket.on("webrtc-offer", handleOffer);
     socket.on("webrtc-answer", handleAnswer);
     socket.on("webrtc-ice-candidate", handleIceCandidate);
     socket.on("webrtc-disconnect", handleDisconnect);
 
-    // ICE candidate event
     pc.current.onicecandidate = (event) => {
       if (event.candidate) {
         socket.emit("webrtc-ice-candidate", {
@@ -248,7 +269,6 @@ const AdminCallPage: React.FC = () => {
       }
     };
 
-    // Track event
     pc.current.ontrack = (event) => {
       if (event.streams && event.streams.length > 0) {
         remoteVideoRef.current.srcObject = event.streams[0];
@@ -264,16 +284,13 @@ const AdminCallPage: React.FC = () => {
   }, [conId, currentAdmin.username, isVideoCall, socket]);
 
   const handleCutTheCall = () => {
-    // Stop all local media tracks
     if (localVideoRef.current && localVideoRef.current.srcObject) {
       const localStream = localVideoRef.current.srcObject as MediaStream;
       localStream.getTracks().forEach((track) => track.stop());
       localVideoRef.current.srcObject = null;
     }
 
-    // Close the RTCPeerConnection
     if (pc.current) {
-      // Stop all tracks added to the peer connection
       pc.current
         .getSenders()
         .forEach((sender) => sender.track && sender.track.stop());
@@ -281,12 +298,10 @@ const AdminCallPage: React.FC = () => {
     }
     socket.emit("webrtc-disconnect", conId, callerId);
 
-    // Remove socket event listeners
     socket.off("webrtc-offer");
     socket.off("webrtc-answer");
     socket.off("webrtc-ice-candidate");
 
-    // Clear the remote video element's source
     if (remoteVideoRef.current) {
       remoteVideoRef.current.srcObject = null;
     }
@@ -341,17 +356,14 @@ const AdminCallPage: React.FC = () => {
       </div>
       <div className="flex justify-center">
         <div className="flex flex-col items-center">
-          <h2 className="font-bold text-3xl text-sky-500">Arjun Kumar VS</h2>
+          <h2 className="font-bold text-3xl text-sky-500">{callerName}</h2>
         </div>
       </div>
     </div>
     <div className="flex flex-col gap-3">
-      <div className="flex justify-between px-16">
-        <button className="flex justify-center items-center">
-          <HiSpeakerXMark className="text-zinc-500 text-6xl" />
-        </button>
-        <button className="flex justify-center items-center">
-          <IoIosMic className="text-zinc-500 text-6xl" />
+      <div className="flex justify-center px-16">
+        <button className="flex justify-center p-2 items-center hover:rounded-full hover:bg-slate-100" onClick={toggleMute}>
+        { isMuted ? <IoIosMicOff className="text-zinc-500 text-6xl" /> : <IoIosMic className="text-zinc-500 text-6xl" />  }
         </button>
       </div>
       <div className="flex justify-center mt-4">
@@ -368,120 +380,3 @@ const AdminCallPage: React.FC = () => {
 };
 
 export default AdminCallPage;
-
-// import { FaUserAlt } from "react-icons/fa";
-// import { MdCall } from "react-icons/md";
-// import { MdCallEnd } from "react-icons/md";
-// import { HiSpeakerWave } from "react-icons/hi2";
-// import { HiSpeakerXMark } from "react-icons/hi2";
-// import { IoIosMicOff } from "react-icons/io";
-// import { IoIosMic } from "react-icons/io";
-// import { useSocket } from "../../contexts/AdminContext";
-// import { useLocation, useNavigate } from "react-router-dom";
-// import { useSelector } from "react-redux";
-
-// const AdminCallPage = () => {
-//   const  {socket, localVideoRef, remoteVideoRef, isVideoCall }: any = useSocket();
-//   const navigate = useNavigate();
-//   const { currentAdmin } = useSelector((state: any) => state.admin);
-
-//   return (
-//     <div>
-//       {/* <div className="flex flex-col gap-y-16 p-9">
-//              <div className="flex flex-col gap-5 mb-10">
-//              <div className="flex justify-center">
-//                 <h3>Incomming call</h3>
-//               </div>
-
-//               <div className="flex justify-center">
-//                 <div className="w-48 h-48 bg-sky-500 rounded-full flex justify-center items-center">
-//               <FaUserAlt className="text-white text-9xl p-2" />
-//                 </div>
-//               </div>
-
-//            <div className="flex justify-center">
-//             <div className="flex flex-col">
-//             <h2 className="font-bold text-3xl text-sky-500">Arjun kumar vs</h2>
-//             <p className="text-zinc-400 text-center font-semibold">Visitor</p>
-//             </div>
-//            </div>
-//              </div>
-
-//              <div className="flex justify-between px-16">
-//               <button className="flex justify-center items-center w-24 h-24 bg-green-400 rounded-full">
-//               <MdCall className="text-white text-7xl" />
-//               </button>
-//               <button className=" flex justify-center items-center  w-24 h-24 bg-red-400 rounded-full">
-//             <MdCallEnd className="text-white text-7xl" />
-// </button>
-//              </div>
-
-//       </div> */}
-
-//       <div className="flex flex-col gap-y-16 p-9">
-
-//         <div className="flex flex-col gap-5 mb-10">
-
-//  <div className="flex flex-col justify-center items-center ">
-//             <video
-//               ref={localVideoRef}
-//               autoPlay
-//               muted
-//               className="w-1/4 absolute bottom-24 z-10 right-24  md:right-9 md:-bottom-4 md:w-[250px]"
-//             ></video>
-//             <video
-//               ref={remoteVideoRef}
-//               autoPlay
-//               className="w-1/1 relative md:w-[900px] md:h-[600px]"
-//             ></video>
-//           </div>
-//           <div className="flex justify-center">
-//             <h3>Connected</h3>
-//           </div>
-
-//           <div className="flex justify-center">
-//             <div className="w-52 h-52 bg-green-300 rounded-full flex justify-center items-center">
-//               <div className="w-48 h-48 bg-sky-500 rounded-full flex justify-center items-center">
-//                 <FaUserAlt className="text-white text-9xl p-2" />
-//               </div>
-//             </div>
-//           </div>
-
-//           <div className="flex justify-center">
-//             <div className="flex flex-col">
-//               <h2 className="font-bold text-3xl text-sky-500">
-//                 Arjun kumar vs
-//               </h2>
-//               <p className="text-zinc-400 text-center font-semibold">Visitor</p>
-//             </div>
-//           </div>
-
-//         </div>
-
-//        <div className="flex flex-col gap-3">
-//        <div className="flex justify-between px-16">
-//           <button className="flex justify-center items-center ">
-//             {/* <HiSpeakerWave className="text-zinc-500 text-6xl" /> */}
-//             <HiSpeakerXMark className="text-zinc-500 text-6xl" />
-//           </button>
-//           <button className=" flex justify-center items-center  ">
-//             {/* <IoIosMicOff className="text-zinc-500 text-6xl" /> */}
-//             <IoIosMic className="text-zinc-500 text-6xl" />
-//           </button>
-//         </div>
-
-//        <div className="flex justify-center">
-//        <button onClick={endCall} className=" flex justify-center items-center  w-20 h-20 bg-red-400 rounded-full hover:bg-red-800">
-//             <MdCallEnd className="text-white text-5xl" />
-// </button>
-//        </div>
-
-//        </div>
-
-//       </div>
-
-//     </div>
-//   );
-// };
-
-// export default AdminCallPage;

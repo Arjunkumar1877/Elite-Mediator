@@ -20,8 +20,10 @@ const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
   const [notificationCount, setNotificationCount] = useState<number>();
   const { currentAdmin } = useSelector((state: any)=> state.admin);
   useEffect(()=>{
-    socket.emit("notify", currentAdmin._id);
+    if(currentAdmin){
+      socket.emit("notify", currentAdmin._id);
 
+    }
   },[])
 
 

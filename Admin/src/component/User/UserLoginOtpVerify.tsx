@@ -35,6 +35,19 @@ const UserLoginOtpVerify = () => {
   const dispatch = useDispatch();
 
   
+  // const fetchProperty = async()=>{
+  //   try {
+  //     const res =  await fetch('/user/get_admins_property_data', {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/json'
+  //       },
+  //       body: JSON.stringify({adminId: userData?.adminId, propId: })
+  //     })
+  //   } catch (error) {
+  //     console.log(error)
+  //   }
+  // }
 
 
   useEffect(() => {

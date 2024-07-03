@@ -1,5 +1,4 @@
-import { IoIosArrowDropdownCircle } from "react-icons/io";
-import { FaCalendarDays, FaArrowLeft, FaArrowRight } from "react-icons/fa6";
+import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import { IoSearch } from "react-icons/io5";
 import { Link } from "react-router-dom";
 import { useState, useEffect, ChangeEvent } from "react";
@@ -10,12 +9,14 @@ import { useSocket } from "../../contexts/AdminContext";
 
 interface Conversation {
   _id: string;
-  userId: any;
+  userId: {
+    username: string;
+  };
   adminId: string;
-  propId: string;
-  createdAt: string;
-  updatedAt: string;
-  lastMessage: {
+  propertyId: string;
+  createdAt?: string;
+  updatedAt?: string;
+  lastMessage?: {
     text: string;
     time: string;
     unread: number;
@@ -28,57 +29,64 @@ const AdminChatListSection: React.FC = () => {
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
-  const [filter, setFilter] = useState<string>('all');
   const [searchTerm, setSearchTerm] = useState<string>('');
   const { currentAdmin } = useSelector((state: any) => state.admin);
   const { notificationCount, setNotificationCount }: any = useSocket();
-  
+  const [properties, setProperties] = useState<any[]>([]);
+  const [propertyFilter, setPropertyFilter] = useState<string>('');
+  const [startDate, setStartDate] = useState<string>('');
+  const [endDate, setEndDate] = useState<string>('');
+
+
   const fetchConversations = async () => {
     try {
       const response = await axios.get('/api/conversations_list', {
         params: {
           adminId: currentAdmin._id,
           page: currentPage,
-          filter: filter,
+          propertyFilter: propertyFilter,
+          startDate: startDate,
+          endDate: endDate
         },
       });
-  
+
       const fetchedConversations = response.data.conversations;
       setConversations(fetchedConversations);
-  
+      setTotalPages(response.data.totalPages);
+
       let total = 0;
       fetchedConversations.forEach((conversation: any) => {
         total += conversation.lastMessage.unread;
       });
-  
       setNotificationCount(total);
-      console.log(notificationCount); // This might still log the previous state due to the asynchronous nature of state updates
-  
-      setTotalPages(response.data.totalPages);
     } catch (error) {
       console.error('Error fetching conversations:', error);
     }
   };
   
+  const fetchAdminsProperties = async () => {
+    try {
+      const res = await fetch(`/api/get_admin_properties/${currentAdmin._id}`);
+      const data = await res.json();
+      setProperties(data);
+    } catch (error) {
+      console.log('Error fetching admin properties:', error);
+    }
+  };
 
-
-
-  useEffect(() => {
-    // socket.emit('join room', currentAdmin._id);
+useEffect(() => {
     fetchConversations();
+    fetchAdminsProperties();
+  }, [currentPage, propertyFilter, startDate, endDate]);
 
-  }, [currentPage, filter]);
-
-  useEffect(() => {
+useEffect(() => {
     socket.on('connect', () => {
       console.log('Connected to socket server with ID:', socket.id);
     });
 
     socket.on('chat message', async (msg: any, convId: string, adminId: string) => {
       console.log(`Message received in room ${convId}: ${msg}`);
-      console.log(msg);
 
-      // Update last message in conversation
       try {
         await axios.put(`/api/conversations/${msg.conversationId}`, {
           lastMessage: {
@@ -87,12 +95,7 @@ const AdminChatListSection: React.FC = () => {
           },
         });
 
- 
-     
-
-        // Emit event to update all admin clients with new message
         socket.emit('chat message', msg, convId, currentAdmin._id);
-        // Emit event to update all admin clients to fetch updated conversation list
         socket.emit('update conversation', adminId);
       } catch (error) {
         console.error('Error updating conversation:', error);
@@ -108,23 +111,35 @@ const AdminChatListSection: React.FC = () => {
       socket.off('chat message');
       socket.off('update conversation');
     };
-  }, [conversations]);
+  }, [currentPage, propertyFilter, startDate, endDate]);
 
-  const handlePreviousPage = () => {
+const handlePreviousPage = () => {
     setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
   };
 
-  const handleNextPage = () => {
+const handleNextPage = () => {
     setCurrentPage((prevPage) => Math.min(prevPage + 1, totalPages));
   };
 
-  const handleFilterChange = (newFilter: string) => {
-    setFilter(newFilter);
-    setCurrentPage(1);
+const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const searchText = e.target.value.toLowerCase();
+    setSearchTerm(searchText);
+
+    // Filter conversations based on search term
+    const filtered = conversations.filter(conversation =>
+      conversation.userId.username.toLowerCase().includes(searchText)
+    );
+    setConversations(filtered);
   };
 
-  const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(e.target.value);
+const handleFilterChatByProperty = (data: string) => {
+    setSearchTerm('');
+    setPropertyFilter(data);
+  };
+
+const clearSearch = () => {
+    setSearchTerm('');
+    fetchConversations(); // Refetch conversations to reset the filtered state
   };
 
   return (
@@ -139,23 +154,32 @@ const AdminChatListSection: React.FC = () => {
         <div className="flex flex-col gap-4">
           <div className="flex flex-col lg:flex-row justify-between bg-sky-500 p-4 rounded">
             <div className="flex gap-4 lg:gap-16 justify-center items-center px-2 lg:px-5">
-              <span onClick={() => handleFilterChange('today')} className="cursor-pointer font-semibold text-white">Today</span>
-              <span onClick={() => handleFilterChange('this_week')} className="cursor-pointer font-semibold text-white">This Week</span>
-              <span onClick={() => handleFilterChange('this_month')} className="cursor-pointer font-semibold text-white">This Month</span>
+            <button onClick={()=> handleFilterChatByProperty('All')} className="py-3 px-8  cursor-pointer text-sm rounded-full bg-white lg:px-16 hover:bg-slate-200">All chats</button>
+            <div className="flex relative">
+                <select
+                  onChange={(e: ChangeEvent<HTMLSelectElement>) => handleFilterChatByProperty(e.target.value)}
+                  className="py-3 bg-white px-8 lg:px-16 text-xs rounded-full"
+                >
+                  <option value="">All Properties</option>
+                  {properties.map((prop: any) => (
+                    <option key={prop._id} value={prop._id}>{prop.propertyName}</option>
+                  ))}
+                </select>
+              </div>
+             
             </div>
 
             <div className="flex flex-col lg:flex-row gap-4 mt-4 lg:mt-0">
-              <div className="flex relative">
-                <button className="py-2 bg-white px-8 lg:px-16 text-xs rounded-full">
-                  Property Name
-                </button>
-                <IoIosArrowDropdownCircle className="absolute cursor-pointer right-4 top-2 text-lg" />
-              </div>
-              <div className="flex relative">
-                <button className="py-2 bg-white px-8 lg:px-16 text-xs rounded-full">
-                  Custom Date
-                </button>
-                <FaCalendarDays className="absolute cursor-pointer right-4 top-2 text-lg" />
+                   
+              <div className="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-4">
+                <div className="flex items-center space-x-2">
+                  <label htmlFor="start-date" className="text-xs">Start Date:</label>
+                  <input type="date" id="start-date" name="start-date" onChange={(e) => setStartDate(e.target.value)} className="py-2 px-4 rounded-full border border-gray-300" />
+                </div>
+                <div className="flex items-center space-x-2">
+                  <label htmlFor="end-date" className="text-xs">End Date:</label>
+                  <input type="date" id="end-date" name="end-date" onChange={(e) => setEndDate(e.target.value)} className="py-2 px-4 rounded-full border border-gray-300" />
+                </div>
               </div>
             </div>
           </div>
@@ -171,23 +195,23 @@ const AdminChatListSection: React.FC = () => {
             <IoSearch className="absolute top-1/2 transform -translate-y-1/2 text-xl right-8" />
           </div>
 
-          <div className="flex flex-col gap-4 overflow-y-auto h-[calc(100vh-270px)]">
-            {conversations.map((conversation) => (
+          <div className="flex flex-col gap-4 overflow-y-auto h-[300px]">
+            {conversations && conversations.map((conversation) => (
               <Link to={`/admin_chat?conId=${conversation._id}`} key={conversation._id}>
                 <div className="flex items-center justify-between border-2 p-4 rounded hover:bg-gray-100 transition">
                   <div className="flex items-center gap-3">
                     <img src="public/userIcon.webp" alt="User" className="h-14 w-14 rounded-full" />
                     <div className="flex flex-col">
-                      <p className="text-md  text-gray-600 font-semibold md:text-xl">{conversation?.userId?.username }</p>
-                      <p className="text-xs text-gray-400 md:text-sm">{conversation.lastMessage.text}</p>
+                      <p className="text-md text-gray-600 font-semibold md:text-xl">{conversation?.userId?.username}</p>
+                      <p className="text-xs text-gray-400 md:text-sm">{conversation?.lastMessage?.text}</p>
                     </div>
                   </div>
 
                   <div className="flex flex-col justify-center items-center gap-1">
-                    <span className="text-xs md:text-md">{new Date(conversation.lastMessage.time).toLocaleTimeString()}</span>
-                    {conversation.lastMessage.unread > 0 && (
+                    <span className="text-xs md:text-md">{new Date(conversation?.lastMessage?.time as any).toLocaleTimeString()}</span>
+                    {conversation?.lastMessage?.unread as number > 0 && (
                       <span className="bg-sky-500 text-white w-6 h-6 rounded-full flex justify-center items-center">
-                        {conversation.lastMessage.unread}
+                        {conversation?.lastMessage?.unread}
                       </span>
                     )}
                   </div>

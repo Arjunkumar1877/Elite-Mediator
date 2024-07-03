@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { BsCheckCircleFill } from "react-icons/bs";
-import { json, useLocation, useNavigate } from "react-router-dom";
+import {  useLocation, useNavigate } from "react-router-dom";
 import { auth } from "../../firebase/firebase";
 import { signInWithPhoneNumber, RecaptchaVerifier } from "firebase/auth";
 import { useDispatch, useSelector } from "react-redux";
-import { setMessages, signInSuccess, signoutSuccess } from "../../redux/user/UserSlice";
+import {  signInSuccess, signoutSuccess } from "../../redux/user/UserSlice";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import axios from "axios";
@@ -32,6 +32,7 @@ export interface PropertyDataType {
   allowVedioCalls: boolean;
   userType: string;
   url: string;
+  deleted: boolean;
   verified?: boolean;
   code: string;
 }
@@ -49,9 +50,9 @@ const InitialDataPage = () => {
   const propIdQ = query.get("propId");
 
   const [formData, setFormData] = useState<UserType>({
-    userId: "",
+    userId: "12345678",
     adminId: adminIdQ || "",
-    propId: propIdQ || "",
+    propId: propertyData?._id || "",
     username: "",
     purpose: "",
     phone: "",
@@ -59,72 +60,99 @@ const InitialDataPage = () => {
     firebaseCode: "",
   });
 
+
+
+  console.log(formData);
+  console.log(propertyData)
+ const phonenum:number = 0;
+   
+  const loginUnkown = async (propertyId: string) => {
+    try {
+      const userIdS = Date.now() + "000000";
+      const res = await fetch("/user/create_unknown_user", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId: userIdS,
+          adminId: adminIdQ,
+          propId: propertyId,
+          username: "Unknown",
+          purpose: "Unknown contact",
+          phone: phonenum,
+          firebaseCode: "0000000000",
+          verified: true,
+        }),
+      });
   
+      if (res.ok) {
+        const createdUserData = await res.json();
+        if (createdUserData) {
+          try {
+            const response = await axios.post("/user/start_conversation", {
+              userId: createdUserData._id,
+              adminId: createdUserData.adminId,
+              propertyId: propertyId,
+            });
+  
+            if (response.data) {
+              toast("successful!");
+              dispatch(signInSuccess(response.data.user));
+              navigate(`/chat_user?conId=${response.data.user.conversationId}`);
+            }
+          } catch (error) {
+            console.error("Error starting conversation:", error);
+          }
+        }
+      } else {
+        throw new Error("Failed to create unknown user");
+      }
+    } catch (error) {
+      console.error("Error creating unknown user:", error);
+      toast.error("Failed to create unknown user. Please try again.");
+    }
+  };
+
 
   useEffect(() => {
-    if (currentUser && currentUser.propId === propIdQ) {
-        toast("You have an old chat list here");
-        navigate(`/chat_user?conId=${currentUser.conversationId}`);
-    } else {
-      dispatch(signoutSuccess());
-      const fetchPropertyData = async () => {
-        const res = await fetch("/user/get_admins_property_data", {
+    const fetchData = async () => {
+      try {
+        const resp = await fetch("/user/get_admins_property_data", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({ propId: propIdQ, adminId: adminIdQ }),
         });
-
-        if (res.ok) {
-          const adminsPropertyData = await res.json();
+  
+        if (resp.ok) {
+          const adminsPropertyData = await resp.json();
+          setFormData({...formData, propId: adminsPropertyData._id});
           setPropertyData(adminsPropertyData);
-          if (adminsPropertyData.userType === "Unknown" && !adminsPropertyData?.deleted) {
-            const userIdS = Date.now() + "000000";
-            const res = await fetch("/user/create_user", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
-                userId: userIdS,
-                adminId: adminIdQ,
-                propId: propIdQ,
-                username: "Unknown",
-                purpose: "Unknown contact",
-                phone: Date.now(),
-                firebaseCode: "0000000000",
-                verified: true,
-              }),
-            });
-
-            if (res.ok) {
-              const createdUserData = await res.json();
-              if (createdUserData.data) {
-                try {
-                  const response = await axios.post("/user/start_conversation", {
-                    userId: createdUserData.data._id,
-                    adminId: createdUserData.data.adminId,
-                    propertyId: createdUserData.data.propId,
-                  });
-
-                  if (response.data) {
-                    toast("successful!");
-                    dispatch(signInSuccess(response.data.user));
-                    navigate(`/chat_user?conId=${response.data.user.conversationId}`);
-                  }
-                } catch (error) {
-                  console.error("Error starting conversation:", error);
-                }
-              }
+  
+          if (currentUser && currentUser.propId === adminsPropertyData._id) {
+            toast("You have an old chat list here");
+            navigate(`/chat_user?conId=${currentUser.conversationId}`);
+          } else {
+            dispatch(signoutSuccess());
+  
+            if (adminsPropertyData.userType === "Unknown" && !adminsPropertyData.deleted) {
+              loginUnkown(adminsPropertyData._id);
             }
           }
+        } else {
+          throw new Error("Failed to fetch property data");
         }
-      };
-
-      fetchPropertyData();
-    }
+      } catch (error) {
+        console.error("Error fetching property data:", error);
+        toast.error("Failed to fetch property data. Please try again.");
+      }
+    };
+  
+    fetchData();
   }, []);
+
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -144,9 +172,7 @@ const InitialDataPage = () => {
   const validateForm = () => {
     return formData.username && formData.purpose && formData.phone;
   };
-console.log(formData);
 
-console.log(propertyData)
   const formSubmit = async () => {
     if (!validateForm()) {
       return toast.error("Please fill out all fields.");
@@ -178,7 +204,7 @@ console.log(propertyData)
           const response = await axios.post("/user/start_conversation", {
             userId: createdUnverifieduserData._id,
             adminId: createdUnverifieduserData.adminId,
-            propertyId: createdUnverifieduserData.propId,
+            propertyId: propertyData?._id,
           });
 
           if (response.data) {
@@ -197,6 +223,8 @@ console.log(propertyData)
 
   const createUserData = async (updatedFormData: UserType) => {
     try {
+
+
       const res = await fetch("/user/create_user", {
         method: "POST",
         headers: {
@@ -250,6 +278,11 @@ console.log(propertyData)
       toast.error("Failed to send OTP. Please try again.");
     }
   };
+
+
+// console.log(formData);
+// console.log(propertyData)
+
 
   return (
     <div className="relative min-h-screen flex flex-col items-center justify-center bg-gray-100 p-4">
@@ -345,3 +378,7 @@ console.log(propertyData)
 };
 
 export default InitialDataPage;
+
+
+
+
