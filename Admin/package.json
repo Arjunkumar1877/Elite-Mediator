@@ -11,8 +11,12 @@
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.2.5",
+    "address": "^2.0.3",
     "axios": "^1.7.2",
     "firebase": "^10.12.2",
+    "get-mac-address": "^1.0.0",
+    "getmac": "^6.6.0",
+    "node-macaddress": "^0.2.4",
     "react": "^18.2.0",
     "react-circular-progressbar": "^2.1.0",
     "react-confirm-alert": "^3.0.6",

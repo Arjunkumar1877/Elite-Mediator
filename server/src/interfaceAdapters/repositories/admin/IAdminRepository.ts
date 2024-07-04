@@ -17,7 +17,7 @@ export interface IAdminRepository {
     FindConversationById(id: string): Promise<Conversation | null>;
     FindAdminsConversationsByAdminId(adminId: string): Promise<any>;
     FindSelectedConversation(id: string): Promise<any>;
-    FilterConversationList(adminId: string, page: string, limit: string): Promise<any>;
+    FilterConversationList(adminId: string, page: number, propertyFilter: string, startDate: number, endDate: number): Promise<any>;
     FindConversationListCount(adminId: string): Promise<any>;
     FindAdminsCallListByAdminId(adminId: string): Promise<any>;
     FindUsersListByAdminId(adminId: string): Promise<any>;

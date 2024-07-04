@@ -6,11 +6,14 @@ import { MessageModel } from "../../../frameworks/database/models/admin/MessageM
 import { UserModel } from "../../../frameworks/database/models/user/User";
 import { InjectedCallingFunctionalitiesController, InjectedGetMessagesController, InjectedSendMesssage } from "../../../frameworks/injection/CommonInjects";
 import { CallModel } from "../../database/models/admin/CallModel";
+import {  getMacAddressFromDevice } from "../../services/GetMacAddress/GetMacAddress";
 const router:Route = Router();
 
 // -------------------------------------| SAVE NEW USER DATA INTO THE DATABASE --------------------------------------------------------------------|
 router.post("/create_user", InjectedCreateNewUserDataController.UserCreateControl.bind(InjectedCreateNewUserDataController));
 
+// -------------------------------------| GET THE MAC ADDRESS OF THE DEVICE THE USER IS IN --------------------------------------------------------------------|
+router.get("/getmac-address", getMacAddressFromDevice.findMacAddress);
 
 // -------------------------------------| SAVE NEW UNVERIFIED USER DATA INTO THE DATABASE --------------------------------------------------------------------|
 router.post("/create_unverified_user", InjectedCreateNewUserDataController.SaveUnverifiedUsderControl.bind(InjectedCreateNewUserDataController));
@@ -79,6 +82,7 @@ router.get('/update_readmessage_conversation/:id', async(req, res)=>{
         console.log(error)
     }
 })
+
 
 
 

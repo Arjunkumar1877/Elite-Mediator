@@ -37,7 +37,7 @@ export class CreateUserController {
   async SaveUnverifiedUsderControl(req: Req, res: Res): Promise<void>{
     try {
       const data = await this.isavenewuserdatausecase.SaveNewUser(req.body);
-      res.json(data)
+      res.json(data);
     } catch (error) {
       console.log(error)
     }

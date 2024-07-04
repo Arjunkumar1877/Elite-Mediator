@@ -7,21 +7,17 @@ export class GetAdminConversationListController{
     async GetConversationListControl(req: Req, res: Res): Promise<void>{
         try {
 
+            const { adminId, page = 1, propertyFilter, startDate, endDate }: any = req.query;
+         let limit: number = 10;
             console.log("HAI IAM CONVRESATION LIST CONTROLLER 🤷‍♂️🤷‍♂️🤷‍♂️💕💕💕💕💕💕💕💕💕💕💕💕💕💕💕💕💕💕💕💕💕💕💕")
-            const { adminId, page = '1', limit = '10' } = req.query as {
-                adminId: string,
-                page?: string,
-                limit?: string,
-              };
-            
-            const conversations = await this.igetconversationlistusecase.FilterOutAllConversationList(adminId, page, limit);
+       
+            const conversations = await this.igetconversationlistusecase.FilterOutAllConversationList(adminId, page, propertyFilter, startDate, endDate);
             const totalConversations  = await this.igetconversationlistusecase.FindConversationListCount(adminId);
-
-            res.status(200).json({
-                conversations,
-                totalPages: Math.ceil(totalConversations / parseInt(limit)),
-                currentPage: parseInt(page)
-              });
+            const totalPages = Math.ceil(totalConversations / limit);
+            console.log(totalPages + "🔥🔥🔥 total docs");
+            console.log(totalConversations + "🔥🔥🔥 total con");
+            
+      res.json({ conversations, totalPages });
         } catch (error) {
             console.log(error)
         }

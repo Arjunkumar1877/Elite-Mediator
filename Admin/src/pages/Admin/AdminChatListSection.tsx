@@ -103,7 +103,7 @@ useEffect(() => {
     });
 
     socket.on('update conversation', () => {
-      fetchConversations();
+      fetchConversations();console.log("updated the conversation 💕💕💕💕💕💕💕🤷‍♂️🤷‍♂️🤷‍♂️📀📀📀📀📀📀📀📀")
     });
 
     return () => {
@@ -146,11 +146,11 @@ const clearSearch = () => {
     <div className="bg-gray-50 min-h-screen p-4">
       <div className="absolute z-0 rounded-2xl -top-64 left-1/2 transform -translate-x-1/2 bg-zinc-300 w-60 h-40 lg:h-96 rotate-45"></div>
 
-      <div className="relative z-10 flex justify-between items-center mb-10 mt-6">
-        <h1 className="text-2xl mt-6 font-bold">Chats</h1>
+      <div className="relative z-10 flex justify-between items-center p-3">
+        <h1 className="text-2xl font-bold">Chats</h1>
       </div>
 
-      <div className="relative z-10 p-2 flex flex-col justify-between border-2 rounded bg-white shadow-lg h-[calc(100vh-150px)] overflow-hidden">
+      <div className="relative z-10 p-2 flex flex-col justify-between border-2 rounded bg-white shadow-lg h-full overflow-hidden">
         <div className="flex flex-col gap-4">
           <div className="flex flex-col lg:flex-row justify-between bg-sky-500 p-4 rounded">
             <div className="flex gap-4 lg:gap-16 justify-center items-center px-2 lg:px-5">
@@ -220,7 +220,7 @@ const clearSearch = () => {
             ))}
           </div>
 
-          <div className="flex justify-between items-center mt-4">
+          <div className="flex justify-between items-center">
             <button
               className="p-2 bg-sky-500 text-white rounded"
               onClick={handlePreviousPage}

@@ -164,22 +164,32 @@ export class MongoAdminRepository implements IAdminRepository {
     }
   }
 
-  async FilterConversationList(adminId: string, page: string, limit: string): Promise<any> {
+  async FilterConversationList(adminId: string, page: number, propertyFilter: string, startDate: any, endDate: any): Promise<any> {
     try {
+      let query: any = { adminId: adminId };
+  
+      const limit = 10;
+      // Apply search term filter
+     
       
-      
- 
-      
+      // Apply property filter
+      if (propertyFilter && propertyFilter !== 'All') {
+        query.propertyId = propertyFilter;
+      }
+  
+      // Apply date range filter
+      if (startDate && endDate) {
+        query.createdAt = { $gte: new Date(startDate), $lte: new Date(endDate) };
+      }
+  
+      const conversations = await ConversationModel.find(query)
+        .populate('userId propertyId')
+        .skip((page - 1) * limit)
+        .limit(limit)
+        .sort({ updatedAt: -1 });
+  
 
-      const conversations = await ConversationModel.find({adminId: adminId}).populate('userId propertyId')
-      .skip((parseInt(page) - 1) * parseInt(limit))
-      .limit(parseInt(limit))
-      .sort({ createdAt: -1 });
-
-      console.log(conversations)
-
-      return conversations;
-
+    return conversations;
     } catch (error) {
       console.log(error)
     }

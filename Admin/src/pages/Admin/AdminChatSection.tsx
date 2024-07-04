@@ -12,6 +12,8 @@ import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
 import axios from "axios";
 import { useSelector } from "react-redux";
 import { useSocket } from "../../contexts/AdminContext";
+import { address } from 'address';
+
 
 interface Message {
   _id: string;
@@ -43,6 +45,7 @@ const AdminChatSection: React.FC = () => {
   const location = useLocation();
   const query = new URLSearchParams(location.search);
   const conId = query.get("conId");
+
  
   useEffect(() => {
     socket.emit("join room", conId); 
@@ -161,12 +164,10 @@ const AdminChatSection: React.FC = () => {
     }
   };
 
-  // Scroll to the bottom of the messages
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
-  // Automatically scroll to the latest message when messages change
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
@@ -175,12 +176,8 @@ const AdminChatSection: React.FC = () => {
     return <div>Loading...</div>;
   }
 
-
-
-
-
   return (
-    <div className="pt-16 h-screen bg-gray-50 flex flex-col">
+    <div className=" h-screen bg-gray-50 flex flex-col">
       <ToastContainer />
       <div className="border-2 flex flex-col h-full p-4 bg-white shadow-lg">
         <div className="flex justify-between items-center px-5 py-2 border-b-2">

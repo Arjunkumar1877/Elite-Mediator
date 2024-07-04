@@ -8,6 +8,9 @@ import path from "path";
 import { createServer, Server as HTTPServer } from 'http';
 import { initializeSocket } from "../../services/socketIo/SocketIo";
 import {Server as SocketIoServer } from 'socket.io';
+import { exec } from 'child_process';
+
+
 
 export class ExpressServer {
     private app: Application;
@@ -35,12 +38,13 @@ export class ExpressServer {
         this.app.use("/api", adminRoutes);
         this.app.use("/user", userRoutes);
         this.app.use("/superadmin", superAdminRoute);
+    
     }
 
     private configureErrorHandling(): void {
         this.app.use((err: any, req: Request, res: Response, next: NextFunction) => {
             const statusCode: number = err.statusCode || 500;
-            const message = err.message || "Internal server error🤷🤷";
+            const message = err.message || "Internal server error";
             res.status(statusCode).json({
                 success: false,
                 statusCode: false,
@@ -48,10 +52,6 @@ export class ExpressServer {
             });
         });
     }
-
-
-
-
 
     private startServer(): void {
         this.server.listen(7000, () => {
