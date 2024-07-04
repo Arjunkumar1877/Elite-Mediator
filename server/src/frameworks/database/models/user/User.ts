@@ -36,6 +36,9 @@ const userSchema = new mongoose.Schema({
     verified: {
         type: Boolean,
         default: false
+    },
+    macId: {
+        type: String
     }
 }, { timestamps: true });
 

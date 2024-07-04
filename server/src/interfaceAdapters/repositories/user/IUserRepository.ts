@@ -13,4 +13,5 @@ export interface IUserRepository{
     FindPropertyData(propId: string, adminId: string): Promise<PropertyData | null>;
     CreateConversation(userId: string, adminId: string, propertyId: string): Promise<any>;
     FindConversation(userId: string, adminId: string, propertyId: string): Promise<Conversation | null>;
+    FindUserByMacId(macId: string, propId: string): Promise<User | null>;
 }

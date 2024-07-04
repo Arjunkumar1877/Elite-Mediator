@@ -8,4 +8,5 @@ export interface User{
     firebaseCode?: string;
     verified: boolean;
     conversationId?: string;
+    macId?: string;
 }

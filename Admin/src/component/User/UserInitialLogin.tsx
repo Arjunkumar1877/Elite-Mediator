@@ -40,6 +40,7 @@ export interface PropertyDataType {
 const InitialDataPage = () => {
   const { currentUser } = useSelector((state: any) => state.user);
   const [propertyData, setPropertyData] = useState<PropertyDataType>();
+  const [macAddress, setMacAddress] = useState<string>('');
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const useQuery = () => {
@@ -66,56 +67,72 @@ const InitialDataPage = () => {
   console.log(propertyData)
  const phonenum:number = 0;
    
-  const loginUnkown = async (propertyId: string) => {
-    try {
-      const userIdS = Date.now() + "000000";
-      const res = await fetch("/user/create_unknown_user", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          userId: userIdS,
-          adminId: adminIdQ,
-          propId: propertyId,
-          username: "Unknown",
-          purpose: "Unknown contact",
-          phone: phonenum,
-          firebaseCode: "0000000000",
-          verified: true,
-        }),
+ const loginUnknown = async (propertyId:string) => {
+  try {
+      const userIdS = `${Date.now()}000000`; // Generate a unique userId
+      const res = await fetch("/user/create_unknown_user_data", {
+          method: "POST",
+          headers: {
+              "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+              userId: userIdS,
+              adminId: adminIdQ,
+              propId: propertyId,
+              username: "Unknown",
+              purpose: "Unknown contact",
+              phone: phonenum,
+              firebaseCode: "0000000000",
+              verified: true,
+              macId: macAddress,
+          }),
       });
-  
+
       if (res.ok) {
-        const createdUserData = await res.json();
-        if (createdUserData) {
-          try {
-            const response = await axios.post("/user/start_conversation", {
-              userId: createdUserData._id,
-              adminId: createdUserData.adminId,
-              propertyId: propertyId,
-            });
-  
-            if (response.data) {
-              toast("successful!");
-              dispatch(signInSuccess(response.data.user));
-              navigate(`/chat_user?conId=${response.data.user.conversationId}`);
-            }
-          } catch (error) {
-            console.error("Error starting conversation:", error);
+          const createdUserData = await res.json();
+          if (createdUserData) {
+              try {
+                  const response = await axios.post("/user/start_conversation", {
+                      userId: createdUserData._id,
+                      adminId: createdUserData.adminId,
+                      propertyId: propertyId,
+                  });
+
+                  if (response.data) {
+                      toast("Successful!");
+                      dispatch(signInSuccess(response.data.user));
+                      navigate(`/chat_user?conId=${response.data.user.conversationId}`);
+                  }
+              } catch (error) {
+                  console.error("Error starting conversation:", error);
+              }
           }
-        }
       } else {
-        throw new Error("Failed to create unknown user");
+          throw new Error("Failed to create unknown user");
       }
-    } catch (error) {
+  } catch (error) {
       console.error("Error creating unknown user:", error);
       toast.error("Failed to create unknown user. Please try again.");
-    }
-  };
+  }
+};
 
+
+  const fetchMacAddress = async()=>{
+    try {
+      const res = await fetch("/user/getmac_address");
+    const data:any = await res.json()
+
+    console.log(data);
+    setMacAddress(data)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  console.log(macAddress)
 
   useEffect(() => {
+    fetchMacAddress();
     const fetchData = async () => {
       try {
         const resp = await fetch("/user/get_admins_property_data", {
@@ -137,8 +154,8 @@ const InitialDataPage = () => {
           } else {
             dispatch(signoutSuccess());
   
-            if (adminsPropertyData.userType === "Unknown" && !adminsPropertyData.deleted) {
-              loginUnkown(adminsPropertyData._id);
+            if (adminsPropertyData.userType === "Unknown" && !adminsPropertyData.deleted && macAddress !== '') {
+              loginUnknown(adminsPropertyData._id);
             }
           }
         } else {
@@ -151,7 +168,8 @@ const InitialDataPage = () => {
     };
   
     fetchData();
-  }, []);
+  }, [macAddress]);
+
 
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {

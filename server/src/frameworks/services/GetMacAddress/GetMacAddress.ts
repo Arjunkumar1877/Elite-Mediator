@@ -19,7 +19,7 @@ class GetMacAddress implements IGetMacAddress {
                 const macAddressLine = lines[2].trim(); 
                 const macAddress = macAddressLine.split(/\s+/)[0]; 
                 console.log(`MAC Address: ${macAddress}`);
-                res.send(macAddress);
+                res.json(macAddress);
             } else {
                 res.status(500).send('Unable to retrieve MAC address');
             }

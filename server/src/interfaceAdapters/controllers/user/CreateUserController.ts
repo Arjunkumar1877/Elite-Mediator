@@ -5,7 +5,7 @@ import { Req, Res } from "../../../frameworks/types/ServerTypes";
 export class CreateUserController {
   constructor(
     private isavenewuserdatausecase: ISaveNewUserDataUseCase,
-    private icheckexisitinguserusecase: ICheckExisitingUserUseCase
+    private icheckexisitinguserusecase: ICheckExisitingUserUseCase,
   ) {}
 
   async UserCreateControl(req: Req, res: Res) {

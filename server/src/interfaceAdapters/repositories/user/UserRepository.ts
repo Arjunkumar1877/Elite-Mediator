@@ -92,4 +92,10 @@ export class MongoUserRepository implements IUserRepository {
     return await ConversationModel.findOne({ userId, adminId, propertyId });
   }
   
+  async FindUserByMacId(macId: string, propId: string): Promise<User | null> {
+   return await UserModel.findOne({macId: macId, propId: propId});   
+  }
+
+  
+
 }
