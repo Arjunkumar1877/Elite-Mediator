@@ -62,61 +62,70 @@ const UsersListSection = () => {
             />
             <IoSearch className="text-gray-500" />
           </div>
-
           <div className="flex flex-col gap-4 overflow-y-auto flex-grow mt-4">
-            {usersList && usersList.map((user: any) => (
-              <div key={user?._id} className="flex flex-col border p-4 rounded-lg gap-4 shadow-sm bg-gray-50">
-                <div className="flex justify-between items-center gap-2">
-                  <div className="flex items-center gap-4 px-5 py-2 bg-white border rounded-lg shadow-sm flex-grow">
-                    <h3 className="font-semibold">Visited on</h3>
-                    <span>{new Date(user?.createdAt).toLocaleDateString()}    ---  {new Date(user?.createdAt).toLocaleTimeString()}  </span>
-                  </div>
+  {usersList && usersList.map((user: any) => (
+    <div key={user?._id} className="flex flex-col border p-4 rounded-lg gap-4 shadow-sm bg-gray-50">
+      <div className="flex justify-between items-center gap-2">
+        <div className="flex items-center gap-4 px-5 py-2 bg-white border rounded-lg shadow-sm flex-grow">
+          <h3 className="font-semibold">Visited on</h3>
+          <span>{new Date(user?.createdAt).toLocaleDateString()} --- {new Date(user?.createdAt).toLocaleTimeString()}</span>
+        </div>
+        <Link to={`/admin_chat?conId=${user?.conversationId}`}>
+          <button className="flex items-center gap-1 text-white bg-sky-500 px-4 py-2 rounded-lg shadow-sm w-24 justify-center">
+            <CiChat1 />
+            Chats
+          </button>
+        </Link>
+      </div>
 
-                 <Link to={`/admin_chat?conId=${user?.conversationId}`}>
-                 <button className="flex items-center gap-1 text-white bg-sky-500 px-4 py-2 rounded-lg shadow-sm w-24 justify-center">
-                    <CiChat1 />
-                    Chats
-                  </button>
-                 </Link>
-                </div>
+      <div className="flex justify-between items-center gap-2">
+        <div className="flex items-center gap-4 px-5 py-2 bg-white border rounded-lg shadow-sm flex-grow">
+          <h3 className="font-semibold">Name</h3>
+          <span>{user?.username}</span>
+        </div>
+        <button className="flex items-center gap-1 text-white bg-red-500 px-4 py-2 rounded-lg shadow-sm w-24 justify-center">
+          <FaRegTrashAlt />
+          Delete
+        </button>
+      </div>
 
-                <div className="flex justify-between items-center gap-2">
-                  <div className="flex items-center gap-4 px-5 py-2 bg-white border rounded-lg shadow-sm flex-grow">
-                    <h3 className="font-semibold">Name</h3>
-                    <span>{user?.username}</span>
-                  </div>
+      <div className="flex justify-between items-center gap-2">
+        <div className="flex items-center gap-4 px-5 py-2 bg-white border rounded-lg shadow-sm flex-grow">
+          <h3 className="font-semibold">Purpose</h3>
+          <span>{user?.purpose  !== 'Unknown contact' ? user?.purpose : 'Visited by an unknown user'}</span>
+        </div>
+    {
+      user?.propId?.userType !== 'Unknown' &&     <a href={`https://wa.me/${user?.phone}`} className="flex items-center gap-1 text-white text-xs bg-green-500 px-4 py-3 rounded-lg shadow-sm w-24 justify-center" target="_blank" rel="noopener noreferrer">
+      <FaWhatsapp className="text-white" />
+      Message
+    </a>
+    }
+      </div>
 
-                  <button className="flex items-center gap-1 text-white bg-red-500 px-4 py-2 rounded-lg shadow-sm w-24 justify-center">
-                    <FaRegTrashAlt />
-                    Delete
-                  </button>
-                </div>
+    {
+      user?.propId?.userType !== 'Unknown' &&   <div className="flex justify-between items-center gap-2">
+      <div className="flex items-center gap-4 px-5 py-2 bg-white border rounded-lg shadow-sm flex-grow">
+        <h3 className="font-semibold">Phone</h3>
+        <span>{user?.phone}</span>
+      </div>
+      <a href={`tel:${user?.phone}`} className="flex items-center gap-1 text-white bg-sky-500 px-4 py-2 rounded-lg shadow-sm w-24 justify-center">
+        <IoCallOutline />
+        Call
+      </a>
+    </div>
+    }
 
-                <div className="flex justify-between items-center gap-2">
-                  <div className="flex items-center gap-4 px-5 py-2 bg-white border rounded-lg shadow-sm flex-grow">
-                    <h3 className="font-semibold">Purpose</h3>
-                    <span>{user?.purpose}</span>
-                  </div>
-                  <a href={`https://wa.me/${user?.phone}`} className="flex items-center gap-1 text-white text-xs bg-green-500 px-4 py-3 rounded-lg shadow-sm w-24 justify-center" target="_blank" rel="noopener noreferrer">
-  <FaWhatsapp className="text-white" />
-  Message
-</a>
+      {/* Adding property name here */}
+      <div className="flex justify-between items-center gap-2">
+        <div className="flex items-center gap-4 px-5 py-2 bg-white border rounded-lg shadow-sm flex-grow">
+          <h3 className="font-semibold">Property</h3>
+          <span>{user?.propId?.propertyName}</span>
+        </div>
+      </div>
+    </div>
+  ))}
+</div>
 
-                </div>
-
-                <div className="flex justify-between items-center gap-2">
-                  <div className="flex items-center gap-4 px-5 py-2 bg-white border rounded-lg shadow-sm flex-grow">
-                    <h3 className="font-semibold">Phone</h3>
-                    <span>{user?.phone}</span>
-                  </div>
-                  <a href={`tel:${user?.phone}`} className="flex items-center gap-1 text-white bg-sky-500 px-4 py-2 rounded-lg shadow-sm w-24 justify-center">
-  <IoCallOutline />
-  Call
-</a>
-                </div>
-              </div>
-            ))}
-          </div>
         </div>
       </div>
     </div>

@@ -62,44 +62,6 @@ router.get('/get_messages/:convId', InjectedGetMessagesController.GetMessagesCon
 // -------------------------------------| FECH ALL AND FILTERED ADMINS CHAT LIST  ----------------------------------------------------------------------------|
 router.get('/conversations_list', InjectedGetConversationListController.GetConversationListControl.bind(InjectedGetConversationListController));
 
-// router.get('/conversations_list', async (req, res) => {
-//     try {
-//       const { adminId, page = 1, propertyFilter, startDate, endDate }:any = req.query;
-//       const limit = 10;
-  
-//       // Build the query object
-//       let query: any = { adminId: adminId };
-  
-//       // Apply search term filter
-     
-      
-//       // Apply property filter
-//       if (propertyFilter && propertyFilter !== 'All') {
-//         query.propertyId = propertyFilter;
-//       }
-  
-//       // Apply date range filter
-//       if (startDate && endDate) {
-//         query.createdAt = { $gte: new Date(startDate), $lte: new Date(endDate) };
-//       }
-  
-//       const conversations = await ConversationModel.find(query)
-//         .populate('userId propertyId')
-//         .skip((parseInt(page) - 1) * limit)
-//         .limit(limit)
-//         .sort({ updatedAt: -1 });
-  
-//       const totalConversations = await ConversationModel.countDocuments(query);
-//       const totalPages = Math.ceil(totalConversations / limit);
-  
-//       res.json({ conversations, totalPages });
-//     } catch (error) {
-//       console.error('Error fetching conversations:', error);
-//       res.status(500).send('Server error');
-//     }
-//   });
-
-
 // -------------------------------------| STARTING A CALL AND SAVING THE DATA TO THE DATABASE  --------------------------------------------------------------------|
 router.post("/start_call", InjectedCallingFunctionalitiesController.StartingCallControl.bind(InjectedCallingFunctionalitiesController));
 
@@ -130,7 +92,26 @@ router.get('/get_admin_properties/:adminId', async(req, res)=>{
 // // -------------------------------------| FECH ALL AND FILTERED ADMINS CHAT LIST  ----------------------------------------------------------------------------|
 // router.get('/conversations_list', InjectedGetConversationListController.GetConversationListControl.bind(InjectedGetConversationListController));
 
+router.post('/edit_unknown_username', async(req, res)=>{
+    try {
 
+        console.log(req.body );
+        console.log("🤷‍♂️🤷‍♂️🤷‍♂️🤷‍♂️🔥🔥🔥🔥📀💕💕💕💕💕🤷‍♂️⛔⛔⛔👍👍😥😥😥😥😥😥😥😥😥😥")
+        const editedUserdata = await UserModel.findOneAndUpdate({_id: req.body.id}, {
+            $set: {
+                username: req.body.username + "(unknown)"
+            }
+        }, { new: true});
+
+        if(editedUserdata){
+            res.json(editedUserdata);
+        }else{
+            res.json("failed editing data")
+        }
+    } catch (error) {
+        console.log(error)
+    }
+})
 
 
 

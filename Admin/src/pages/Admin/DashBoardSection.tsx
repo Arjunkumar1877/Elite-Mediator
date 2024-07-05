@@ -47,6 +47,38 @@ function DashboardSection() {
       }
     }
   };
+
+
+  // const startCall = async (isVideo = false) => {
+  //   try {
+  //     setIsVideoCall(isVideo);
+
+  //     const res = await fetch("/api/start_call", {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify({
+  //         conversationId: conId,
+  //         callerId: currentAdmin._id,
+  //         adminId: currentAdmin._id,
+  //         userId: selectedConversation?.userId._id,
+  //         caller: "Admin",
+  //         callType:  isVideo ? 'video' : 'audio',
+  //         receiver: "User"
+  //       }),
+  //     });
+
+  //     const data = await res.json();
+  //     console.log(data);
+
+  //     if (data) {
+  //       socket.emit("incoming-call", { conId, incommingId: currentAdmin._id, adminId: currentAdmin._id, callerId: data._id });
+  //     }
+  //   } catch (error) {
+  //     console.error("Error starting call:", error);
+  //   }
+  // };
   
 
 

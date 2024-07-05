@@ -17,7 +17,7 @@ const AdminCallPage: React.FC = () => {
     localVideoRef,
     remoteVideoRef,
     isVideoCall,
-    setIsVideoCall,
+    setIsVideoCall
   }: any = useSocket();
   const navigate = useNavigate();
   const { currentAdmin } = useSelector((state: any) => state.admin);
@@ -25,9 +25,30 @@ const AdminCallPage: React.FC = () => {
   const location = useLocation();
   const query = new URLSearchParams(location.search);
   const conId = query.get("conId");
-  const name = query.get("name");
+  const incommingId = query.get("incommingId");
   const callerId = query.get("callerId");
   const [isMuted, setIsMuted] = useState<boolean>(false);
+  const [seconds, setSeconds] = useState<number>(0);
+  const [callConnected, setCallConnected] = useState<boolean>(false);
+
+
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setSeconds(prevSeconds => prevSeconds + 1);
+    }, 1000);
+  
+    return () => clearInterval(timer); 
+  }, []);
+  
+  const formatTime = (seconds: number): string => {
+    const getSeconds = `0${seconds % 60}`.slice(-2);
+    const minutes: any = `${Math.floor(seconds / 60)}`;
+    const getMinutes = `0${minutes % 60}`.slice(-2);
+    const getHours = `0${Math.floor(seconds / 3600)}`.slice(-2);
+    return `${getHours}:${getMinutes}:${getSeconds}`;
+  };
+
 
   const fetchSelectedConversation = async()=>{
     try {
@@ -136,7 +157,7 @@ const AdminCallPage: React.FC = () => {
         const offer = await pc.current.createOffer();
         await pc.current.setLocalDescription(offer);
         socket.emit("webrtc-offer", {
-          name: currentAdmin.username,
+          incommingId: currentAdmin.username,
           room: conId,
           isVideo: isVideoCall,
           offer,
@@ -147,15 +168,17 @@ const AdminCallPage: React.FC = () => {
       }
     };
 
-    if (name === currentAdmin.username) {
+    console.log(incommingId + "  " +  currentAdmin.username)
+
+    if (incommingId === currentAdmin._id) {
       createOffer();
     }
 
     const handleOffer = async (offer: any) => {
-      if (offer.name !== currentAdmin.username) {
+      if (offer.incommingId !== currentAdmin.username) {
         confirmAlert({
           title: "Incoming Call",
-          message: `You have a call from ${offer.name}. Do you want to accept the call?`,
+          message: `You have a call from ${offer.incommingId}. Do you want to accept the call?`,
           buttons: [
             {
               label: "Yes",
@@ -181,7 +204,7 @@ const AdminCallPage: React.FC = () => {
                 socket.emit("webrtc-answer", {
                   room: conId,
                   answer,
-                  name: currentAdmin.username,
+                  incommingId: currentAdmin.username,
                   callerId: callerId
                 });
                 updateCallAnswering(offer.callerId);
@@ -201,8 +224,8 @@ const AdminCallPage: React.FC = () => {
     };
 
     const handleAnswer = async (data: any) => {
-      const { name, answer } = data;
-      if (currentAdmin.username !== name) {
+      const { incommingId, answer } = data;
+      if (currentAdmin.username !== incommingId) {
         if (pc.current.signalingState === "have-local-offer") {
           try {
             await pc.current.setRemoteDescription(
@@ -229,6 +252,7 @@ const AdminCallPage: React.FC = () => {
     };
 
     const handleDisconnect = (conId: any) => {
+      setCallConnected(false)
       if (localVideoRef.current && localVideoRef.current.srcObject) {
         const localStream = localVideoRef.current.srcObject as MediaStream;
         localStream.getTracks().forEach((track) => track.stop());
@@ -271,6 +295,7 @@ const AdminCallPage: React.FC = () => {
 
     pc.current.ontrack = (event) => {
       if (event.streams && event.streams.length > 0) {
+        setCallConnected(true)
         remoteVideoRef.current.srcObject = event.streams[0];
       }
     };
@@ -357,6 +382,7 @@ const AdminCallPage: React.FC = () => {
       <div className="flex justify-center">
         <div className="flex flex-col items-center">
           <h2 className="font-bold text-3xl text-sky-500">{callerName}</h2>
+          <p>Call Duration: { callConnected ? formatTime(seconds) : '00:00:00'}</p>
         </div>
       </div>
     </div>

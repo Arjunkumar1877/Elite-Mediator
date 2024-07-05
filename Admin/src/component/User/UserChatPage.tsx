@@ -40,7 +40,7 @@ const UserChatPage: React.FC = () => {
     socket.emit("join room", conId);
     socket.on("incoming-call", (data: any) => {
       console.log(data);
-      navigate(`/call_page_user?conId=${data.conId}&name=${data.name}&callerId=${data.callerId}`);
+      navigate(`/call_page_user?conId=${data.conId}&incommingId=${data.incommingId}&callerId=${data.callerId}`);
     });
   }, [conId, currentUser.username]);
 
@@ -68,7 +68,7 @@ const UserChatPage: React.FC = () => {
       if(data){
         socket.emit("incoming-call", {
           conId,
-          name: currentUser.username,
+          incommingId: currentUser._id,
           adminId: currentUser.adminId,
           callerId: data._id
         })
@@ -315,10 +315,10 @@ export default UserChatPage;
 //     socket.emit("join room", conId);
 
 //     const handleOffer = async (offer: any) => {
-//       if (offer.name !== currentUser.username) {
+//       if (offer.incommingId !== currentUser.username) {
 //         confirmAlert({
 //           title: 'Incoming Call',
-//           message: `You have a call from ${offer.name}. Do you want to accept the call?`,
+//           message: `You have a call from ${offer.incommingId}. Do you want to accept the call?`,
 //           buttons: [
 //             {
 //               label: 'Yes',
@@ -335,7 +335,7 @@ export default UserChatPage;
 //                 await pc.current.setRemoteDescription(new RTCSessionDescription(offer.offer));
 //                 const answer = await pc.current.createAnswer();
 //                 await pc.current.setLocalDescription(answer);
-//                 socket.emit("webrtc-answer", { room: conId, answer, name: currentUser.username });
+//                 socket.emit("webrtc-answer", { room: conId, answer, incommingId: currentUser.username });
 //               }
 //             },
 //             {
@@ -349,8 +349,8 @@ export default UserChatPage;
 //       }
 //     };
 //     const handleAnswer = async (data: any) => {
-//       const { name, answer } = data;
-//       if (currentUser.username !== name) {
+//       const { incommingId, answer } = data;
+//       if (currentUser.username !== incommingId) {
 //         if (pc.current.signalingState === "have-local-offer") {
 //           try {
 //             await pc.current.setRemoteDescription(new RTCSessionDescription(answer));
@@ -438,7 +438,7 @@ export default UserChatPage;
 
 //       const offer = await pc.current.createOffer();
 //       await pc.current.setLocalDescription(offer);
-//       socket.emit("webrtc-offer", { name: currentUser.username, room: conId, isVideo, adminId: currentUser.adminId, offer });
+//       socket.emit("webrtc-offer", { incommingId: currentUser.username, room: conId, isVideo, adminId: currentUser.adminId, offer });
 //     } catch (error) {
 //       console.error("Error starting call:", error);
 //     }

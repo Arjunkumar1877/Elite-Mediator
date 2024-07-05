@@ -11,17 +11,44 @@ import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 
 const UserCallPage = () => {
-  const { socket, setIsVideoCall, isVideoCall }: any = useSocket();
+  // const { socket, setIsVideoCall, isVideoCall }: any = useSocket();
   const navigate = useNavigate();
   const { currentUser } = useSelector((state: any) => state.user);
   const location = useLocation();
   const query = new URLSearchParams(location.search);
   const conId = query.get("conId");
-  const name = query.get("name");
+  const incommingId = query.get("incommingId");
   const callerId = query.get("callerId");
-  const localVideoRef: any = useRef<HTMLVideoElement>(null);
-  const remoteVideoRef: any= useRef<HTMLVideoElement>(null);
+  const {
+    socket,
+    localVideoRef,
+    remoteVideoRef,
+    isVideoCall,
+    setIsVideoCall,
+  }: any = useSocket();
   const [isMuted, setIsMuted] = useState<boolean>(false);
+  const [seconds, setSeconds] = useState<number>(0);
+  const [callConnected, setCallConnected] = useState<boolean>(false);
+
+
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setSeconds(prevSeconds => prevSeconds + 1);
+    }, 1000);
+  
+    return () => clearInterval(timer); 
+  }, []);
+  
+  const formatTime = (seconds: number): string => {
+    const getSeconds = `0${seconds % 60}`.slice(-2);
+    const minutes: any = `${Math.floor(seconds / 60)}`;
+    const getMinutes = `0${minutes % 60}`.slice(-2);
+    const getHours = `0${Math.floor(seconds / 3600)}`.slice(-2);
+    return `${getHours}:${getMinutes}:${getSeconds}`;
+  };
+
+
 console.log(localVideoRef);
 console.log(remoteVideoRef);
   const toggleMute = () => {
@@ -72,21 +99,21 @@ console.log(remoteVideoRef);
 
         const offer = await pc.current.createOffer();
         await pc.current.setLocalDescription(offer);
-        socket.emit("webrtc-offer", { name: currentUser.username, room: conId, isVideo: isVideoCall, offer, callerId: callerId });
+        socket.emit("webrtc-offer", { incommingId: currentUser.username, room: conId, isVideo: isVideoCall, offer, callerId: callerId });
       } catch (error) {
         console.error("Error creating offer:", error);
       }
     };
 
-    if(name === currentUser.username){
+    if(incommingId === currentUser._id){
       createOffer();
     }
     
     const handleOffer = async (offer: any) => {
-      if (offer.name !== currentUser.username) {
+      if (offer.incommingId !== currentUser.username) {
         confirmAlert({
           title: 'Incoming Call',
-          message: `You have a call from ${offer.name}. Do you want to accept the call?`,
+          message: `You have a call from ${offer.incommingId}. Do you want to accept the call?`,
           buttons: [
             {
               label: 'Yes',
@@ -107,7 +134,7 @@ console.log(remoteVideoRef);
                   await pc.current.setRemoteDescription(new RTCSessionDescription(offer.offer));
                   const answer = await pc.current.createAnswer();
                   await pc.current.setLocalDescription(answer);
-                  socket.emit("webrtc-answer", { room: conId, answer, name: currentUser.username, callerId: offer.callerId });
+                  socket.emit("webrtc-answer", { room: conId, answer, incommingId: currentUser.username, callerId: offer.callerId });
                 } catch (error) {
                   console.error('Error handling offer acceptance:', error);
                 }
@@ -131,8 +158,8 @@ console.log(remoteVideoRef);
     
 
     const handleAnswer = async (data: any) => {
-      const { name, answer } = data;
-      if (currentUser.username !== name) {
+      const { incommingId, answer } = data;
+      if (currentUser.username !== incommingId) {
         if (pc.current.signalingState === "have-local-offer") {
           try {
             await pc.current.setRemoteDescription(new RTCSessionDescription(answer));
@@ -191,6 +218,8 @@ console.log(remoteVideoRef);
 
     pc.current.ontrack = (event) => {
       if (event.streams && event.streams.length > 0) {
+        setCallConnected(true)
+
         remoteVideoRef.current.srcObject = event.streams[0];
       }
     };
@@ -261,7 +290,8 @@ console.log(remoteVideoRef);
           <div className="flex justify-center">
             <div className="flex flex-col items-center">
               <h2 className="font-bold text-3xl text-sky-500">Arjun Kumar VS</h2>
-              <p className="text-zinc-400 text-center font-semibold">Visitor</p>
+              <p>Call Duration: { callConnected ? formatTime(seconds) : '00:00:00'}</p>
+
             </div>
           </div>
         </div>
@@ -286,3 +316,5 @@ console.log(remoteVideoRef);
 };
 
 export default UserCallPage;
+
+

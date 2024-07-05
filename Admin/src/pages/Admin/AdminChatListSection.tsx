@@ -6,6 +6,8 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 import io from 'socket.io-client';
 import { useSocket } from "../../contexts/AdminContext";
+import { FaRegEdit } from "react-icons/fa";
+
 
 interface Conversation {
   _id: string;
@@ -125,7 +127,6 @@ const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
     const searchText = e.target.value.toLowerCase();
     setSearchTerm(searchText);
 
-    // Filter conversations based on search term
     const filtered = conversations.filter(conversation =>
       conversation.userId.username.toLowerCase().includes(searchText)
     );
@@ -196,30 +197,32 @@ const clearSearch = () => {
             <IoSearch className="absolute top-1/2 transform -translate-y-1/2 text-xl right-8" />
           </div>
 
-          <div className="flex flex-col gap-4 overflow-y-auto h-[300px]">
-            {conversations && conversations.map((conversation) => (
-              <Link to={`/admin_chat?conId=${conversation._id}`} key={conversation._id}>
-                <div className="flex items-center justify-between border-2 p-4 rounded hover:bg-gray-100 transition">
-                  <div className="flex items-center gap-3">
-                    <img src="public/userIcon.webp" alt="User" className="h-14 w-14 rounded-full" />
-                    <div className="flex flex-col">
-                      <p className="text-md text-gray-600 font-semibold md:text-xl">{conversation?.userId?.username}</p>
-                      <p className="text-xs text-gray-400 md:text-sm">{conversation?.lastMessage?.text}</p>
-                    </div>
-                  </div>
-
-                  <div className="flex flex-col justify-center items-center gap-1">
-                    <span className="text-xs md:text-md">{new Date(conversation?.lastMessage?.time as any).toLocaleTimeString()}</span>
-                    {conversation?.lastMessage?.unread as number > 0 && (
-                      <span className="bg-sky-500 text-white w-6 h-6 rounded-full flex justify-center items-center">
-                        {conversation?.lastMessage?.unread}
-                      </span>
-                    )}
-                  </div>
-                </div>
-              </Link>
-            ))}
+          <div className="flex flex-col gap-4 overflow-y-auto h-[380px]">
+  {conversations && conversations.map((conversation: any) => (
+    <Link to={`/admin_chat?conId=${conversation._id}`} key={conversation._id}>
+      <div className="flex items-center justify-between border-2 p-4 rounded hover:bg-gray-100 transition">
+        <div className="flex items-center gap-3">
+          <img src="public/userIcon.webp" alt="User" className="h-14 w-14 rounded-full"/>
+          <div className="flex flex-col">
+          <p className="text-xs text-sky-500 md:text-sm">({conversation?.propertyId?.propertyName})</p>
+            <p className="text-md text-gray-600 font-semibold md:text-xl">{conversation?.userId?.username} </p>
+            <p className="text-xs text-gray-400 md:text-sm">{conversation?.lastMessage?.text}</p>
           </div>
+        </div>
+
+        <div className="flex flex-col justify-center items-center gap-1">
+          <span className="text-xs md:text-md">{new Date(conversation?.lastMessage?.time as any).toLocaleTimeString()}</span>
+          {conversation?.lastMessage?.unread as number > 0 && (
+            <span className="bg-sky-500 text-white w-6 h-6 rounded-full flex justify-center items-center">
+              {conversation?.lastMessage?.unread}
+            </span>
+          )}
+        </div>
+      </div>
+    </Link>
+  ))}
+</div>
+
 
           <div className="flex justify-between items-center">
             <button

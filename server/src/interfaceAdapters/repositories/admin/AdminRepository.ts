@@ -155,7 +155,7 @@ export class MongoAdminRepository implements IAdminRepository {
     try {
       const conversation = await ConversationModel.findOne({
         _id: id,
-      }).populate("userId");
+      }).populate("userId propertyId");
 
       return conversation;
     } catch (error) {
@@ -169,15 +169,12 @@ export class MongoAdminRepository implements IAdminRepository {
       let query: any = { adminId: adminId };
   
       const limit = 10;
-      // Apply search term filter
      
       
-      // Apply property filter
       if (propertyFilter && propertyFilter !== 'All') {
         query.propertyId = propertyFilter;
       }
   
-      // Apply date range filter
       if (startDate && endDate) {
         query.createdAt = { $gte: new Date(startDate), $lte: new Date(endDate) };
       }
@@ -210,7 +207,7 @@ export class MongoAdminRepository implements IAdminRepository {
 
 
  async FindUsersListByAdminId(adminId: string): Promise<any> {
-    const userData = await UserModel.find({adminId: adminId}).sort({createdAt: -1});
+    const userData = await UserModel.find({adminId: adminId}).sort({createdAt: -1}).populate('propId');
     
     if(userData.length > 0){
       return userData

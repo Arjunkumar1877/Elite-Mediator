@@ -18,6 +18,9 @@ const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
   const remoteVideoRef: any= useRef<HTMLVideoElement>(null);
   const [isVideoCall, setIsVideoCall] = useState<boolean>();
   const [notificationCount, setNotificationCount] = useState<number>();
+  const [callConnected, setCallConnected] = useState<boolean>(false);
+
+
   const { currentAdmin } = useSelector((state: any)=> state.admin);
   useEffect(()=>{
     if(currentAdmin){
@@ -28,7 +31,7 @@ const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
 
 
   return (
-    <SocketContext.Provider value={{ socket, localVideoRef, remoteVideoRef, setIsVideoCall, isVideoCall, notificationCount, setNotificationCount }}>
+    <SocketContext.Provider value={{ socket, localVideoRef, remoteVideoRef, callConnected, setCallConnected , setIsVideoCall, isVideoCall, notificationCount, setNotificationCount }}>
       {children}
     </SocketContext.Provider>
   );
