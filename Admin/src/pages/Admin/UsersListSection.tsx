@@ -95,7 +95,7 @@ const UsersListSection = () => {
           <span>{user?.purpose  !== 'Unknown contact' ? user?.purpose : 'Visited by an unknown user'}</span>
         </div>
     {
-      user?.propId?.userType !== 'Unknown' &&     <a href={`https://wa.me/${user?.phone}`} className="flex items-center gap-1 text-white text-xs bg-green-500 px-4 py-3 rounded-lg shadow-sm w-24 justify-center" target="_blank" rel="noopener noreferrer">
+      user?.propId?.userType !== 'Unknown' &&     <a  className="flex items-center gap-1 text-white text-xs bg-green-500 px-4 py-3 rounded-lg shadow-sm w-24 justify-center" target="_blank" rel="noopener noreferrer">
       <FaWhatsapp className="text-white" />
       Message
     </a>

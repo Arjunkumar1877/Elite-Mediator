@@ -349,6 +349,7 @@ import { useSelector } from "react-redux";
 import { useSocket } from "../../contexts/AdminContext";
 import { FaWhatsapp } from "react-icons/fa6";
 import { RiDeleteBin6Line } from "react-icons/ri";
+import { MdCleaningServices } from "react-icons/md";
 
 
 interface Message {
@@ -363,7 +364,7 @@ interface Message {
 
 interface Conversation {
   _id: string;
-  userId: { _id: string; username: string };
+  userId: { _id: string; username: string, phone?: number };
   adminId: string;
   propId: string;
   propertyId: { userType: string };
@@ -580,7 +581,7 @@ const AdminChatSection: React.FC = () => {
           <div className="flex gap-5 items-center text-lg md:text-2xl text-sky-500">
             <IoCall className="cursor-pointer hover:text-sky-800" onClick={() => startCall(false)} />
             <FaVideo className="cursor-pointer hover:text-sky-800" onClick={() => startCall(true)} />
-            <HiDotsVertical className="cursor-pointer hover:text-sky-800" />
+            <HiDotsVertical className="cursor-pointer hover:text-sky-800 hover:bg-slate-200 rounded-full hover:text-2xl hover:p-1 md:hover:text-3xl" onClick={()=> setShowOptions(!showOptions)} />
 
           </div>
         </div>
@@ -640,6 +641,24 @@ const AdminChatSection: React.FC = () => {
             <BsSend className="text-white text-2xl" />
           </div>
         </div>
+
+       {
+        showOptions &&  <div className="w-34 h-39 absolute bg-slate-700 opacity-70 right-14 rounded top-12 flex flex-col p-3 gap-4 md:w-40">
+   {
+     selectedConversation?.propertyId.userType !== "Unknown" &&   <>
+       <a href={`https://wa.me/${selectedConversation?.userId?.phone}`}>
+     <div className="flex justify-start gap-2  rounded items-center hover:p-1 hover:bg-slate-900 cursor-pointer text-white text-sm md:text-lg"><FaWhatsapp className="text-green-600" /> <span className="text-sm"> Whats app</span></div>
+     </a>
+     <a href={`tel:${selectedConversation?.userId?.phone}`}>
+     <div className="flex justify-start gap-2  rounded items-center hover:p-1 hover:bg-slate-900 cursor-pointer text-white text-sm md:text-lg"><IoCall className="text-green-600" /> <span className="text-sm">{selectedConversation?.userId.phone}</span></div>
+
+     </a>
+
+     </>
+   }
+        <div className="flex justify-start gap-2  rounded items-center hover:p-1 hover:bg-slate-900 cursor-pointer text-white text-sm md:text-lg"><MdCleaningServices className="text-red-600" /> <span className="text-sm">Clear chat</span></div>
+      </div>
+       }
 
       </div>
     </div>
