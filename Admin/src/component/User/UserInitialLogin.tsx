@@ -9,6 +9,7 @@ import {  signInSuccess, signoutSuccess } from "../../redux/user/UserSlice";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import axios from "axios";
+import { v4 as uuidv4 } from 'uuid';
 
 type UserType = {
   _id?: string;
@@ -34,6 +35,7 @@ export interface PropertyDataType {
   url: string;
   deleted: boolean;
   verified?: boolean;
+  macId?: string;
   code: string;
 }
 
@@ -62,10 +64,22 @@ const InitialDataPage = () => {
   });
 
 
+  const getOrSetUUID = (): string => {
+    let uuid = localStorage.getItem('mac-id');
+    if (!uuid) {
+      uuid = uuidv4();
+      localStorage.setItem('mac-id', uuid);
+    }
+    return uuid;
+  };
 
-  console.log(formData);
-  console.log(propertyData)
- const phonenum:number = 0;
+ 
+
+
+
+console.log(formData);
+console.log(propertyData)
+const phonenum:number = 0;
    
  const loginUnknown = async (propertyId:string) => {
   try {
@@ -117,22 +131,16 @@ const InitialDataPage = () => {
 };
 
 
-  const fetchMacAddress = async()=>{
-    try {
-      const res = await fetch("/user/getmac_address");
-    const data:any = await res.json()
-
-    console.log(data);
-    setMacAddress(data)
-    } catch (error) {
-      console.log(error)
-    }
-  }
-
   console.log(macAddress)
 
   useEffect(() => {
-    fetchMacAddress();
+  
+  const macID = getOrSetUUID();
+  console.log('MAC ID:', macID);
+  if(macID){
+    setMacAddress(macID)
+  }
+  console.log(macID);
     const fetchData = async () => {
       try {
         const resp = await fetch("/user/get_admins_property_data", {

@@ -38,7 +38,7 @@ const AdminChatListSection: React.FC = () => {
   const [endDate, setEndDate] = useState<string>('');
 
 
-  const fetchConversations = async () => {
+const fetchConversations = async () => {
     try {
       const response = await axios.get('/api/conversations_list', {
         params: {
@@ -64,7 +64,7 @@ const AdminChatListSection: React.FC = () => {
     }
   };
   
-  const fetchAdminsProperties = async () => {
+const fetchAdminsProperties = async () => {
     try {
       const res = await fetch(`/api/get_admin_properties/${currentAdmin._id}`);
       const data = await res.json();
@@ -141,6 +141,7 @@ const clearSearch = () => {
     setSearchTerm('');
     fetchConversations(); // Refetch conversations to reset the filtered state
   };
+  
 
   return (
     <div className="bg-gray-50 min-h-screen p-4">
