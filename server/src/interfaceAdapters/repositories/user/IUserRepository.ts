@@ -14,4 +14,5 @@ export interface IUserRepository{
     CreateConversation(userId: string, adminId: string, propertyId: string): Promise<any>;
     FindConversation(userId: string, adminId: string, propertyId: string): Promise<Conversation | null>;
     FindUserByMacId(macId: string, propId: string): Promise<User | null>;
+    FindAndGetUserMessages(conId: string): Promise<any>;
 }

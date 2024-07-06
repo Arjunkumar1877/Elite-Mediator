@@ -9,4 +9,5 @@ export interface User{
     verified: boolean;
     conversationId?: string;
     macId?: string;
+    deleted?: boolean;
 }

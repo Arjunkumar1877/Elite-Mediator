@@ -21,4 +21,5 @@ export interface IAdminRepository {
     FindConversationListCount(adminId: string): Promise<any>;
     FindAdminsCallListByAdminId(adminId: string): Promise<any>;
     FindUsersListByAdminId(adminId: string): Promise<any>;
+    FindAndEditUnknownUser(userId: string, username: string): Promise<any>;
 }

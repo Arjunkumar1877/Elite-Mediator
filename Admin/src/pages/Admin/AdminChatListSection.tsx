@@ -162,9 +162,9 @@ const clearSearch = () => {
                   onChange={(e: ChangeEvent<HTMLSelectElement>) => handleFilterChatByProperty(e.target.value)}
                   className="py-3 bg-white px-8 lg:px-16 text-xs rounded-full"
                 >
-                  <option value="">All Properties</option>
+                  <option className="px-5" value="">All Properties</option>
                   {properties.map((prop: any) => (
-                    <option key={prop._id} value={prop._id}>{prop.propertyName}</option>
+                    <option className="px-5" key={prop._id} value={prop._id}>{prop.propertyName}</option>
                   ))}
                 </select>
               </div>

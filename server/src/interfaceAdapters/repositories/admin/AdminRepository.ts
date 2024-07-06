@@ -9,7 +9,6 @@ import { Conversation } from "../../../entities/models/common/Conversation";
 import moment from "moment";
 import { CallModel } from "../../../frameworks/database/models/admin/CallModel";
 import { UserModel } from "../../../frameworks/database/models/user/User";
-import { isBuffer } from "util";
 
 export class MongoAdminRepository implements IAdminRepository {
   async CreateAdmin(admin: Admin): Promise<any> {
@@ -164,56 +163,80 @@ export class MongoAdminRepository implements IAdminRepository {
     }
   }
 
-  async FilterConversationList(adminId: string, page: number, propertyFilter: string, startDate: any, endDate: any): Promise<any> {
+  async FilterConversationList(
+    adminId: string,
+    page: number,
+    propertyFilter: string,
+    startDate: any,
+    endDate: any
+  ): Promise<any> {
     try {
       let query: any = { adminId: adminId };
-  
+
       const limit = 10;
-     
-      
-      if (propertyFilter && propertyFilter !== 'All') {
+
+      if (propertyFilter && propertyFilter !== "All") {
         query.propertyId = propertyFilter;
       }
-  
+
       if (startDate && endDate) {
-        query.createdAt = { $gte: new Date(startDate), $lte: new Date(endDate) };
+        query.createdAt = {
+          $gte: new Date(startDate),
+          $lte: new Date(endDate),
+        };
       }
-  
+
       const conversations = await ConversationModel.find(query)
-        .populate('userId propertyId')
+        .populate("userId propertyId")
         .skip((page - 1) * limit)
         .limit(limit)
         .sort({ updatedAt: -1 });
-  
 
-    return conversations;
+      return conversations;
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
   }
 
-  async FindConversationListCount(adminId: string): Promise<any>{
+  async FindConversationListCount(adminId: string): Promise<any> {
     let filterQuery: any = { adminId };
-    
-      const totalConversations = await ConversationModel.countDocuments(filterQuery);
-      return totalConversations;
-  }
 
+    const totalConversations = await ConversationModel.countDocuments(
+      filterQuery
+    );
+    return totalConversations;
+  }
 
   async FindAdminsCallListByAdminId(adminId: string): Promise<any> {
-    const calles = await CallModel.find({adminId: adminId}).populate('userId').sort({createdAt: -1});
-    return calles
+    const calles = await CallModel.find({ adminId: adminId })
+      .populate("userId")
+      .sort({ createdAt: -1 });
+    return calles;
   }
 
+  async FindUsersListByAdminId(adminId: string): Promise<any> {
+    const userData = await UserModel.find({ adminId: adminId, deleted: false })
+      .sort({ createdAt: -1 })
+      .populate("propId");
 
- async FindUsersListByAdminId(adminId: string): Promise<any> {
-    const userData = await UserModel.find({adminId: adminId}).sort({createdAt: -1}).populate('propId');
-    
-    if(userData.length > 0){
-      return userData
-    }else{
-      return 'Empty list'
+    if (userData.length > 0) {
+      return userData;
+    } else {
+      return "Empty list";
     }
   }
 
+  async FindAndEditUnknownUser(userId: string, username: string): Promise<any> {
+    const editedUserdata = await UserModel.findOneAndUpdate({_id: userId}, {
+      $set: {
+          username: username
+      }
+  }, { new: true});
+
+  if(editedUserdata){
+      return editedUserdata
+  }else{
+      return ''
+  }
+  }
 }

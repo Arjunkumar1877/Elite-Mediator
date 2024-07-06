@@ -4,5 +4,6 @@ export interface Message{
   senderId: string;
   senderModel: string;
   text: string;
-  
+  userDeleted?: boolean;
+  adminDeleted?: boolean;
 }

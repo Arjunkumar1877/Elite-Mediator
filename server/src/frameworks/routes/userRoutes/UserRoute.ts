@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { Route } from "../../../frameworks/types/ServerTypes";
-import { InjectedChekAndSaveUnknwnUserController, InjectedCreateConversationController, InjectedCreateNewUserDataController, InjectedGetAdminsPropertdataController, InjectedGetUnverifiedUserDataController, InjectedGetUserDataByPhoneController, InjectedVerifyAndUpdateUserDataController } from "../../../frameworks/injection/UserInjects";
+import { InjectedChekAndSaveUnknwnUserController, InjectedCreateConversationController, InjectedCreateNewUserDataController, InjectedGetAdminsPropertdataController, InjectedGetUnverifiedUserDataController, InjectedGetUserDataByPhoneController, InjectedGetUserMessagesController, InjectedVerifyAndUpdateUserDataController } from "../../../frameworks/injection/UserInjects";
 import { ConversationModel } from "../../../frameworks/database/models/admin/ConversationModel";
 import { MessageModel } from "../../../frameworks/database/models/admin/MessageModel";
 import { UserModel } from "../../../frameworks/database/models/user/User";
@@ -50,7 +50,7 @@ router.post('/send_message', InjectedSendMesssage.SendMessageControl.bind(Inject
 
 
 // -------------------------------------| GETTING ALL THE MESSAGES FROM THE DATABASE  --------------------------------------------------------------------|
-router.get('/get_messages/:convId', InjectedGetMessagesController.GetMessagesControl.bind(InjectedGetMessagesController));
+router.get('/get_user_messages/:conId', InjectedGetUserMessagesController.GetUserMessagesControl.bind(InjectedGetUserMessagesController));
 
 
 // -------------------------------------| STARTING A CALL AND SAVING THE DATA TO THE DATABASE  --------------------------------------------------------------------|
@@ -69,8 +69,6 @@ router.post("/decline_call/:callerId", InjectedCallingFunctionalitiesController.
 router.post("/disconnect_call/:callerId", InjectedCallingFunctionalitiesController.DisconnectingControl.bind(InjectedCallingFunctionalitiesController));
 
 
-
-
 router.get('/update_readmessage_conversation/:id', async(req, res)=>{
     try {
         const user = await ConversationModel.findOneAndUpdate({_id: req.params.id}, {
@@ -83,7 +81,30 @@ router.get('/update_readmessage_conversation/:id', async(req, res)=>{
     } catch (error) {
         console.log(error)
     }
-})
+});
+
+
+router.get('/clear_user_chat/:conId', async (req, res) => {
+    try {
+        const { conId } = req.params;
+        const result = await MessageModel.updateMany(
+            { conversationId: conId },
+            { $set: { userDeleted: true } }
+        );
+        res.status(200).json({
+            success: true,
+            message: `Messages with conversation ID ${conId} have been marked as deleted.`,
+            result
+        });
+    } catch (error: any) {
+        res.status(500).json({
+            success: false,
+            message: 'An error occurred while updating messages.',
+            error: error.message
+        });
+    }
+});
+
 
 
 

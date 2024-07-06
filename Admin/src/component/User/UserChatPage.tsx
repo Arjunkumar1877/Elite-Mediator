@@ -11,6 +11,9 @@ import { signoutSuccess, setMessages } from "../../redux/user/UserSlice";
 
 import io from "socket.io-client";
 import { useSocket } from "../../contexts/AdminContext";
+import { MdCleaningServices } from "react-icons/md";
+// import { toast } from "react-toastify";
+import { Toaster, toast } from "react-hot-toast";
 
 const socket = io("http://localhost:7000");
 
@@ -34,6 +37,8 @@ const UserChatPage: React.FC = () => {
   const location = useLocation();
   const query = new URLSearchParams(location.search);
   const conId = query.get("conId");
+  const [showOptions, setShowOptions] = useState<boolean>(false);
+
 
 
   useEffect(() => {
@@ -92,7 +97,7 @@ const UserChatPage: React.FC = () => {
 
   const fetchMessages = async () => {
     try {
-      const res: any = await axios.get(`/user/get_messages/${conId}`);
+      const res: any = await axios.get(`/user/get_user_messages/${conId}`);
       console.log(res);
       console.log(res.data);
 
@@ -150,10 +155,34 @@ const UserChatPage: React.FC = () => {
     navigate("/");
   };
 
+  const formatTime = (dateString: string) => {
+    const options: Intl.DateTimeFormatOptions = {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true,
+    };
+    return new Date(dateString).toLocaleTimeString([], options);
+  };
+
+
+  const handleClearChat = async()=>{
+    const res = await fetch(`/user/clear_user_chat/${conId}`);
+    const data = await res.json();
+
+    if(data.success){
+      fetchMessages();
+      setShowOptions(false);
+      toast("Chats cleared", {
+        duration: 1000 
+    });
+    }
+  }
+
   console.log(currentUser);
 
   return (
     <div className="pt-1 h-screen bg-gray-50 flex flex-col">
+      <Toaster />
       <div className="border-2 flex flex-col h-full p-4 bg-white shadow-lg">
         <div className="flex justify-between items-center px-5 py-3 border-b-2">
           <div className="flex gap-5 items-center">
@@ -168,17 +197,18 @@ const UserChatPage: React.FC = () => {
               </span>
             )}
           </div>
-          <div className="flex gap-5 items-center text-2xl text-sky-500">
+          <div className="flex gap-5 items-center text-lg md:text-2xl text-sky-500">
             <IoCall
-              className="cursor-pointer"
+              className="cursor-pointer hover:text-sky-800"
               onClick={() => startCall(false)}
             />
             <FaVideo
-              className="cursor-pointer"
+              className="cursor-pointer hover:text-sky-800"
               onClick={() => startCall(true)}
             />
-            <HiDotsVertical className="cursor-pointer" />
-            <FiLogOut className="cursor-pointer" onClick={handleSignOut} />
+            <HiDotsVertical className="cursor-pointer hover:text-sky-800 hover:bg-slate-200 rounded-full hover:text-2xl hover:p-1 md:hover:text-3xl"  onClick={()=> setShowOptions(!showOptions)}  />
+            
+            <FiLogOut className="cursor-pointer " onClick={handleSignOut} />
           </div>
         </div>
 
@@ -204,7 +234,7 @@ const UserChatPage: React.FC = () => {
                   <div className="flex flex-col max-w-[300px] md:max-w-[350px] lg:max-w-[650px]">
                     <div className="flex justify-between text-xs text-slate-400">
                       <span>
-                        {new Date(message.createdAt).toLocaleTimeString()}
+                        {formatTime(message.createdAt)}
                       </span>
                       <span>
                         {message.senderModel === "User"
@@ -251,6 +281,14 @@ const UserChatPage: React.FC = () => {
             <BsSend className="text-white text-2xl" />
           </div>
         </div>
+
+        {
+        showOptions &&  <div className="w-34 h-39 absolute bg-slate-700 opacity-70 right-24 rounded top-16 flex flex-col p-3 gap-4 md:w-40">
+        <div className="flex justify-start gap-2  rounded items-center hover:p-1 hover:bg-slate-900 cursor-pointer text-white text-sm md:text-lg" onClick={handleClearChat}><MdCleaningServices className="text-red-600" /> <span className="text-sm">Clear chat</span></div>
+      </div>
+       }
+
+
       </div>
     </div>
   );

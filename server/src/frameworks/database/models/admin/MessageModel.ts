@@ -23,6 +23,14 @@ const MessageSchema = new mongoose.Schema({
     type: Date, 
     default: Date.now 
   },
+  userDeleted: {
+    type: Boolean,
+    default: false
+  },
+  adminDeleted: {
+    type: Boolean,
+    default: false
+  }
 });
 
 export const MessageModel = mongoose.model("Message", MessageSchema);

@@ -7,5 +7,6 @@ export interface Conversation {
         text?: string;
         time?: Date | string;
         unread?: number;
-    }
+    },
+    deleted: boolean;
 }

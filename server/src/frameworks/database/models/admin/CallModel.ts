@@ -42,6 +42,10 @@ const callSchema = new mongoose.Schema({
   },
   callDuration: {
     type: Date
+  },
+  deleted: {
+    type: Boolean,
+    default: false
   }
 }, { timestamps: true});
 

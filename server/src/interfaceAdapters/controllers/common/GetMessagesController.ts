@@ -8,7 +8,7 @@ export class GetMessagesController{
 
     async GetMessagesControl(req: Req, res: Res): Promise<void>{
         console.log("fetching messages ")
-        const data = await this.igetmessagesusecase.GetMessages(req.params.convId)
+        const data = await this.igetmessagesusecase.GetMessages(req.params.conId)
 
         res.json(data);
     }

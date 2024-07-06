@@ -95,7 +95,7 @@
 //     }
 //   };
 
-//   const handleConversationSelect = async () => {
+//   const fetchMessages = async () => {
 //     try {
 //       const response = await axios.get(`/api/get_messages/${conId}`);
 //       setMessages(response.data);
@@ -132,7 +132,7 @@
 //     };
 
 //     updateReadCount();
-//     handleConversationSelect();
+//     fetchMessages();
 //     fetchSelectedConversation();
 
 //     const handleChatMessage = (msg: any) => {
@@ -341,7 +341,7 @@ import { HiOutlinePaperClip } from "react-icons/hi2";
 import { HiDotsVertical } from "react-icons/hi";
 import { BsSend } from "react-icons/bs";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { ToastContainer } from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import 'react-confirm-alert/src/react-confirm-alert.css'; 
 import axios from "axios";
@@ -428,9 +428,9 @@ const AdminChatSection: React.FC = () => {
     }
   };
 
-  const handleConversationSelect = async () => {
+  const fetchMessages = async () => {
     try {
-      const response = await axios.get<Message[]>(`/api/get_messages/${conId}`);
+      const response = await axios.get<Message[]>(`/api/get_admin_messages/${conId}`);
       setMessages(response.data);
       setLoading(false);
       scrollToBottom();
@@ -461,7 +461,7 @@ const AdminChatSection: React.FC = () => {
     };
 
     updateReadCount();
-    handleConversationSelect();
+    fetchMessages();
     fetchSelectedConversation();
 
     const handleChatMessage = (msg: Message) => {
@@ -536,6 +536,20 @@ const AdminChatSection: React.FC = () => {
 
   if (loading) {
     return <div>Loading...</div>;
+  }
+
+  const handleClearChat = async()=>{
+    console.log("clearing chat clicked")
+    const res = await fetch(`/api/clear_admin_chat/${conId}`);
+    const data = await res.json();
+
+    if(data.success){
+      fetchMessages();
+      setShowOptions(false);
+      toast("Chats cleared", {
+        autoClose: 1000 
+    });
+    }
   }
 
   return (
@@ -656,7 +670,7 @@ const AdminChatSection: React.FC = () => {
 
      </>
    }
-        <div className="flex justify-start gap-2  rounded items-center hover:p-1 hover:bg-slate-900 cursor-pointer text-white text-sm md:text-lg"><MdCleaningServices className="text-red-600" /> <span className="text-sm">Clear chat</span></div>
+        <div className="flex justify-start gap-2  rounded items-center hover:p-1 hover:bg-slate-900 cursor-pointer text-white text-sm md:text-lg" onClick={handleClearChat} ><MdCleaningServices className="text-red-600" /> <span className="text-sm">Clear chat</span></div>
       </div>
        }
 

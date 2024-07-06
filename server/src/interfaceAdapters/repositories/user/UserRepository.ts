@@ -96,6 +96,8 @@ export class MongoUserRepository implements IUserRepository {
    return await UserModel.findOne({macId: macId, propId: propId});   
   }
 
-  
+  async FindAndGetUserMessages(conId: string): Promise<any> {
+   return  await MessageModel.find({conversationId: conId, userDeleted: false});   
+  }
 
 }

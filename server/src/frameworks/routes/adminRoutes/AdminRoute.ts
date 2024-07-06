@@ -56,7 +56,8 @@ router.get('/update_conversation_unread_count/:id', InjectedUpdateConversationRe
 // -------------------------------------| FETCH THE CONVERSATION'S DOCUMENT USING THE ID ----------------------------------------------------------------------------|
 router.get('/selected_conversation/:id',  InjectedGetSelectedConversationController.GetSelectedConversationControl.bind(InjectedGetSelectedConversationController));
 
-// -------------------------------------| GETTING ALL THE MESSAGES FROM THE DATABASE  --------------------------------------------------------------------|
+// -------------------------------------| GETTING ALL THE ADMIN CHAT LIST MESSAGES FROM THE DATABASE  --------------------------------------------------------------------|
+router.get('/get_admin_messages/:conId', InjectedGetMessagesController.GetMessagesControl.bind(InjectedGetMessagesController));
 router.get('/get_messages/:convId', InjectedGetMessagesController.GetMessagesControl.bind(InjectedGetMessagesController));
 
 // -------------------------------------| FECH ALL AND FILTERED ADMINS CHAT LIST  ----------------------------------------------------------------------------|
@@ -87,6 +88,32 @@ router.get('/get_admin_properties/:adminId', async(req, res)=>{
     const data = await QrModel.find({adminId: id});
     res.json(data);
 })
+
+
+
+router.get('/clear_admin_chat/:conId', async (req, res) => {
+    try {
+        const { conId } = req.params;
+        const result = await MessageModel.updateMany(
+            { conversationId: conId },
+            { $set: { adminDeleted: true } }
+        );
+        res.status(200).json({
+            success: true,
+            message: `Messages with conversation ID ${conId} have been marked as deleted.`,
+            result
+        });
+    } catch (error: any) {
+        res.status(500).json({
+            success: false,
+            message: 'An error occurred while updating messages.',
+            error: error.message
+        });
+    }
+});
+
+
+
 
 
 // // -------------------------------------| FECH ALL AND FILTERED ADMINS CHAT LIST  ----------------------------------------------------------------------------|

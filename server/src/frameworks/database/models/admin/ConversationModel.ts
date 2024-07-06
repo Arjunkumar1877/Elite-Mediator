@@ -32,6 +32,10 @@ const ConversationSchema = new Schema({
       default: 0
     }
   },
+  deleted: {
+    type: Boolean,
+    default: false
+  }
 }, {timestamps: true});
 
 export const ConversationModel = mongoose.model('Conversation', ConversationSchema);

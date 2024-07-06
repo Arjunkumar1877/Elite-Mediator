@@ -4,6 +4,7 @@ import { CreateUserController } from "../../interfaceAdapters/controllers/user/C
 import { GetAdminsPropertyDataController } from "../../interfaceAdapters/controllers/user/GetAdminsPropertyDataController";
 import { GetUserDataByIdController } from "../../interfaceAdapters/controllers/user/GetUserDataByIdController";
 import { GetUserDataByPhoneController } from "../../interfaceAdapters/controllers/user/GetUserDataByPhoneController";
+import { GetUserMessagesController } from "../../interfaceAdapters/controllers/user/GetUserMessagesController";
 import { VerifyAndUpdateUserController } from "../../interfaceAdapters/controllers/user/UserVerifyAndUpdateController";
 import { MongoUserRepository } from "../../interfaceAdapters/repositories/user/UserRepository";
 import { CheckAndSaveUnknownUserUseCase } from "../../useCases/user/CheckAndSaveUnknownUserUseCase";
@@ -12,6 +13,7 @@ import { CreateConversationUseCase } from "../../useCases/user/CreateConversatio
 import { GetAdminsPropertDataUseCase } from "../../useCases/user/GetAdminsPropertDataUseCase";
 import { GetUserDataByIdUseCase } from "../../useCases/user/GetUserDataByIdUseCase";
 import { GetUserDataByPhoneUseCase } from "../../useCases/user/GetUserDataByPhoneUseCase";
+import { GetUserMessagesUseCase } from "../../useCases/user/GetUserMessagesUseCase";
 import { SaveNewUserDataUseCase } from "../../useCases/user/SaveNewUserDataUseCase";
 import { VerifyUserUseCase } from "../../useCases/user/VerifyUserUseCase";
 
@@ -55,5 +57,11 @@ export const InjectedGetAdminsPropertdataController = new GetAdminsPropertyDataC
 // -----------------------------| CHECK AND SEND CONVERSATION AND USER OR CREATE NEW CONVERSATION AND UPDATE USER WITH CONVERSATION ID INJECTION ----------------------------------------------------------------------------------------
 const createConversationUse = new CreateConversationUseCase(mongoRepo)
 export const InjectedCreateConversationController = new CreateConversationController(createConversationUse, getUserDataByIdUse);
+
+
+
+// -----------------------------| GET ALL MESSAGES FOR THE USER CHAT  ----------------------------------------------------------------------------------------
+const getUserMessagesUse = new GetUserMessagesUseCase(mongoRepo)
+export const InjectedGetUserMessagesController = new GetUserMessagesController(getUserMessagesUse);
 
 
