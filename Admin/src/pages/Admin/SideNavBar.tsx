@@ -57,8 +57,9 @@ const SideNavBar: React.FC<SideNavBarProps> = ({ navShowSet }) => {
 
     socket.on("incoming-call", (data: any) => {
       if (location.pathname !== `/admin_chat?conId=${data.conId}`) {
-        console.log(data);
-        navigate(`/admin_call_page?conId=${data.conId}&name=${data.name}`);
+        // console.log(data);
+        navigate(`/call_admin_page?conId=${data.conId}&incommingId=${data.incommingId}&callerId=${data.callerId}`);
+        
       }
     });
 

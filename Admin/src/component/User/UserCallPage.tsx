@@ -10,6 +10,8 @@ import 'react-toastify/dist/ReactToastify.css';
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 
+
+
 const UserCallPage = () => {
   // const { socket, setIsVideoCall, isVideoCall }: any = useSocket();
   const navigate = useNavigate();
@@ -29,6 +31,7 @@ const UserCallPage = () => {
   const [isMuted, setIsMuted] = useState<boolean>(false);
   const [seconds, setSeconds] = useState<number>(0);
   const [callConnected, setCallConnected] = useState<boolean>(false);
+  const [callConnecting, setCallConnecting] = useState<boolean>(true);
 
 
 
@@ -110,6 +113,7 @@ console.log(remoteVideoRef);
     }
     
     const handleOffer = async (offer: any) => {
+      console.log(offer)
       if (offer.incommingId !== currentUser.username) {
         confirmAlert({
           title: 'Incoming Call',
@@ -120,11 +124,12 @@ console.log(remoteVideoRef);
               onClick: async () => {
                 try {
                   setIsVideoCall(offer.isVideo);
+                  updateCallAnswering(offer.callerId);
                   const constraints = { audio: true, video: offer.isVideo };
                   const stream = await navigator.mediaDevices.getUserMedia(constraints);
                   stream.getTracks().forEach((track) => pc.current.addTrack(track, stream));
     
-                  if (localVideoRef.current) {
+                   if (localVideoRef.current) {
                     localVideoRef.current.srcObject = stream;
                     console.log('Stream assigned to localVideoRef on offer acceptance');
                   }
@@ -145,6 +150,7 @@ console.log(remoteVideoRef);
               onClick: () => {
                 try {
                   navigate(`/chat_user?conId=${conId}`);
+                  updateCallCancelling(offer.callerId);
                   socket.emit("webrtc-disconnect", conId, offer.callerId);
                 } catch (error) {
                   console.error('Error handling offer rejection:', error);
@@ -218,6 +224,7 @@ console.log(remoteVideoRef);
 
     pc.current.ontrack = (event) => {
       if (event.streams && event.streams.length > 0) {
+        setCallConnecting(false);
         setCallConnected(true)
 
         remoteVideoRef.current.srcObject = event.streams[0];
@@ -231,6 +238,67 @@ console.log(remoteVideoRef);
       socket.off("webrtc-disconnect", handleDisconnect);
     };
   }, [conId, currentUser.username, isVideoCall, socket]);
+
+  const updateCallCancelling = async (callerId: any) => {
+    try {
+      const res = await fetch(`/api/decline_call/${callerId}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+  
+      if (!res.ok) {
+        throw new Error(`HTTP error! status: ${res.status}`);
+      }
+  
+      const data = await res.json();
+      console.log(data);
+    } catch (error) {
+      console.error('Error updating call status:', error);
+    }
+  };
+  
+  const updateCallAnswering= async (callerId: any) => {
+    try {
+      const res = await fetch(`/api/accept_call/${callerId}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+  
+      if (!res.ok) {
+        throw new Error(`HTTP error! status: ${res.status}`);
+      }
+  
+      const data = await res.json();
+      console.log(data);
+    } catch (error) {
+      console.error('Error updating call status:', error);
+    }
+  };
+
+  const updateCallDisconnecting = async (callerId: any) => {
+    try {
+      const res = await fetch(`/api/disconnect_call/${callerId}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+  
+      if (!res.ok) {
+        throw new Error(`HTTP error! status: ${res.status}`);
+      }
+  
+      const data = await res.json();
+      console.log(data);
+    } catch (error) {
+      console.error('Error updating call status:', error);
+    }
+  };
+
 
   const handleCutTheCall = () => {
     if (localVideoRef.current && localVideoRef.current.srcObject) {
@@ -280,7 +348,7 @@ console.log(remoteVideoRef);
                 ></video>
               </div>
             ) : (
-              <div className="w-52 h-52 bg-green-300 rounded-full flex justify-center items-center">
+              <div className={`w-52 h-52 rounded-full flex justify-center items-center ${callConnected && ' bg-green-300'}`}>
                 <div className="w-48 h-48 bg-sky-500 rounded-full flex justify-center items-center">
                   <FaUserAlt className="text-white text-9xl p-2" />
                 </div>
@@ -290,7 +358,17 @@ console.log(remoteVideoRef);
           <div className="flex justify-center">
             <div className="flex flex-col items-center">
               <h2 className="font-bold text-3xl text-sky-500">Arjun Kumar VS</h2>
-              <p>Call Duration: { callConnected ? formatTime(seconds) : '00:00:00'}</p>
+              {
+                callConnecting && callConnecting ? (
+              <p>Calling....</p>
+                ) : (
+                 <>
+                  <p className="text-green-600">Connected</p>
+                  <p>Call Duration: { callConnected ? formatTime(seconds) : '00:00:00'}</p>
+
+                 </>
+                )
+              }
 
             </div>
           </div>

@@ -9,8 +9,10 @@ import { ICommonRepository } from "./ICommonRepository";
 
 
 export class MongoCommonRepository implements ICommonRepository{
-    async CreateNewMessageToDb(message: Message): Promise<Message | any> {
-        const newMessage = new MessageModel(message);
+    async CreateNewMessageToDb(message: any): Promise<Message | any> {
+      console.log(message )
+      console.log("😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️")
+        const newMessage = new MessageModel(message.messageData);
         const save =   await newMessage.save();
   
         return save;

@@ -15,6 +15,10 @@ const MessageSchema = new mongoose.Schema({
     enum: ["User", "Admin"], 
     required: true 
   },
+  type: {
+    type: String,
+    required: true,
+  },
   text: { 
     type: String, 
     required: true 

@@ -39,8 +39,7 @@ const AdminChatListSection: React.FC = () => {
   const [startDate, setStartDate] = useState<string>('');
   const [endDate, setEndDate] = useState<string>('');
 
-
-const fetchConversations = async () => {
+  const fetchConversations = async () => {
     try {
       const response = await axios.get('/api/conversations_list', {
         params: {
@@ -66,7 +65,7 @@ const fetchConversations = async () => {
     }
   };
   
-const fetchAdminsProperties = async () => {
+  const fetchAdminsProperties = async () => {
     try {
       const res = await fetch(`/api/get_admin_properties/${currentAdmin._id}`);
       const data = await res.json();
@@ -76,12 +75,12 @@ const fetchAdminsProperties = async () => {
     }
   };
 
-useEffect(() => {
+  useEffect(() => {
     fetchConversations();
     fetchAdminsProperties();
   }, [currentPage, propertyFilter, startDate, endDate]);
 
-useEffect(() => {
+  useEffect(() => {
     socket.on('connect', () => {
       console.log('Connected to socket server with ID:', socket.id);
     });
@@ -105,7 +104,8 @@ useEffect(() => {
     });
 
     socket.on('update conversation', () => {
-      fetchConversations();console.log("updated the conversation 💕💕💕💕💕💕💕🤷‍♂️🤷‍♂️🤷‍♂️📀📀📀📀📀📀📀📀")
+      fetchConversations();
+      console.log("updated the conversation 💕💕💕💕💕💕💕🤷‍♂️🤷‍♂️🤷‍♂️📀📀📀📀📀📀📀📀")
     });
 
     return () => {
@@ -115,15 +115,15 @@ useEffect(() => {
     };
   }, [currentPage, propertyFilter, startDate, endDate]);
 
-const handlePreviousPage = () => {
+  const handlePreviousPage = () => {
     setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
   };
 
-const handleNextPage = () => {
+  const handleNextPage = () => {
     setCurrentPage((prevPage) => Math.min(prevPage + 1, totalPages));
   };
 
-const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
     const searchText = e.target.value.toLowerCase();
     setSearchTerm(searchText);
 
@@ -133,16 +133,41 @@ const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
     setConversations(filtered);
   };
 
-const handleFilterChatByProperty = (data: string) => {
+  const handleFilterChatByProperty = (data: string) => {
     setSearchTerm('');
     setPropertyFilter(data);
   };
 
-const clearSearch = () => {
+  const clearSearch = () => {
     setSearchTerm('');
     fetchConversations(); // Refetch conversations to reset the filtered state
   };
   
+  const getUserTypeBanner = (userType: string) => {
+    let bannerColor = '';
+    let bannerText = '';
+
+    switch (userType) {
+      case "Unknown":
+        bannerColor = 'text-gray-900';
+        bannerText = 'Unknown';
+        break;
+      case "Unverified":
+        bannerColor = 'text-yellow-500';
+        bannerText = 'Unverified';
+        break;
+      default:
+        bannerColor = 'text-green-600';
+        bannerText = 'Verified';
+        break;
+    }
+
+    return (
+      <span className={`absolute top-3 -left-2 -rotate-45 ${bannerColor}  text-xs font-semibold p-1 rounded-lg`}>
+        {bannerText}
+      </span>
+    );
+  };
 
   return (
     <div className="bg-gray-50 min-h-screen p-4">
@@ -156,8 +181,8 @@ const clearSearch = () => {
         <div className="flex flex-col gap-4">
           <div className="flex flex-col lg:flex-row justify-between bg-sky-500 p-4 rounded">
             <div className="flex gap-4 lg:gap-16 justify-center items-center px-2 lg:px-5">
-            <button onClick={()=> handleFilterChatByProperty('All')} className="py-3 px-8  cursor-pointer text-sm rounded-full bg-white lg:px-16 hover:bg-slate-200">All chats</button>
-            <div className="flex relative">
+              <button onClick={() => handleFilterChatByProperty('All')} className="py-3 px-8 cursor-pointer text-sm rounded-full bg-white lg:px-16 hover:bg-slate-200">All chats</button>
+              <div className="flex relative">
                 <select
                   onChange={(e: ChangeEvent<HTMLSelectElement>) => handleFilterChatByProperty(e.target.value)}
                   className="py-3 bg-white px-8 lg:px-16 text-xs rounded-full"
@@ -168,11 +193,9 @@ const clearSearch = () => {
                   ))}
                 </select>
               </div>
-             
             </div>
 
             <div className="flex flex-col lg:flex-row gap-4 mt-4 lg:mt-0">
-                   
               <div className="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-4">
                 <div className="flex items-center space-x-2">
                   <label htmlFor="start-date" className="text-xs">Start Date:</label>
@@ -198,31 +221,33 @@ const clearSearch = () => {
           </div>
 
           <div className="flex flex-col gap-4 overflow-y-auto h-[380px]">
-  {conversations && conversations.map((conversation: any) => (
-    <Link to={`/admin_chat?conId=${conversation._id}`} key={conversation._id}>
-      <div className="flex items-center justify-between border-2 p-4 rounded hover:bg-gray-100 transition">
-        <div className="flex items-center gap-3">
-          <img src="public/userIcon.webp" alt="User" className="h-14 w-14 rounded-full"/>
-          <div className="flex flex-col">
-          <p className="text-xs text-sky-500 md:text-sm">({conversation?.propertyId?.propertyName})</p>
-            <p className="text-md text-gray-600 font-semibold md:text-xl">{conversation?.userId?.username} </p>
-            <p className="text-xs text-gray-400 md:text-sm">{conversation?.lastMessage?.text}</p>
+            {conversations && conversations.map((conversation: any) => (
+              <Link to={`/admin_chat?conId=${conversation._id}`} key={conversation._id}>
+                <div className="flex items-center justify-between border-2 p-4 rounded hover:bg-gray-100 transition relative">
+                  <div className="absolute top-0 left-0 w-full h-full flex justify-center items-center">
+                    {getUserTypeBanner(conversation.propertyId.userType)}
+                  </div>
+                  <div className="flex items-center gap-3 relative z-10 mt-3">
+                    <img src="public/userIcon.webp" alt="User" className="h-14 w-14 rounded-full"/>
+                    <div className="flex flex-col">
+                      <p className="text-xs text-sky-500 md:text-sm">({conversation?.propertyId?.propertyName})</p>
+                      <p className="text-md text-gray-600 font-semibold md:text-xl">{conversation?.userId?.username}</p>
+                      <p className="text-xs text-gray-400 md:text-sm">{conversation?.lastMessage?.text}</p>
+                    </div>
+                  </div>
+
+                  <div className="flex flex-col justify-center items-center gap-1">
+                    <span className="text-xs md:text-md">{new Date(conversation?.lastMessage?.time as any).toLocaleTimeString()}</span>
+                    {conversation?.lastMessage?.unread as number > 0 && (
+                      <span className="bg-sky-500 text-white w-6 h-6 rounded-full flex justify-center items-center">
+                        {conversation?.lastMessage?.unread}
+                      </span>
+                    )}
+                  </div>
+                </div>
+              </Link>
+            ))}
           </div>
-        </div>
-
-        <div className="flex flex-col justify-center items-center gap-1">
-          <span className="text-xs md:text-md">{new Date(conversation?.lastMessage?.time as any).toLocaleTimeString()}</span>
-          {conversation?.lastMessage?.unread as number > 0 && (
-            <span className="bg-sky-500 text-white w-6 h-6 rounded-full flex justify-center items-center">
-              {conversation?.lastMessage?.unread}
-            </span>
-          )}
-        </div>
-      </div>
-    </Link>
-  ))}
-</div>
-
 
           <div className="flex justify-between items-center">
             <button

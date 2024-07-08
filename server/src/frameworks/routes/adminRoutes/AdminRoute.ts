@@ -126,7 +126,7 @@ router.post('/edit_unknown_username', async(req, res)=>{
         console.log("🤷‍♂️🤷‍♂️🤷‍♂️🤷‍♂️🔥🔥🔥🔥📀💕💕💕💕💕🤷‍♂️⛔⛔⛔👍👍😥😥😥😥😥😥😥😥😥😥")
         const editedUserdata = await UserModel.findOneAndUpdate({_id: req.body.id}, {
             $set: {
-                username: req.body.username + "(unknown)"
+                username: req.body.username
             }
         }, { new: true});
 

@@ -50,7 +50,7 @@ export default function App() {
               <Route path="/generate_qr" element={<GenerateQrCodePage />} />
               <Route path="/chat_list" element={<AdminChatListPage />} />
               <Route path="/admin_chat" element={<AdminChatPage />} />
-              <Route path="/admin_call_page" element={<AdminCallPage />} />
+              <Route path="/call_admin_page" element={<AdminCallPage />} />
             </Route>
 
 

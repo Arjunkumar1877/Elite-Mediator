@@ -4,7 +4,7 @@ import { HiSpeakerWave, HiSpeakerXMark } from "react-icons/hi2";
 import { IoIosMicOff, IoIosMic } from "react-icons/io";
 import { useSocket } from "../../contexts/AdminContext";
 import { useEffect, useRef, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -27,9 +27,13 @@ const AdminCallPage: React.FC = () => {
   const conId = query.get("conId");
   const incommingId = query.get("incommingId");
   const callerId = query.get("callerId");
+
+
+
   const [isMuted, setIsMuted] = useState<boolean>(false);
   const [seconds, setSeconds] = useState<number>(0);
   const [callConnected, setCallConnected] = useState<boolean>(false);
+  const [callConnecting, setCallConnecting] = useState<boolean>(true);
 
 
 
@@ -295,6 +299,7 @@ const AdminCallPage: React.FC = () => {
 
     pc.current.ontrack = (event) => {
       if (event.streams && event.streams.length > 0) {
+        setCallConnecting(false)
         setCallConnected(true)
         remoteVideoRef.current.srcObject = event.streams[0];
       }
@@ -359,7 +364,7 @@ const AdminCallPage: React.FC = () => {
           </div>
         ) : (
          <div className="flex flex-col justify-center items-center">
-           <div className="w-52 h-52 bg-green-300 rounded-full flex justify-center items-center">
+            <div className={`w-52 h-52 rounded-full flex justify-center items-center ${callConnected && ' bg-green-300'}`}>
             <div className="w-48 h-48 bg-sky-500 rounded-full flex justify-center items-center">
               <FaUserAlt className="text-white text-9xl p-2" />
             </div>
@@ -382,7 +387,17 @@ const AdminCallPage: React.FC = () => {
       <div className="flex justify-center">
         <div className="flex flex-col items-center">
           <h2 className="font-bold text-3xl text-sky-500">{callerName}</h2>
-          <p>Call Duration: { callConnected ? formatTime(seconds) : '00:00:00'}</p>
+          {
+                callConnecting && callConnecting ? (
+              <p>Calling....</p>
+                ) : (
+                 <>
+                  <p className="text-green-600">Connected</p>
+                  <p>Call Duration: { callConnected ? formatTime(seconds) : '00:00:00'}</p>
+
+                 </>
+                )
+              }
         </div>
       </div>
     </div>

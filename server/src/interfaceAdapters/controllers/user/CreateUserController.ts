@@ -43,12 +43,5 @@ export class CreateUserController {
     }
   }
 
-  async CreateUnknownUserControl(req: Req, res: Res): Promise<void>{
-    try {
-      const data = await this.isavenewuserdatausecase.SaveNewUser(req.body);
-      res.json(data);
-    } catch (error) {
-      console.log(error)
-    }
-  }
+
 }

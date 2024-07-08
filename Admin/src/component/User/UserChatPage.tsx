@@ -17,15 +17,27 @@ import { Toaster, toast } from "react-hot-toast";
 
 const socket = io("http://localhost:7000");
 
+
 interface Message {
-  _id: string;
-  conversationId: string;
+  _id?: string;
+  conversationId: string | number | null;
   senderId: string;
   senderModel: "User" | "Admin";
+  type: "text" | string;
   text: string;
-  createdAt: string;
+  createdAt?: string ;
   senderName?: string;
 }
+
+
+interface Conversation {
+  _id: string;
+  userId: { _id: string; username: string, phone?: number };
+  adminId: string;
+  propId: string;
+  propertyId: { userType: string };
+}
+
 
 const UserChatPage: React.FC = () => {
   const [newMessage, setNewMessage] = useState<string>("");
@@ -38,6 +50,19 @@ const UserChatPage: React.FC = () => {
   const query = new URLSearchParams(location.search);
   const conId = query.get("conId");
   const [showOptions, setShowOptions] = useState<boolean>(false);
+  const [imageUploadProgress, setImageUploadProgress] = useState<number | null>(
+    null
+  );
+  const [imageUploadError, setImageUploadError] = useState<string | null>(null);
+  const [messageData, setMessageData] = useState<Message>({
+    conversationId: conId,
+    senderId: currentUser._id,
+    senderModel: "User",
+    type: 'text',
+    text: ''
+  });
+  
+  const fileRef = useRef<HTMLInputElement>(null);
 
 
 
@@ -45,7 +70,9 @@ const UserChatPage: React.FC = () => {
     socket.emit("join room", conId);
     socket.on("incoming-call", (data: any) => {
       console.log(data);
-      navigate(`/call_page_user?conId=${data.conId}&incommingId=${data.incommingId}&callerId=${data.callerId}`);
+      if(data.callerId){
+        navigate(`/call_page_user?conId=${data.conId}&incommingId=${data.incommingId}&callerId=${data.callerId}`);
+      }
     });
   }, [conId, currentUser.username]);
 
@@ -121,14 +148,11 @@ const UserChatPage: React.FC = () => {
   }, [currentUser, conId, navigate]);
 
   const sendMessage = async () => {
-    if (newMessage.trim() === "" || !conId) return;
+   console.log("sending message")
 
     try {
       const response = await axios.post<Message>("/user/send_message", {
-        conversationId: conId,
-        senderId: currentUser._id,
-        senderModel: "User",
-        text: newMessage,
+       messageData
       });
 
       socket.emit("chat message", response.data, conId, currentUser.adminId);
@@ -215,7 +239,7 @@ const UserChatPage: React.FC = () => {
         <div className="flex-1 overflow-y-auto py-4">
           <div className="flex flex-col gap-4 px-5">
             {messages?.length > 0 &&
-              messages.map((message: Message) => (
+              messages.map((message: any) => (
                 <div
                   key={message._id}
                   className={`flex ${
@@ -242,9 +266,26 @@ const UserChatPage: React.FC = () => {
                           : message.senderName || "Admin"}
                       </span>
                     </div>
-                    <div className="p-3 rounded-xl bg-sky-100 text-sm overflow-hidden break-words">
-                      {message.text}
-                    </div>
+                    {
+                  message.type === 'text' ? (
+                    <div className="p-3 rounded-xl bg-sky-100 text-sm break-words">
+                    {message.text}
+                  </div>
+                  ): (
+                    <div className="p-3 rounded-xl bg-sky-100 text-sm break-words">
+                               { message.type.startsWith("image/") ? (
+              <img src={message.text} alt="Shared file" style={{ maxWidth: "200px" }} />
+            ) : (
+              <video controls style={{ maxWidth: "200px" }}>
+                <source src={message.text} type={message.type} />
+              </video>
+            )}
+
+                  </div>
+
+
+                  )
+                 }
                   </div>
                   {message.senderModel === "User" && (
                     <img
@@ -269,8 +310,8 @@ const UserChatPage: React.FC = () => {
             type="text"
             placeholder="Write something..."
             className="flex-1 mx-3 p-2 rounded-lg border bg-sky-100 border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-500"
-            value={newMessage}
-            onChange={(e) => setNewMessage(e.target.value)}
+            value={messageData.text}
+            onChange={(e) => setMessageData({...messageData, text: e.target.value})}
             onKeyPress={(e) => e.key === "Enter" && sendMessage()}
           />
           <HiOutlinePaperClip className="text-sky-500 text-2xl cursor-pointer" />

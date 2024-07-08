@@ -6,6 +6,7 @@ export class SendMessageController {
     constructor(private isendmessageusecase: ISendUserMessageUseCase) {}
 
     async SendMessageControl(req: Req, res: Res): Promise<void> {
+        console.log(req.body)
         const messageData = await this.isendmessageusecase.SendMessages(req.body);
         
         // Emit the new message event

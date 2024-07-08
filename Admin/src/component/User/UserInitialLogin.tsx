@@ -205,18 +205,13 @@ const phonenum:number = 0;
     }
 
     if (propertyData?.userType === "Unverified") {
-      const userIdS = formData.phone + "" + Date.now();
-      const updatedFormData = {
-        ...formData,
-        username: formData.username + "(unverified)",
-        userId: userIdS,
-      };
+  
       const res = await fetch("/user/create_unverified_user", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(updatedFormData),
+        body: JSON.stringify(formData),
       });
 
       if (!res.ok) {

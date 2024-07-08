@@ -1,338 +1,3 @@
-// import { useEffect, useState, useRef } from "react";
-// import { MdArrowBackIosNew } from "react-icons/md";
-// import { IoCall } from "react-icons/io5";
-// import { FaVideo } from "react-icons/fa";
-// import { HiDotsVertical } from "react-icons/hi";
-// import { HiOutlinePaperClip } from "react-icons/hi2";
-// import { BsSend } from "react-icons/bs";
-// import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
-// import { ToastContainer, toast } from 'react-toastify';
-// import 'react-toastify/dist/ReactToastify.css';
-// import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
-// import axios from "axios";
-// import { useSelector } from "react-redux";
-// import { useSocket } from "../../contexts/AdminContext";
-// import { address } from 'address';
-// import { FaRegEdit } from "react-icons/fa";
-
-
-
-// interface Message {
-//   _id: string;
-//   conversationId: string;
-//   senderId: string;
-//   senderModel: "User" | "Admin";
-//   text: string;
-//   createdAt: string;
-//   senderName?: string;
-// }
-
-// interface Conversation {
-//   _id: string;
-//   userId: any;
-//   adminId: string;
-//   propId: string;
-// }
-
-// const AdminChatSection: React.FC = () => {
-//   const [selectedConversation, setSelectedConversation] = useState<Conversation | null | any>(null);
-//   const [messages, setMessages] = useState<Message[]>([]);
-//   const [newMessage, setNewMessage] = useState<string>("");
-//   const [loading, setLoading] = useState<boolean>(true);
-//   const messagesEndRef = useRef<HTMLDivElement>(null);
-//   const { currentAdmin } = useSelector((state: any) => state?.admin);
-//   const navigate = useNavigate();
-//   const  {socket, setIsVideoCall }: any = useSocket();
-//   const [editingName, setEditingName] = useState<boolean>(false);
-//   const [newName, setNewName] = useState<string>('');
-//   const location = useLocation();
-//   const query = new URLSearchParams(location.search);
-//   const conId = query.get("conId");
-
- 
-//   useEffect(() => {
-//     socket.emit("join room", conId); 
-//     const handleIncomingCall = (data: any) => {
-//       console.log(data);
-//       navigate(`/admin_call_page?conId=${data.conId}&incommingId=${data.incommingId}&callerId=${data.callerId}`);
-//     };
-    
-//     socket.on('incoming-call', handleIncomingCall);
-
-//     return () => {
-//       socket.off('incoming-call', handleIncomingCall);
-//     };
-//   }, [conId, navigate]);
-
-//   const startCall = async (isVideo = false) => {
-//     try {
-//       setIsVideoCall(isVideo);
-
-//       const res = await fetch("/api/start_call", {
-//         method: "POST",
-//         headers: {
-//           "Content-Type": "application/json",
-//         },
-//         body: JSON.stringify({
-//           conversationId: conId,
-//           callerId: currentAdmin._id,
-//           adminId: currentAdmin._id,
-//           userId: selectedConversation?.userId._id,
-//           caller: "Admin",
-//           callType:  isVideo ? 'video' : 'audio',
-//           receiver: "User"
-//         }),
-//       });
-
-//       const data = await res.json();
-//       console.log(data);
-
-//       if (data) {
-//         socket.emit("incoming-call", { conId, incommingId: currentAdmin._id, adminId: currentAdmin._id, callerId: data._id });
-//       }
-//     } catch (error) {
-//       console.error("Error starting call:", error);
-//     }
-//   };
-
-//   const fetchMessages = async () => {
-//     try {
-//       const response = await axios.get(`/api/get_messages/${conId}`);
-//       setMessages(response.data);
-//       setLoading(false);
-//       scrollToBottom();
-//     } catch (error) {
-//       console.error("Error fetching messages:", error);
-//       setLoading(false);
-//     }
-//   };
-
-//   const fetchSelectedConversation = async () => {
-//     try {
-//       const res = await fetch(`/api/selected_conversation/${conId}`);
-//       const data = await res.json();
-//       setSelectedConversation(data);
-//       setNewName(selectedConversation?.userId?.username)
-//     } catch (error) {
-//       console.error("Error fetching selected conversation:", error);
-//     }
-//   };
-
-//   console.log(selectedConversation)
-
-//   useEffect(() => {
-//     const updateReadCount = async () => {
-//       try {
-//         const res = await fetch(`/api/update_conversation_unread_count/${conId}`);
-//         const data = await res.json();
-//         console.log(data);
-//       } catch (error) {
-//         console.error("Error updating unread count:", error);
-//       }
-//     };
-
-//     updateReadCount();
-//     fetchMessages();
-//     fetchSelectedConversation();
-
-//     const handleChatMessage = (msg: any) => {
-//       if (msg.conversationId === conId) {
-//         setMessages((prevMessages) => [...prevMessages, msg]);
-//       }
-//     };
-
-//     socket.emit("update conversation", currentAdmin._id);
-//     socket.on("recieve_message", handleChatMessage);
-
-//     return () => {
-//       socket.off("recieve_message", handleChatMessage);
-//     };
-//   }, [conId, currentAdmin._id, editingName]);
-
-//   const sendMessage = async () => {
-//     if (newMessage.trim() === "" || !conId) return;
-
-//     try {
-//       const response = await axios.post("/api/send_message", {
-//         conversationId: conId,
-//         senderId: currentAdmin._id,
-//         senderModel: "Admin",
-//         text: newMessage,
-//       });
-
-//       socket.emit("chat message", response.data, conId, currentAdmin._id);
-//       setNewMessage("");
-//       scrollToBottom();
-//     } catch (error) {
-//       console.error("Error sending message:", error);
-//     }
-//   };
-
-//   const scrollToBottom = () => {
-//     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-//   };
-
-//   useEffect(() => {
-//     scrollToBottom();
-//   }, [messages]);
-
-//   if (loading) {
-//     return <div>Loading...</div>;
-//   }
-
-//   const handleChangeName = async(userId: string, newName: string)=>{
-//     try {
-//       const res = await fetch('/api/edit_unknown_username', {
-//         method: 'POST',
-//         headers: {
-//           'Content-Type': 'application/json'
-//         },
-//         body: JSON.stringify({id: userId, username: newName})
-//       });
-
-//       const data:any = await res.json();
-//       if(data){
-//         console.log("edit success      📀📀📀📀📀📀📀📀📀📀📀📀📀📀")
-//         // console.log(data)
-//         setEditingName(false);
-//         fetchSelectedConversation();
-//       }
-//     } catch (error) {
-//       console.log(error)
-//     }
-//   }
-
-//   return (
-//     <div className=" h-screen bg-gray-50 flex flex-col">
-//       <ToastContainer />
-//       <div className="border-2 flex flex-col h-full p-4 bg-white shadow-lg">
-//         <div className="flex justify-between items-center px-5 py-2 border-b-2">
-//           <div className="flex gap-5 items-center">
-//             <Link to={"/chat_list"}>
-//               <MdArrowBackIosNew className="text-xl cursor-pointer" />
-//             </Link>
-//             <img
-//               src="/public/userIcon.webp"
-//               className="w-10 h-10 rounded-full"
-//               alt="User"
-//             />
-//             <span className="text-xl font-bold flex">
-//               {
-//                 editingName ? (
-// <div className="flex justify-center items-center gap-1 md:gap-2">
-// <input type="text" value={newName} className="w-[150px] border-2 rounded md:w-[300px] md:p-1" onChange={(e: any)=> setNewName(e.target.value)} /> <button className="text-xs bg-sky-500  text-white px-1 py-1.5 rounded md:p-2 md:text-sm hover:bg-sky-600" onClick={()=> handleChangeName(selectedConversation?.userId._id, newName)} >Save</button>
-// </div>
-//                 ): (
-//                  <div className="flex justify-center gap-2 items-center text-lg md:text-2xl">
-//                   {selectedConversation?.userId?.username} { selectedConversation?.propertyId?.userType === 'Unknown' && <FaRegEdit className="cursor-pointer text-sky-500 hover:text-sky-800" onClick={()=> setEditingName(true)} />}
-//                  </div>
-//                 )
-//               }
-//             </span>
-//           </div>
-//           <div className="flex gap-5 items-center text-lg md:text-2xl text-sky-500 ">
-//             <IoCall
-//               className="cursor-pointer hover:text-sky-800"
-//               onClick={() => startCall(false)}
-//             />
-//             <FaVideo
-//               className="cursor-pointer hover:text-sky-800"
-//               onClick={() => startCall(true)}
-//             />
-
-
-
-//             <HiDotsVertical className="cursor-pointer hover:text-sky-800" />
-//           </div>
-//         </div>
-
-//         <div className="flex-1 overflow-y-auto py-4">
-//           <div className="flex flex-col gap-4 px-5">
-//             {messages.map((message) => (
-//               <div
-//                 key={message._id}
-//                 className={`flex ${
-//                   message.senderModel === "Admin"
-//                     ? "justify-end"
-//                     : "justify-start"
-//                 } gap-3`}
-//               >
-//                 {message.senderModel !== "Admin" && (
-//                   <img
-//                     src="/public/userIcon.webp"
-//                     alt="User"
-//                     className="w-10 h-10 rounded-full"
-//                   />
-//                 )}
-//                 <div className="flex flex-col max-w-[300px] md:max-w-[350px] lg:max-w-[650px]">
-//                   <div className="flex justify-between text-xs text-slate-400">
-//                     <span>
-//                       {new Date(message.createdAt).toLocaleTimeString()}
-//                     </span>
-//                     <span>
-//                       {message.senderModel === "Admin"
-//                         ? "You"
-//                         : message.senderName}
-//                     </span>
-//                   </div>
-//                   <div className="p-3 rounded-xl bg-sky-100 text-sm break-words">
-//                     {message.text}
-//                   </div>
-//                 </div>
-//                 {message.senderModel === "Admin" && (
-//                   <img
-//                     src="/public/userIcon.webp"
-//                     alt="User"
-//                     className="w-10 h-10 rounded-full"
-//                   />
-//                 )}
-//               </div>
-//             ))}
-//             <div ref={messagesEndRef}></div>
-//           </div>
-//         </div>
-      
-//         <div className="flex justify-between items-center px-5 py-2 bg-sky-200 rounded-lg mt-2">
-//           <img
-//             src="/public/userIcon.webp"
-//             className="w-10 h-10 rounded-full"
-//             alt="User"
-//           />
-//           <input
-//             type="text"
-//             placeholder="Write something..."
-//             className="flex-1 mx-3 p-2 rounded-lg border bg-sky-100 border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-500"
-//             value={newMessage}
-//             onChange={(e) => setNewMessage(e.target.value)}
-//             onKeyPress={(e) => e.key === "Enter" && sendMessage()}
-//           />
-//           <HiOutlinePaperClip className="text-sky-500 text-2xl cursor-pointer" />
-//           <div
-//             className="p-2 rounded-full bg-sky-500 ml-3 cursor-pointer"
-//             onClick={sendMessage}
-//           >
-//             <BsSend className="text-white text-2xl" />
-//           </div>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default AdminChatSection;
-
-
-
-
-
-
-
-
-
-
-
-
-
 import React, { useEffect, useState, useRef } from "react";
 import { MdArrowBackIosNew } from "react-icons/md";
 import { IoCall } from "react-icons/io5";
@@ -349,16 +14,22 @@ import { useSelector } from "react-redux";
 import { useSocket } from "../../contexts/AdminContext";
 import { FaWhatsapp } from "react-icons/fa6";
 import { RiDeleteBin6Line } from "react-icons/ri";
+// import { storage } from "./firebaseConfig"; 
 import { MdCleaningServices } from "react-icons/md";
+import { getDownloadURL, getStorage, ref, uploadBytesResumable } from "firebase/storage";
+import app, { storage } from "../../firebase/firebase";
+import ReactLoading from 'react-loading';
+
 
 
 interface Message {
-  _id: string;
-  conversationId: string;
+  _id?: string;
+  conversationId: string | number | null;
   senderId: string;
   senderModel: "User" | "Admin";
+  type: "text" | string;
   text: string;
-  createdAt: string;
+  createdAt?: string ;
   senderName?: string;
 }
 
@@ -381,15 +52,43 @@ const AdminChatSection: React.FC = () => {
   const { socket, setIsVideoCall }: any = useSocket();
   const [editingName, setEditingName] = useState<boolean>(false);
   const [showOptions, setShowOptions] = useState<boolean>(false);
+  const [file, setFile] = useState<any>();
+  const [fileType, setFileType] = useState<any>('text')
   const [newName, setNewName] = useState<string>('');
   const location = useLocation();
   const query = new URLSearchParams(location.search);
   const conId = query.get("conId");
+  const [imageUploadProgress, setImageUploadProgress] = useState<number | null>(
+    null
+  );
+  const [imageUploadError, setImageUploadError] = useState<string | null>(null);
+  const [messageData, setMessageData] = useState<Message>({
+    conversationId: conId,
+    senderId: currentAdmin._id,
+    senderModel: "Admin",
+    type: 'text',
+    text: ''
+  });
+  
+  const fileRef = useRef<HTMLInputElement>(null);
+
+
+  // OnChange event handler
+  const handleMessageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setMessageData({ ...messageData, text: e.target.value });
+  };
+  
 
   useEffect(() => {
     socket.emit("join room", conId); 
+
+
     const handleIncomingCall = (data: any) => {
-      navigate(`/admin_call_page?conId=${data.conId}&incommingId=${data.incommingId}&callerId=${data.callerId}`);
+      console.log(data)
+         if(data){
+      navigate(`/call_admin_page?conId=${data.conId}&incommingId=${data.incommingId}&callerId=${data.callerId}`);
+
+         }
     };
     
     socket.on('incoming-call', handleIncomingCall);
@@ -420,7 +119,8 @@ const AdminChatSection: React.FC = () => {
       });
 
       const data = await res.json();
-      if (data) {
+      if (data._id) {
+        console.log("emitted for calling 💕💕💕💕💕💕💕💕💕💕💕💕💕💕💕💕💕💕💕💕")
         socket.emit("incoming-call", { conId, incommingId: currentAdmin._id, adminId: currentAdmin._id, callerId: data._id });
       }
     } catch (error) {
@@ -459,7 +159,7 @@ const AdminChatSection: React.FC = () => {
         console.error("Error updating unread count:", error);
       }
     };
-
+    
     updateReadCount();
     fetchMessages();
     fetchSelectedConversation();
@@ -479,18 +179,20 @@ const AdminChatSection: React.FC = () => {
   }, [conId, currentAdmin._id, socket]);
 
   const sendMessage = async () => {
-    if (newMessage.trim() === "" || !conId) return;
+    // if (newMessage.trim() === "" || !conId) return;
+    console.log(messageData)
 
     try {
       const response = await axios.post<Message>("/api/send_message", {
-        conversationId: conId,
-        senderId: currentAdmin._id,
-        senderModel: "Admin",
-        text: newMessage,
+       messageData
       });
 
       socket.emit("chat message", response.data, conId, currentAdmin._id);
       setNewMessage("");
+      setMessageData({...messageData, text: ''});
+      setFileType('text')
+      setFile(null);
+      setMessageData({...messageData, type: 'text', text: ''})
       scrollToBottom();
     } catch (error) {
       console.error("Error sending message:", error);
@@ -500,6 +202,68 @@ const AdminChatSection: React.FC = () => {
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
+
+  
+
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      console.log(e.target.files);
+      console.log(file.type)
+      setFileType(file.type);
+      setFile(file);
+      handleFileUpload(file);
+    }
+  };
+  
+
+const handleFileUpload = async (file: File) => {
+  if (!file) {
+    setImageUploadError("Please select a file");
+    return;
+  }
+
+  try {
+    setImageUploadError(null);
+    const storage = getStorage(app);
+    const fileName = new Date().getTime() + "_" + file.name;
+    const storageRef = ref(storage, fileName);
+    const uploadTask = uploadBytesResumable(storageRef, file);
+
+    uploadTask.on(
+      "state_changed",
+      (snapshot) => {
+        const progress =
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        setImageUploadProgress(progress);
+      },
+      (error) => {
+        setImageUploadError("File upload failed: " + error.message);
+        setImageUploadProgress(null);
+      },
+      () => {
+        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+          setImageUploadProgress(null);
+          setImageUploadError(null);
+          console.log(downloadURL);
+          setFile(downloadURL);
+          setMessageData((prev) => ({
+            ...prev,
+            type: file.type,
+            text: downloadURL
+          }));
+        });
+      }
+    );
+  } catch (error) {
+    setImageUploadError("File upload failed");
+    setImageUploadProgress(null);
+  }
+};
+
+
+
 
   useEffect(() => {
     scrollToBottom();
@@ -525,7 +289,7 @@ const AdminChatSection: React.FC = () => {
     }
   }
 
-  const formatTime = (dateString: string) => {
+  const formatTime = (dateString: any) => {
     const options: Intl.DateTimeFormatOptions = {
       hour: '2-digit',
       minute: '2-digit',
@@ -533,10 +297,6 @@ const AdminChatSection: React.FC = () => {
     };
     return new Date(dateString).toLocaleTimeString([], options);
   };
-
-  if (loading) {
-    return <div>Loading...</div>;
-  }
 
   const handleClearChat = async()=>{
     console.log("clearing chat clicked")
@@ -550,6 +310,12 @@ const AdminChatSection: React.FC = () => {
         autoClose: 1000 
     });
     }
+  }
+
+  console.log(messageData)
+
+  if (loading) {
+    return <div>Loading...</div>;
   }
 
   return (
@@ -602,7 +368,7 @@ const AdminChatSection: React.FC = () => {
 
         <div className="flex-1 overflow-y-auto py-4">
           <div className="flex flex-col gap-4 px-5">
-            {messages.map((message) => (
+            {messages.map((message: Message) => (
               <div
                 key={message._id}
                 className={`flex ${message.senderModel === "Admin" ? "justify-end" : "justify-start"} gap-3`}
@@ -616,12 +382,29 @@ const AdminChatSection: React.FC = () => {
                 )}
                 <div className="flex flex-col max-w-[300px] md:max-w-[350px] lg:max-w-[650px]">
                   <div className="flex justify-between text-xs text-slate-400">
-                    <span>{formatTime(message.createdAt)}</span>
+                    <span>{formatTime(message?.createdAt)}</span>
                     <span>{message.senderModel === "Admin" ? "You" : message.senderName}</span>
                   </div>
-                  <div className="p-3 rounded-xl bg-sky-100 text-sm break-words">
+                 {
+                  message.type === 'text' ? (
+                    <div className="p-3 rounded-xl bg-sky-100 text-sm break-words">
                     {message.text}
                   </div>
+                  ): (
+                    <div className="p-3 rounded-xl bg-sky-100 text-sm break-words">
+                               { message.type.startsWith("image/") ? (
+              <img src={message.text} alt="Shared file" style={{ maxWidth: "200px" }} />
+            ) : (
+              <video controls style={{ maxWidth: "200px" }}>
+                <source src={message.text} type={message.type} />
+              </video>
+            )}
+
+                  </div>
+
+
+                  )
+                 }
                 </div>
                 {message.senderModel === "Admin" && (
                   <img
@@ -635,26 +418,57 @@ const AdminChatSection: React.FC = () => {
             <div ref={messagesEndRef}></div>
           </div>
         </div>
-
+       
         <div className="flex justify-between items-center px-5 py-2 bg-sky-200 rounded-lg mt-2">
-          <img
-            src="/public/userIcon.webp"
-            className="w-10 h-10 rounded-full"
-            alt="User"
-          />
-          <input
-            type="text"
-            placeholder="Write something..."
-            className="flex-1 mx-3 p-2 rounded-lg border bg-sky-100 border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-500"
-            value={newMessage}
-            onChange={(e) => setNewMessage(e.target.value)}
-            onKeyPress={(e) => e.key === "Enter" && sendMessage()}
-          />
-          <HiOutlinePaperClip className="text-sky-500 text-2xl cursor-pointer" />
-          <div className="p-2 rounded-full bg-sky-500 ml-3 cursor-pointer" onClick={sendMessage}>
-            <BsSend className="text-white text-2xl" />
-          </div>
-        </div>
+  <img
+    src="/public/userIcon.webp"
+    className="w-10 h-10 rounded-full"
+    alt="User"
+  />
+{
+  fileType && fileType === 'text' &&   <input
+  type="text"
+  placeholder="Write something..."
+  className="flex-1 mx-3 p-2 rounded-lg border bg-sky-100 border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-500"
+  value={messageData.text}
+  onChange={handleMessageChange}
+  onKeyPress={(e) => e.key === "Enter" && sendMessage()}
+/>
+}
+<div className="flex">
+  {imageUploadProgress && imageUploadProgress < 100 ? (
+    <ReactLoading type="bubbles" className="text-sky-500" color={'skyBlue'} width={100} />
+  ) : (
+    file && (
+      <>
+        {fileType && fileType.startsWith('image/') ? (
+          <img src={file} alt="Selected file" width={250} />
+        ) : (
+          <video src={file} width={250} controls />
+        )}
+      </>
+    )
+  )}
+
+  <input
+    type="file"
+    ref={fileRef}
+    name=""
+    id=""
+    onChange={handleFileChange}
+    hidden
+  />
+
+  <HiOutlinePaperClip
+    onClick={() => fileRef.current?.click()}
+    className="text-sky-500 text-2xl cursor-pointer"
+  />
+</div>
+
+  <div className="p-2 rounded-full bg-sky-500 ml-3 cursor-pointer" onClick={sendMessage}>
+    <BsSend className="text-white text-2xl" />
+  </div>
+</div>
 
        {
         showOptions &&  <div className="w-34 h-39 absolute bg-slate-700 opacity-70 right-14 rounded top-12 flex flex-col p-3 gap-4 md:w-40">
