@@ -67,7 +67,7 @@ const AdminChatListSection: React.FC = () => {
 
   const fetchAdminsProperties = async () => {
     try {
-      const res = await fetch(`/api/get_admin_properties/${currentAdmin._id}`);
+      const res = await fetch(`/api/get_admin_property_data/${currentAdmin._id}`);
       const data = await res.json();
       setProperties(data);
     } catch (error) {

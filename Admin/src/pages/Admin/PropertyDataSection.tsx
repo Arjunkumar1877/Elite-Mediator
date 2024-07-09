@@ -49,11 +49,12 @@ const PropertyDataSection = () => {
 
   const handleDelete = async (id: string) => {
     try {
-      const res = axios.get(`/api/delete_admin_property_data/${id}`);
+      const res = await axios.get(`/api/delete_admin_property_data/${id}`);
 
-      const data:any = res?.data;
-    } catch (error) {}
-    y;
+      const data:any = res.data;
+    } catch (error) {
+      console.log(error)
+    }
   };
 
   return (

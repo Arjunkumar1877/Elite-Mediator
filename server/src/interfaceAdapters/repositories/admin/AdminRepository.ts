@@ -9,6 +9,7 @@ import { Conversation } from "../../../entities/models/common/Conversation";
 import moment from "moment";
 import { CallModel } from "../../../frameworks/database/models/admin/CallModel";
 import { UserModel } from "../../../frameworks/database/models/user/User";
+import { MessageModel } from "../../../frameworks/database/models/admin/MessageModel";
 
 export class MongoAdminRepository implements IAdminRepository {
   async CreateAdmin(admin: Admin): Promise<any> {
@@ -239,4 +240,16 @@ export class MongoAdminRepository implements IAdminRepository {
       return ''
   }
   }
+
+  async FindAndClearAdminChatMessages(conId: string): Promise<any> {
+    const result = await MessageModel.updateMany(
+      { conversationId: conId },
+      { $set: { adminDeleted: true } }
+  );
+
+  return result;
+
+  }
+
+ 
 }

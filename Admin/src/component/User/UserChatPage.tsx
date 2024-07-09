@@ -11,7 +11,7 @@ import { signoutSuccess, setMessages } from "../../redux/user/UserSlice";
 
 import io from "socket.io-client";
 import { useSocket } from "../../contexts/AdminContext";
-import { MdCleaningServices } from "react-icons/md";
+import { MdCleaningServices, MdOutlineZoomOutMap } from "react-icons/md";
 // import { toast } from "react-toastify";
 import { Toaster, toast } from "react-hot-toast";
 import {
@@ -396,6 +396,15 @@ const handleCancelRecordedAudio = async()=>{
 
 
 
+const downloadImage = (img: string) => {
+  const link = document.createElement('a');
+  link.href = img || '';
+  link.download = 'image.jpg';
+  link.target = '_blank'
+  link.click();
+};
+
+
   console.log(currentUser);
 
 
@@ -469,19 +478,26 @@ const handleCancelRecordedAudio = async()=>{
                         {message.text}
                       </div>
                     ) : (
-                      <div className="p-3 rounded-xl bg-sky-100 text-sm break-words">
+                      <div className="p-2 rounded-xl bg-sky-100 text-sm break-words">
                       {message.type.startsWith("image/") ? (
-                        <img
-                          src={message.text}
-                          alt="Shared file"
-                          className="w-[200px] md:w-[500px]"
-                        />
+                      <div className="relative">
+                      <MdOutlineZoomOutMap
+                        onClick={() => downloadImage(message.text)}
+                        className="text-sky-500 hover:text-sky-800 absolute top-0 left-0 text-3xl  md:text-5xl cursor-pointer"
+                      />
+                      <img
+                        src={message.text}
+                        alt="Shared file"
+                        className="w-[200px] md:w-[500px]"
+                      />
+                    </div>
+                    
                       ) : message.type.startsWith("video/") ? (
                         <video className="w-[200px] md:w-[500px]" controls >
                           <source src={message.text} type={message.type} />
                         </video>
                       ) : (
-                        <audio className="w-[200px] h-[40px] md:w-[300px]" controls>
+                        <audio className="w-[200px] h-[60px] md:w-[500px] " controls>
                         <source src={message.text}
                        type="audio/mpeg" />
                         Your browser does not support the audio element.

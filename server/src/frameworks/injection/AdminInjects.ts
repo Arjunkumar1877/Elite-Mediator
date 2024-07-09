@@ -29,6 +29,10 @@ import { GetAdminCallListUseCase } from '../../useCases/admin/GetAdminCallListUs
 import { GetAdminsCallListController } from '../../interfaceAdapters/controllers/Admin/GetAdminsCallListController';
 import { GetUsersListUseCase } from '../../useCases/admin/GetUsersListUseCase';
 import { GetUsersListController } from '../../interfaceAdapters/controllers/Admin/GetUsersListController';
+import { ClearAdminChatUseCase } from '../../useCases/admin/ClearAdminChatUseCase';
+import { ClearAdminChatMessagesController } from '../../interfaceAdapters/controllers/Admin/ClearAdminChatMessagesController';
+import { EditUnknownUsernameUseCase } from '../../useCases/admin/EditUnknownUsernameUseCase';
+import { EditUnknownUsername } from '../../interfaceAdapters/controllers/Admin/EditUnknownUsername';
 const mongoRepo = new MongoAdminRepository();
 
 // -----------------------------| ADMIN SIGNUP INJECTION ----------------------------------------------------------------------------------------
@@ -39,6 +43,7 @@ export const InjectedAdminSignUpController = new AdminSignupController(adminSign
 // -----------------------------| ADMIN LOGIN VERIFY INJECTION ----------------------------------------------------------------------------------------
 const getUnverifiedAdminUse = new GetUnverifiedAdminDataUsecase(mongoRepo);
 export const InjectedGetUnverifiedAdminController = new GetUnverifiedAdminController(getUnverifiedAdminUse);
+
 
 // -----------------------------| ADMIN LOGIN VERIFY INJECTION ----------------------------------------------------------------------------------------
 const adminGoogleLoginUse = new GoogleAuthUseCase(mongoRepo);
@@ -103,3 +108,13 @@ export const InjectedGetAdminsCallListController = new GetAdminsCallListControll
 // -----------------------------| GET VISITORS  LIST INJECTION ----------------------------------------------------------------------------------------
 const getUsersListUse = new GetUsersListUseCase(mongoRepo);
 export const InjectedGetUsersListController = new GetUsersListController(getUsersListUse);
+
+
+// -----------------------------| CLEAR ADMIN CHAT MESSAGES ----------------------------------------------------------------------------------------
+const clearAdminChatMessagesUse = new ClearAdminChatUseCase(mongoRepo);
+export const InjectedClearAdminChatMessagesController = new ClearAdminChatMessagesController(clearAdminChatMessagesUse);
+
+
+// -----------------------------| CLEAR ADMIN CHAT MESSAGES ----------------------------------------------------------------------------------------
+const editUnknownUsernameUse = new EditUnknownUsernameUseCase(mongoRepo);
+export const InjectedEditUnknownUsernameController = new EditUnknownUsername(editUnknownUsernameUse);

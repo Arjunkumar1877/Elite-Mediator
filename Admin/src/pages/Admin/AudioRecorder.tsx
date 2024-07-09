@@ -55,11 +55,11 @@ const AudioRecorder: React.FC<AudioRecorderProps> = ({ onRecordingComplete }) =>
   return (
     <div>
       {!recording ? (
-        <button onClick={startRecording}><FaMicrophone /></button>
+        <button onClick={startRecording}><FaMicrophone className='text-2xl text-sky-500' /></button>
       ) : (
         <div className='flex gap-1'>
-          <button onClick={stopRecording}><FaRegStopCircle /></button>
-          <ReactLoading type={"bars"} color={""} height={30} width={30} />
+          <button onClick={stopRecording}><FaRegStopCircle className='text-2xl text-red-500' /></button>
+          <ReactLoading type={"bars"} className='text-sky-500' height={30} width={30} />
         </div>
       )}
     </div>

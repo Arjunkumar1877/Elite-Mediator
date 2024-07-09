@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { MdArrowBackIosNew } from "react-icons/md";
 import { IoCall } from "react-icons/io5";
-import { FaVideo, FaRegEdit } from "react-icons/fa";
+import { FaVideo, FaRegEdit, FaDownload } from "react-icons/fa";
 import { HiOutlinePaperClip } from "react-icons/hi2";
 import { HiDotsVertical } from "react-icons/hi";
 import { BsSend } from "react-icons/bs";
@@ -14,7 +14,8 @@ import { useSelector } from "react-redux";
 import { useSocket } from "../../contexts/AdminContext";
 import { FaWhatsapp } from "react-icons/fa6";
 import { FaTrashAlt } from "react-icons/fa";
-import { RiDeleteBin6Line } from "react-icons/ri";
+import { MdOutlineZoomOutMap } from "react-icons/md";
+
 // import { storage } from "./firebaseConfig";
 import { MdCleaningServices } from "react-icons/md";
 import {
@@ -440,6 +441,15 @@ const handleCancelRecordedAudio = async()=>{
   setFileUploading(false);
 }
 
+const downloadImage = (img: string) => {
+  const link = document.createElement('a');
+  link.href = img || '';
+  link.download = 'image.jpg';
+  link.target = '_blank'
+  link.click();
+};
+
+
 
 console.log(selectedConversation)
 
@@ -552,17 +562,27 @@ if (loading) {
                   ) : (
                     <div className="p-3 rounded-xl bg-sky-100 text-sm break-words">
                       {message.type.startsWith("image/") ? (
-                        <img
-                          src={message.text}
-                          alt="Shared file"
-                          className="w-[200px] md:w-[500px]"
-                        />
+
+<div className="relative">
+  <MdOutlineZoomOutMap
+    onClick={() => downloadImage(message.text)}
+    className="text-sky-500 hover:text-sky-800 absolute top-0 left-0 text-3xl md:text-5xl cursor-pointer"
+  />
+  <img
+    src={message.text}
+    alt="Shared file"
+    className="w-[200px] md:w-[500px]"
+  />
+</div>
+
+
+
                       ) : message.type.startsWith("video/") ? (
                         <video className="w-[200px] md:w-[500px]" controls >
                           <source src={message.text} type={message.type} />
                         </video>
                       ) : (
-                        <audio className="w-[200px] h-[40px] md:w-[300px]" controls>
+                        <audio className="w-[200px] h-[60px] md:w-[500px] " controls>
                         <source src={message.text}
                        type="audio/mpeg" />
                         Your browser does not support the audio element.
@@ -624,7 +644,10 @@ if (loading) {
       file && (
         <>
           {typeof fileType === "string" && fileType.startsWith("image/") ? (
-            <img src={file} alt="Selected file" width={250} />
+            <div>
+<img src={file} alt="Selected file" width={250} />
+
+            </div>
           ) : typeof fileType === "string" && fileType.startsWith("video/") ? (
             <video src={file} width={250} height={400} controls />
           ) : (
