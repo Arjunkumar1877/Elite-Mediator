@@ -311,10 +311,93 @@ const UserChatPage: React.FC = () => {
   };
 
 
- 
+  
+const MAX_AUDIO_SIZE = 20 * 1024 * 1024; 
+
+const handleAudioUpload = async (audioFile: File | Blob): Promise<string | null> => {
+  if (!audioFile || audioFile.size === 0) {
+    toast.error("Please select an audio file");
+    return null;
+  }
+
+  if (audioFile instanceof File && audioFile.size > MAX_AUDIO_SIZE) {
+    toast.error("Maximum audio file size limit is 20MB");
+    return null;
+  }
+
+  try {
+    setAudioUploadingProgress(true)
+    const storage = getStorage();
+    const fileName = new Date().getTime() + "_" + (audioFile instanceof File ? audioFile.name : 'audio.webm');
+    const storageRef = ref(storage, fileName);
+    const uploadTask = uploadBytesResumable(storageRef, audioFile);
+    setFileUploading(true)
+
+    return new Promise<string | null>((resolve, reject) => {
+      uploadTask.on(
+        "state_changed",
+        (snapshot) => {
+          const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          console.log(`Upload is ${progress}% done`);
+        },
+        (error) => {
+          console.error("Error uploading audio:", error);
+          toast.error("Failed to upload audio");
+          reject(error);
+        },
+        async () => {
+          try {
+            const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+            console.log("File available at", downloadURL);
+            resolve(downloadURL);
+          } catch (error) {
+            console.error("Error getting download URL:", error);
+            toast.error("Failed to get audio download URL");
+            reject(error);
+          }
+        }
+      );
+    });
+  } catch (error) {
+    console.error("Error uploading audio:", error);
+    toast.error("Failed to upload audio");
+    return null;
+  }
+};
+
+
+
+
+const handleRecordingComplete = async (blob: Blob) => {
+  try {
+    const audioUrl = await handleAudioUpload(blob);
+    if (audioUrl) {
+      setMessageData({ ...messageData, text: audioUrl, type: blob.type });
+
+      console.log('Audio URL:', audioUrl);
+      setFileType(blob)
+      console.log(blob.type)
+      setFile(audioUrl);
+      setAudioUploadingProgress(false)
+      // Optionally, you can perform additional actions after successfully saving the audio
+    }
+  } catch (error) {
+    console.error('Error handling recording:', error);
+    // Handle error (e.g., display error message to user)
+  }
+};
+
+const handleCancelRecordedAudio = async()=>{
+  setFile('');
+  setFileType('text');
+  setMessageData({...messageData, text: '', type: 'text'});
+  setFileUploading(false);
+}
+
 
 
   console.log(currentUser);
+
 
   return (
     <div className="pt-1 h-screen bg-gray-50 flex flex-col">
@@ -377,8 +460,8 @@ const UserChatPage: React.FC = () => {
                       <span>{formatTime(message.createdAt)}</span>
                       <span>
                         {message.senderModel === "User"
-                          ? "You"
-                          : message.senderName || "Admin"}
+                          ? <span className="text-sky-500 font-bold">You</span>
+                          : <span className="text-sky-500 font-bold">{currentUser.adminId.username}</span>  || "Admin"}
                       </span>
                     </div>
                     {message.type === "text" ? (
@@ -387,18 +470,24 @@ const UserChatPage: React.FC = () => {
                       </div>
                     ) : (
                       <div className="p-3 rounded-xl bg-sky-100 text-sm break-words">
-                        {message.type.startsWith("image/") ? (
-                          <img
-                            src={message.text}
-                            alt="Shared file"
-                            style={{ maxWidth: "200px" }}
-                          />
-                        ) : (
-                          <video controls style={{ maxWidth: "200px" }}>
-                            <source src={message.text} type={message.type} />
-                          </video>
-                        )}
-                      </div>
+                      {message.type.startsWith("image/") ? (
+                        <img
+                          src={message.text}
+                          alt="Shared file"
+                          className="w-[200px] md:w-[500px]"
+                        />
+                      ) : message.type.startsWith("video/") ? (
+                        <video className="w-[200px] md:w-[500px]" controls >
+                          <source src={message.text} type={message.type} />
+                        </video>
+                      ) : (
+                        <audio className="w-[200px] h-[40px] md:w-[300px]" controls>
+                        <source src={message.text}
+                       type="audio/mpeg" />
+                        Your browser does not support the audio element.
+                      </audio>
+                      )}
+                    </div>
                     )}
                   </div>
                   {message.senderModel === "User" && (

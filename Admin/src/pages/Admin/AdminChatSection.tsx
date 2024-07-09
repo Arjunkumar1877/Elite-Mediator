@@ -441,7 +441,7 @@ const handleCancelRecordedAudio = async()=>{
 }
 
 
-
+console.log(selectedConversation)
 
 if (loading) {
   return (
@@ -541,8 +541,8 @@ if (loading) {
                     <span>{formatTime(message?.createdAt)}</span>
                     <span>
                       {message.senderModel === "Admin"
-                        ? "You"
-                        : message.senderName}
+                        ? <span className="text-sky-500 font-bold">You</span>
+                        : <span className="text-sky-500 font-bold">{selectedConversation?.userId.username}</span>}
                     </span>
                   </div>
                   {message.type === "text" ? (
