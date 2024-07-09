@@ -4,10 +4,10 @@ import { Link } from "react-router-dom";
 import { useState, useEffect, ChangeEvent } from "react";
 import axios from "axios";
 import { useSelector } from "react-redux";
-import io from 'socket.io-client';
+import io from "socket.io-client";
 import { useSocket } from "../../contexts/AdminContext";
 import { FaRegEdit } from "react-icons/fa";
-
+import { MdOutlinePermMedia } from "react-icons/md";
 
 interface Conversation {
   _id: string;
@@ -25,29 +25,29 @@ interface Conversation {
   };
 }
 
-const socket = io('http://localhost:7000');
+const socket = io("http://localhost:7000");
 
 const AdminChatListSection: React.FC = () => {
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
-  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [searchTerm, setSearchTerm] = useState<string>("");
   const { currentAdmin } = useSelector((state: any) => state.admin);
   const { notificationCount, setNotificationCount }: any = useSocket();
   const [properties, setProperties] = useState<any[]>([]);
-  const [propertyFilter, setPropertyFilter] = useState<string>('');
-  const [startDate, setStartDate] = useState<string>('');
-  const [endDate, setEndDate] = useState<string>('');
+  const [propertyFilter, setPropertyFilter] = useState<string>("");
+  const [startDate, setStartDate] = useState<string>("");
+  const [endDate, setEndDate] = useState<string>("");
 
   const fetchConversations = async () => {
     try {
-      const response = await axios.get('/api/conversations_list', {
+      const response = await axios.get("/api/conversations_list", {
         params: {
           adminId: currentAdmin._id,
           page: currentPage,
           propertyFilter: propertyFilter,
           startDate: startDate,
-          endDate: endDate
+          endDate: endDate,
         },
       });
 
@@ -61,17 +61,17 @@ const AdminChatListSection: React.FC = () => {
       });
       setNotificationCount(total);
     } catch (error) {
-      console.error('Error fetching conversations:', error);
+      console.error("Error fetching conversations:", error);
     }
   };
-  
+
   const fetchAdminsProperties = async () => {
     try {
       const res = await fetch(`/api/get_admin_properties/${currentAdmin._id}`);
       const data = await res.json();
       setProperties(data);
     } catch (error) {
-      console.log('Error fetching admin properties:', error);
+      console.log("Error fetching admin properties:", error);
     }
   };
 
@@ -81,37 +81,42 @@ const AdminChatListSection: React.FC = () => {
   }, [currentPage, propertyFilter, startDate, endDate]);
 
   useEffect(() => {
-    socket.on('connect', () => {
-      console.log('Connected to socket server with ID:', socket.id);
+    socket.on("connect", () => {
+      console.log("Connected to socket server with ID:", socket.id);
     });
 
-    socket.on('chat message', async (msg: any, convId: string, adminId: string) => {
-      console.log(`Message received in room ${convId}: ${msg}`);
+    socket.on(
+      "chat message",
+      async (msg: any, convId: string, adminId: string) => {
+        console.log(`Message received in room ${convId}: ${msg}`);
 
-      try {
-        await axios.put(`/api/conversations/${msg.conversationId}`, {
-          lastMessage: {
-            text: msg.text,
-            time: msg.createdAt,
-          },
-        });
+        try {
+          await axios.put(`/api/conversations/${msg.conversationId}`, {
+            lastMessage: {
+              text: msg.text,
+              time: msg.createdAt,
+            },
+          });
 
-        socket.emit('chat message', msg, convId, currentAdmin._id);
-        socket.emit('update conversation', adminId);
-      } catch (error) {
-        console.error('Error updating conversation:', error);
+          socket.emit("chat message", msg, convId, currentAdmin._id);
+          socket.emit("update conversation", adminId);
+        } catch (error) {
+          console.error("Error updating conversation:", error);
+        }
       }
-    });
+    );
 
-    socket.on('update conversation', () => {
+    socket.on("update conversation", () => {
       fetchConversations();
-      console.log("updated the conversation 💕💕💕💕💕💕💕🤷‍♂️🤷‍♂️🤷‍♂️📀📀📀📀📀📀📀📀")
+      console.log(
+        "updated the conversation 💕💕💕💕💕💕💕🤷‍♂️🤷‍♂️🤷‍♂️📀📀📀📀📀📀📀📀"
+      );
     });
 
     return () => {
-      socket.off('connect');
-      socket.off('chat message');
-      socket.off('update conversation');
+      socket.off("connect");
+      socket.off("chat message");
+      socket.off("update conversation");
     };
   }, [currentPage, propertyFilter, startDate, endDate]);
 
@@ -127,43 +132,45 @@ const AdminChatListSection: React.FC = () => {
     const searchText = e.target.value.toLowerCase();
     setSearchTerm(searchText);
 
-    const filtered = conversations.filter(conversation =>
+    const filtered = conversations.filter((conversation) =>
       conversation.userId.username.toLowerCase().includes(searchText)
     );
     setConversations(filtered);
   };
 
   const handleFilterChatByProperty = (data: string) => {
-    setSearchTerm('');
+    setSearchTerm("");
     setPropertyFilter(data);
   };
 
   const clearSearch = () => {
-    setSearchTerm('');
-    fetchConversations(); // Refetch conversations to reset the filtered state
+    setSearchTerm("");
+    fetchConversations();
   };
-  
+
   const getUserTypeBanner = (userType: string) => {
-    let bannerColor = '';
-    let bannerText = '';
+    let bannerColor = "";
+    let bannerText = "";
 
     switch (userType) {
       case "Unknown":
-        bannerColor = 'text-gray-900';
-        bannerText = 'Unknown';
+        bannerColor = "bg-gray-600";
+        bannerText = "Unknown";
         break;
       case "Unverified":
-        bannerColor = 'text-yellow-500';
-        bannerText = 'Unverified';
+        bannerColor = "bg-yellow-500";
+        bannerText = "Unverified";
         break;
       default:
-        bannerColor = 'text-green-600';
-        bannerText = 'Verified';
+        bannerColor = "bg-green-600";
+        bannerText = "Verified";
         break;
     }
 
     return (
-      <span className={`absolute top-3 -left-2 -rotate-45 ${bannerColor}  text-xs font-semibold p-1 rounded-lg`}>
+      <span
+        className={`absolute top-0 left-0  ${bannerColor} text-white   text-xs font-semibold p-0.5 rounded`}
+      >
         {bannerText}
       </span>
     );
@@ -181,15 +188,26 @@ const AdminChatListSection: React.FC = () => {
         <div className="flex flex-col gap-4">
           <div className="flex flex-col lg:flex-row justify-between bg-sky-500 p-4 rounded">
             <div className="flex gap-4 lg:gap-16 justify-center items-center px-2 lg:px-5">
-              <button onClick={() => handleFilterChatByProperty('All')} className="py-3 px-8 cursor-pointer text-sm rounded-full bg-white lg:px-16 hover:bg-slate-200">All chats</button>
+              <button
+                onClick={() => handleFilterChatByProperty("All")}
+                className="py-3 px-8 cursor-pointer text-sm rounded-full bg-white lg:px-16 hover:bg-slate-200"
+              >
+                All chats
+              </button>
               <div className="flex relative">
                 <select
-                  onChange={(e: ChangeEvent<HTMLSelectElement>) => handleFilterChatByProperty(e.target.value)}
+                  onChange={(e: ChangeEvent<HTMLSelectElement>) =>
+                    handleFilterChatByProperty(e.target.value)
+                  }
                   className="py-3 bg-white px-8 lg:px-16 text-xs rounded-full"
                 >
-                  <option className="px-5" value="">All Properties</option>
+                  <option className="px-5" value="">
+                    All Properties
+                  </option>
                   {properties.map((prop: any) => (
-                    <option className="px-5" key={prop._id} value={prop._id}>{prop.propertyName}</option>
+                    <option className="px-5" key={prop._id} value={prop._id}>
+                      {prop.propertyName}
+                    </option>
                   ))}
                 </select>
               </div>
@@ -198,12 +216,28 @@ const AdminChatListSection: React.FC = () => {
             <div className="flex flex-col lg:flex-row gap-4 mt-4 lg:mt-0">
               <div className="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-4">
                 <div className="flex items-center space-x-2">
-                  <label htmlFor="start-date" className="text-xs">Start Date:</label>
-                  <input type="date" id="start-date" name="start-date" onChange={(e) => setStartDate(e.target.value)} className="py-2 px-4 rounded-full border border-gray-300" />
+                  <label htmlFor="start-date" className="text-xs">
+                    Start Date:
+                  </label>
+                  <input
+                    type="date"
+                    id="start-date"
+                    name="start-date"
+                    onChange={(e) => setStartDate(e.target.value)}
+                    className="py-2 px-4 rounded-full border border-gray-300"
+                  />
                 </div>
                 <div className="flex items-center space-x-2">
-                  <label htmlFor="end-date" className="text-xs">End Date:</label>
-                  <input type="date" id="end-date" name="end-date" onChange={(e) => setEndDate(e.target.value)} className="py-2 px-4 rounded-full border border-gray-300" />
+                  <label htmlFor="end-date" className="text-xs">
+                    End Date:
+                  </label>
+                  <input
+                    type="date"
+                    id="end-date"
+                    name="end-date"
+                    onChange={(e) => setEndDate(e.target.value)}
+                    className="py-2 px-4 rounded-full border border-gray-300"
+                  />
                 </div>
               </div>
             </div>
@@ -221,32 +255,59 @@ const AdminChatListSection: React.FC = () => {
           </div>
 
           <div className="flex flex-col gap-4 overflow-y-auto h-[380px]">
-            {conversations && conversations.map((conversation: any) => (
-              <Link to={`/admin_chat?conId=${conversation._id}`} key={conversation._id}>
-                <div className="flex items-center justify-between border-2 p-4 rounded hover:bg-gray-100 transition relative">
-                  <div className="absolute top-0 left-0 w-full h-full flex justify-center items-center">
-                    {getUserTypeBanner(conversation.propertyId.userType)}
-                  </div>
-                  <div className="flex items-center gap-3 relative z-10 mt-3">
-                    <img src="public/userIcon.webp" alt="User" className="h-14 w-14 rounded-full"/>
-                    <div className="flex flex-col">
-                      <p className="text-xs text-sky-500 md:text-sm">({conversation?.propertyId?.propertyName})</p>
-                      <p className="text-md text-gray-600 font-semibold md:text-xl">{conversation?.userId?.username}</p>
-                      <p className="text-xs text-gray-400 md:text-sm">{conversation?.lastMessage?.text}</p>
+            {conversations &&
+              conversations.map((conversation: any) => (
+                <Link
+                  to={`/admin_chat?conId=${conversation._id}`}
+                  key={conversation._id}
+                >
+                  <div className="flex items-center justify-between border-2 p-4 rounded hover:bg-gray-100 transition relative">
+                    <div className="absolute top-0 left-0 w-full h-full flex justify-center items-center">
+                      {getUserTypeBanner(conversation.propertyId.userType)}
+                    </div>
+                    <div className="flex items-center gap-3 relative z-10 mt-3">
+                      <img
+                        src="public/userIcon.webp"
+                        alt="User"
+                        className="h-14 w-14 rounded-full"
+                      />
+                      <div className="flex flex-col">
+                        <p className="text-xs text-sky-500 md:text-sm">
+                          ({conversation?.propertyId?.propertyName})
+                        </p>
+                        <p className="text-md text-gray-600 font-semibold md:text-xl">
+                          {conversation?.userId?.username}
+                        </p>
+                        <p className="text-xs text-gray-400 md:text-sm">
+                          {conversation?.lastMessage?.text?.startsWith(
+                            "https://"
+                          ) ? (
+                            <div className="flex gap-1 justify-center items-center">
+                              <MdOutlinePermMedia />
+                              Media{" "}
+                            </div>
+                          ) : (
+                            conversation?.lastMessage?.text
+                          )}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col justify-center items-center gap-1">
+                      <span className="text-xs md:text-md">
+                        {new Date(
+                          conversation?.lastMessage?.time as any
+                        ).toLocaleTimeString()}
+                      </span>
+                      {(conversation?.lastMessage?.unread as number) > 0 && (
+                        <span className="bg-sky-500 text-white w-6 h-6 rounded-full flex justify-center items-center">
+                          {conversation?.lastMessage?.unread}
+                        </span>
+                      )}
                     </div>
                   </div>
-
-                  <div className="flex flex-col justify-center items-center gap-1">
-                    <span className="text-xs md:text-md">{new Date(conversation?.lastMessage?.time as any).toLocaleTimeString()}</span>
-                    {conversation?.lastMessage?.unread as number > 0 && (
-                      <span className="bg-sky-500 text-white w-6 h-6 rounded-full flex justify-center items-center">
-                        {conversation?.lastMessage?.unread}
-                      </span>
-                    )}
-                  </div>
-                </div>
-              </Link>
-            ))}
+                </Link>
+              ))}
           </div>
 
           <div className="flex justify-between items-center">
@@ -257,7 +318,9 @@ const AdminChatListSection: React.FC = () => {
             >
               <FaArrowLeft />
             </button>
-            <span>Page {currentPage} of {totalPages}</span>
+            <span>
+              Page {currentPage} of {totalPages}
+            </span>
             <button
               className="p-2 bg-sky-500 text-white rounded"
               onClick={handleNextPage}
