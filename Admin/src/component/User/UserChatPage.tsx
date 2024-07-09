@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import { BsSend } from "react-icons/bs";
-import { FaVideo } from "react-icons/fa";
+import { FaTrashAlt, FaVideo } from "react-icons/fa";
 import { HiDotsVertical, HiOutlinePaperClip } from "react-icons/hi";
 import { IoCall } from "react-icons/io5";
 import { FiLogOut } from "react-icons/fi";
@@ -23,6 +23,7 @@ import {
 import app from "../../firebase/firebase";
 import ReactLoading from "react-loading";
 import { confirmAlert } from "react-confirm-alert";
+import AudioRecorder from "../../pages/Admin/AudioRecorder";
 
 const socket = io("http://localhost:7000");
 
@@ -63,6 +64,7 @@ const UserChatPage: React.FC = () => {
   const [imageUploadError, setImageUploadError] = useState<string | null>(null);
   const [file, setFile] = useState<any>();
   const [fileType, setFileType] = useState<any>("text");
+  const [audioUploadingProgress, setAudioUploadingProgress] = useState<boolean>(false)
   const [messageData, setMessageData] = useState<Message>({
     conversationId: conId,
     senderId: currentUser._id,
@@ -308,6 +310,10 @@ const UserChatPage: React.FC = () => {
     setMessageData({ ...messageData, text: e.target.value });
   };
 
+
+ 
+
+
   console.log(currentUser);
 
   return (
@@ -409,65 +415,87 @@ const UserChatPage: React.FC = () => {
         </div>
 
         <div className="flex justify-between items-center px-5 py-2 bg-sky-200 rounded-lg mt-2">
-          <img
-            src="/public/userIcon.webp"
-            className="w-10 h-10 rounded-full"
-            alt="User"
-          />
-          {fileType && fileType === "text" && (
-            <input
-              type="text"
-              placeholder="Write something..."
-              className="flex-1 mx-3 p-2 rounded-lg border bg-sky-100 border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-500"
-              value={messageData.text}
-              onChange={handleMessageChange}
-              onKeyPress={(e) => e.key === "Enter" && sendMessage()}
-            />
+  {!fileUploading && (
+    <AudioRecorder onRecordingComplete={handleRecordingComplete} />
+  )}
+
+  {audioUploadingProgress && (
+    <ReactLoading
+      type="bubbles"
+      className="text-sky-500"
+      color={"skyBlue"}
+      width={100}
+    />
+  )}
+
+  {fileType === "text" && (
+    <input
+      type="text"
+      placeholder="Write something..."
+      className="flex-1 mx-3 p-2 rounded-lg border bg-sky-100 border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-500"
+      value={messageData.text}
+      onChange={handleMessageChange}
+      onKeyPress={(e) => e.key === "Enter" && sendMessage()}
+    />
+  )}
+
+  <div className="flex">
+    {imageUploadProgress && imageUploadProgress < 100 ? (
+      <ReactLoading
+        type="bubbles"
+        className="text-sky-500"
+        color={"skyBlue"}
+        width={100}
+      />
+    ) : (
+      file && (
+        <>
+          {typeof fileType === "string" && fileType.startsWith("image/") ? (
+            <img src={file} alt="Selected file" width={250} />
+          ) : typeof fileType === "string" && fileType.startsWith("video/") ? (
+            <video src={file} width={250} height={400} controls />
+          ) : (
+            <div className="flex gap-1 justify-center items-center">
+              <audio className="rounded" src={file} controls />
+              <div
+                className="hover:bg-sky-100 p-3 rounded-full"
+                onClick={handleCancelRecordedAudio}
+              >
+                <FaTrashAlt className="text-sky-500 cursor-pointer" />
+              </div>
+            </div>
           )}
-          <div className="flex">
-            {imageUploadProgress && imageUploadProgress < 100 ? (
-              <ReactLoading
-                type="bubbles"
-                className="text-sky-500"
-                color={"skyBlue"}
-                width={100}
-              />
-            ) : (
-              file && (
-                <>
-                  {fileType && fileType.startsWith("image/") ? (
-                    <img src={file} alt="Selected file" width={250} />
-                  ) : (
-                    <video src={file} width={250} controls />
-                  )}
-                </>
-              )
-            )}
+        </>
+      )
+    )}
 
-            <input
-              type="file"
-              ref={fileRef}
-              name=""
-              id=""
-              onChange={handleFileChange}
-              hidden
-            />
+    <input
+      type="file"
+      ref={fileRef}
+      name=""
+      id=""
+      onChange={handleFileChange}
+      hidden
+    />
 
-            {!fileUploading && (
-              <HiOutlinePaperClip
-                onClick={() => fileRef.current?.click()}
-                className="text-sky-500 text-2xl cursor-pointer"
-              />
-            )}
-          </div>
+    {!fileUploading && (
+      <HiOutlinePaperClip
+        onClick={() => fileRef.current?.click()}
+        className="text-sky-500 text-2xl cursor-pointer"
+      />
+    )}
+  </div>
+  
+  {messageData && messageData.text !== "" && (
+    <div
+      className="p-2 rounded-full bg-sky-500 ml-3 cursor-pointer"
+      onClick={sendMessage}
+    >
+      <BsSend className="text-white text-2xl" />
+    </div>
+  )}
+</div>
 
-          <div
-            className="p-2 rounded-full bg-sky-500 ml-3 cursor-pointer"
-            onClick={sendMessage}
-          >
-            <BsSend className="text-white text-2xl" />
-          </div>
-        </div>
 
         {showOptions && (
           <div className="w-34 h-39 absolute bg-slate-700 opacity-70 right-24 rounded top-16 flex flex-col p-3 gap-4 md:w-40">

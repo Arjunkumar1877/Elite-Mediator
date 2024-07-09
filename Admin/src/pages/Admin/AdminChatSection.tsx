@@ -13,6 +13,7 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 import { useSocket } from "../../contexts/AdminContext";
 import { FaWhatsapp } from "react-icons/fa6";
+import { FaTrashAlt } from "react-icons/fa";
 import { RiDeleteBin6Line } from "react-icons/ri";
 // import { storage } from "./firebaseConfig";
 import { MdCleaningServices } from "react-icons/md";
@@ -26,6 +27,7 @@ import app, { storage } from "../../firebase/firebase";
 import ReactLoading from "react-loading";
 import { confirmAlert } from "react-confirm-alert";
 import "react-confirm-alert/src/react-confirm-alert.css";
+import AudioRecorder from "./AudioRecorder";
 
 interface Message {
   _id?: string;
@@ -64,11 +66,11 @@ const AdminChatSection: React.FC = () => {
   const conId = query.get("conId");
   const [file, setFile] = useState<any>();
   const [fileType, setFileType] = useState<any>("text");
-  const [imageUploadProgress, setImageUploadProgress] = useState<number | null>(
-    null
-  );
+  const [imageUploadProgress, setImageUploadProgress] = useState<number | null>(null);
   const [fileUploading, setFileUploading] = useState<boolean>(false);
+  const [audio, setAudio] = useState<any>(null);
   const [imageUploadError, setImageUploadError] = useState<string | null>(null);
+  const [audioUploadingProgress, setAudioUploadingProgress] = useState<boolean>(false)
   const [messageData, setMessageData] = useState<Message>({
     conversationId: conId,
     senderId: currentAdmin._id,
@@ -76,7 +78,6 @@ const AdminChatSection: React.FC = () => {
     type: "text",
     text: "",
   });
-
   const fileRef = useRef<HTMLInputElement>(null);
 
   const handleMessageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -353,14 +354,102 @@ const AdminChatSection: React.FC = () => {
       ],
     });
   };
-  // console.log(messageData)
 
   console.log(selectedConversation);
 
-  if (loading) {
-    return <div>Loading...</div>;
+
+
+const MAX_AUDIO_SIZE = 20 * 1024 * 1024; 
+
+const handleAudioUpload = async (audioFile: File | Blob): Promise<string | null> => {
+  if (!audioFile || audioFile.size === 0) {
+    toast.error("Please select an audio file");
+    return null;
   }
 
+  if (audioFile instanceof File && audioFile.size > MAX_AUDIO_SIZE) {
+    toast.error("Maximum audio file size limit is 20MB");
+    return null;
+  }
+
+  try {
+    setAudioUploadingProgress(true)
+    const storage = getStorage();
+    const fileName = new Date().getTime() + "_" + (audioFile instanceof File ? audioFile.name : 'audio.webm');
+    const storageRef = ref(storage, fileName);
+    const uploadTask = uploadBytesResumable(storageRef, audioFile);
+    setFileUploading(true)
+
+    return new Promise<string | null>((resolve, reject) => {
+      uploadTask.on(
+        "state_changed",
+        (snapshot) => {
+          const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          console.log(`Upload is ${progress}% done`);
+        },
+        (error) => {
+          console.error("Error uploading audio:", error);
+          toast.error("Failed to upload audio");
+          reject(error);
+        },
+        async () => {
+          try {
+            const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+            console.log("File available at", downloadURL);
+            resolve(downloadURL);
+          } catch (error) {
+            console.error("Error getting download URL:", error);
+            toast.error("Failed to get audio download URL");
+            reject(error);
+          }
+        }
+      );
+    });
+  } catch (error) {
+    console.error("Error uploading audio:", error);
+    toast.error("Failed to upload audio");
+    return null;
+  }
+};
+
+
+
+
+const handleRecordingComplete = async (blob: Blob) => {
+  try {
+    const audioUrl = await handleAudioUpload(blob);
+    if (audioUrl) {
+      setMessageData({ ...messageData, text: audioUrl, type: blob.type });
+
+      console.log('Audio URL:', audioUrl);
+      setFileType(blob)
+      console.log(blob.type)
+      setAudio(audioUrl);
+      setFile(audioUrl);
+      setAudioUploadingProgress(false)
+    }
+  } catch (error) {
+    console.error('Error handling recording:', error);
+  }
+};
+
+const handleCancelRecordedAudio = async()=>{
+  setFile('');
+  setFileType('text');
+  setMessageData({...messageData, text: '', type: 'text'});
+  setFileUploading(false);
+}
+
+
+
+
+if (loading) {
+  return (
+    <div className="flex justify-center items-center h-full">
+      <ReactLoading type={"spin"} color={"#000"} />
+    </div>
+  );
+}
   return (
     <div className="h-screen bg-gray-50 flex flex-col">
       <ToastContainer />
@@ -466,12 +555,18 @@ const AdminChatSection: React.FC = () => {
                         <img
                           src={message.text}
                           alt="Shared file"
-                          style={{ maxWidth: "200px" }}
+                          className="w-[200px] md:w-[500px]"
                         />
-                      ) : (
-                        <video controls style={{ maxWidth: "200px" }}>
+                      ) : message.type.startsWith("video/") ? (
+                        <video className="w-[200px] md:w-[500px]" controls >
                           <source src={message.text} type={message.type} />
                         </video>
+                      ) : (
+                        <audio className="w-[200px] h-[40px] md:w-[300px]" controls>
+                        <source src={message.text}
+                       type="audio/mpeg" />
+                        Your browser does not support the audio element.
+                      </audio>
                       )}
                     </div>
                   )}
@@ -486,69 +581,95 @@ const AdminChatSection: React.FC = () => {
               </div>
             ))}
             <div ref={messagesEndRef}></div>
+           
+
           </div>
         </div>
+
 
         <div className="flex justify-between items-center px-5 py-2 bg-sky-200 rounded-lg mt-2">
-          <img
-            src="/public/userIcon.webp"
-            className="w-10 h-10 rounded-full"
-            alt="User"
-          />
-          {fileType && fileType === "text" && (
-            <input
-              type="text"
-              placeholder="Write something..."
-              className="flex-1 mx-3 p-2 rounded-lg border bg-sky-100 border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-500"
-              value={messageData.text}
-              onChange={handleMessageChange}
-              onKeyPress={(e) => e.key === "Enter" && sendMessage()}
-            />
+  {!fileUploading && (
+    <AudioRecorder onRecordingComplete={handleRecordingComplete} />
+  )}
+
+  {audioUploadingProgress && (
+    <ReactLoading
+      type="bubbles"
+      className="text-sky-500"
+      color={"skyBlue"}
+      width={100}
+    />
+  )}
+
+  {fileType === "text" && (
+    <input
+      type="text"
+      placeholder="Write something..."
+      className="flex-1 mx-3 p-2 rounded-lg border bg-sky-100 border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-500"
+      value={messageData.text}
+      onChange={handleMessageChange}
+      onKeyPress={(e) => e.key === "Enter" && sendMessage()}
+    />
+  )}
+
+  <div className="flex">
+    {imageUploadProgress && imageUploadProgress < 100 ? (
+      <ReactLoading
+        type="bubbles"
+        className="text-sky-500"
+        color={"skyBlue"}
+        width={100}
+      />
+    ) : (
+      file && (
+        <>
+          {typeof fileType === "string" && fileType.startsWith("image/") ? (
+            <img src={file} alt="Selected file" width={250} />
+          ) : typeof fileType === "string" && fileType.startsWith("video/") ? (
+            <video src={file} width={250} height={400} controls />
+          ) : (
+            <div className="flex gap-1 justify-center items-center">
+              <audio className="rounded" src={file} controls />
+              <div
+                className="hover:bg-sky-100 p-3 rounded-full"
+                onClick={handleCancelRecordedAudio}
+              >
+                <FaTrashAlt className="text-sky-500 cursor-pointer" />
+              </div>
+            </div>
           )}
-          <div className="flex">
-            {imageUploadProgress && imageUploadProgress < 100 ? (
-              <ReactLoading
-                type="bubbles"
-                className="text-sky-500"
-                color={"skyBlue"}
-                width={100}
-              />
-            ) : (
-              file && (
-                <>
-                  {fileType && fileType.startsWith("image/") ? (
-                    <img src={file} alt="Selected file" width={250} />
-                  ) : (
-                    <video src={file} width={250} controls />
-                  )}
-                </>
-              )
-            )}
+        </>
+      )
+    )}
 
-            <input
-              type="file"
-              ref={fileRef}
-              name=""
-              id=""
-              onChange={handleFileChange}
-              hidden
-            />
+    <input
+      type="file"
+      ref={fileRef}
+      name=""
+      id=""
+      onChange={handleFileChange}
+      hidden
+    />
 
-            {!fileUploading && (
-              <HiOutlinePaperClip
-                onClick={() => fileRef.current?.click()}
-                className="text-sky-500 text-2xl cursor-pointer"
-              />
-            )}
-          </div>
+    {!fileUploading && (
+      <HiOutlinePaperClip
+        onClick={() => fileRef.current?.click()}
+        className="text-sky-500 text-2xl cursor-pointer"
+      />
+    )}
+  </div>
+  
+  {messageData && messageData.text !== "" && (
+    <div
+      className="p-2 rounded-full bg-sky-500 ml-3 cursor-pointer"
+      onClick={sendMessage}
+    >
+      <BsSend className="text-white text-2xl" />
+    </div>
+  )}
+</div>
 
-          <div
-            className="p-2 rounded-full bg-sky-500 ml-3 cursor-pointer"
-            onClick={sendMessage}
-          >
-            <BsSend className="text-white text-2xl" />
-          </div>
-        </div>
+
 
         {showOptions && (
           <div className="w-34 h-39 absolute bg-slate-700 opacity-70 right-14 rounded top-12 flex flex-col p-3 gap-4 md:w-40">
