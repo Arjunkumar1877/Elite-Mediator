@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import SideNavBar from '../../pages/Admin/SideNavBar';
-import ProfileSection from '../../pages/Admin/ProfileSection';
+import SideNavBar from '../../component/Admin/SideNavBar';
+import EditProfileSection from '../../component/Admin/EditProfileSection';
 
-const ProfilePage = () => {
+const EditProfilePage = () => {
   const [navShow, setNavShow] = useState<boolean>(true);
 
   return (
@@ -10,10 +10,10 @@ const ProfilePage = () => {
       <SideNavBar navShowSet={setNavShow} />
       <div className={`transition-all duration-300 ${!navShow ? "w-[60px]" : "w-[250px]"}`}></div>
       <div className="flex-1">
-        <ProfileSection />
+        <EditProfileSection />
       </div>
     </div>
   );
 };
 
-export default ProfilePage;
+export default EditProfilePage;

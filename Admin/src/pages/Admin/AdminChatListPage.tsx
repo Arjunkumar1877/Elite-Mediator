@@ -1,6 +1,6 @@
 import { useState } from "react";
-import SideNavBar from "../../pages/Admin/SideNavBar";
-import AdminChatListSection from "../../pages/Admin/AdminChatListSection";
+import SideNavBar from "../../component/Admin/SideNavBar";
+import AdminChatListSection from "../../component/Admin/AdminChatListSection";
 
 const AdminChatListPage = () => {
     

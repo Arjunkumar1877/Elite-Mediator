@@ -86,6 +86,44 @@ router.post('/edit_unknown_username', InjectedEditUnknownUsernameController.Edit
 
 
 
+router.get("/admin_dash_graph/:adminId", async(req, res)=>{
+    const  adminId  = req.params.adminId;
+
+    const filterUnknown: any = {
+        adminId: adminId,
+      }; 
+        const filterVerified: any = {
+        adminId: adminId,
+      }; 
+        const filterUnVerified: any = {
+        adminId: adminId,
+      };
+
+
+        const verifiedProperties = await QrModel.find({ userType: "Verified" });
+        const verifiedPropertyIds = verifiedProperties.map(property => property._id);
+        filterVerified.propId = { $in: verifiedPropertyIds };
+      
+
+        const unknonProperties = await QrModel.find({ userType: "Unknown" });
+        const unknownPropertyIds = unknonProperties.map(property => property._id);
+        filterUnknown.propId = { $in: unknownPropertyIds };
+      
+        
+        const unverifiedProperties = await QrModel.find({ userType: "Unverified" });
+        const unverifiedPropertyIds = unverifiedProperties.map(property => property._id);
+        filterUnVerified.propId = { $in: unverifiedPropertyIds };
+      
+
+
+      const All = await UserModel.find({adminId: adminId}).countDocuments();
+      const unknown = await UserModel.find(filterVerified).countDocuments()
+      const verified = await UserModel.find(filterUnknown).countDocuments()
+      const unVerified = await UserModel.find(filterUnVerified).countDocuments()
+
+      res.json({All, unknown, verified, unVerified})
+})
+
 
 
 // interface GetUsersListRequest extends Request {

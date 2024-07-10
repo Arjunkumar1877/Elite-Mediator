@@ -2,15 +2,17 @@ import express, { Application, Request, Response, NextFunction } from "express";
 import cookieParser from "cookie-parser";
 import adminRoutes from "../../../frameworks/routes/adminRoutes/AdminRoute";
 import superAdminRoute from "../../../frameworks/routes/superAdminRoutes/SuperAdminRoute";
-import userRoutes from '../../../frameworks/routes/userRoutes/UserRoute'
+import userRoutes from '../../../frameworks/routes/userRoutes/UserRoute';
 import cors from "cors";
 import path from "path";
 import { createServer, Server as HTTPServer } from 'http';
 import { initializeSocket } from "../../services/socketIo/SocketIo";
-import {Server as SocketIoServer } from 'socket.io';
+import { Server as SocketIoServer } from 'socket.io';
 import { exec } from 'child_process';
+import dotenv from "dotenv";
 
-
+// Load environment variables
+dotenv.config();
 
 export class ExpressServer {
     private app: Application;
@@ -32,13 +34,25 @@ export class ExpressServer {
         this.app.use(express.json());
         this.app.use(cors());
         this.app.use(cookieParser());
+
+        // Serve static files (if any)
+        const publicPath = path.join(__dirname, '..', 'public');
+        this.app.use(express.static(publicPath));
     }
 
     private configureRoutes(): void {
+        // Mount your routes here
         this.app.use("/api", adminRoutes);
         this.app.use("/user", userRoutes);
         this.app.use("/superadmin", superAdminRoute);
-    
+
+        // Add a catch-all route for handling undefined routes
+        this.app.use('*', (req: Request, res: Response) => {
+            res.status(404).json({
+                success: false,
+                message: 'Route not found'
+            });
+        });
     }
 
     private configureErrorHandling(): void {
@@ -47,21 +61,20 @@ export class ExpressServer {
             const message = err.message || "Internal server error";
             res.status(statusCode).json({
                 success: false,
-                statusCode: false,
+                statusCode,
                 message,
             });
         });
     }
 
     private startServer(): void {
-        this.server.listen(7000, () => {
-            console.log("Express server running on port 7000");
+        const port = process.env.PORT || 7000;  // Use environment variable for port if available
+        this.server.listen(port, () => {
+            console.log(`Express server running on port ${port}`);
         });
     }
 }
 
-
-
-
-
+// To initialize the server, create an instance of ExpressServer
+// new ExpressServer();
 

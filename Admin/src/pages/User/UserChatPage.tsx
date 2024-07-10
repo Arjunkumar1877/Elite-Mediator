@@ -23,7 +23,7 @@ import {
 import app from "../../firebase/firebase";
 import ReactLoading from "react-loading";
 import { confirmAlert } from "react-confirm-alert";
-import AudioRecorder from "../../pages/Admin/AudioRecorder";
+import AudioRecorder from "../../component/Admin/AudioRecorder";
 
 const socket = io("http://localhost:7000");
 

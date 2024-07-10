@@ -1,6 +1,6 @@
 import { useState } from "react";
-import SideNavBar from "../../pages/Admin/SideNavBar";
-import UsersListSection from "../../pages/Admin/UsersListSection";
+import SideNavBar from "../../component/Admin/SideNavBar";
+import UsersListSection from "../../component/Admin/UsersListSection";
 
 const UsersListPage = () => {
     

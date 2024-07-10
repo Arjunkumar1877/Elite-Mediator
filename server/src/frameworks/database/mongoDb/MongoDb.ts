@@ -1,9 +1,16 @@
 import mongoose from "mongoose";
 
-export const connectDb = ()=>{
+
+
+export const connectDb = async()=>{
     try {
-        mongoose.connect('mongodb+srv://arjuntech177:to49V6oovBgQIMsg@cluster0.oyup6gg.mongodb.net/');
-        console.log("mongoDb connected");
+        const mongoUri = process?.env?.MONGO_URI;
+        if(mongoUri){
+            await  mongoose.connect(mongoUri);
+            console.log("mongoDb connected");
+        } else {
+            console.log("No uri available")
+        }
     } catch (error) {
         console.log(error)
     }

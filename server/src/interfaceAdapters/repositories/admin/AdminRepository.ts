@@ -216,15 +216,10 @@ export class MongoAdminRepository implements IAdminRepository {
   }
 
   async FindUsersListByAdminId(adminId: string, startDate: string, endDate: string, propertyName: string, userType: string): Promise<any> {
-    // const userData = await UserModel.find({ adminId: adminId, deleted: false })
-    //   .sort({ createdAt: -1 })
-    //   .populate("propId");
-
-   
 
     if(propertyName === 'All' || userType === 'All'){
       
-      const users = await UserModel.find({adminId: adminId});
+      const users = await UserModel.find({adminId: adminId}).populate('propId');
      
       return users
     }

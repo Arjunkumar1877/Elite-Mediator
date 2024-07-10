@@ -1,29 +1,29 @@
 import "./App.css";
-import Landing from "./component/Admin/LandingPage";
-import Login from "./component/Admin/Login";
+import Landing from "./pages/Admin/LandingPage";
+import Login from "./pages/Admin/Login";
 // import Landing from './pages/LandingPage'
-import ServicePage from "./component/Admin/ServicePage";
+import ServicePage from "./pages/Admin/ServicePage";
 import { Route, Routes, BrowserRouter } from "react-router-dom";
-import Signup from "./component/Admin/Signup";
-import OtpVerification from "./component/Admin/VerifyOtp";
-import UserVerifyData from "./component/Admin/UserVerifyData";
-import ProfilePage from "./component/Admin/ProfilePage";
-import EditProfilePage from "./component/Admin/EditProfilePage";
+import Signup from "./pages/Admin/Signup";
+import OtpVerification from "./pages/Admin/VerifyOtp";
+import UserVerifyData from "./pages/Admin/UserVerifyData";
+import ProfilePage from "./pages/Admin/ProfilePage";
+import EditProfilePage from "./pages/Admin/EditProfilePage";
 import AdminPrivateRoute from "./component/Admin/AdminPrivateRoute";
 import { Toaster } from "react-hot-toast";
-import DashboardPage from "./component/Admin/DashboardPage";
-import PropertyDataPage from "./component/Admin/PropertyDataPage";
-import GenerateQrCodePage from "./component/Admin/GenerateQrCodePage";
-import AdminChatListPage from "./component/Admin/AdminChatListPage";
-import AdminChatPage from "./component/Admin/AdminChatPage";
-import InitialDataPage from "./component/User/UserInitialLogin";
-import UserLoginOtpVerify from "./component/User/UserLoginOtpVerify";
-import UserPrivateRoute from "./component/User/UserPrivateRoute";
+import DashboardPage from "./pages/Admin/DashboardPage";
+import GenerateQrCodePage from "./pages/Admin/GenerateQrCodePage";
+import AdminChatListPage from "./pages/Admin/AdminChatListPage";
+import AdminChatPage from "./pages/Admin/AdminChatPage";
+import InitialDataPage from "./pages/User/UserInitialLogin";
+import UserLoginOtpVerify from "./pages/User/UserLoginOtpVerify";
+import UserPrivateRoute from "./pages/User/UserPrivateRoute";
 import SocketProvider from "./contexts/AdminContext";
-import AdminCallPage from "./component/Admin/AdminCallPage";
-import UserCallPage from "./component/User/UserCallPage";
-import UserChatPage from "./component/User/UserChatPage";
-import UsersListPage from "./component/Admin/UsersListPage";
+import AdminCallPage from "./pages/Admin/AdminCallPage";
+import UserCallPage from "./pages/User/UserCallPage";
+import UserChatPage from "./pages/User/UserChatPage";
+import UsersListPage from "./pages/Admin/UsersListPage";
+import PropertyDataPage from "./pages/Admin/PropertyDataPage";
 
 export default function App() {
   return (
@@ -38,7 +38,6 @@ export default function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/verify_otp_page/:ph" element={<OtpVerification />} />
-           <Route path="/visitors" element={<UsersListPage />} />
 
 
             <Route element={<AdminPrivateRoute />}>
@@ -46,7 +45,9 @@ export default function App() {
               <Route path="/profile" element={<ProfilePage />} />
               <Route path="/editprofile" element={<EditProfilePage />} />
               <Route path="/dashboard" element={<DashboardPage />} />
-              <Route path="/qrcodes" element={<PropertyDataPage />} />
+              <Route path="/qrcodes" element={<PropertyDataPage />}/>
+           <Route path="/visitors" element={<UsersListPage />} />
+
               <Route path="/generate_qr" element={<GenerateQrCodePage />} />
               <Route path="/chat_list" element={<AdminChatListPage />} />
               <Route path="/admin_chat" element={<AdminChatPage />} />

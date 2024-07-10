@@ -2,8 +2,11 @@ import { IoSettingsOutline } from "react-icons/io5";
 import { FaRegTrashCan } from "react-icons/fa6";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FaPhone, FaVideo, FaCheck, FaTimes, FaClock, FaRegTrashAlt } from 'react-icons/fa';
+import { useSocket } from "../../contexts/AdminContext";
+import axios from "axios";
+import DashBoardGraph from "./DashBoardGraph";
 
 
 
@@ -12,7 +15,9 @@ function DashboardSection() {
   const { currentAdmin } = useSelector((state: any)=> state.admin);
   const [admincallList, setAdminCallList] = useState<any>();
   const [usersList, setUsersList] = useState<any>();
-
+  const { socket, setIsVideoCall }: any = useSocket();
+  const [graphData, setGraphData] = useState<any>();
+  const navigate = useNavigate();
   const fetchCalls = async()=>{
     try {
       const res = await fetch(`/api/get_calls/${currentAdmin._id}`);
@@ -29,15 +34,17 @@ function DashboardSection() {
 
   const fetchUsers = async (): Promise<void> => {
     try {
-      const res = await fetch(`/api/get_users_list/${currentAdmin._id}`);
-      if (!res.ok) {
-        throw new Error(`Error: ${res.statusText}`);
-      }
-      const data = await res.json();
+      const res = await axios.get("/api/get_users_list", {
+        params: {
+          adminId: currentAdmin._id,
+        },
+      });
+
+      const data = await res;
       
-      console.log(data); 
-      if(data !== 'Empty list'){
-        setUsersList(data);
+      console.log(data.data); 
+      if(data.data !== 'Empty list'){
+        setUsersList(data.data);
       }
     } catch (error: unknown) {
       if (error instanceof Error) {
@@ -49,37 +56,76 @@ function DashboardSection() {
   };
 
 
-  // const startCall = async (isVideo = false) => {
-  //   try {
-  //     setIsVideoCall(isVideo);
+  const fetchGraphData = async()=>{
+    try {
+      const res = await axios.get(`/api/admin_dash_graph/${currentAdmin._id}`);
 
-  //     const res = await fetch("/api/start_call", {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify({
-  //         conversationId: conId,
-  //         callerId: currentAdmin._id,
-  //         adminId: currentAdmin._id,
-  //         userId: selectedConversation?.userId._id,
-  //         caller: "Admin",
-  //         callType:  isVideo ? 'video' : 'audio',
-  //         receiver: "User"
-  //       }),
-  //     });
+      console.log(res.data)
+      setGraphData(res.data)
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
-  //     const data = await res.json();
+
+  // useEffect(() => {
+
+  //   const handleIncomingCall = (data: any) => {
   //     console.log(data);
-
   //     if (data) {
-  //       socket.emit("incoming-call", { conId, incommingId: currentAdmin._id, adminId: currentAdmin._id, callerId: data._id });
+  //       navigate(
+  //         `/call_admin_page?conId=${data.conId}&incommingId=${data.incommingId}&callerId=${data.callerId}`
+  //       );
   //     }
-  //   } catch (error) {
-  //     console.error("Error starting call:", error);
-  //   }
-  // };
+  //   };
+
+  //   socket.on("incoming-call", handleIncomingCall);
+
+  //   return () => {
+  //     socket.off("incoming-call", handleIncomingCall);
+  //   };
+  // }, [ navigate, socket]);
   
+  const startCall = async (isVideo: boolean = false, conId: string, userId: string) => {
+    try {
+      setIsVideoCall(isVideo);
+
+      const res = await fetch("/api/start_call", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          conversationId: conId,
+          callerId: currentAdmin._id,
+          adminId: currentAdmin._id,
+          userId: userId,
+          caller: "Admin",
+          callType: isVideo ? "video" : "audio",
+          receiver: "User",
+        }),
+      });
+
+      const data = await res.json();
+      if (data._id) {
+        console.log(
+          "emitted for calling 💕💕💕💕💕💕💕💕💕💕💕💕💕💕💕💕💕💕💕💕"
+        );
+        socket.emit("incoming-call", {
+          conId,
+          incommingId: currentAdmin._id,
+          adminId: currentAdmin._id,
+          callerId: data._id,
+        });
+      }
+    } catch (error) {
+      console.error("Error starting call:", error);
+    }
+  };
+
+
+
+
   function formatCallDuration(duration: number): string {
     const seconds = Math.floor((duration / 1000) % 60);
     const minutes = Math.floor((duration / (1000 * 60)) % 60);
@@ -97,6 +143,7 @@ function DashboardSection() {
 
 
  useEffect(()=>{
+  fetchGraphData()
   fetchUsers()
   fetchCalls();
     const fetchUser = async()=>{
@@ -137,9 +184,20 @@ function DashboardSection() {
           <p className="text-xs text-zinc-400">{adminData?.email}</p>
         </div>
         <hr className="w-full mt-4" />
-        <div className="flex justify-center items-center py-3">
+        <div className="flex justify-start items-center py-3">
           <p>
             Address: <span className="text-xs text-zinc-400">{adminData?.address}</span>
+          </p>
+        </div>
+        <div className="flex justify-start items-center py-3">
+          <p>
+            City: <span className="text-xs text-zinc-400">{adminData?.city}</span>
+          </p>
+        </div>
+
+        <div className="flex justify-start items-center py-3">
+          <p>
+            Phone: <span className="text-xs text-zinc-400">{adminData?.phone}</span>
           </p>
         </div>
       </div>
@@ -147,9 +205,11 @@ function DashboardSection() {
         <div className="mb-3">
           <h2 className="text-xl font-bold">Your Activity</h2>
         </div>
-        <div className="h-64 bg-gray-100 flex justify-center items-center">
-          <p>📈📉📊💹</p>
-        </div>
+        
+          {
+            graphData && <DashBoardGraph data={graphData}/>
+          }
+        
       </div>
     </div>
 
@@ -191,9 +251,9 @@ function DashboardSection() {
               <div className="flex flex-col items-center gap-1 w-1/3">
                 <div className="flex items-center gap-2">
                   {calls.callType === 'video' ? (
-                    <FaVideo className="text-red-500" />
+                    <FaVideo onClick={()=> startCall(true, calls.conversationId, calls.userId._id)} className="cursor-pointer text-red-500" />
                   ) : (
-                    <FaPhone className="text-green-500" />
+                    <FaPhone onClick={()=> startCall(false, calls.conversationId, calls.userId._id)} className="cursor-pointer text-green-500" />
                   )}
                 </div>
                 <div className="flex items-center gap-2">
@@ -222,7 +282,9 @@ function DashboardSection() {
         <div className="flex-1 p-4 border-2 rounded-lg bg-white shadow-lg">
       <div className="flex justify-between items-center px-5 py-2">
         <h2 className="text-lg font-bold lg:text-2xl">Recent Visitors</h2>
-        <p className="text-sky-500 text-sm font-bold">({usersList?.length || 0}) All</p>
+       <Link to={'/visitors'}>
+       <p className="text-sky-500 text-sm font-bold hover:bg-sky-500 hover:rounded-full hover:p-2 hover:text-white">({usersList?.length || 0}) All</p>
+       </Link>
       </div>
       <hr className="w-full mt-4" />
       <div className="overflow-y-scroll max-h-96 mt-4">

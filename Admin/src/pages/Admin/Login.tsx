@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { signInStart,signInSuccess } from "../../redux/admin/adminSlice";
 import { FaEyeSlash } from "react-icons/fa";
-import OAuth from "../../pages/Admin/OAuth";
+import OAuth from "../../component/Admin/OAuth";
 import { IoEyeSharp } from "react-icons/io5";
 
 import toast from "react-hot-toast";

@@ -1,8 +1,8 @@
 import { useState } from "react";
-import SideNavBar from "../../pages/Admin/SideNavBar"
-import PropertyDataSection from "../../pages/Admin/PropertyDataSection";
+import SideNavBar from "../../component/Admin/SideNavBar"
+import QrCodeGenerateSection from "../../component/Admin/QrCodeGenerateSection";
 
-const PropertyDataPage = () => {
+const GenerateQrCodePage = () => {
     
   const [navShow, setNavShow] = useState<boolean>(true);
   return (
@@ -10,10 +10,10 @@ const PropertyDataPage = () => {
     <SideNavBar navShowSet={setNavShow} />
     <div className={`transition-all duration-300 ${!navShow ? "w-[60px]" : "w-[250px]"}`}></div>
     <div className="flex-1">
-    <PropertyDataSection />
+    <QrCodeGenerateSection />
     </div>
   </div>
   )
 }
 
-export default PropertyDataPage
+export default GenerateQrCodePage
