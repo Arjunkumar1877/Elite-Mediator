@@ -80,6 +80,20 @@ function DashboardSection() {
   //   }
   // };
   
+  function formatCallDuration(duration: number): string {
+    const seconds = Math.floor((duration / 1000) % 60);
+    const minutes = Math.floor((duration / (1000 * 60)) % 60);
+    const hours = Math.floor((duration / (1000 * 60 * 60)) % 24);
+
+    const formattedSeconds = seconds < 10 ? `0${seconds}` : seconds.toString();
+    const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes.toString();
+    const formattedHours = hours < 10 ? `0${hours}` : hours.toString();
+
+    if (hours === 0) {
+        return `${formattedMinutes}:${formattedSeconds}`;
+    }
+    return `${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
+}
 
 
  useEffect(()=>{
@@ -159,7 +173,7 @@ function DashboardSection() {
                   {new Date(calls.createdAt).toLocaleString()}
                 </span>
                 <span className="text-sm md:text-lg font-semibold">{calls?.userId?.username}</span>
-                <div className="flex items-center gap-2 text-xs md:text-sm text-gray-500">
+                <div className="flex items-center gap-3 text-xs md:text-sm text-gray-500">
                   {calls.caller === 'Admin' ? (
                     <FaPhone className="text-blue-500" />
                   ) : (
@@ -167,6 +181,10 @@ function DashboardSection() {
                   )}
                   <span>
                     {calls.caller === 'Admin' ? 'Outgoing' : 'Incoming'}
+                  </span>
+
+                  <span>
+                     { calls?.callDuration && <> Call Duration: {formatCallDuration(calls?.callDuration)} </>}
                   </span>
                 </div>
               </div>

@@ -1,10 +1,11 @@
 import { Router } from "express";
-import { Route } from "../../../frameworks/types/ServerTypes";
+import { Req, Route } from "../../../frameworks/types/ServerTypes";
 import { JwtTokenAdapter } from "../../../frameworks/services/jwtService/TokenService";
 import { InjectedAdminSignUpController, InjectedAdminlogincontroller, InjectedGenerateQrCodeController, InjectedGetAdminDataController, InjectedGetAdminAllPropertyDataController, InjectedGetUnverifiedAdminController, InjectedGoogleLoginController, InjectedSavePropertyDataController, InjectedUpdateAdminProfileController, InjectedUpdateVerifyAdminController, InjectedUpdateConversationReadCountToZeroController, InjectedGetSelectedConversationController, InjectedGetConversationListController, InjectedGetAdminsCallListController, InjectedGetUsersListController, InjectedClearAdminChatMessagesController, InjectedEditUnknownUsernameController } from "../../../frameworks/injection/AdminInjects";
 import { InjectedCallingFunctionalitiesController, InjectedGetMessagesController, InjectedSendMesssage } from "../../../frameworks/injection/CommonInjects";
 import { InjectedCreateConversationController } from "../../../frameworks/injection/UserInjects";
 import { UserModel } from "../../database/models/user/User";
+import { QrModel } from "../../database/models/admin/QrDataModel";
 
 const router: Route = Router();
 
@@ -74,13 +75,71 @@ router.post("/disconnect_call/:callerId", InjectedCallingFunctionalitiesControll
 router.get("/get_calls/:adminId", InjectedGetAdminsCallListController.GetAdminsCallListControl.bind(InjectedGetAdminsCallListController));
 
 // -------------------------------------| FETCH ALL THE USER LIST OF THE ADMIN FROM THE DATABASE  ------------------------------------------------------|
-router.get("/get_users_list/:adminId", InjectedGetUsersListController.GetTheUserListControl.bind(InjectedGetUsersListController));
+router.get("/get_users_list", InjectedGetUsersListController.GetTheUserListControl.bind(InjectedGetUsersListController));
+
 
 // -------------------------------------| CLEAR ADMIN CHAT MESSAGES  -----------------------------------------------------------------------------------|
 router.get('/clear_admin_chat/:conId',  InjectedClearAdminChatMessagesController.clearAllAdminMessagesControl.bind(InjectedClearAdminChatMessagesController));
 
 // -------------------------------------| CHANGE THE UNKNOWN USER TO   -----------------------------------------------------------------------------------|
 router.post('/edit_unknown_username', InjectedEditUnknownUsernameController.EditUnknownUsernameControl.bind(InjectedEditUnknownUsernameController))
+
+
+
+
+
+// interface GetUsersListRequest extends Request {
+//     query: {
+//       adminId: string;
+//       startDate?: string;
+//       endDate?: string;
+//       propertyName?: string;
+//       userType?: string;
+//     };
+//   }
+  
+//   export const getUsersList = async (req: Req, res:any) => {
+//     try {
+//       const { adminId, startDate, endDate, propertyName, userType } = req.query;
+
+//       if(propertyName === 'All' || userType === 'All'){
+        
+//         const users = await UserModel.find({adminId: adminId});
+//         res.json(users)
+//         return 
+//       }
+  
+//       const filter: any = {
+//         adminId: adminId,
+//       };
+  
+//       if (startDate) {
+//         filter.createdAt = { $gte: new Date(startDate) };
+//       }
+//       if (endDate) {
+//         filter.createdAt = { ...filter.createdAt, $lte: new Date(endDate) };
+//       }
+//       if (propertyName) {
+//         filter.propId = propertyName;
+//       }
+  
+//       if (userType) {
+//         const properties = await QrModel.find({ userType });
+//         const propertyIds = properties.map(property => property._id);
+//         filter.propId = { $in: propertyIds };
+//       }
+  
+//       const users = await UserModel.find(filter).populate('propId');
+//       res.json(users.length ? users : "Empty list");
+//     } catch (error) {
+//       console.error("Error fetching users list:", error);
+//       res.status(500).json({ message: "Server error" });
+//     }
+//   };
+ 
+ 
+// //   router.get('/get_users_list', getUsersList);
+  
 
 
 

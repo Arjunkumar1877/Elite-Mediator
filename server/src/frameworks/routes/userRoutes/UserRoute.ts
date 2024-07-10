@@ -23,8 +23,6 @@ router.post("/create_unverified_user", InjectedCreateNewUserDataController.SaveU
 router.post("/create_unknown_user_data", InjectedChekAndSaveUnknwnUserController.CheckAndSaveUnknownUserControl.bind(InjectedChekAndSaveUnknwnUserController));
 
 
-
-
 // -------------------------------------| VERIFY THE USER DATA USING FIREBASE CODE IN THE CLIENT SIDE AND UPDATE --------------------------------------------------------------------|
 router.post("/user_update_verify/:id", InjectedVerifyAndUpdateUserDataController.VerifyAndUpdateUserControl.bind(InjectedVerifyAndUpdateUserDataController));
 

@@ -41,7 +41,7 @@ const callSchema = new mongoose.Schema({
     type: Date
   },
   callDuration: {
-    type: Date
+    type: Number
   },
   deleted: {
     type: Boolean,

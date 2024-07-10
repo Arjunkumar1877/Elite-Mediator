@@ -1,3 +1,3 @@
 export interface  IGetUsersListUseCase{
-    GetTheUserList(id: string): Promise<any>;
+    GetTheUserList(adminId: string, startDate: string, endDate: string, propertyName: string, userType: string): Promise<any>;
 }

@@ -215,13 +215,44 @@ export class MongoAdminRepository implements IAdminRepository {
     return calles;
   }
 
-  async FindUsersListByAdminId(adminId: string): Promise<any> {
-    const userData = await UserModel.find({ adminId: adminId, deleted: false })
-      .sort({ createdAt: -1 })
-      .populate("propId");
+  async FindUsersListByAdminId(adminId: string, startDate: string, endDate: string, propertyName: string, userType: string): Promise<any> {
+    // const userData = await UserModel.find({ adminId: adminId, deleted: false })
+    //   .sort({ createdAt: -1 })
+    //   .populate("propId");
 
-    if (userData.length > 0) {
-      return userData;
+   
+
+    if(propertyName === 'All' || userType === 'All'){
+      
+      const users = await UserModel.find({adminId: adminId});
+     
+      return users
+    }
+
+    const filter: any = {
+      adminId: adminId,
+    };
+
+    if (startDate) {
+      filter.createdAt = { $gte: new Date(startDate) };
+    }
+    if (endDate) {
+      filter.createdAt = { ...filter.createdAt, $lte: new Date(endDate) };
+    }
+    if (propertyName) {
+      filter.propId = propertyName;
+    }
+
+    if (userType) {
+      const properties = await QrModel.find({ userType });
+      const propertyIds = properties.map(property => property._id);
+      filter.propId = { $in: propertyIds };
+    }
+
+    const users = await UserModel.find(filter).populate('propId');
+
+    if (users.length > 0) {
+      return users;
     } else {
       return "Empty list";
     }

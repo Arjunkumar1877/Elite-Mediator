@@ -20,7 +20,7 @@ export interface IAdminRepository {
     FilterConversationList(adminId: string, page: number, propertyFilter: string, startDate: number, endDate: number): Promise<any>;
     FindConversationListCount(adminId: string): Promise<any>;
     FindAdminsCallListByAdminId(adminId: string): Promise<any>;
-    FindUsersListByAdminId(adminId: string): Promise<any>;
+    FindUsersListByAdminId(adminId: string, startDate: string, endDate: string, propertyName: string, userType: string): Promise<any>;
     FindAndEditUnknownUser(userId: string, username: string): Promise<any>;
     FindAndClearAdminChatMessages(conId: string): Promise<any>;
 }

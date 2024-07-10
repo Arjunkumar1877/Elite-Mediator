@@ -322,6 +322,7 @@ console.log(remoteVideoRef);
     }
 
     navigate(`/chat_user?conId=${conId}`);
+    updateCallDisconnecting(callerId)
   };
 
   return (

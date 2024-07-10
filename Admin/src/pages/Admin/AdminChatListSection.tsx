@@ -8,6 +8,7 @@ import io from "socket.io-client";
 import { useSocket } from "../../contexts/AdminContext";
 import { FaRegEdit } from "react-icons/fa";
 import { MdOutlinePermMedia } from "react-icons/md";
+import toast, { ToastBar } from "react-hot-toast";
 
 interface Conversation {
   _id: string;
@@ -78,7 +79,7 @@ const AdminChatListSection: React.FC = () => {
   useEffect(() => {
     fetchConversations();
     fetchAdminsProperties();
-  }, [currentPage, propertyFilter, startDate, endDate]);
+  }, [currentPage, propertyFilter]);
 
   useEffect(() => {
     socket.on("connect", () => {
@@ -140,6 +141,8 @@ const AdminChatListSection: React.FC = () => {
 
   const handleFilterChatByProperty = (data: string) => {
     setSearchTerm("");
+    setEndDate("");
+    setStartDate("")
     setPropertyFilter(data);
   };
 
@@ -176,6 +179,34 @@ const AdminChatListSection: React.FC = () => {
     );
   };
 
+  const handleStartDateChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const newStartDate = e.target.value;
+    if (new Date(newStartDate) > new Date(endDate)) {
+      toast.error("Start date cannot be later than end date.");
+    } else {
+      setStartDate(newStartDate);
+    }
+  };
+
+  const handleEndDateChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const newEndDate = e.target.value;
+    if (new Date(startDate) > new Date(newEndDate)) {
+      toast.error("End date cannot be earlier than start date.");
+    } else {
+      setEndDate(newEndDate);
+    }
+  };
+
+  const handleFilterByDate = ()=>{
+    if(startDate && endDate){
+      fetchConversations();
+      fetchAdminsProperties();
+    }else{
+      toast.error("please select the dates..")
+    }
+  }
+
+
   return (
     <div className="bg-gray-50 min-h-screen p-4">
       <div className="absolute z-0 rounded-2xl -top-64 left-1/2 transform -translate-x-1/2 bg-zinc-300 w-60 h-40 lg:h-96 rotate-45"></div>
@@ -187,10 +218,10 @@ const AdminChatListSection: React.FC = () => {
       <div className="relative z-10 p-2 flex flex-col justify-between border-2 rounded bg-white shadow-lg h-full overflow-hidden">
         <div className="flex flex-col gap-4">
           <div className="flex flex-col lg:flex-row justify-between bg-sky-500 p-4 rounded">
-            <div className="flex gap-4 lg:gap-16 justify-center items-center px-2 lg:px-5">
+            <div className="flex gap-16 lg:gap-16 justify-center items-center px-2 lg:px-5">
               <button
                 onClick={() => handleFilterChatByProperty("All")}
-                className="py-3 px-8 cursor-pointer text-sm rounded-full bg-white lg:px-16 hover:bg-slate-200"
+                className="py-3 bg-white px-8 lg:px-16 text-xs rounded-full hover:bg-sky-300"
               >
                 All chats
               </button>
@@ -199,13 +230,13 @@ const AdminChatListSection: React.FC = () => {
                   onChange={(e: ChangeEvent<HTMLSelectElement>) =>
                     handleFilterChatByProperty(e.target.value)
                   }
-                  className="py-3 bg-white px-8 lg:px-16 text-xs rounded-full"
+                  className="py-3 px-2 bg-white lg:px-16 text-xs rounded-full cursor-pointer"
                 >
-                  <option className="px-5" value="">
+                  <option value="">
                     All Properties
                   </option>
                   {properties.map((prop: any) => (
-                    <option className="px-5" key={prop._id} value={prop._id}>
+                    <option  key={prop._id} value={prop._id}>
                       {prop.propertyName}
                     </option>
                   ))}
@@ -213,9 +244,9 @@ const AdminChatListSection: React.FC = () => {
               </div>
             </div>
 
-            <div className="flex flex-col lg:flex-row gap-4 mt-4 lg:mt-0">
+            <div className="flex flex-col lg:flex-row gap-4 mt-4 lg:mt-0 bg-sky-300 rounded p-3">
               <div className="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-4">
-                <div className="flex items-center space-x-2">
+                <div className="flex mr-12 pr-4 items-center space-x-2">
                   <label htmlFor="start-date" className="text-xs">
                     Start Date:
                   </label>
@@ -223,8 +254,9 @@ const AdminChatListSection: React.FC = () => {
                     type="date"
                     id="start-date"
                     name="start-date"
-                    onChange={(e) => setStartDate(e.target.value)}
-                    className="py-2 px-4 rounded-full border border-gray-300"
+                    value={startDate}
+                    onChange={handleStartDateChange}
+                    className="py-2 px-4 rounded-full border border-gray-300 cursor-pointer"
                   />
                 </div>
                 <div className="flex items-center space-x-2">
@@ -235,9 +267,11 @@ const AdminChatListSection: React.FC = () => {
                     type="date"
                     id="end-date"
                     name="end-date"
-                    onChange={(e) => setEndDate(e.target.value)}
-                    className="py-2 px-4 rounded-full border border-gray-300"
+                    value={endDate}
+                    onChange={handleEndDateChange}
+                    className="py-2 px-4 rounded-full border border-gray-300 cursor-pointer"
                   />
+                  <button className="bg-white text-xs p-3 rounded-full font-semibold hover:bg-sky-200 " onClick={handleFilterByDate}>Apply</button>
                 </div>
               </div>
             </div>
