@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { MdArrowBackIosNew } from "react-icons/md";
 import { IoCall } from "react-icons/io5";
-import { FaVideo, FaRegEdit, FaDownload } from "react-icons/fa";
+import { FaVideo, FaRegEdit } from "react-icons/fa";
 import { HiOutlinePaperClip } from "react-icons/hi2";
 import { HiDotsVertical } from "react-icons/hi";
 import { BsSend } from "react-icons/bs";
@@ -15,8 +15,6 @@ import { useSocket } from "../../contexts/AdminContext";
 import { FaWhatsapp } from "react-icons/fa6";
 import { FaTrashAlt } from "react-icons/fa";
 import { MdOutlineZoomOutMap } from "react-icons/md";
-
-// import { storage } from "./firebaseConfig";
 import { MdCleaningServices } from "react-icons/md";
 import {
   getDownloadURL,
@@ -24,7 +22,7 @@ import {
   ref,
   uploadBytesResumable,
 } from "firebase/storage";
-import app, { storage } from "../../firebase/firebase";
+import app from "../../firebase/firebase";
 import ReactLoading from "react-loading";
 import { confirmAlert } from "react-confirm-alert";
 import "react-confirm-alert/src/react-confirm-alert.css";
@@ -41,19 +39,71 @@ interface Message {
   senderName?: string;
 }
 
-interface Conversation {
-  _id: string;
-  userId: { _id: string; username: string; phone?: number };
+
+type UserDataType = {
   adminId: string;
+  conversationId: string;
+  createdAt: string;
+  deleted: false;
+  firebaseCode: string;
+  phone: number;
   propId: string;
-  propertyId: { userType: string; allowVedioCalls: boolean };
+  purpose: string;
+  updatedAt?: number;
+  userId: string;
+  username: string;
+  verified?: boolean;
+  _id?: string;
+};
+
+type PropertyDataType = {
+  adminId: string;
+  allowVedioCalls: boolean;
+  code: string;
+  createdAt?: number;
+  deleted: boolean;
+  propId: string;
+  propertyAddress: string;
+  propertyName: string;
+  updatedAt?: number;
+  url: string;
+  userType: string;
+  _id?: string;
+};
+
+type ConversationDataType = {
+  adminId: string;
+  createdAt: number;
+  deleted: boolean;
+  lastMessage: {
+    text: string;
+    time: number;
+    unread: number;
+  };
+  propertyId: PropertyDataType;
+  updatedAt: number;
+  userId: UserDataType;
+};
+
+
+type CallDataType = {
+  adminId: string;
+callType: 'audio' | "video";
+caller: "Admin" | "User";
+conversationId: string;
+createdAt: number; 
+deleted: boolean;
+receiver: string;
+updatedAt?: number
+userId: string;
+_id?: string; 
 }
+
 
 const AdminChatSection: React.FC = () => {
   const [selectedConversation, setSelectedConversation] =
-    useState<Conversation | null>(null);
+    useState<ConversationDataType | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
-  const [newMessage, setNewMessage] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(true);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { currentAdmin } = useSelector((state: any) => state?.admin);
@@ -69,8 +119,6 @@ const AdminChatSection: React.FC = () => {
   const [fileType, setFileType] = useState<any>("text");
   const [imageUploadProgress, setImageUploadProgress] = useState<number | null>(null);
   const [fileUploading, setFileUploading] = useState<boolean>(false);
-  const [audio, setAudio] = useState<any>(null);
-  const [imageUploadError, setImageUploadError] = useState<string | null>(null);
   const [audioUploadingProgress, setAudioUploadingProgress] = useState<boolean>(false)
   const [messageData, setMessageData] = useState<Message>({
     conversationId: conId,
@@ -79,7 +127,7 @@ const AdminChatSection: React.FC = () => {
     type: "text",
     text: "",
   });
-  const fileRef = useRef<HTMLInputElement>(null);
+  const fileRef: any = useRef<HTMLInputElement>(null);
 
   const handleMessageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setMessageData({ ...messageData, text: e.target.value });
@@ -124,11 +172,13 @@ const AdminChatSection: React.FC = () => {
         }),
       });
 
-      const data = await res.json();
+      const data: CallDataType = await res.json();
       if (data._id) {
         console.log(
           "emitted for calling 💕💕💕💕💕💕💕💕💕💕💕💕💕💕💕💕💕💕💕💕"
         );
+
+        console.log(data)
         socket.emit("incoming-call", {
           conId,
           incommingId: currentAdmin._id,
@@ -136,20 +186,20 @@ const AdminChatSection: React.FC = () => {
           callerId: data._id,
         });
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error starting call:", error);
     }
   };
 
   const fetchMessages = async () => {
     try {
-      const response = await axios.get<Message[]>(
+      const response: any = await axios.get<Message[]>(
         `/api/get_admin_messages/${conId}`
       );
       setMessages(response.data);
       setLoading(false);
       scrollToBottom();
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error fetching messages:", error);
       setLoading(false);
     }
@@ -157,8 +207,8 @@ const AdminChatSection: React.FC = () => {
 
   const fetchSelectedConversation = async () => {
     try {
-      const res = await fetch(`/api/selected_conversation/${conId}`);
-      const data = await res.json();
+      const res: any = await fetch(`/api/selected_conversation/${conId}`);
+      const data: ConversationDataType = await res.json();
       setSelectedConversation(data);
       setNewName(data.userId.username);
     } catch (error) {
@@ -194,16 +244,14 @@ const AdminChatSection: React.FC = () => {
   }, [conId, currentAdmin._id, socket]);
 
   const sendMessage = async () => {
-    // if (newMessage.trim() === "" || !conId) return;
     console.log(messageData);
 
     try {
-      const response = await axios.post<Message>("/api/send_message", {
+      const response: any = await axios.post<Message>("/api/send_message", {
         messageData,
       });
 
       socket.emit("chat message", response.data, conId, currentAdmin._id);
-      setNewMessage("");
       setFileType("text");
       setFile(null);
       setMessageData({ ...messageData, type: "text", text: "" });
@@ -251,7 +299,6 @@ const AdminChatSection: React.FC = () => {
     }
 
     try {
-      setImageUploadError(null);
       const storage = getStorage(app);
       const fileName = new Date().getTime() + "_" + file.name;
       const storageRef = ref(storage, fileName);
@@ -265,14 +312,13 @@ const AdminChatSection: React.FC = () => {
             (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
           setImageUploadProgress(progress);
         },
-        (error) => {
-          setImageUploadError("File upload failed: " + error.message);
+        (error: any) => {
+          console.log(error)
           setImageUploadProgress(null);
         },
         () => {
           getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
             setImageUploadProgress(null);
-            setImageUploadError(null);
             console.log(downloadURL);
             setFile(downloadURL);
             setMessageData((prev) => ({
@@ -284,7 +330,6 @@ const AdminChatSection: React.FC = () => {
         }
       );
     } catch (error) {
-      setImageUploadError("File upload failed");
       setImageUploadProgress(null);
     }
   };
@@ -425,7 +470,6 @@ const handleRecordingComplete = async (blob: Blob) => {
       console.log('Audio URL:', audioUrl);
       setFileType(blob)
       console.log(blob.type)
-      setAudio(audioUrl);
       setFile(audioUrl);
       setAudioUploadingProgress(false)
     }
@@ -481,7 +525,7 @@ if (loading) {
                     type="text"
                     value={newName}
                     className="w-[150px] border-2 rounded md:w-[300px] md:p-1"
-                    onChange={(e) => setNewName(e.target.value)}
+                    onChange={(e:  React.ChangeEvent<HTMLInputElement>) => setNewName(e.target.value)}
                   />
                   <button
                     className="text-xs bg-sky-500 text-white px-1 py-1.5 rounded md:p-2 md:text-sm hover:bg-sky-600"

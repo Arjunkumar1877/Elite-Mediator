@@ -7,34 +7,65 @@ import { useSelector } from "react-redux";
 import io from "socket.io-client";
 import { useSocket } from "../../contexts/AdminContext";
 import { MdOutlinePermMedia } from "react-icons/md";
-import toast, { } from "react-hot-toast";
+import toast from "react-hot-toast";
 
-interface Conversation {
-  _id: string;
-  userId: {
-    username: string;
-  };
+type UserDataType = {
   adminId: string;
-  propertyId: string;
-  createdAt?: string;
-  updatedAt?: string;
-  lastMessage?: {
+  conversationId: string;
+  createdAt: string;
+  deleted: false;
+  firebaseCode: string;
+  phone: number;
+  propId: string;
+  purpose: string;
+  updatedAt?: number;
+  userId: string;
+  username: string;
+  verified?: boolean;
+  _id?: string;
+};
+
+type PropertyDataType = {
+  adminId: string;
+  allowVedioCalls: boolean;
+  code: string;
+  createdAt?: number;
+  deleted: boolean;
+  propId: string;
+  propertyAddress: string;
+  propertyName: string;
+  updatedAt?: number;
+  url: string;
+  userType: string;
+  _id?: string;
+};
+
+type ConversationDataType = {
+  adminId: string;
+  createdAt: number;
+  deleted: boolean;
+  lastMessage: {
     text: string;
-    time: string;
+    time: number;
     unread: number;
   };
-}
+  propertyId: PropertyDataType;
+  updatedAt: number;
+  userId: UserDataType;
+};
 
 const socket = io("http://localhost:7000");
 
 const AdminChatListSection: React.FC = () => {
-  const [conversations, setConversations] = useState<Conversation[]>([]);
+  const [conversations, setConversations] = useState<ConversationDataType[]>(
+    []
+  );
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
   const [searchTerm, setSearchTerm] = useState<string>("");
   const { currentAdmin } = useSelector((state: any) => state.admin);
-  const { notificationCount, setNotificationCount }: any = useSocket();
-  const [properties, setProperties] = useState<any[]>([]);
+  const { setNotificationCount }: any = useSocket();
+  const [properties, setProperties] = useState<PropertyDataType[]>([]);
   const [propertyFilter, setPropertyFilter] = useState<string>("");
   const [startDate, setStartDate] = useState<string>("");
   const [endDate, setEndDate] = useState<string>("");
@@ -53,24 +84,28 @@ const AdminChatListSection: React.FC = () => {
 
       const fetchedConversations = response.data.conversations;
       setConversations(fetchedConversations);
+      console.log(conversations);
       setTotalPages(response.data.totalPages);
 
-      let total = 0;
-      fetchedConversations.forEach((conversation: any) => {
+      let total: number = 0;
+      fetchedConversations.forEach((conversation: ConversationDataType) => {
         total += conversation.lastMessage.unread;
       });
       setNotificationCount(total);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error fetching conversations:", error);
     }
   };
 
   const fetchAdminsProperties = async () => {
     try {
-      const res = await fetch(`/api/get_admin_property_data/${currentAdmin._id}`);
-      const data = await res.json();
+      const res = await fetch(
+        `/api/get_admin_property_data/${currentAdmin._id}`
+      );
+      const data: PropertyDataType[] = await res.json();
+      console.log(data);
       setProperties(data);
-    } catch (error) {
+    } catch (error: any) {
       console.log("Error fetching admin properties:", error);
     }
   };
@@ -129,10 +164,10 @@ const AdminChatListSection: React.FC = () => {
   };
 
   const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const searchText = e.target.value.toLowerCase();
+    const searchText: string = e.target.value.toLowerCase();
     setSearchTerm(searchText);
 
-    const filtered = conversations.filter((conversation) =>
+    const filtered: ConversationDataType[] = conversations.filter((conversation) =>
       conversation.userId.username.toLowerCase().includes(searchText)
     );
     setConversations(filtered);
@@ -141,13 +176,8 @@ const AdminChatListSection: React.FC = () => {
   const handleFilterChatByProperty = (data: string) => {
     setSearchTerm("");
     setEndDate("");
-    setStartDate("")
+    setStartDate("");
     setPropertyFilter(data);
-  };
-
-  const clearSearch = () => {
-    setSearchTerm("");
-    fetchConversations();
   };
 
   const getUserTypeBanner = (userType: string) => {
@@ -179,7 +209,7 @@ const AdminChatListSection: React.FC = () => {
   };
 
   const handleStartDateChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const newStartDate = e.target.value;
+    const newStartDate: any = e.target.value;
     if (new Date(newStartDate) > new Date(endDate)) {
       toast.error("Start date cannot be later than end date.");
     } else {
@@ -188,7 +218,7 @@ const AdminChatListSection: React.FC = () => {
   };
 
   const handleEndDateChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const newEndDate = e.target.value;
+    const newEndDate: any = e.target.value;
     if (new Date(startDate) > new Date(newEndDate)) {
       toast.error("End date cannot be earlier than start date.");
     } else {
@@ -196,15 +226,14 @@ const AdminChatListSection: React.FC = () => {
     }
   };
 
-  const handleFilterByDate = ()=>{
-    if(startDate && endDate){
+  const handleFilterByDate = () => {
+    if (startDate && endDate) {
       fetchConversations();
       fetchAdminsProperties();
-    }else{
-      toast.error("please select the dates..")
+    } else {
+      toast.error("please select the dates..");
     }
-  }
-
+  };
 
   return (
     <div className="bg-gray-50 min-h-screen p-4">
@@ -231,11 +260,9 @@ const AdminChatListSection: React.FC = () => {
                   }
                   className="py-3 px-2 bg-white lg:px-16 text-xs rounded-full cursor-pointer"
                 >
-                  <option value="">
-                    All Properties
-                  </option>
-                  {properties.map((prop: any) => (
-                    <option  key={prop._id} value={prop._id}>
+                  <option value="">All Properties</option>
+                  {properties.map((prop: PropertyDataType) => (
+                    <option key={prop._id} value={prop._id}>
                       {prop.propertyName}
                     </option>
                   ))}
@@ -270,7 +297,12 @@ const AdminChatListSection: React.FC = () => {
                     onChange={handleEndDateChange}
                     className="py-2 px-4 rounded-full border border-gray-300 cursor-pointer"
                   />
-                  <button className="bg-white text-xs p-3 rounded-full font-semibold hover:bg-sky-200 " onClick={handleFilterByDate}>Apply</button>
+                  <button
+                    className="bg-white text-xs p-3 rounded-full font-semibold hover:bg-sky-200 "
+                    onClick={handleFilterByDate}
+                  >
+                    Apply
+                  </button>
                 </div>
               </div>
             </div>

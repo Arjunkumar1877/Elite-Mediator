@@ -1,8 +1,7 @@
 import { IoSettingsOutline } from "react-icons/io5";
-import { FaRegTrashCan } from "react-icons/fa6";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { FaPhone, FaVideo, FaCheck, FaTimes, FaClock, FaRegTrashAlt } from 'react-icons/fa';
 import { useSocket } from "../../contexts/AdminContext";
 import axios from "axios";
@@ -17,7 +16,6 @@ function DashboardSection() {
   const [usersList, setUsersList] = useState<any>();
   const { socket, setIsVideoCall }: any = useSocket();
   const [graphData, setGraphData] = useState<any>();
-  const navigate = useNavigate();
   const fetchCalls = async()=>{
     try {
       const res = await fetch(`/api/get_calls/${currentAdmin._id}`);
@@ -67,24 +65,6 @@ function DashboardSection() {
     }
   }
 
-
-  // useEffect(() => {
-
-  //   const handleIncomingCall = (data: any) => {
-  //     console.log(data);
-  //     if (data) {
-  //       navigate(
-  //         `/call_admin_page?conId=${data.conId}&incommingId=${data.incommingId}&callerId=${data.callerId}`
-  //       );
-  //     }
-  //   };
-
-  //   socket.on("incoming-call", handleIncomingCall);
-
-  //   return () => {
-  //     socket.off("incoming-call", handleIncomingCall);
-  //   };
-  // }, [ navigate, socket]);
   
   const startCall = async (isVideo: boolean = false, conId: string, userId: string) => {
     try {

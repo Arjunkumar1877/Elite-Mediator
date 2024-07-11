@@ -5,7 +5,7 @@ import { useSocket } from "../../contexts/AdminContext";
 import { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
@@ -13,7 +13,6 @@ import 'react-confirm-alert/src/react-confirm-alert.css';
 
 
 const UserCallPage = () => {
-  // const { socket, setIsVideoCall, isVideoCall }: any = useSocket();
   const navigate = useNavigate();
   const { currentUser } = useSelector((state: any) => state.user);
   const location = useLocation();

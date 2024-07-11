@@ -18,10 +18,14 @@ export class JwtTokenAdapter implements TokenServices {
     try {
       // const admin = await this.adminrepository.FindAdminByEmail(req.body.email);
       const token = await jwt.sign(
+
         { email: req.body.email },
         "hellooooo" as string,
         { expiresIn: "600m" }
       );
+
+      console.log(req.body)
+         console.log("📀📀📀📀📀📀📀")
       req.body.token = token;
       next();
     } catch (error) {
@@ -46,7 +50,7 @@ export class JwtTokenAdapter implements TokenServices {
       }
 
 req.body.user = user     
-
+console.log("verified ❤️❤️❤️❤️❤️📉📉📉📉📉📉📉📉📉📉📉📉📉📉📉📉📉📉📉📉📉📉📉📉📉")
       next();
     });
   }

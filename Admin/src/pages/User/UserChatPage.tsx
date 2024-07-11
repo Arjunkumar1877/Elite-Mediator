@@ -8,11 +8,9 @@ import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import { signoutSuccess, setMessages } from "../../redux/user/UserSlice";
-
 import io from "socket.io-client";
 import { useSocket } from "../../contexts/AdminContext";
 import { MdCleaningServices, MdOutlineZoomOutMap } from "react-icons/md";
-// import { toast } from "react-toastify";
 import { Toaster, toast } from "react-hot-toast";
 import {
   getDownloadURL,
@@ -38,16 +36,9 @@ interface Message {
   senderName?: string;
 }
 
-interface Conversation {
-  _id: string;
-  userId: { _id: string; username: string; phone?: number };
-  adminId: string;
-  propId: string;
-  propertyId: { userType: string; allowVideoCalls: boolean };
-}
+
 
 const UserChatPage: React.FC = () => {
-  const [newMessage, setNewMessage] = useState<string>("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { currentUser, messages } = useSelector((state: any) => state.user);
   const { setIsVideoCall }: any = useSocket();
@@ -61,7 +52,6 @@ const UserChatPage: React.FC = () => {
     null
   );
   const [fileUploading, setFileUploading] = useState<boolean>(false);
-  const [imageUploadError, setImageUploadError] = useState<string | null>(null);
   const [file, setFile] = useState<any>();
   const [fileType, setFileType] = useState<any>("text");
   const [audioUploadingProgress, setAudioUploadingProgress] = useState<boolean>(false)
@@ -108,7 +98,6 @@ const UserChatPage: React.FC = () => {
     }
 
     try {
-      setImageUploadError(null);
       const storage = getStorage(app);
       const fileName = new Date().getTime() + "_" + file.name;
       const storageRef = ref(storage, fileName);
@@ -122,14 +111,13 @@ const UserChatPage: React.FC = () => {
             (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
           setImageUploadProgress(progress);
         },
-        (error) => {
-          setImageUploadError("File upload failed: " + error.message);
+        (error: any) => {
+          console.log(error)
           setImageUploadProgress(null);
         },
         () => {
           getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
             setImageUploadProgress(null);
-            setImageUploadError(null);
             console.log(downloadURL);
             setFile(downloadURL);
             setMessageData((prev) => ({
@@ -141,7 +129,6 @@ const UserChatPage: React.FC = () => {
         }
       );
     } catch (error) {
-      setImageUploadError("File upload failed");
       setImageUploadProgress(null);
     }
   };
@@ -241,7 +228,6 @@ const UserChatPage: React.FC = () => {
       socket.emit("update conversation", currentUser.adminId);
       socket.emit("notify", currentUser.adminId);
 
-      setNewMessage("");
       setFileType("text");
       setFile(null);
       setMessageData({ ...messageData, type: "text", text: "" });

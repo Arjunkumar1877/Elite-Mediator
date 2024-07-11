@@ -18,9 +18,6 @@ type PropertyDataType = {
 const PropertyDataSection = () => {
   const { currentAdmin } = useSelector((state: any) => state.admin);
   const [propertyData, setPropertyData] = useState<PropertyDataType[]>([]);
-  // const [qrCode, setQrCode] = useState();
- 
-
   useEffect(() => {
     const fetchPropertyData = async () => {
       try {
@@ -47,15 +44,15 @@ const PropertyDataSection = () => {
     link.click();
   };
 
-  const handleDelete = async (id: string) => {
-    try {
-      const res = await axios.get(`/api/delete_admin_property_data/${id}`);
+  // const handleDelete = async (id: string) => {
+  //   try {
+  //     const res = await axios.get(`/api/delete_admin_property_data/${id}`);
 
-      const data:any = res.data;
-    } catch (error) {
-      console.log(error)
-    }
-  };
+  //     const data:any = res.data;
+  //   } catch (error) {
+  //     console.log(error)
+  //   }
+  // };
 
   return (
     <div className="relative p-1">
@@ -110,7 +107,7 @@ const PropertyDataSection = () => {
                       </td>
                       <td className="flex-1 text-left">
                         <button
-                          onClick={() => handleDelete(data?._id)}
+                          // onClick={() => handleDelete(data?._id)}
                           className="bg-red-500 text-white text-xs cursor-pointer rounded hover:bg-red-700 lg:text-sm lg:py-1 lg:px-2"
                         >
                           delete

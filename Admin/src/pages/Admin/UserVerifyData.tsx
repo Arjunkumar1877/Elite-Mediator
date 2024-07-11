@@ -23,7 +23,6 @@ interface FormDataType {
 const UserVerifyData = () => {
   const navigate = useNavigate();
   const { currentAdmin } = useSelector((state: any) => state.admin);
-  const [file, setFile] = useState<File | null>(null);
   const [imageUploadProgress, setImageUploadProgress] = useState<number | null>(
     null
   );
@@ -59,7 +58,6 @@ const UserVerifyData = () => {
 
   const handleImageChange = (e: React.ChangeEvent < HTMLInputElement > ) => {
     if (e.target.files && e.target.files[0]) {
-      setFile(e.target.files[0]);
       handleImageUpload(e.target.files[0]);
     }
   };

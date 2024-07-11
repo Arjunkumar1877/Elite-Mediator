@@ -8,8 +8,8 @@ import { ChangeEvent, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { auth } from "../../firebase/firebase";
 import toast from "react-hot-toast";
-import { useDispatch, useSelector } from "react-redux";
-import { setMessages, signInSuccess } from "../../redux/user/UserSlice";
+import { useDispatch } from "react-redux";
+import {  signInSuccess } from "../../redux/user/UserSlice";
 import axios from "axios";
 
 type UserDataType = {
@@ -31,23 +31,9 @@ const UserLoginOtpVerify = () => {
   const [userData, setUserData] = useState<UserDataType | null>(null);
   const params = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { currentUser } = useSelector((state: any) => state.user);
   const dispatch = useDispatch();
 
   
-  // const fetchProperty = async()=>{
-  //   try {
-  //     const res =  await fetch('/user/get_admins_property_data', {
-  //       method: 'POST',
-  //       headers: {
-  //         'Content-Type': 'application/json'
-  //       },
-  //       body: JSON.stringify({adminId: userData?.adminId, propId: })
-  //     })
-  //   } catch (error) {
-  //     console.log(error)
-  //   }
-  // }
 
 
   useEffect(() => {

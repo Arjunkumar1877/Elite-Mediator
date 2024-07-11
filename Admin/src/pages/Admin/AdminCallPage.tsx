@@ -1,12 +1,10 @@
 import { FaUserAlt } from "react-icons/fa";
-import { MdCall, MdCallEnd } from "react-icons/md";
-import { HiSpeakerWave, HiSpeakerXMark } from "react-icons/hi2";
+import {  MdCallEnd } from "react-icons/md";
 import { IoIosMicOff, IoIosMic } from "react-icons/io";
 import { useSocket } from "../../contexts/AdminContext";
 import { useEffect, useRef, useState } from "react";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { confirmAlert } from "react-confirm-alert"; // Import
 import "react-confirm-alert/src/react-confirm-alert.css"; // Import css

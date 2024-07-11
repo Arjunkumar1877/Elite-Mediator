@@ -1,7 +1,7 @@
+import React from "react";
 import "./App.css";
 import Landing from "./pages/Admin/LandingPage";
 import Login from "./pages/Admin/Login";
-// import Landing from './pages/LandingPage'
 import ServicePage from "./pages/Admin/ServicePage";
 import { Route, Routes, BrowserRouter } from "react-router-dom";
 import Signup from "./pages/Admin/Signup";
@@ -25,10 +25,9 @@ import UserChatPage from "./pages/User/UserChatPage";
 import UsersListPage from "./pages/Admin/UsersListPage";
 import PropertyDataPage from "./pages/Admin/PropertyDataPage";
 
-export default function App() {
+const App: React.FC = () => {
   return (
     <div className="">
-      {/* <ServicePage /> */}
       <Toaster />
       <SocketProvider>
         <BrowserRouter>
@@ -39,28 +38,21 @@ export default function App() {
             <Route path="/signup" element={<Signup />} />
             <Route path="/verify_otp_page/:ph" element={<OtpVerification />} />
 
-
             <Route element={<AdminPrivateRoute />}>
               <Route path="/admin-data" element={<UserVerifyData />} />
               <Route path="/profile" element={<ProfilePage />} />
               <Route path="/editprofile" element={<EditProfilePage />} />
               <Route path="/dashboard" element={<DashboardPage />} />
-              <Route path="/qrcodes" element={<PropertyDataPage />}/>
-           <Route path="/visitors" element={<UsersListPage />} />
-
+              <Route path="/qrcodes" element={<PropertyDataPage />} />
+              <Route path="/visitors" element={<UsersListPage />} />
               <Route path="/generate_qr" element={<GenerateQrCodePage />} />
               <Route path="/chat_list" element={<AdminChatListPage />} />
               <Route path="/admin_chat" element={<AdminChatPage />} />
               <Route path="/call_admin_page" element={<AdminCallPage />} />
             </Route>
 
-
-
             <Route path="/new_user" element={<InitialDataPage />} />
-            <Route
-              path="/user_verify_otp_page/:id"
-              element={<UserLoginOtpVerify />}
-            />
+            <Route path="/user_verify_otp_page/:id" element={<UserLoginOtpVerify />} />
             <Route element={<UserPrivateRoute />}>
               <Route path="/chat_user" element={<UserChatPage />} />
               <Route path="/call_page_user" element={<UserCallPage />} />
@@ -71,3 +63,5 @@ export default function App() {
     </div>
   );
 }
+
+export default App;

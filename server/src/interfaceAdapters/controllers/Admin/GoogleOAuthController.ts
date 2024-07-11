@@ -5,8 +5,7 @@ export class GoogleOAthController {
   constructor(private googleauthusecase: IGoogleAuth) {}
   async GoogleoauthController(req: Req, res: Res) {
     try {
-      console.log("😂😂😣❤️");
-      console.log(req.body);
+      // console.log(req.body);
       const data = await this.googleauthusecase.GoogleAuthLogin(req.body);
       console.log(data);
       console.log(req.body.token);

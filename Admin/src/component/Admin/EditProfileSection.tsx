@@ -43,31 +43,25 @@ const EditProfileSection: React.FC = () => {
     landmark: "",
     pincode: "",
   });
-  const [file, setFile] = useState<File | null>(null);
   const [imageUploadProgress, setImageUploadProgress] = useState<number | null>(
     null
   );
-  const [imageUploadError, setImageUploadError] = useState<string | null>(null);
-
-  // const [profileImage, setProfileImage] = useState < string | null > (null);
   const { currentAdmin } = useSelector((state: any) => state.admin);
   const navigate = useNavigate();
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
-      setFile(e.target.files[0]);
       handleImageUpload(e.target.files[0]);
     }
   };
 
   const handleImageUpload = async (file: File) => {
     if (!file) {
-      setImageUploadError("Please select an image");
+      toast('No file available to upload.')
       return;
     }
 
     try {
-      setImageUploadError(null);
       const storage = getStorage(app);
       const fileName = new Date().getTime() + "_" + file.name;
       const storageRef = ref(storage, fileName);
@@ -80,14 +74,13 @@ const EditProfileSection: React.FC = () => {
             (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
           setImageUploadProgress(progress);
         },
-        (error) => {
-          setImageUploadError("Image upload failed: " + error.message);
+        (error: any) => {
+          console.log(error)
           setImageUploadProgress(null);
         },
         () => {
           getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
             setImageUploadProgress(null);
-            setImageUploadError(null);
             setProfileData((prevData) => ({
               ...prevData,
               image: downloadURL,
@@ -96,7 +89,6 @@ const EditProfileSection: React.FC = () => {
         }
       );
     } catch (error) {
-      setImageUploadError("Image upload failed");
       setImageUploadProgress(null);
     }
   };

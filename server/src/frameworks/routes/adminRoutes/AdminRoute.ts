@@ -27,62 +27,62 @@ router.post("/admin_login", InjectedAdminlogincontroller.login.bind(InjectedAdmi
 router.post("/google_oauth",JwtToken.CreateJwtToken,  InjectedGoogleLoginController.GoogleoauthController.bind(InjectedGoogleLoginController));
 
 // -------------------------------------| UPDATE THE ADDMIN PROFILE ------------------------------------------------------------------------------------|
-router.post("/update_admin/:id",  InjectedUpdateAdminProfileController.UpdateAdminProfileData.bind(InjectedUpdateAdminProfileController));
+router.post("/update_admin/:id",JwtToken.verifyToken,  InjectedUpdateAdminProfileController.UpdateAdminProfileData.bind(InjectedUpdateAdminProfileController));
 
 // -------------------------------------| GET THE ADMIN DATA BY THE ADMIN ID ---------------------------------------------------------------------------|
-router.get("/get_admin/:id", InjectedGetAdminDataController.GetAdminDataByIdController.bind(InjectedGetAdminDataController));
+router.get("/get_admin/:id",JwtToken.verifyToken, InjectedGetAdminDataController.GetAdminDataByIdController.bind(InjectedGetAdminDataController));
 
 // -------------------------------------| GET THE GENRATED ADMIN CODE ----------------------------------------------------------------------------------|
-router.get("/generate_code/:adminId/:propertyId", InjectedGenerateQrCodeController.GenerateQrCode.bind(InjectedGenerateQrCodeController));
+router.get("/generate_code/:adminId/:propertyId",JwtToken.verifyToken, InjectedGenerateQrCodeController.GenerateQrCode.bind(InjectedGenerateQrCodeController));
 
 // -------------------------------------| SAVE PROPERTY DATA AND QRCODE --------------------------------------------------------------------------------|
-router.post("/save_property_data", InjectedSavePropertyDataController.SavePropertyDataControl.bind(InjectedSavePropertyDataController));
+router.post("/save_property_data",JwtToken.verifyToken, InjectedSavePropertyDataController.SavePropertyDataControl.bind(InjectedSavePropertyDataController));
 
 // -------------------------------------| GET ADMINS PROPERTY DATA AND QRCODE --------------------------------------------------------------------------|
-router.get("/get_admin_property_data/:id", InjectedGetAdminAllPropertyDataController.GetAdminPropertyDataControl.bind(InjectedGetAdminAllPropertyDataController));
+router.get("/get_admin_property_data/:id", JwtToken.verifyToken, InjectedGetAdminAllPropertyDataController.GetAdminPropertyDataControl.bind(InjectedGetAdminAllPropertyDataController));
 
 // -------------------------------------| SEND MESSAGE FROM ADMIN SIDE TO USER -------------------------------------------------------------------------|
-router.post('/send_message', InjectedSendMesssage.SendMessageControl.bind(InjectedSendMesssage));
+router.post('/send_message', JwtToken.verifyToken, InjectedSendMesssage.SendMessageControl.bind(InjectedSendMesssage));
 
 // -------------------------------------| FETCH THE EXSISTING CONVERSATION ON THE ADMIN SIDE -----------------------------------------------------------|
-router.post('/start_conversation', InjectedCreateConversationController.CreateConversationControl.bind(InjectedCreateConversationController));
+router.post('/start_conversation',JwtToken.verifyToken, InjectedCreateConversationController.CreateConversationControl.bind(InjectedCreateConversationController));
 
 // -------------------------------------| UPDATE THE CONVERSATION'S MESSAGE COUNT TO ZERO --------------------------------------------------------------|
-router.get('/update_conversation_unread_count/:id', InjectedUpdateConversationReadCountToZeroController.updateConversationReadToZeroControl.bind(InjectedUpdateConversationReadCountToZeroController));
+router.get('/update_conversation_unread_count/:id',JwtToken.verifyToken, InjectedUpdateConversationReadCountToZeroController.updateConversationReadToZeroControl.bind(InjectedUpdateConversationReadCountToZeroController));
 
 // -------------------------------------| FETCH THE CONVERSATION'S DOCUMENT USING THE ID ---------------------------------------------------------------|
-router.get('/selected_conversation/:id',  InjectedGetSelectedConversationController.GetSelectedConversationControl.bind(InjectedGetSelectedConversationController));
+router.get('/selected_conversation/:id',JwtToken.verifyToken,  InjectedGetSelectedConversationController.GetSelectedConversationControl.bind(InjectedGetSelectedConversationController));
 
 // -------------------------------------| GETTING ALL THE ADMIN CHAT LIST MESSAGES FROM THE DATABASE  --------------------------------------------------|
-router.get('/get_admin_messages/:conId', InjectedGetMessagesController.GetMessagesControl.bind(InjectedGetMessagesController));
+router.get('/get_admin_messages/:conId',JwtToken.verifyToken, InjectedGetMessagesController.GetMessagesControl.bind(InjectedGetMessagesController));
 
 // -------------------------------------| FECH ALL AND FILTERED ADMINS CHAT LIST  ----------------------------------------------------------------------|
-router.get('/conversations_list', InjectedGetConversationListController.GetConversationListControl.bind(InjectedGetConversationListController));
+router.get('/conversations_list',JwtToken.verifyToken, InjectedGetConversationListController.GetConversationListControl.bind(InjectedGetConversationListController));
 
 // -------------------------------------| STARTING A CALL AND SAVING THE DATA TO THE DATABASE  ---------------------------------------------------------|
-router.post("/start_call", InjectedCallingFunctionalitiesController.StartingCallControl.bind(InjectedCallingFunctionalitiesController));
+router.post("/start_call",JwtToken.verifyToken, InjectedCallingFunctionalitiesController.StartingCallControl.bind(InjectedCallingFunctionalitiesController));
 
 // -------------------------------------| ACCEPTING THE CALL AND UPDATING THE DATABASE  ----------------------------------------------------------------|
-router.post("/accept_call/:callerId", InjectedCallingFunctionalitiesController.AcceptingCallControl.bind(InjectedCallingFunctionalitiesController));
+router.post("/accept_call/:callerId",JwtToken.verifyToken, InjectedCallingFunctionalitiesController.AcceptingCallControl.bind(InjectedCallingFunctionalitiesController));
 
 // -------------------------------------| DECLINING THE CALL BY THE USER AND UPDATING IT TO THE DATABASE  ----------------------------------------------|
-router.post("/decline_call/:callerId", InjectedCallingFunctionalitiesController.DecliningCallControl.bind(InjectedCallingFunctionalitiesController));
+router.post("/decline_call/:callerId",JwtToken.verifyToken, InjectedCallingFunctionalitiesController.DecliningCallControl.bind(InjectedCallingFunctionalitiesController));
 
 // -------------------------------------| DISCONNECT THE CONNECTED CALL BY THE USER AND UPDATING IT TO THE DATABASE  -----------------------------------|
-router.post("/disconnect_call/:callerId", InjectedCallingFunctionalitiesController.DisconnectingControl.bind(InjectedCallingFunctionalitiesController));
+router.post("/disconnect_call/:callerId",JwtToken.verifyToken, InjectedCallingFunctionalitiesController.DisconnectingControl.bind(InjectedCallingFunctionalitiesController));
 
 // -------------------------------------| FETCH ALL THE CALL LIST OF THE ADMIN FROM THE DATABASE  ------------------------------------------------------|
-router.get("/get_calls/:adminId", InjectedGetAdminsCallListController.GetAdminsCallListControl.bind(InjectedGetAdminsCallListController));
+router.get("/get_calls/:adminId",JwtToken.verifyToken, InjectedGetAdminsCallListController.GetAdminsCallListControl.bind(InjectedGetAdminsCallListController));
 
 // -------------------------------------| FETCH ALL THE USER LIST OF THE ADMIN FROM THE DATABASE  ------------------------------------------------------|
-router.get("/get_users_list", InjectedGetUsersListController.GetTheUserListControl.bind(InjectedGetUsersListController));
+router.get("/get_users_list",JwtToken.verifyToken, InjectedGetUsersListController.GetTheUserListControl.bind(InjectedGetUsersListController));
 
 
 // -------------------------------------| CLEAR ADMIN CHAT MESSAGES  -----------------------------------------------------------------------------------|
-router.get('/clear_admin_chat/:conId',  InjectedClearAdminChatMessagesController.clearAllAdminMessagesControl.bind(InjectedClearAdminChatMessagesController));
+router.get('/clear_admin_chat/:conId', JwtToken.verifyToken, InjectedClearAdminChatMessagesController.clearAllAdminMessagesControl.bind(InjectedClearAdminChatMessagesController));
 
 // -------------------------------------| CHANGE THE UNKNOWN USER TO   -----------------------------------------------------------------------------------|
-router.post('/edit_unknown_username', InjectedEditUnknownUsernameController.EditUnknownUsernameControl.bind(InjectedEditUnknownUsernameController))
+router.post('/edit_unknown_username', JwtToken.verifyToken, InjectedEditUnknownUsernameController.EditUnknownUsernameControl.bind(InjectedEditUnknownUsernameController))
 
 
 
@@ -116,68 +116,14 @@ router.get("/admin_dash_graph/:adminId", async(req, res)=>{
       
 
 
-      const All = await UserModel.find({adminId: adminId}).countDocuments();
-      const unknown = await UserModel.find(filterVerified).countDocuments()
-      const verified = await UserModel.find(filterUnknown).countDocuments()
-      const unVerified = await UserModel.find(filterUnVerified).countDocuments()
+      const All:number = await UserModel.find({adminId: adminId}).countDocuments();
+      const unknown: number = await UserModel.find(filterVerified).countDocuments()
+      const verified: number = await UserModel.find(filterUnknown).countDocuments()
+      const unVerified: number = await UserModel.find(filterUnVerified).countDocuments()
 
       res.json({All, unknown, verified, unVerified})
 })
 
-
-
-// interface GetUsersListRequest extends Request {
-//     query: {
-//       adminId: string;
-//       startDate?: string;
-//       endDate?: string;
-//       propertyName?: string;
-//       userType?: string;
-//     };
-//   }
-  
-//   export const getUsersList = async (req: Req, res:any) => {
-//     try {
-//       const { adminId, startDate, endDate, propertyName, userType } = req.query;
-
-//       if(propertyName === 'All' || userType === 'All'){
-        
-//         const users = await UserModel.find({adminId: adminId});
-//         res.json(users)
-//         return 
-//       }
-  
-//       const filter: any = {
-//         adminId: adminId,
-//       };
-  
-//       if (startDate) {
-//         filter.createdAt = { $gte: new Date(startDate) };
-//       }
-//       if (endDate) {
-//         filter.createdAt = { ...filter.createdAt, $lte: new Date(endDate) };
-//       }
-//       if (propertyName) {
-//         filter.propId = propertyName;
-//       }
-  
-//       if (userType) {
-//         const properties = await QrModel.find({ userType });
-//         const propertyIds = properties.map(property => property._id);
-//         filter.propId = { $in: propertyIds };
-//       }
-  
-//       const users = await UserModel.find(filter).populate('propId');
-//       res.json(users.length ? users : "Empty list");
-//     } catch (error) {
-//       console.error("Error fetching users list:", error);
-//       res.status(500).json({ message: "Server error" });
-//     }
-//   };
- 
- 
-// //   router.get('/get_users_list', getUsersList);
-  
 
 
 
