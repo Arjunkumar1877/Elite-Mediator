@@ -6,9 +6,8 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 import io from "socket.io-client";
 import { useSocket } from "../../contexts/AdminContext";
-import { FaRegEdit } from "react-icons/fa";
 import { MdOutlinePermMedia } from "react-icons/md";
-import toast, { ToastBar } from "react-hot-toast";
+import toast, { } from "react-hot-toast";
 
 interface Conversation {
   _id: string;
