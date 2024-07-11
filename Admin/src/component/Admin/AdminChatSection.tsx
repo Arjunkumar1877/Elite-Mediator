@@ -401,12 +401,8 @@ const AdminChatSection: React.FC = () => {
     });
   };
 
-  console.log(selectedConversation);
-
-
-
+console.log(selectedConversation);
 const MAX_AUDIO_SIZE = 20 * 1024 * 1024; 
-
 const handleAudioUpload = async (audioFile: File | Blob): Promise<string | null> => {
   if (!audioFile || audioFile.size === 0) {
     toast.error("Please select an audio file");
@@ -457,9 +453,6 @@ const handleAudioUpload = async (audioFile: File | Blob): Promise<string | null>
     return null;
   }
 };
-
-
-
 
 const handleRecordingComplete = async (blob: Blob) => {
   try {

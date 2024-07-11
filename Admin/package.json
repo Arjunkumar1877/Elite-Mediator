@@ -14,7 +14,7 @@
     "address": "^2.0.3",
     "axios": "^1.7.2",
     "chart.js": "^4.4.3",
-    "firebase": "^10.12.2",
+    "firebase": "^10.12.3",
     "get-mac-address": "^1.0.0",
     "getmac": "^6.6.0",
     "node-macaddress": "^0.2.4",

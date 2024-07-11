@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "./App.css";
 import Landing from "./pages/Admin/LandingPage";
 import Login from "./pages/Admin/Login";
@@ -24,8 +24,20 @@ import UserCallPage from "./pages/User/UserCallPage";
 import UserChatPage from "./pages/User/UserChatPage";
 import UsersListPage from "./pages/Admin/UsersListPage";
 import PropertyDataPage from "./pages/Admin/PropertyDataPage";
+import { onMessageListener, requestPermission } from "./firebase/firebase";
 
 const App: React.FC = () => {
+  useEffect(() => {
+    requestPermission();
+
+    const unsubscribe = onMessageListener();
+   
+
+    return () => {
+      unsubscribe.then(() => {}).catch((err) => console.log("failed " + err));
+    };
+  }, []);
+
   return (
     <div className="">
       <Toaster />

@@ -1,8 +1,9 @@
+// src/firebase.ts
+
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getStorage } from "firebase/storage";
-
-console.log(import.meta.env.VITE_FIREBASE_API_KEY)
+import { getToken, getMessaging, onMessage } from 'firebase/messaging';
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -14,10 +15,46 @@ const firebaseConfig = {
   measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
 };
 
-
-
-
 const app = initializeApp(firebaseConfig);
+export default app;
 export const auth = getAuth(app);
 export const storage = getStorage(app);
-export default app;
+export const messaging = getMessaging(app);
+// console.log(import.meta.env.VITE_VAPID_KEY)
+
+
+const requestPermission = async (): Promise<void> => {
+  console.log("Requesting User Permission");
+
+  try {
+    const permission = await Notification.requestPermission();
+    if (permission === 'granted') {
+      console.log("Notification user Permission granted");
+
+      const currentToken = await getToken(messaging, { vapidKey: import.meta.env.VITE_VAPID_KEY });
+      if (currentToken) {
+        console.log("Client Token:   ", currentToken);
+      } else {
+        console.log("Failed to generate the app registration token.");
+      }
+    } else {
+      console.log("User Permission Denied.");
+    }
+  } catch (err) {
+    console.log("An error occurred when requesting to receive token. ", err);
+  }
+};
+
+const onMessageListener = (): Promise<any> => {
+  return new Promise((resolve) => {
+    onMessage(messaging, (payload) => {
+      console.log(payload);
+      resolve(payload);
+    });
+  });
+};
+
+requestPermission();
+onMessageListener()
+
+export { requestPermission, onMessageListener };

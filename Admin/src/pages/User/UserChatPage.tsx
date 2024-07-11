@@ -465,7 +465,7 @@ const downloadImage = (img: string) => {
                       </div>
                     ) : (
                       <div className="p-2 rounded-xl bg-sky-100 text-sm break-words">
-                      {message.type.startsWith("image/") ? (
+                      {message?.type &&  message?.type?.startsWith("image/") ? (
                       <div className="relative">
                       <MdOutlineZoomOutMap
                         onClick={() => downloadImage(message.text)}
@@ -478,7 +478,7 @@ const downloadImage = (img: string) => {
                       />
                     </div>
                     
-                      ) : message.type.startsWith("video/") ? (
+                      ) : message?.type?.startsWith("video/") ? (
                         <video className="w-[200px] md:w-[500px]" controls >
                           <source src={message.text} type={message.type} />
                         </video>
