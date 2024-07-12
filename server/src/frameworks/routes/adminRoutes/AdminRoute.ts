@@ -1,12 +1,11 @@
 import { Router } from "express";
 import { Req, Route } from "../../../frameworks/types/ServerTypes";
 import { JwtTokenAdapter } from "../../../frameworks/services/jwtService/TokenService";
-import { InjectedAdminSignUpController, InjectedAdminlogincontroller, InjectedGenerateQrCodeController, InjectedGetAdminDataController, InjectedGetAdminAllPropertyDataController, InjectedGetUnverifiedAdminController, InjectedGoogleLoginController, InjectedSavePropertyDataController, InjectedUpdateAdminProfileController, InjectedUpdateVerifyAdminController, InjectedUpdateConversationReadCountToZeroController, InjectedGetSelectedConversationController, InjectedGetConversationListController, InjectedGetAdminsCallListController, InjectedGetUsersListController, InjectedClearAdminChatMessagesController, InjectedEditUnknownUsernameController } from "../../../frameworks/injection/AdminInjects";
+import { InjectedAdminSignUpController, InjectedAdminlogincontroller, InjectedGenerateQrCodeController, InjectedGetAdminDataController, InjectedGetAdminAllPropertyDataController, InjectedGetUnverifiedAdminController, InjectedGoogleLoginController, InjectedSavePropertyDataController, InjectedUpdateAdminProfileController, InjectedUpdateVerifyAdminController, InjectedUpdateConversationReadCountToZeroController, InjectedGetSelectedConversationController, InjectedGetConversationListController, InjectedGetAdminsCallListController, InjectedGetUsersListController, InjectedClearAdminChatMessagesController, InjectedEditUnknownUsernameController, InjectedAddNewFcmTokenOrGetExsistingeController } from "../../../frameworks/injection/AdminInjects";
 import { InjectedCallingFunctionalitiesController, InjectedGetMessagesController, InjectedSendMesssage } from "../../../frameworks/injection/CommonInjects";
 import { InjectedCreateConversationController } from "../../../frameworks/injection/UserInjects";
 import { UserModel } from "../../database/models/user/User";
 import { QrModel } from "../../database/models/admin/QrDataModel";
-import { sendPushMessage } from "../../services/pushNotication/SendPushNotification";
 
 const router: Route = Router();
 
@@ -87,6 +86,8 @@ router.post('/edit_unknown_username', JwtToken.verifyToken, InjectedEditUnknownU
 
 
 
+router.post('/admin_add_or_get_fcmtoken', InjectedAddNewFcmTokenOrGetExsistingeController.AddAdminFcmTokenControl.bind(InjectedAddNewFcmTokenOrGetExsistingeController));
+
 router.get("/admin_dash_graph/:adminId", async(req, res)=>{
     const  adminId  = req.params.adminId;
 
@@ -127,6 +128,6 @@ router.get("/admin_dash_graph/:adminId", async(req, res)=>{
 
 
 
-router.post("/send_push", sendPushMessage);
+// router.post("/send_push", sendPushMessage);
 
 export default router;

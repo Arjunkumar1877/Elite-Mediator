@@ -6,17 +6,6 @@ import { requestPermission } from "../../firebase/firebase";
 import { useEffect, useState } from "react";
 
 const Landing = () => {
-  const [token, setToken] = useState("")
-
-  const tokensetting = async()=>{
-    const tokennn: any = await requestPermission();
-    setToken(tokennn)
-  }
-
-  useEffect(() => {
-tokensetting()
-
-  }, []);
   return (
     <div className="relative bg-white  overflow-hidden p-8 md:p-10 lg:p-0">
       <div className="absolute rounded-2xl top-0 left-1/4 transform -translate-x-1/2 -translate-y-1/2 bg-blue-100 w-40 h-40 lg:w-72 lg:h-72 rotate-45"></div>
@@ -133,7 +122,6 @@ tokensetting()
           <div className="text-start">
             <button className="bg-sky-500 text-white px-4 py-2 rounded-md self-start">
               Leran more..
-              <p className="mt-3">{token}</p>
             </button>
           </div>
         </div>

@@ -100,4 +100,13 @@ export class MongoUserRepository implements IUserRepository {
    return  await MessageModel.find({conversationId: conId, userDeleted: false});   
   }
 
+  async CreateUserNewMessageToDb(message: any): Promise<Message | any> {
+    console.log(message )
+    console.log("😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️")
+      const newMessage = new MessageModel(message);
+      const save =   await newMessage.save();
+
+      return save;
+  }
+
 }

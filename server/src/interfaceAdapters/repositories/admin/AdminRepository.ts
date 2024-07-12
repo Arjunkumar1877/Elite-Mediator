@@ -51,6 +51,20 @@ export class MongoAdminRepository implements IAdminRepository {
     return newUser;
   }
 
+  async FindAdminAndAddFcmToken(token:string, adminId: string): Promise<any>{
+    const data = await AdminModel.findOneAndUpdate({_id: adminId}, {
+      $set: {
+        fcmToken: token
+      }
+    })
+
+    return data;
+  }
+
+  async FindAdminFcmToken(token: string, adminId: string): Promise<any> {
+    return await AdminModel.findOne({_id: adminId, fcmToken: token});
+  }
+
   async UpdateAdminData(admin: Admin, id: string): Promise<Admin | null> {
     return await AdminModel.findOneAndUpdate(
       { _id: id },
@@ -276,6 +290,5 @@ export class MongoAdminRepository implements IAdminRepository {
   return result;
 
   }
-
  
 }

@@ -10,4 +10,5 @@ export interface User{
     conversationId?: string;
     macId?: string;
     deleted?: boolean;
+    fcmToken?: string;
 }

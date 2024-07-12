@@ -73,28 +73,34 @@ admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
 });
 
-export const sendPushMessage = (req: Req, res: Res) => {
+export const sendPushMessage = (messageText: string, title: string, token: string) => {
   try {
-    const token = req.body.token;
+    
 
     const message = {
       notification: {
-        title: "Arjun kumar vs",
-        body: "This is a Test Notification"
+        title: title,
+        body: messageText
       },
-      token: token
+      token: token,
+      
+      webpush: {
+        fcmOptions: {
+          link: "https://elite-mediator.vercel.app/" 
+        }
+      }
     };
 
     getMessaging().send(message)
       .then((response) => {
-        res.json({ message: "success", token, response });
+        return response
       })
       .catch((err) => {
-        res.json(err);
+       return err
       });
 
   } catch (error) {
     console.log(error);
-    res.status(500).json({ error: 'Internal Server Error' });
+   return error
   }
 };

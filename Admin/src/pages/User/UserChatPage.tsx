@@ -65,6 +65,8 @@ const UserChatPage: React.FC = () => {
 
   const fileRef = useRef<HTMLInputElement>(null);
 
+  // console.log(currentUser)
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
@@ -220,8 +222,10 @@ const UserChatPage: React.FC = () => {
     console.log("sending message");
 
     try {
-      const response = await axios.post<Message>("/user/send_message", {
-        messageData,
+      const response = await axios.post<Message>("/user/user_send_message", {
+        messageData: messageData,
+        token: currentUser?.adminId?.fcmToken,
+        username: currentUser.username
       });
 
       socket.emit("chat message", response.data, conId, currentUser.adminId);

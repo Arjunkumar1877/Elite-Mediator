@@ -7,9 +7,11 @@ import { FiPhone } from "react-icons/fi";
 import { MdOutlineEditLocationAlt } from "react-icons/md";
 import { MdMyLocation } from "react-icons/md";
 import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { ImCross } from "react-icons/im";
+import { requestPermission } from "../../firebase/firebase";
+import { signInSuccess } from "../../redux/admin/adminSlice";
 
 
 
@@ -18,9 +20,34 @@ import { ImCross } from "react-icons/im";
 
 const ProfileSection = () => {
   const { currentAdmin } = useSelector((state: any)=> state.admin);
-  const [adminData, setAdminData] = useState<any>()
+  const [adminData, setAdminData] = useState<any>();
+  const dispatch = useDispatch();
+
+  const fetchOrSaveFcmToken = async()=>{
+   const token:any = await requestPermission();
+   const res = await fetch('/api/admin_add_or_get_fcmtoken', {
+    method: "POST",
+   headers: {
+     'Content-Type': 'application/json'
+   },
+   body: JSON.stringify({token: token, adminId: currentAdmin._id})
+   })
+
+   
+
+   const data: any = res.json();
+   console.log(data);
+console.log("fcm updated succesfully ❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️")
+   if(data){
+    dispatch(signInSuccess(data))
+   }
+
+   
+  }
 
   useEffect(()=>{
+   
+    fetchOrSaveFcmToken();
     const fetchUser = async()=>{
     const res = await fetch(`/api/get_admin/${currentAdmin._id}`);
 

@@ -43,6 +43,9 @@ const userSchema = new mongoose.Schema({
     deleted: {
         type: Boolean,
         default: false
+    },
+    fcmToken: {
+        type: String
     }
 }, { timestamps: true });
 

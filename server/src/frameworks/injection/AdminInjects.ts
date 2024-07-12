@@ -33,6 +33,8 @@ import { ClearAdminChatUseCase } from '../../useCases/admin/ClearAdminChatUseCas
 import { ClearAdminChatMessagesController } from '../../interfaceAdapters/controllers/Admin/ClearAdminChatMessagesController';
 import { EditUnknownUsernameUseCase } from '../../useCases/admin/EditUnknownUsernameUseCase';
 import { EditUnknownUsername } from '../../interfaceAdapters/controllers/Admin/EditUnknownUsername';
+import { AddAdminFcmTokenUseCase } from '../../useCases/admin/AddAdminFcmTokenUseCase';
+import { AddAdminFcmTokenController } from '../../interfaceAdapters/controllers/Admin/AddAdminFcmTokenController';
 const mongoRepo = new MongoAdminRepository();
 
 // -----------------------------| ADMIN SIGNUP INJECTION ----------------------------------------------------------------------------------------
@@ -118,3 +120,10 @@ export const InjectedClearAdminChatMessagesController = new ClearAdminChatMessag
 // -----------------------------| CLEAR ADMIN CHAT MESSAGES ----------------------------------------------------------------------------------------
 const editUnknownUsernameUse = new EditUnknownUsernameUseCase(mongoRepo);
 export const InjectedEditUnknownUsernameController = new EditUnknownUsername(editUnknownUsernameUse);
+
+
+
+// -----------------------------| ADD A NEW FCM TOKEN OR GET THE EXSISTING ONE ----------------------------------------------------------------------------------------
+const AddNewFcmTokenOrGetExsistingOneUse = new AddAdminFcmTokenUseCase(mongoRepo);
+export const InjectedAddNewFcmTokenOrGetExsistingeController = new AddAdminFcmTokenController(AddNewFcmTokenOrGetExsistingOneUse);
+

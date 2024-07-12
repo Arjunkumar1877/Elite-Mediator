@@ -55,7 +55,7 @@ const onMessageListener = (): Promise<any> => {
   });
 };
 
-requestPermission();
+// requestPermission();
 onMessageListener()
 
 export { requestPermission, onMessageListener };

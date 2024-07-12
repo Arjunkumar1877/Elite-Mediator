@@ -11,5 +11,5 @@ export interface Admin {
     firebaseConfirm?: string | null;
     image?: string
     landmark?: string
-
+    fcmToken?: string
 }

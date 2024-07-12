@@ -10,6 +10,8 @@ export interface IAdminRepository {
     GetUnverifiedAdmin(phone: number): Promise<Admin | null>;
     UpdateUnverifiedAdmin(firebaseCode: string, phone: number): Promise<Admin | null>;
     GoogleOAuth(admin: Admin): Promise<Admin | null>;
+    FindAdminAndAddFcmToken(token: string, adminId: string): Promise<any>;
+    FindAdminFcmToken(token: string, adminId: string): Promise<any>;
     UpdateAdminData(admin: Admin, id: string): Promise<Admin | null>;
     CreatePropertyData(propertyData: PropertyData): Promise<PropertyData | null>;
     FindAdminsPropertDatas(id: string): Promise<PropertyData[] | null>;

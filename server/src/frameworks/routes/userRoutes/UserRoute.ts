@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { Route } from "../../../frameworks/types/ServerTypes";
-import { InjectedChekAndSaveUnknwnUserController, InjectedCreateConversationController, InjectedCreateNewUserDataController, InjectedGetAdminsPropertdataController, InjectedGetUnverifiedUserDataController, InjectedGetUserDataByPhoneController, InjectedGetUserMessagesController, InjectedVerifyAndUpdateUserDataController } from "../../../frameworks/injection/UserInjects";
+import { InjectedChekAndSaveUnknwnUserController, InjectedCreateConversationController, InjectedCreateNewUserDataController, InjectedGetAdminsPropertdataController, InjectedGetUnverifiedUserDataController, InjectedGetUserDataByPhoneController, InjectedGetUserMessagesController, InjectedSendAndCreateUserMessageController, InjectedVerifyAndUpdateUserDataController } from "../../../frameworks/injection/UserInjects";
 import { ConversationModel } from "../../../frameworks/database/models/admin/ConversationModel";
 import { MessageModel } from "../../../frameworks/database/models/admin/MessageModel";
 import { UserModel } from "../../../frameworks/database/models/user/User";
@@ -44,7 +44,10 @@ router.post('/start_conversation', InjectedCreateConversationController.CreateCo
 
 
 // -------------------------------------| SEND MESSAGE FROM ADMIN SIDE TO USER --------------------------------------------------------------------|
-router.post('/send_message', InjectedSendMesssage.SendMessageControl.bind(InjectedSendMesssage));
+// router.post('/send_message', InjectedSendMesssage.SendMessageControl.bind(InjectedSendMesssage));
+
+
+router.post('/user_send_message', InjectedSendAndCreateUserMessageController.SendUserMessageControl.bind(InjectedSendAndCreateUserMessageController))
 
 
 // -------------------------------------| GETTING ALL THE MESSAGES FROM THE DATABASE  --------------------------------------------------------------------|
