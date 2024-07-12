@@ -13,7 +13,7 @@ if (!("Notification" in window)) {
   alert('This browser does not support desktop notification')
 }
 
-alert("heyyyyyyyyyyyyy")
+// alert("heyyyyyyyyyyyyy")
 
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {

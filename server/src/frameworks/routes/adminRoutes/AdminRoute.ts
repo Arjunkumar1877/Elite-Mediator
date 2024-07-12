@@ -6,6 +6,7 @@ import { InjectedCallingFunctionalitiesController, InjectedGetMessagesController
 import { InjectedCreateConversationController } from "../../../frameworks/injection/UserInjects";
 import { UserModel } from "../../database/models/user/User";
 import { QrModel } from "../../database/models/admin/QrDataModel";
+import { sendPushMessage } from "../../services/pushNotication/SendPushNotification";
 
 const router: Route = Router();
 
@@ -126,6 +127,6 @@ router.get("/admin_dash_graph/:adminId", async(req, res)=>{
 
 
 
-
+router.post("/send_push", sendPushMessage);
 
 export default router;
