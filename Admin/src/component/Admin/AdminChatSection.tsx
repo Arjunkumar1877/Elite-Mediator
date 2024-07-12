@@ -54,6 +54,7 @@ type UserDataType = {
   username: string;
   verified?: boolean;
   _id?: string;
+  fcmToken: string;
 };
 
 type PropertyDataType = {
@@ -248,7 +249,9 @@ const AdminChatSection: React.FC = () => {
 
     try {
       const response: any = await axios.post<Message>("/api/send_message", {
-        messageData,
+        messageData: messageData,
+        token: selectedConversation?.userId?.fcmToken,
+        username: currentAdmin.username
       });
 
       socket.emit("chat message", response.data, conId, currentAdmin._id);

@@ -14,7 +14,7 @@ export class SendUserMessageController {
       const token: string = req.body.token;
       const username: string = req.body.username;
 
-      const data = await this.isendandcreateusermessageusecase.SendNewMessage(
+      const data = await this.isendandcreateusermessageusecase.SendNewMessageByUser(
         message
       );
 

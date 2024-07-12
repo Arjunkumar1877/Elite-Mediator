@@ -6,7 +6,7 @@ import { IUserRepository } from "../../interfaceAdapters/repositories/user/IUser
 export class SendAndCreateUserMessage implements ISendAndCreateUserMessageUseCase{
  constructor(private iuserRepository: IUserRepository){};
 
- async SendNewMessage(message: Message): Promise<Message> {
+ async SendNewMessageByUser(message: Message): Promise<Message> {
      const newMessage = await this.iuserRepository.CreateUserNewMessageToDb(message);
 
      return newMessage

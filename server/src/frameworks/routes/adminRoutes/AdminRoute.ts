@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { Req, Route } from "../../../frameworks/types/ServerTypes";
 import { JwtTokenAdapter } from "../../../frameworks/services/jwtService/TokenService";
-import { InjectedAdminSignUpController, InjectedAdminlogincontroller, InjectedGenerateQrCodeController, InjectedGetAdminDataController, InjectedGetAdminAllPropertyDataController, InjectedGetUnverifiedAdminController, InjectedGoogleLoginController, InjectedSavePropertyDataController, InjectedUpdateAdminProfileController, InjectedUpdateVerifyAdminController, InjectedUpdateConversationReadCountToZeroController, InjectedGetSelectedConversationController, InjectedGetConversationListController, InjectedGetAdminsCallListController, InjectedGetUsersListController, InjectedClearAdminChatMessagesController, InjectedEditUnknownUsernameController, InjectedAddNewFcmTokenOrGetExsistingeController } from "../../../frameworks/injection/AdminInjects";
+import { InjectedAdminSignUpController, InjectedAdminlogincontroller, InjectedGenerateQrCodeController, InjectedGetAdminDataController, InjectedGetAdminAllPropertyDataController, InjectedGetUnverifiedAdminController, InjectedGoogleLoginController, InjectedSavePropertyDataController, InjectedUpdateAdminProfileController, InjectedUpdateVerifyAdminController, InjectedUpdateConversationReadCountToZeroController, InjectedGetSelectedConversationController, InjectedGetConversationListController, InjectedGetAdminsCallListController, InjectedGetUsersListController, InjectedClearAdminChatMessagesController, InjectedEditUnknownUsernameController, InjectedAddNewFcmTokenOrGetExsistingeController, InjectedSendAdminMessageController } from "../../../frameworks/injection/AdminInjects";
 import { InjectedCallingFunctionalitiesController, InjectedGetMessagesController, InjectedSendMesssage } from "../../../frameworks/injection/CommonInjects";
 import { InjectedCreateConversationController } from "../../../frameworks/injection/UserInjects";
 import { UserModel } from "../../database/models/user/User";
@@ -42,7 +42,10 @@ router.post("/save_property_data",JwtToken.verifyToken, InjectedSavePropertyData
 router.get("/get_admin_property_data/:id", JwtToken.verifyToken, InjectedGetAdminAllPropertyDataController.GetAdminPropertyDataControl.bind(InjectedGetAdminAllPropertyDataController));
 
 // -------------------------------------| SEND MESSAGE FROM ADMIN SIDE TO USER -------------------------------------------------------------------------|
-router.post('/send_message', JwtToken.verifyToken, InjectedSendMesssage.SendMessageControl.bind(InjectedSendMesssage));
+// router.post('/send_message', JwtToken.verifyToken, InjectedSendMesssage.SendMessageControl.bind(InjectedSendMesssage));
+router.post('/send_message',  InjectedSendAdminMessageController.SendAdminMessageControl.bind(InjectedSendAdminMessageController));
+
+
 
 // -------------------------------------| FETCH THE EXSISTING CONVERSATION ON THE ADMIN SIDE -----------------------------------------------------------|
 router.post('/start_conversation',JwtToken.verifyToken, InjectedCreateConversationController.CreateConversationControl.bind(InjectedCreateConversationController));
