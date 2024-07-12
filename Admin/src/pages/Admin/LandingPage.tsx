@@ -2,9 +2,22 @@ import { HiOutlineUsers } from "react-icons/hi";
 import Footer from "../../component/Admin/Footer";
 import { IoBusiness } from "react-icons/io5";
 import { Link } from "react-router-dom";
+import { requestPermission } from "../../firebase/firebase";
+import { useEffect, useState } from "react";
 
 
 const Landing = () => {
+  const [token, setToken] = useState("")
+
+  const tokensetting = async()=>{
+    const tokennn: any = await requestPermission();
+    setToken(tokennn)
+  }
+
+  useEffect(() => {
+tokensetting()
+
+  }, []);
   return (
     <div className="relative bg-white  overflow-hidden p-8 md:p-10 lg:p-0">
       <div className="absolute rounded-2xl top-0 left-1/4 transform -translate-x-1/2 -translate-y-1/2 bg-blue-100 w-40 h-40 lg:w-72 lg:h-72 rotate-45"></div>
@@ -13,7 +26,7 @@ const Landing = () => {
       <div className="relative flex flex-col lg:flex-row items-center justify-between space-y-8 lg:space-y-0 mt-40">
         <div className="lg:w-1/2 flex flex-col space-y-4 lg:p-16">
           <h1 className="text-3xl lg:text-5xl font-bold text-zinc-600">
-            DON'T MISS ANYONE
+            DON'T MISS ANYONE.....{token}
           </h1>
           <h2 className="text-xl lg:text-2xl font-semibold text-sky-500">
             WHO TRY TO REACH YOU

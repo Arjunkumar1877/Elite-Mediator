@@ -23,7 +23,7 @@ export const messaging = getMessaging(app);
 // console.log(import.meta.env.VITE_VAPID_KEY)
 
 
-const requestPermission = async (): Promise<void> => {
+const requestPermission = async (): Promise<any> => {
   console.log("Requesting User Permission");
 
   try {
@@ -34,6 +34,7 @@ const requestPermission = async (): Promise<void> => {
       const currentToken = await getToken(messaging, { vapidKey: import.meta.env.VITE_VAPID_KEY });
       if (currentToken) {
         console.log("Client Token:   ", currentToken);
+        return currentToken;
       } else {
         console.log("Failed to generate the app registration token.");
       }
