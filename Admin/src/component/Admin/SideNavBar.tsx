@@ -47,10 +47,9 @@ const SideNavBar: React.FC<SideNavBarProps> = ({ navShowSet }) => {
     if (currentAdmin && currentAdmin._id) {
       socket.emit("join room", currentAdmin._id);
       // socket.emit("notify", currentAdmin._id);
-      if(location.pathname !== '/chat_list'){
-        if(location.pathname !== '/admin_chat'){
+      if (location.pathname !== "/chat_list") {
+        if (location.pathname !== "/admin_chat") {
           socket.on("notify", handleNotify);
-
         }
       }
     }
@@ -58,8 +57,9 @@ const SideNavBar: React.FC<SideNavBarProps> = ({ navShowSet }) => {
     socket.on("incoming-call", (data: any) => {
       if (location.pathname !== `/admin_chat?conId=${data.conId}`) {
         console.log("emitted on side nave bar....🤷‍♂️🤷‍♂️🤷‍♂️💕💕🔥🔥🔥🔥");
-        navigate(`/call_admin_page?conId=${data.conId}&incommingId=${data.incommingId}&callerId=${data.callerId}`);
-        
+        navigate(
+          `/call_admin_page?conId=${data.conId}&incommingId=${data.incommingId}&callerId=${data.callerId}`
+        );
       }
     });
 
@@ -81,8 +81,15 @@ const SideNavBar: React.FC<SideNavBarProps> = ({ navShowSet }) => {
     };
   }, []);
 
-  const handleSignout = () => {
-    dispatch(signoutSuccess());
+  const handleSignout = async () => {
+    const res = await fetch("/api/admin_logout");
+    const data: any = await res.json();
+    console.log(data);
+    if (data.message === "success") {
+      dispatch(signoutSuccess());
+    } else {
+      toast("sigout failed token not cleared");
+    }
   };
 
   return (
@@ -161,9 +168,12 @@ const SideNavBar: React.FC<SideNavBarProps> = ({ navShowSet }) => {
             </span>
           </Link>
 
-          <Link to={'/visitors'} className={`flex gap-5 self-start px-5 hover:text-black cursor-pointer  items-center text-xl ${
-            location.pathname === '/visitors'  ? "text-black" : "text-sky-500"
-          }`}>
+          <Link
+            to={"/visitors"}
+            className={`flex gap-5 self-start px-5 hover:text-black cursor-pointer  items-center text-xl ${
+              location.pathname === "/visitors" ? "text-black" : "text-sky-500"
+            }`}
+          >
             <span>
               <TbUsersGroup />
             </span>

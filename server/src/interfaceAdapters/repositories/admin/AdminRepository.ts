@@ -10,6 +10,7 @@ import moment from "moment";
 import { CallModel } from "../../../frameworks/database/models/admin/CallModel";
 import { UserModel } from "../../../frameworks/database/models/user/User";
 import { MessageModel } from "../../../frameworks/database/models/admin/MessageModel";
+import { Message } from "../../../entities/models/common/Message";
 
 export class MongoAdminRepository implements IAdminRepository {
   async CreateAdmin(admin: Admin): Promise<any> {
@@ -291,4 +292,13 @@ export class MongoAdminRepository implements IAdminRepository {
 
   }
  
+  async CreateAdminNewMessageToDb(message: Message): Promise<Message | any> {
+    console.log(message )
+    console.log("😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂❤️❤️❤️❤️❤️Admin send message an dsave to db")
+      const newMessage = new MessageModel(message);
+      const save =   await newMessage.save();
+
+      return save;
+  }
+
 }

@@ -21,7 +21,7 @@ router.get("/unverified_admin/:phone", InjectedGetUnverifiedAdminController.getU
 router.post("/update_firebase_verify", InjectedUpdateVerifyAdminController.UpdateAdminVerifyController.bind(InjectedUpdateVerifyAdminController));
 
 // -------------------------------------| VERIFY THE ADMIN AND LOGIN -----------------------------------------------------------------------------------|
-router.post("/admin_login", InjectedAdminlogincontroller.login.bind(InjectedAdminlogincontroller));
+router.post("/admin_login", JwtToken.CreateJwtToken, InjectedAdminlogincontroller.login.bind(InjectedAdminlogincontroller));
 
 // -------------------------------------| GOOGLE AUTHENTICATION ----------------------------------------------------------------------------------------|
 router.post("/google_oauth",JwtToken.CreateJwtToken,  InjectedGoogleLoginController.GoogleoauthController.bind(InjectedGoogleLoginController));
@@ -126,6 +126,8 @@ router.get("/admin_dash_graph/:adminId", async(req, res)=>{
       res.json({All, unknown, verified, unVerified})
 })
 
+
+router.get("/admin_logout", JwtToken.removeToken)
 
 
 // router.post("/send_push", sendPushMessage);

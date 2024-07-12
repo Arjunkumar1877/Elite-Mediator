@@ -1,6 +1,7 @@
 import { Admin } from "../../../entities/models/admin/Admin";
 import { PropertyData } from "../../../entities/models/admin/PropertyData";
 import { Conversation } from "../../../entities/models/common/Conversation";
+import { Message } from "../../../entities/models/common/Message";
 
 export interface IAdminRepository {
     CreateAdmin(admin: Admin): Promise<Admin>;
@@ -24,5 +25,6 @@ export interface IAdminRepository {
     FindAdminsCallListByAdminId(adminId: string): Promise<any>;
     FindUsersListByAdminId(adminId: string, startDate: string, endDate: string, propertyName: string, userType: string): Promise<any>;
     FindAndEditUnknownUser(userId: string, username: string): Promise<any>;
+    CreateAdminNewMessageToDb(message: Message): Promise<Message | any>;
     FindAndClearAdminChatMessages(conId: string): Promise<any>;
 }

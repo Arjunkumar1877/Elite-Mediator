@@ -109,4 +109,16 @@ export class MongoUserRepository implements IUserRepository {
       return save;
   }
 
+  async FindUserAndAddFcmToken(token: string, userId: string): Promise<any> {
+    return await UserModel.findOneAndUpdate({_id: userId}, {
+      $set: {
+        fcmToken: token
+      }
+    }, {new: true});
+  }
+
+  async FindUserFcmToken(token: string, userId: string): Promise<any> {
+    return await UserModel.findOne({_id: userId, fcmToken: token}).populate("adminId propId");
+  }
+
 }

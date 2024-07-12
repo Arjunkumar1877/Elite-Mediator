@@ -7,7 +7,7 @@ import { FiLogOut } from "react-icons/fi";
 import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
-import { signoutSuccess, setMessages } from "../../redux/user/UserSlice";
+import { signoutSuccess, setMessages, signInSuccess } from "../../redux/user/UserSlice";
 import io from "socket.io-client";
 import { useSocket } from "../../contexts/AdminContext";
 import { MdCleaningServices, MdOutlineZoomOutMap } from "react-icons/md";
@@ -18,7 +18,7 @@ import {
   ref,
   uploadBytesResumable,
 } from "firebase/storage";
-import app from "../../firebase/firebase";
+import app, { requestPermission } from "../../firebase/firebase";
 import ReactLoading from "react-loading";
 import { confirmAlert } from "react-confirm-alert";
 import AudioRecorder from "../../component/Admin/AudioRecorder";
@@ -65,7 +65,30 @@ const UserChatPage: React.FC = () => {
 
   const fileRef = useRef<HTMLInputElement>(null);
 
-  // console.log(currentUser)
+  // console.log(currentUser);
+
+  const fetchOrSaveFcmToken = async()=>{
+    const token:any = await requestPermission();
+    const res = await fetch('/user/user_add_or_get_fcmtoken', {
+     method: "POST",
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({token: token, userId: currentUser._id})
+    })
+ 
+    
+ 
+    const data: any = await res.json();
+    console.log(data);
+ console.log("fcm updated succesfully ❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️")
+    if(data){
+     dispatch(signInSuccess(data))
+    }
+ 
+    
+   }
+
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -136,6 +159,7 @@ const UserChatPage: React.FC = () => {
   };
 
   useEffect(() => {
+    fetchOrSaveFcmToken();
     socket.emit("join room", conId);
     socket.on("incoming-call", (data: any) => {
       console.log(data);

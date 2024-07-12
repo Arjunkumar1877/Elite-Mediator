@@ -35,7 +35,7 @@ const ProfileSection = () => {
 
    
 
-   const data: any = res.json();
+   const data: any = await res.json();
    console.log(data);
 console.log("fcm updated succesfully ❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️")
    if(data){

@@ -10,6 +10,8 @@ export interface IUserRepository{
     FindByIdAndVerify(userId: string): Promise<User>;
     FindByPhoneAndPropId(phone: number, propId: string): Promise<any>
     FindByPhoneAndPropIdAndDelete(phone: number, propId: string): Promise<any>;
+    FindUserAndAddFcmToken(token: string, userId: string): Promise<any>;
+    FindUserFcmToken(token: string, userId: string): Promise<any>;
     FindPropertyData(propId: string, adminId: string): Promise<PropertyData | null>;
     CreateConversation(userId: string, adminId: string, propertyId: string): Promise<any>;
     FindConversation(userId: string, adminId: string, propertyId: string): Promise<Conversation | null>;

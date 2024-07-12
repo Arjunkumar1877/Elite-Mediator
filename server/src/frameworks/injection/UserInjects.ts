@@ -1,3 +1,5 @@
+import { AddAdminFcmTokenController } from "../../interfaceAdapters/controllers/Admin/AddAdminFcmTokenController";
+import { AddUserFcmTokenController } from "../../interfaceAdapters/controllers/user/AddUserFcmTokenController";
 import { CheckAndSaveUnknownUserController } from "../../interfaceAdapters/controllers/user/CheckAndSaveUnknownUserController";
 import { CreateConversationController } from "../../interfaceAdapters/controllers/user/CreateConversationController";
 import { CreateUserController } from "../../interfaceAdapters/controllers/user/CreateUserController";
@@ -8,6 +10,7 @@ import { GetUserMessagesController } from "../../interfaceAdapters/controllers/u
 import { SendUserMessageController } from "../../interfaceAdapters/controllers/user/SendUserMessageController";
 import { VerifyAndUpdateUserController } from "../../interfaceAdapters/controllers/user/UserVerifyAndUpdateController";
 import { MongoUserRepository } from "../../interfaceAdapters/repositories/user/UserRepository";
+import { AddUserFcmTokenUseCase } from "../../useCases/user/AddUserFcmTokenUseCase";
 import { CheckAndSaveUnknownUserUseCase } from "../../useCases/user/CheckAndSaveUnknownUserUseCase";
 import { CheckExisitingUserUseCase } from "../../useCases/user/CheckExisitingUserUseCase";
 import { CreateConversationUseCase } from "../../useCases/user/CreateConversationUseCase";
@@ -35,7 +38,6 @@ const checkAndSaveUnknownUserUse = new CheckAndSaveUnknownUserUseCase(mongoRepo)
 export const InjectedChekAndSaveUnknwnUserController = new CheckAndSaveUnknownUserController(checkAndSaveUnknownUserUse);
 
 
-
 // -----------------------------| GET UNVERIFIED USER DATA BY ID INJECTION ----------------------------------------------------------------------------------------
 const getUserDataByIdUse = new GetUserDataByIdUseCase(mongoRepo);
 export const InjectedGetUnverifiedUserDataController = new GetUserDataByIdController(getUserDataByIdUse);
@@ -44,6 +46,11 @@ export const InjectedGetUnverifiedUserDataController = new GetUserDataByIdContro
 // -----------------------------| VERIFY AND UPDATE USER DATA INJECTION ----------------------------------------------------------------------------------------
 const VerifyUserDataUse = new VerifyUserUseCase(mongoRepo);
 export const InjectedVerifyAndUpdateUserDataController = new VerifyAndUpdateUserController(VerifyUserDataUse);
+
+
+// -----------------------------| ADD FCM TOKEN TO USER DB FOR PUSH NOTIFICATION  ----------------------------------------------------------------------------------------
+const AddUserNewFcmTokenOrGetExsistingOneUse = new AddUserFcmTokenUseCase(mongoRepo)
+export const InjectedAddUserFcmCodeController = new AddUserFcmTokenController(AddUserNewFcmTokenOrGetExsistingOneUse);
 
 
 // -----------------------------| GET USER DATA BY PHONE INJECTION ----------------------------------------------------------------------------------------
@@ -61,13 +68,9 @@ const createConversationUse = new CreateConversationUseCase(mongoRepo)
 export const InjectedCreateConversationController = new CreateConversationController(createConversationUse, getUserDataByIdUse);
 
 
-
-// -----------------------------| GET ALL MESSAGES FOR THE USER CHAT  ----------------------------------------------------------------------------------------
+// -----------------------------| SEND MESSAGES FROM USER CHAT  ----------------------------------------------------------------------------------------
 const SendUserMessageUse = new SendAndCreateUserMessage(mongoRepo)
 export const InjectedSendAndCreateUserMessageController = new SendUserMessageController(SendUserMessageUse);
-
-
-
 
 
 // -----------------------------| GET ALL MESSAGES FOR THE USER CHAT  ----------------------------------------------------------------------------------------

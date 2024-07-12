@@ -18,14 +18,13 @@ export class JwtTokenAdapter implements TokenServices {
     try {
       // const admin = await this.adminrepository.FindAdminByEmail(req.body.email);
       const token = await jwt.sign(
-
         { email: req.body.email },
         "hellooooo" as string,
         { expiresIn: "600m" }
       );
 
-      console.log(req.body)
-         console.log("📀📀📀📀📀📀📀")
+      console.log(req.body);
+      console.log("📀📀📀📀📀📀📀");
       req.body.token = token;
       next();
     } catch (error) {
@@ -49,9 +48,21 @@ export class JwtTokenAdapter implements TokenServices {
         return next(errorFun.errorHandler(401, "Unauthorized"));
       }
 
-req.body.user = user     
-console.log("verified ❤️❤️❤️❤️❤️📉📉📉📉📉📉📉📉📉📉📉📉📉📉📉📉📉📉📉📉📉📉📉📉📉")
+      req.body.user = user;
+      console.log(
+        "verified ❤️❤️❤️❤️❤️📉📉📉📉📉📉📉📉📉📉📉📉📉📉📉📉📉📉📉📉📉📉📉📉📉"
+      );
       next();
     });
+  }
+
+  async removeToken(req: Req, res: Res): Promise<void> {
+    try {
+      res.clearCookie("access_token");
+      res.status(200).json({ message: "success" });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: "Internal Server Error" });
+    }
   }
 }
