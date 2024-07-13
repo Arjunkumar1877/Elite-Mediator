@@ -1,7 +1,6 @@
 import { useState } from "react";
 import SuperAdminSideNavbar from "../../component/SuperAdmin/SuperAdminSideNavbar";
-import SuperAdminRegisteredAdminsListSection from "../../component/SuperAdmin/SuperAdminRegisteredAdminsListSection";
-
+import SuperAdminRegisteredAdminProfileSection from "../../component/SuperAdmin/SuperAdminRegisteredAdminProfileSection";
 
 const SuperAdminRegisteredAdminProfilePage = () => {
     const [navShow, setNavShow] = useState<boolean>(true);
@@ -11,7 +10,7 @@ const SuperAdminRegisteredAdminProfilePage = () => {
         <SuperAdminSideNavbar navShowSet={setNavShow} />
         <div className={`transition-all duration-300 ${!navShow ? "w-[60px]" : "w-[250px]"}`}></div>
         <div className="flex-1">
-          <SuperAdminRegisteredAdminsListSection />
+          <SuperAdminRegisteredAdminProfileSection />
         </div>
       </div>
     );

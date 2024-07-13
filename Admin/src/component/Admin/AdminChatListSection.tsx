@@ -261,7 +261,7 @@ const AdminChatListSection: React.FC = () => {
                   className="py-3 px-2 bg-white lg:px-16 text-xs rounded-full cursor-pointer"
                 >
                   <option value="">All Properties</option>
-                  {properties.map((prop: PropertyDataType) => (
+                  {properties && properties?.map((prop: PropertyDataType) => (
                     <option key={prop._id} value={prop._id}>
                       {prop.propertyName}
                     </option>
