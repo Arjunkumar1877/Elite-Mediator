@@ -3,9 +3,18 @@ import Footer from "../../component/Admin/Footer";
 import { IoBusiness } from "react-icons/io5";
 import { Link } from "react-router-dom";
 import { requestPermission } from "../../firebase/firebase";
-import { useEffect, useState } from "react";
+import { useEffect} from "react";
+import { useSocket } from "../../contexts/AdminContext";
 
 const Landing = () => {
+  const { setToken }: any = useSocket()
+  const getToken = async()=>{
+   const token: string = await requestPermission();
+   setToken(token)
+  }
+  useEffect(()=>{
+  getToken();
+  })
   return (
     <div className="relative bg-white  overflow-hidden p-8 md:p-10 lg:p-0">
       <div className="absolute rounded-2xl top-0 left-1/4 transform -translate-x-1/2 -translate-y-1/2 bg-blue-100 w-40 h-40 lg:w-72 lg:h-72 rotate-45"></div>

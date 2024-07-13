@@ -6,7 +6,6 @@ import { PersistGate } from "redux-persist/integration/react";
 import { persistor, store } from "./redux/store.ts";
 import { Provider } from "react-redux";
 
-// src/main.ts or src/index.ts
 
 if (!("Notification" in window)) {
   console.log("This browser does not support desktop notification");

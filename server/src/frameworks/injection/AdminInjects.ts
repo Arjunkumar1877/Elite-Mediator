@@ -37,6 +37,8 @@ import { AddAdminFcmTokenUseCase } from '../../useCases/admin/AddAdminFcmTokenUs
 import { AddAdminFcmTokenController } from '../../interfaceAdapters/controllers/Admin/AddAdminFcmTokenController';
 import { SendAndCreateAdminMessageUseCase } from '../../useCases/admin/SendAndCreateAdminMessageUseCase';
 import { SendAdminMessageController } from '../../interfaceAdapters/controllers/Admin/SendAdminMessageController';
+import { UserStatisticsGraphDataUseCase } from '../../useCases/admin/UserStatisticsGraphDataUseCase';
+import { GetUserStatisticsGraphDataController } from '../../interfaceAdapters/controllers/Admin/GetUserStatisticsGraphDataController';
 const mongoRepo = new MongoAdminRepository();
 
 // -----------------------------| ADMIN SIGNUP INJECTION ----------------------------------------------------------------------------------------
@@ -133,4 +135,11 @@ export const InjectedAddNewFcmTokenOrGetExsistingeController = new AddAdminFcmTo
 // // -----------------------------| ADD A NEW FCM TOKEN OR GET THE EXSISTING ONE ----------------------------------------------------------------------------------------
 const sendAdminMessageUse = new SendAndCreateAdminMessageUseCase(mongoRepo);
 export const InjectedSendAdminMessageController = new SendAdminMessageController(sendAdminMessageUse);
+
+
+
+
+// // -----------------------------| ADD A NEW FCM TOKEN OR GET THE EXSISTING ONE ----------------------------------------------------------------------------------------
+const userStatisticsDataUse = new UserStatisticsGraphDataUseCase(mongoRepo);
+export const InjectedUserStatisticsGraphController = new GetUserStatisticsGraphDataController(userStatisticsDataUse);
 

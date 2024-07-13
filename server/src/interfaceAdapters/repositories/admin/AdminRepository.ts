@@ -11,6 +11,7 @@ import { CallModel } from "../../../frameworks/database/models/admin/CallModel";
 import { UserModel } from "../../../frameworks/database/models/user/User";
 import { MessageModel } from "../../../frameworks/database/models/admin/MessageModel";
 import { Message } from "../../../entities/models/common/Message";
+import { GraphDataType } from "../../../entities/useCasesInterfaces/Admin/IUserStatisticsGraphDataUseCase";
 
 export class MongoAdminRepository implements IAdminRepository {
   async CreateAdmin(admin: Admin): Promise<any> {
@@ -299,6 +300,43 @@ export class MongoAdminRepository implements IAdminRepository {
       const save =   await newMessage.save();
 
       return save;
+  }
+
+  async FindUserStaticsDataOfAdminById(adminId: string): Promise<GraphDataType> {
+
+    const filterUnknown: any = {
+        adminId: adminId,
+      }; 
+        const filterVerified: any = {
+        adminId: adminId,
+      }; 
+        const filterUnVerified: any = {
+        adminId: adminId,
+      };
+
+
+        const verifiedProperties = await QrModel.find({ userType: "Verified" });
+        const verifiedPropertyIds = verifiedProperties.map(property => property._id);
+        filterVerified.propId = { $in: verifiedPropertyIds };
+      
+
+        const unknonProperties = await QrModel.find({ userType: "Unknown" });
+        const unknownPropertyIds = unknonProperties.map(property => property._id);
+        filterUnknown.propId = { $in: unknownPropertyIds };
+      
+        
+        const unverifiedProperties = await QrModel.find({ userType: "Unverified" });
+        const unverifiedPropertyIds = unverifiedProperties.map(property => property._id);
+        filterUnVerified.propId = { $in: unverifiedPropertyIds };
+      
+
+
+      const All:number = await UserModel.find({adminId: adminId}).countDocuments();
+      const unknown: number = await UserModel.find(filterVerified).countDocuments()
+      const verified: number = await UserModel.find(filterUnknown).countDocuments()
+      const unVerified: number = await UserModel.find(filterUnVerified).countDocuments()
+
+      return {All, unknown, verified, unVerified}
   }
 
 }

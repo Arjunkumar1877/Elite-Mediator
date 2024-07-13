@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { Req, Route } from "../../../frameworks/types/ServerTypes";
 import { JwtTokenAdapter } from "../../../frameworks/services/jwtService/TokenService";
-import { InjectedAdminSignUpController, InjectedAdminlogincontroller, InjectedGenerateQrCodeController, InjectedGetAdminDataController, InjectedGetAdminAllPropertyDataController, InjectedGetUnverifiedAdminController, InjectedGoogleLoginController, InjectedSavePropertyDataController, InjectedUpdateAdminProfileController, InjectedUpdateVerifyAdminController, InjectedUpdateConversationReadCountToZeroController, InjectedGetSelectedConversationController, InjectedGetConversationListController, InjectedGetAdminsCallListController, InjectedGetUsersListController, InjectedClearAdminChatMessagesController, InjectedEditUnknownUsernameController, InjectedAddNewFcmTokenOrGetExsistingeController, InjectedSendAdminMessageController } from "../../../frameworks/injection/AdminInjects";
+import { InjectedAdminSignUpController, InjectedAdminlogincontroller, InjectedGenerateQrCodeController, InjectedGetAdminDataController, InjectedGetAdminAllPropertyDataController, InjectedGetUnverifiedAdminController, InjectedGoogleLoginController, InjectedSavePropertyDataController, InjectedUpdateAdminProfileController, InjectedUpdateVerifyAdminController, InjectedUpdateConversationReadCountToZeroController, InjectedGetSelectedConversationController, InjectedGetConversationListController, InjectedGetAdminsCallListController, InjectedGetUsersListController, InjectedClearAdminChatMessagesController, InjectedEditUnknownUsernameController, InjectedAddNewFcmTokenOrGetExsistingeController, InjectedSendAdminMessageController, InjectedUserStatisticsGraphController } from "../../../frameworks/injection/AdminInjects";
 import { InjectedCallingFunctionalitiesController, InjectedGetMessagesController, InjectedSendMesssage } from "../../../frameworks/injection/CommonInjects";
 import { InjectedCreateConversationController } from "../../../frameworks/injection/UserInjects";
 import { UserModel } from "../../database/models/user/User";
@@ -29,8 +29,14 @@ router.post("/google_oauth",JwtToken.CreateJwtToken,  InjectedGoogleLoginControl
 // -------------------------------------| UPDATE THE ADDMIN PROFILE ------------------------------------------------------------------------------------|
 router.post("/update_admin/:id",JwtToken.verifyToken,  InjectedUpdateAdminProfileController.UpdateAdminProfileData.bind(InjectedUpdateAdminProfileController));
 
+// -------------------------------------| ADD A NEW FCM TOKEN TO ADMIN OR GET THE ADMIN WITH THE EXSISTING FCM TOKEN   -----------------------------------------------------------------------------------|
+router.post('/admin_add_or_get_fcmtoken', InjectedAddNewFcmTokenOrGetExsistingeController.AddAdminFcmTokenControl.bind(InjectedAddNewFcmTokenOrGetExsistingeController));
+
 // -------------------------------------| GET THE ADMIN DATA BY THE ADMIN ID ---------------------------------------------------------------------------|
 router.get("/get_admin/:id",JwtToken.verifyToken, InjectedGetAdminDataController.GetAdminDataByIdController.bind(InjectedGetAdminDataController));
+
+// -------------------------------------| GET THE USER STATISTIC GRAPH DATA FOR THE ADMIN DASHBOARD   -----------------------------------------------------------------------------------|
+router.get("/admin_dash_graph/:adminId", InjectedUserStatisticsGraphController.GetUserStatisticsGraphDataControl.bind(InjectedUserStatisticsGraphController))
 
 // -------------------------------------| GET THE GENRATED ADMIN CODE ----------------------------------------------------------------------------------|
 router.get("/generate_code/:adminId/:propertyId",JwtToken.verifyToken, InjectedGenerateQrCodeController.GenerateQrCode.bind(InjectedGenerateQrCodeController));
@@ -42,10 +48,7 @@ router.post("/save_property_data",JwtToken.verifyToken, InjectedSavePropertyData
 router.get("/get_admin_property_data/:id", JwtToken.verifyToken, InjectedGetAdminAllPropertyDataController.GetAdminPropertyDataControl.bind(InjectedGetAdminAllPropertyDataController));
 
 // -------------------------------------| SEND MESSAGE FROM ADMIN SIDE TO USER -------------------------------------------------------------------------|
-// router.post('/send_message', JwtToken.verifyToken, InjectedSendMesssage.SendMessageControl.bind(InjectedSendMesssage));
-router.post('/send_message',  InjectedSendAdminMessageController.SendAdminMessageControl.bind(InjectedSendAdminMessageController));
-
-
+router.post('/admin_send_message',  InjectedSendAdminMessageController.SendAdminMessageControl.bind(InjectedSendAdminMessageController));
 
 // -------------------------------------| FETCH THE EXSISTING CONVERSATION ON THE ADMIN SIDE -----------------------------------------------------------|
 router.post('/start_conversation',JwtToken.verifyToken, InjectedCreateConversationController.CreateConversationControl.bind(InjectedCreateConversationController));
@@ -87,49 +90,7 @@ router.get('/clear_admin_chat/:conId', JwtToken.verifyToken, InjectedClearAdminC
 // -------------------------------------| CHANGE THE UNKNOWN USER TO   -----------------------------------------------------------------------------------|
 router.post('/edit_unknown_username', JwtToken.verifyToken, InjectedEditUnknownUsernameController.EditUnknownUsernameControl.bind(InjectedEditUnknownUsernameController))
 
-
-
-router.post('/admin_add_or_get_fcmtoken', InjectedAddNewFcmTokenOrGetExsistingeController.AddAdminFcmTokenControl.bind(InjectedAddNewFcmTokenOrGetExsistingeController));
-
-router.get("/admin_dash_graph/:adminId", async(req, res)=>{
-    const  adminId  = req.params.adminId;
-
-    const filterUnknown: any = {
-        adminId: adminId,
-      }; 
-        const filterVerified: any = {
-        adminId: adminId,
-      }; 
-        const filterUnVerified: any = {
-        adminId: adminId,
-      };
-
-
-        const verifiedProperties = await QrModel.find({ userType: "Verified" });
-        const verifiedPropertyIds = verifiedProperties.map(property => property._id);
-        filterVerified.propId = { $in: verifiedPropertyIds };
-      
-
-        const unknonProperties = await QrModel.find({ userType: "Unknown" });
-        const unknownPropertyIds = unknonProperties.map(property => property._id);
-        filterUnknown.propId = { $in: unknownPropertyIds };
-      
-        
-        const unverifiedProperties = await QrModel.find({ userType: "Unverified" });
-        const unverifiedPropertyIds = unverifiedProperties.map(property => property._id);
-        filterUnVerified.propId = { $in: unverifiedPropertyIds };
-      
-
-
-      const All:number = await UserModel.find({adminId: adminId}).countDocuments();
-      const unknown: number = await UserModel.find(filterVerified).countDocuments()
-      const verified: number = await UserModel.find(filterUnknown).countDocuments()
-      const unVerified: number = await UserModel.find(filterUnVerified).countDocuments()
-
-      res.json({All, unknown, verified, unVerified})
-})
-
-
+// -------------------------------------| LOGOUT THE USER AND REMOVE THE JWT TOKEN FROM THE COOKIES   -----------------------------------------------------------------------------------|
 router.get("/admin_logout", JwtToken.removeToken)
 
 

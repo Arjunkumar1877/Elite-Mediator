@@ -25,6 +25,10 @@ import UserChatPage from "./pages/User/UserChatPage";
 import UsersListPage from "./pages/Admin/UsersListPage";
 import PropertyDataPage from "./pages/Admin/PropertyDataPage";
 import { onMessageListener, requestPermission } from "./firebase/firebase";
+import SuperAdminLogin from "./pages/SuperAdmin/SuperAdminLogin";
+import SuperAdminDashboardPage from "./pages/SuperAdmin/SuperAdminDashboardPage";
+import SuperAdminRegisteredAdminsListPage from "./pages/SuperAdmin/SuperAdminRegisteredAdminsListPage";
+import SuperAdminRegisteredAdminProfilePage from "./pages/SuperAdmin/SuperAdminRegisteredAdminProfilePage";
 
 const App: React.FC = () => {
   useEffect(() => {
@@ -69,6 +73,16 @@ const App: React.FC = () => {
               <Route path="/chat_user" element={<UserChatPage />} />
               <Route path="/call_page_user" element={<UserCallPage />} />
             </Route>
+
+
+
+
+
+        <Route path="/super_admin_dashboard"  element={<SuperAdminDashboardPage />}/>
+        <Route path="/super_admin_login"  element={<SuperAdminLogin />}/>
+        <Route path="/super_admin_registered_admin_list" element={<SuperAdminRegisteredAdminsListPage />} />
+        <Route path="/super_admin_registered_admin_profile" element={<SuperAdminRegisteredAdminProfilePage/>} />
+
           </Routes>
         </BrowserRouter>
       </SocketProvider>

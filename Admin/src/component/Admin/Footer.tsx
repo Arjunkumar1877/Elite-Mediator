@@ -27,7 +27,7 @@ const Footer = () => {
         <div className="self-start flex gap-1">
           <input
             type="email"
-            placeholder="Your email address"
+            placeholder={"Your email address"}
             className="rounded-md w-28 h-8 px-1 py-1 border border-gray-700 focus:outline-none focus:ring-1 focus:ring-inset focus:ring-blue-500 lg:w-40"
           />
           <button className="bg-sky-500 w-16 text-xs text-white px-1 py-1 rounded-md hover:bg-blue-700">

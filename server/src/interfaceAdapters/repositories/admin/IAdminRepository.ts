@@ -2,6 +2,7 @@ import { Admin } from "../../../entities/models/admin/Admin";
 import { PropertyData } from "../../../entities/models/admin/PropertyData";
 import { Conversation } from "../../../entities/models/common/Conversation";
 import { Message } from "../../../entities/models/common/Message";
+import { GraphDataType } from "../../../entities/useCasesInterfaces/Admin/IUserStatisticsGraphDataUseCase";
 
 export interface IAdminRepository {
     CreateAdmin(admin: Admin): Promise<Admin>;
@@ -27,4 +28,5 @@ export interface IAdminRepository {
     FindAndEditUnknownUser(userId: string, username: string): Promise<any>;
     CreateAdminNewMessageToDb(message: Message): Promise<Message | any>;
     FindAndClearAdminChatMessages(conId: string): Promise<any>;
+    FindUserStaticsDataOfAdminById(adminId: string): Promise<GraphDataType>;
 }

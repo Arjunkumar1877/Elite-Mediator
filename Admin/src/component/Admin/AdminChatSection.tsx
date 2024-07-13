@@ -248,7 +248,7 @@ const AdminChatSection: React.FC = () => {
     console.log(messageData);
 
     try {
-      const response: any = await axios.post<Message>("/api/send_message", {
+      const response: any = await axios.post<Message>("/api/admin_send_message", {
         messageData: messageData,
         token: selectedConversation?.userId?.fcmToken,
         username: currentAdmin.username

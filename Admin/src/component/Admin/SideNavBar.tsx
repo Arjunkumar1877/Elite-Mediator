@@ -21,7 +21,7 @@ interface SideNavBarProps {
 }
 
 const SideNavBar: React.FC<SideNavBarProps> = ({ navShowSet }) => {
-  const [showNav, setShowNav] = useState(true);
+  const [showNav, setShowNav] = useState<boolean>(true);
   const { currentAdmin } = useSelector((state: any) => state.admin);
   const [isHovered, setIsHovered] = useState<boolean>(false);
   const dispatch = useDispatch();
@@ -110,10 +110,7 @@ const SideNavBar: React.FC<SideNavBarProps> = ({ navShowSet }) => {
       </div>
 
       <div
-        className={`transition-all duration-300 ${
-          showNav
-            ? "h-screen w-[250px] bg-sky-50"
-            : "h-screen w-[60px] bg-sky-50"
+        className={`
         }`}
       >
         <span

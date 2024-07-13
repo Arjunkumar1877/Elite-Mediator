@@ -1,5 +1,8 @@
 {
     "recommendations": [
-        "bradlc.vscode-tailwindcss"
+        "bradlc.vscode-tailwindcss",
+        "rodrigovallades.es7-react-js-snippets",
+        "burkeholland.simple-react-snippets",
+        "infeng.vscode-react-typescript"
     ]
 }
