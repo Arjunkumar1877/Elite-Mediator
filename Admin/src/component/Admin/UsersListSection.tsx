@@ -8,6 +8,23 @@ import { Link } from "react-router-dom";
 import toast from "react-hot-toast";
 import axios from "axios";
 
+
+type PropertyDataType = {
+  adminId: string;
+  allowVedioCalls: boolean;
+  code: string;
+  createdAt?: number;
+  deleted: boolean;
+  propId: string;
+  propertyAddress: string;
+  propertyName: string;
+  updatedAt?: number;
+  url: string;
+  userType: string;
+  _id?: string;
+};
+
+
 const UsersListSection = () => {
   const [usersList, setUsersList] = useState<any[]>([]);
   const { currentAdmin } = useSelector((state: any) => state.admin);
@@ -52,7 +69,7 @@ const UsersListSection = () => {
   const fetchAdminsProperties = async () => {
     try {
       const res = await fetch(
-        `/api/get_admin_property_data/${currentAdmin._id}`
+        `/api/get_admin_property_data_filtering/${currentAdmin._id}`
       );
       const data = await res.json();
       setProperties(data);
@@ -137,11 +154,13 @@ const UsersListSection = () => {
                 >
                   {/* <option value="All">Select property</option> */}
                   <option value="All">All Properties</option>
-                  {properties.map((prop: any) => (
-                    <option key={prop._id} value={prop._id}>
-                      {prop.propertyName}
-                    </option>
-                  ))}
+                  {properties && properties.map((prop: PropertyDataType) => (
+    <>
+    <option className={`${!prop.deleted ? 'font-bold text-green-500' : 'text-red-500'}`} key={prop._id} value={prop._id}>
+      {prop.propertyName} {prop.deleted ? " - (Deleted)" : " -  (Active)"} 
+     </option>
+    </>
+  ))}
                 </select>
               </div>
             </div>

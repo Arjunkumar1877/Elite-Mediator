@@ -39,6 +39,8 @@ import { SendAndCreateAdminMessageUseCase } from '../../useCases/admin/SendAndCr
 import { SendAdminMessageController } from '../../interfaceAdapters/controllers/Admin/SendAdminMessageController';
 import { UserStatisticsGraphDataUseCase } from '../../useCases/admin/UserStatisticsGraphDataUseCase';
 import { GetUserStatisticsGraphDataController } from '../../interfaceAdapters/controllers/Admin/GetUserStatisticsGraphDataController';
+import { GetAdminPropertDataForFilteringController } from '../../interfaceAdapters/controllers/Admin/GetAdminPropertDataForFilteringController';
+import { GetAdminPropertyDataForFilterUseCase } from '../../useCases/admin/GetAdminPropertyDataForFilterUseCase';
 const mongoRepo = new MongoAdminRepository();
 
 // -----------------------------| ADMIN SIGNUP INJECTION ----------------------------------------------------------------------------------------
@@ -71,7 +73,7 @@ const adminProfileUpdateUse = new UpdateAdminProfileUseCase(mongoRepo);
 export const InjectedUpdateAdminProfileController = new UpdateAdminProfileController(adminProfileUpdateUse);
 
 
-// -----------------------------| UPDATE ADMIN PROFILE DETAILS INJECTION ----------------------------------------------------------------------------------------
+// -----------------------------|GET ADMIN PROFILE DETAILS INJECTION ----------------------------------------------------------------------------------------
 const getAdminDataByIdUse = new GetAdminDataUseCase(mongoRepo);
 export const InjectedGetAdminDataController = new GetAdminDataController(getAdminDataByIdUse);
 
@@ -89,6 +91,12 @@ export const InjectedSavePropertyDataController = new SavePropertDataController(
 // -----------------------------| GET EACH ADMIN'S PROPERTY DATA AND QRCODE'S INJECTION ----------------------------------------------------------------------------------------
 const getAdminPropertyDataUse = new GetAdminAllPropertDataUseCase(mongoRepo);
 export const InjectedGetAdminAllPropertyDataController = new GetAdminAllPropertyDataController(getAdminPropertyDataUse);
+
+
+// -----------------------------| GET EACH ADMIN'S PROPERTY DATA AND QRCODE'S INJECTION ----------------------------------------------------------------------------------------
+const getAdminPropertyDataForFilterUse = new GetAdminPropertyDataForFilterUseCase(mongoRepo);
+export const InjectedGetAdminPropertyDataForFilteringController = new GetAdminPropertDataForFilteringController(getAdminPropertyDataForFilterUse);
+
 
 
 // -----------------------------| GET EACH ADMIN'S PROPERTY DATA AND QRCODE'S INJECTION ----------------------------------------------------------------------------------------
@@ -131,12 +139,9 @@ const AddNewFcmTokenOrGetExsistingOneUse = new AddAdminFcmTokenUseCase(mongoRepo
 export const InjectedAddNewFcmTokenOrGetExsistingeController = new AddAdminFcmTokenController(AddNewFcmTokenOrGetExsistingOneUse);
 
 
-
 // // -----------------------------| ADD A NEW FCM TOKEN OR GET THE EXSISTING ONE ----------------------------------------------------------------------------------------
 const sendAdminMessageUse = new SendAndCreateAdminMessageUseCase(mongoRepo);
 export const InjectedSendAdminMessageController = new SendAdminMessageController(sendAdminMessageUse);
-
-
 
 
 // // -----------------------------| ADD A NEW FCM TOKEN OR GET THE EXSISTING ONE ----------------------------------------------------------------------------------------

@@ -16,7 +16,8 @@ export interface IAdminRepository {
     FindAdminFcmToken(token: string, adminId: string): Promise<any>;
     UpdateAdminData(admin: Admin, id: string): Promise<Admin | null>;
     CreatePropertyData(propertyData: PropertyData): Promise<PropertyData | null>;
-    FindAdminsPropertDatas(id: string): Promise<PropertyData[] | null>;
+    FindAdminsPropertDatas(adminId: string): Promise<PropertyData[] | null>;
+    FindAdminsPropertDatasForFilter(adminId: string): Promise<PropertyData[] | null>;
     UpdateLastMessageUnreadToZero(id: string, text: string, time: Date, unread: number): Promise<Conversation | any>;
     FindConversationById(id: string): Promise<Conversation | null>;
     FindAdminsConversationsByAdminId(adminId: string): Promise<any>;

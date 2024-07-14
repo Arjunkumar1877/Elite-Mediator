@@ -93,7 +93,7 @@ const SideNavBar: React.FC<SideNavBarProps> = ({ navShowSet }) => {
   };
 
   return (
-    <div className="fixed z-20">
+    <div className="fixed z-20 bg-sky-50 h-full">
       <div
         className={`flex p-1 gap-1 transition-all duration-300 ${
           showNav ? "bg-sky-50 w-[250px]" : "w-[60px]"

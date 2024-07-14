@@ -9,6 +9,7 @@ import { useSocket } from "../../contexts/AdminContext";
 import { MdOutlinePermMedia } from "react-icons/md";
 import toast from "react-hot-toast";
 
+
 type UserDataType = {
   adminId: string;
   conversationId: string;
@@ -100,7 +101,7 @@ const AdminChatListSection: React.FC = () => {
   const fetchAdminsProperties = async () => {
     try {
       const res = await fetch(
-        `/api/get_admin_property_data/${currentAdmin._id}`
+        `/api/get_admin_property_data_filtering/${currentAdmin._id}`
       );
       const data: PropertyDataType[] = await res.json();
       console.log(data);
@@ -249,24 +250,25 @@ const AdminChatListSection: React.FC = () => {
             <div className="flex gap-16 lg:gap-16 justify-center items-center px-2 lg:px-5">
               <button
                 onClick={() => handleFilterChatByProperty("All")}
-                className="py-3 bg-white px-8 lg:px-16 text-xs rounded-full hover:bg-sky-300"
+                className="py-3 bg-white px-4 lg:px-8 text-xs rounded-full hover:bg-sky-300"
               >
                 All chats
               </button>
               <div className="flex relative">
-                <select
-                  onChange={(e: ChangeEvent<HTMLSelectElement>) =>
-                    handleFilterChatByProperty(e.target.value)
-                  }
-                  className="py-3 px-2 bg-white lg:px-16 text-xs rounded-full cursor-pointer"
-                >
-                  <option value="">All Properties</option>
-                  {properties && properties?.map((prop: PropertyDataType) => (
-                    <option key={prop._id} value={prop._id}>
-                      {prop.propertyName}
-                    </option>
-                  ))}
-                </select>
+              <select
+  onChange={(e: ChangeEvent<HTMLSelectElement>) => handleFilterChatByProperty(e.target.value)}
+  className="py-3 px-2 bg-white lg:px-16 text-xs rounded-full cursor-pointer"
+>
+  <option className="font-bold" value="">All Properties</option>
+  {properties && properties.map((prop: PropertyDataType) => (
+    <>
+    <option className={`${!prop.deleted ? 'font-bold text-green-500' : 'text-red-500'}`} key={prop._id} value={prop._id}>
+      {prop.propertyName} {prop.deleted ? " -  (Removed)" : " -  (Active)"} 
+     </option>
+    </>
+  ))}
+</select>
+
               </div>
             </div>
 
