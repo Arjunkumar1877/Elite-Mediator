@@ -9,7 +9,6 @@ import { useSocket } from "../../contexts/AdminContext";
 import { MdOutlinePermMedia } from "react-icons/md";
 import toast from "react-hot-toast";
 
-
 type UserDataType = {
   adminId: string;
   conversationId: string;
@@ -174,7 +173,6 @@ const AdminChatListSection: React.FC = () => {
   //   setConversations(filtered);
   // };
 
-  
   const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
   };
@@ -182,9 +180,6 @@ const AdminChatListSection: React.FC = () => {
   const filteredChatsList = conversations.filter((con) =>
     con.userId.username.toLowerCase().includes(searchTerm.toLowerCase())
   );
-
-
-
 
   const handleFilterChatByProperty = (data: string) => {
     setSearchTerm("");
@@ -267,20 +262,33 @@ const AdminChatListSection: React.FC = () => {
                 All chats
               </button>
               <div className="flex relative">
-              <select
-  onChange={(e: ChangeEvent<HTMLSelectElement>) => handleFilterChatByProperty(e.target.value)}
-  className="py-3 px-2 bg-white lg:px-16 text-xs rounded-full cursor-pointer"
->
-  <option className="font-bold" value="">All Properties</option>
-  {properties && properties.map((prop: PropertyDataType) => (
-    <>
-    <option className={`${!prop.deleted ? 'font-bold text-green-500' : 'text-red-500'}`} key={prop._id} value={prop._id}>
-      {prop.propertyName} {prop.deleted ? " -  (Removed)" : " -  (Active)"} 
-     </option>
-    </>
-  ))}
-</select>
-
+                <select
+                  onChange={(e: ChangeEvent<HTMLSelectElement>) =>
+                    handleFilterChatByProperty(e.target.value)
+                  }
+                  className="py-3 px-2 bg-white lg:px-16 text-xs rounded-full cursor-pointer"
+                >
+                  <option className="font-bold" value="">
+                    All Properties
+                  </option>
+                  {properties &&
+                    properties.map((prop: PropertyDataType) => (
+                      <>
+                        <option
+                          className={`${
+                            !prop.deleted
+                              ? "font-bold text-green-500"
+                              : "text-red-500"
+                          }`}
+                          key={prop._id}
+                          value={prop._id}
+                        >
+                          {prop.propertyName}{" "}
+                          {prop.deleted ? " -  (Removed)" : " -  (Active)"}
+                        </option>
+                      </>
+                    ))}
+                </select>
               </div>
             </div>
 

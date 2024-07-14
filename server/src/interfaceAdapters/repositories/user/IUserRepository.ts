@@ -18,4 +18,7 @@ export interface IUserRepository{
     FindUserByMacId(macId: string, propId: string): Promise<User | null>;
     CreateUserNewMessageToDb(message: any): Promise<Message | any>;
     FindAndGetUserMessages(conId: string): Promise<any>;
+    FindTheUserById(userId: string): Promise<User | null>;
+    FindConversationAndUpdateDeleted(conId: string | undefined): Promise<any>;
+    FindUserAndUpdateDeletedUser(userId: string): Promise<any>;
 }

@@ -101,8 +101,8 @@ export class MongoUserRepository implements IUserRepository {
   }
 
   async CreateUserNewMessageToDb(message: any): Promise<Message | any> {
-    console.log(message )
-    console.log("😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️")
+    // console.log(message )
+    // console.log("😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️")
       const newMessage = new MessageModel(message);
       const save =   await newMessage.save();
 
@@ -120,5 +120,40 @@ export class MongoUserRepository implements IUserRepository {
   async FindUserFcmToken(token: string, userId: string): Promise<any> {
     return await UserModel.findOne({_id: userId, fcmToken: token}).populate("adminId propId");
   }
+
+  async FindTheUserById(userId: string): Promise<User | null> {
+    return await UserModel.findOne({_id: userId});
+  }
+
+  async FindConversationAndUpdateDeleted(conId: string): Promise<any> {
+    const updatedConversation = await ConversationModel.findOneAndUpdate({_id: conId}, {
+      $set: {
+        deleted: false
+      }
+    }, { new: true});
+
+    if(updatedConversation){
+      return 'updated'
+    }else{
+      return 'failed'
+    }
+  }
+
+  async FindUserAndUpdateDeletedUser(userId: string): Promise<any> {
+  const updateUser = await UserModel.findOneAndUpdate({_id: userId}, {
+    $set: {
+      deleted: false
+    }
+  }, {new: true});
+
+  if(updateUser){
+    return 'updated';
+  }else{
+    return 'failed';
+  }
+
+  }
+
+  // async 
 
 }

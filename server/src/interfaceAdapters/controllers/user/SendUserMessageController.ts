@@ -9,7 +9,9 @@ export class SendUserMessageController {
 
   async SendUserMessageControl(req: Req, res: Res): Promise<void> {
     try {
-      console.log(req.body);
+      // console.log(req.body);
+    console.log("🤷‍♂️🤷‍♂️🤷‍♂️🤷‍♂️🤷‍♂️🤷‍♂️🤷‍♂️🤷‍♂️😥😥😥 controller for sending messages from user to admin")
+
       const message: any = req.body.messageData;
       const token: string = req.body.token;
       const username: string = req.body.username;

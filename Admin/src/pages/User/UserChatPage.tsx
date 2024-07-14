@@ -246,7 +246,7 @@ const UserChatPage: React.FC = () => {
     console.log("sending message");
 
     try {
-      const response = await axios.post<Message>("/user/user_send_message", {
+      const response = await axios.post<Message>("/user/user_send_message_to_admin", {
         messageData: messageData,
         token: currentUser?.adminId?.fcmToken,
         username: currentUser.username

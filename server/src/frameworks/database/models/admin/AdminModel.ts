@@ -47,6 +47,10 @@ const AdminSchema = new mongoose.Schema(
     },
     fcmToken: {
       type: String
+    },
+    blocked: {
+      type: Boolean,
+      default: false
     }
   },
   { timestamps: true }

@@ -43,8 +43,8 @@ router.post("/get_admins_property_data", InjectedGetAdminsPropertdataController.
 router.post('/start_conversation', InjectedCreateConversationController.CreateConversationControl.bind(InjectedCreateConversationController));
 
 
-// -------------------------------------| SEND MESSAGE FROM ADMIN SIDE TO USER --------------------------------------------------------------------|
-router.post('/user_send_message', InjectedSendAndCreateUserMessageController.SendUserMessageControl.bind(InjectedSendAndCreateUserMessageController))
+// -------------------------------------| SEND MESSAGE FROM USER SIDE TO ADMIN --------------------------------------------------------------------|
+router.post('/user_send_message_to_admin', InjectedSendAndCreateUserMessageController.SendUserMessageControl.bind(InjectedSendAndCreateUserMessageController))
 
 
 // -------------------------------------| GETTING ALL THE MESSAGES FROM THE DATABASE  --------------------------------------------------------------------|

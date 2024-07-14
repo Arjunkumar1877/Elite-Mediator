@@ -19,7 +19,7 @@ import { GetUserDataByIdUseCase } from "../../useCases/user/GetUserDataByIdUseCa
 import { GetUserDataByPhoneUseCase } from "../../useCases/user/GetUserDataByPhoneUseCase";
 import { GetUserMessagesUseCase } from "../../useCases/user/GetUserMessagesUseCase";
 import { SaveNewUserDataUseCase } from "../../useCases/user/SaveNewUserDataUseCase";
-import { SendAndCreateUserMessage } from "../../useCases/user/SendAndCreateUserMessage";
+import { SendAndCreateUserMessageUseCase } from "../../useCases/user/SendAndCreateUserMessage";
 import { VerifyUserUseCase } from "../../useCases/user/VerifyUserUseCase";
 
 
@@ -69,7 +69,7 @@ export const InjectedCreateConversationController = new CreateConversationContro
 
 
 // -----------------------------| SEND MESSAGES FROM USER CHAT  ----------------------------------------------------------------------------------------
-const SendUserMessageUse = new SendAndCreateUserMessage(mongoRepo)
+const SendUserMessageUse = new SendAndCreateUserMessageUseCase(mongoRepo)
 export const InjectedSendAndCreateUserMessageController = new SendUserMessageController(SendUserMessageUse);
 
 
