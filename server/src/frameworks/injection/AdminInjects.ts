@@ -41,6 +41,8 @@ import { UserStatisticsGraphDataUseCase } from '../../useCases/admin/UserStatist
 import { GetUserStatisticsGraphDataController } from '../../interfaceAdapters/controllers/Admin/GetUserStatisticsGraphDataController';
 import { GetAdminPropertDataForFilteringController } from '../../interfaceAdapters/controllers/Admin/GetAdminPropertDataForFilteringController';
 import { GetAdminPropertyDataForFilterUseCase } from '../../useCases/admin/GetAdminPropertyDataForFilterUseCase';
+import { DeleteUserDataUseCase } from '../../useCases/admin/DeleteUserDataUseCase';
+import { DeleteUserDataAndConversationController } from '../../interfaceAdapters/controllers/Admin/DEleteUserDAtaAndConversationController';
 const mongoRepo = new MongoAdminRepository();
 
 // -----------------------------| ADMIN SIGNUP INJECTION ----------------------------------------------------------------------------------------
@@ -139,12 +141,18 @@ const AddNewFcmTokenOrGetExsistingOneUse = new AddAdminFcmTokenUseCase(mongoRepo
 export const InjectedAddNewFcmTokenOrGetExsistingeController = new AddAdminFcmTokenController(AddNewFcmTokenOrGetExsistingOneUse);
 
 
-// // -----------------------------| ADD A NEW FCM TOKEN OR GET THE EXSISTING ONE ----------------------------------------------------------------------------------------
+// -----------------------------| ADD A NEW FCM TOKEN OR GET THE EXSISTING ONE ----------------------------------------------------------------------------------------
 const sendAdminMessageUse = new SendAndCreateAdminMessageUseCase(mongoRepo);
 export const InjectedSendAdminMessageController = new SendAdminMessageController(sendAdminMessageUse);
 
 
-// // -----------------------------| ADD A NEW FCM TOKEN OR GET THE EXSISTING ONE ----------------------------------------------------------------------------------------
+// -----------------------------| GET USER DAT ASTATISTICS FOR THE ADMIN DASHBOARD ----------------------------------------------------------------------------------------
 const userStatisticsDataUse = new UserStatisticsGraphDataUseCase(mongoRepo);
 export const InjectedUserStatisticsGraphController = new GetUserStatisticsGraphDataController(userStatisticsDataUse);
+
+
+
+// -----------------------------| GET USER DAT ASTATISTICS FOR THE ADMIN DASHBOARD ----------------------------------------------------------------------------------------
+const deleteUserDataUse = new DeleteUserDataUseCase(mongoRepo);
+export const InjectedDeleteUserDataAndConversationController = new DeleteUserDataAndConversationController(deleteUserDataUse);
 

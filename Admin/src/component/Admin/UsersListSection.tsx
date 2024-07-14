@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import toast from "react-hot-toast";
 import axios from "axios";
+import Swal from 'sweetalert2';
 
 
 type PropertyDataType = {
@@ -42,6 +43,34 @@ const UsersListSection = () => {
 
 
   
+  const handleDeleteUserData = async(userId: string)=>{
+    const res = await fetch(`/api/admin_delete_user_data/${userId}`);
+
+    const data = await res.json();
+
+    if(data === "deleted"){
+      fetchFileredUserData();
+    }
+  }
+
+
+  const confirmDelete = (id: string) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "This users chat list and all messages will be remove",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!"
+    }).then((result) => {
+      if (result.isConfirmed) {
+      handleDeleteUserData(id)
+        Swal.fire("Deleted!", "Your file has been deleted.", "success");
+      }
+    });
+  };
+
 
 
   const fetchFileredUserData = async () => {
@@ -215,7 +244,7 @@ const UsersListSection = () => {
           </div>
 
           <div className="flex flex-col gap-4 overflow-y-auto flex-grow mt-4">
-            {filteredUsersList.map((user: any) => (
+            {filteredUsersList && filteredUsersList.map((user: any) => (
               <div
                 key={user?._id}
                 className="flex flex-col border p-4 rounded-lg gap-4 shadow-sm bg-gray-50"
@@ -243,7 +272,7 @@ const UsersListSection = () => {
                     <h3 className="font-semibold text:xs md:text-lg">Name</h3>
                     <span className="text:xs md:text-lg">{user?.username}</span>
                   </div>
-                  <button className="flex items-center gap-1 text-white bg-red-500 px-4 py-2 rounded-lg shadow-sm w-24 justify-center">
+                  <button onClick={()=> confirmDelete(user._id)} className="flex items-center gap-1 text-white bg-red-500 px-4 py-2 rounded-lg shadow-sm w-24 justify-center">
                     <FaRegTrashAlt />
                     Delete
                   </button>

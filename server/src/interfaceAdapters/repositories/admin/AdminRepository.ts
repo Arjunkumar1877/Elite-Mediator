@@ -12,6 +12,7 @@ import { UserModel } from "../../../frameworks/database/models/user/User";
 import { MessageModel } from "../../../frameworks/database/models/admin/MessageModel";
 import { Message } from "../../../entities/models/common/Message";
 import { GraphDataType } from "../../../entities/useCasesInterfaces/Admin/IUserStatisticsGraphDataUseCase";
+import { User } from "../../../entities/models/user/User";
 
 export class MongoAdminRepository implements IAdminRepository {
   async CreateAdmin(admin: Admin): Promise<any> {
@@ -53,18 +54,21 @@ export class MongoAdminRepository implements IAdminRepository {
     return newUser;
   }
 
-  async FindAdminAndAddFcmToken(token:string, adminId: string): Promise<any>{
-    const data = await AdminModel.findOneAndUpdate({_id: adminId}, {
-      $set: {
-        fcmToken: token
+  async FindAdminAndAddFcmToken(token: string, adminId: string): Promise<any> {
+    const data = await AdminModel.findOneAndUpdate(
+      { _id: adminId },
+      {
+        $set: {
+          fcmToken: token,
+        },
       }
-    })
+    );
 
     return data;
   }
 
   async FindAdminFcmToken(token: string, adminId: string): Promise<any> {
-    return await AdminModel.findOne({_id: adminId, fcmToken: token});
+    return await AdminModel.findOne({ _id: adminId, fcmToken: token });
   }
 
   async UpdateAdminData(admin: Admin, id: string): Promise<Admin | null> {
@@ -97,11 +101,15 @@ export class MongoAdminRepository implements IAdminRepository {
     return await QrModel.create(propertyData);
   }
 
-  async FindAdminsPropertDatas(adminId: string): Promise<PropertyData[] | null> {
+  async FindAdminsPropertDatas(
+    adminId: string
+  ): Promise<PropertyData[] | null> {
     return await QrModel.find({ adminId: adminId, deleted: false });
   }
 
-  async FindAdminsPropertDatasForFilter(adminId: string): Promise<PropertyData[] | null> {
+  async FindAdminsPropertDatasForFilter(
+    adminId: string
+  ): Promise<PropertyData[] | null> {
     return await QrModel.find({ adminId: adminId });
   }
 
@@ -192,7 +200,7 @@ export class MongoAdminRepository implements IAdminRepository {
     endDate: any
   ): Promise<any> {
     try {
-      let query: any = { adminId: adminId };
+      let query: any = { adminId: adminId, deleted: false };
 
       const limit = 10;
 
@@ -235,17 +243,26 @@ export class MongoAdminRepository implements IAdminRepository {
     return calles;
   }
 
-  async FindUsersListByAdminId(adminId: string, startDate: string, endDate: string, propertyName: string, userType: string): Promise<any> {
+  async FindUsersListByAdminId(
+    adminId: string,
+    startDate: string,
+    endDate: string,
+    propertyName: string,
+    userType: string
+  ): Promise<any> {
+    if (propertyName === "All" || userType === "All") {
+      const users = await UserModel.find({
+        adminId: adminId,
+        updatedAt: -1,
+        deleted: false,
+      }).populate("propId");
 
-    if(propertyName === 'All' || userType === 'All'){
-      
-      const users = await UserModel.find({adminId: adminId}).populate('propId');
-     
-      return users
+      return users;
     }
 
     const filter: any = {
       adminId: adminId,
+      deleted: false,
     };
 
     if (startDate) {
@@ -260,11 +277,11 @@ export class MongoAdminRepository implements IAdminRepository {
 
     if (userType) {
       const properties = await QrModel.find({ userType });
-      const propertyIds = properties.map(property => property._id);
+      const propertyIds = properties.map((property) => property._id);
       filter.propId = { $in: propertyIds };
     }
 
-    const users = await UserModel.find(filter).populate('propId');
+    const users = await UserModel.find(filter).populate("propId");
 
     if (users.length > 0) {
       return users;
@@ -274,73 +291,113 @@ export class MongoAdminRepository implements IAdminRepository {
   }
 
   async FindAndEditUnknownUser(userId: string, username: string): Promise<any> {
-    const editedUserdata = await UserModel.findOneAndUpdate({_id: userId}, {
-      $set: {
-          username: username
-      }
-  }, { new: true});
+    const editedUserdata = await UserModel.findOneAndUpdate(
+      { _id: userId },
+      {
+        $set: {
+          username: username,
+        },
+      },
+      { new: true }
+    );
 
-  if(editedUserdata){
-      return editedUserdata
-  }else{
-      return ''
-  }
+    if (editedUserdata) {
+      return editedUserdata;
+    } else {
+      return "";
+    }
   }
 
   async FindAndClearAdminChatMessages(conId: string): Promise<any> {
     const result = await MessageModel.updateMany(
       { conversationId: conId },
       { $set: { adminDeleted: true } }
-  );
+    );
 
-  return result;
-
+    return result;
   }
- 
+
   async CreateAdminNewMessageToDb(message: Message): Promise<Message | any> {
-    console.log(message )
-    console.log("😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂❤️❤️❤️❤️❤️Admin send message an dsave to db")
-      const newMessage = new MessageModel(message);
-      const save =   await newMessage.save();
+    console.log(message);
+    console.log(
+      "😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂❤️❤️❤️❤️❤️Admin send message an dsave to db"
+    );
+    const newMessage = new MessageModel(message);
+    const save = await newMessage.save();
 
-      return save;
+    return save;
   }
 
-  async FindUserStaticsDataOfAdminById(adminId: string): Promise<GraphDataType> {
-
+  async FindUserStaticsDataOfAdminById(
+    adminId: string
+  ): Promise<GraphDataType> {
     const filterUnknown: any = {
-        adminId: adminId,
-      }; 
-        const filterVerified: any = {
-        adminId: adminId,
-      }; 
-        const filterUnVerified: any = {
-        adminId: adminId,
-      };
+      adminId: adminId,
+    };
+    const filterVerified: any = {
+      adminId: adminId,
+    };
+    const filterUnVerified: any = {
+      adminId: adminId,
+    };
 
+    const verifiedProperties = await QrModel.find({ userType: "Verified" });
+    const verifiedPropertyIds = verifiedProperties.map(
+      (property) => property._id
+    );
+    filterVerified.propId = { $in: verifiedPropertyIds };
 
-        const verifiedProperties = await QrModel.find({ userType: "Verified" });
-        const verifiedPropertyIds = verifiedProperties.map(property => property._id);
-        filterVerified.propId = { $in: verifiedPropertyIds };
-      
+    const unknonProperties = await QrModel.find({ userType: "Unknown" });
+    const unknownPropertyIds = unknonProperties.map((property) => property._id);
+    filterUnknown.propId = { $in: unknownPropertyIds };
 
-        const unknonProperties = await QrModel.find({ userType: "Unknown" });
-        const unknownPropertyIds = unknonProperties.map(property => property._id);
-        filterUnknown.propId = { $in: unknownPropertyIds };
-      
-        
-        const unverifiedProperties = await QrModel.find({ userType: "Unverified" });
-        const unverifiedPropertyIds = unverifiedProperties.map(property => property._id);
-        filterUnVerified.propId = { $in: unverifiedPropertyIds };
-      
+    const unverifiedProperties = await QrModel.find({ userType: "Unverified" });
+    const unverifiedPropertyIds = unverifiedProperties.map(
+      (property) => property._id
+    );
+    filterUnVerified.propId = { $in: unverifiedPropertyIds };
 
+    const All: number = await UserModel.find({
+      adminId: adminId,
+    }).countDocuments();
+    const unknown: number = await UserModel.find(
+      filterVerified
+    ).countDocuments();
+    const verified: number = await UserModel.find(
+      filterUnknown
+    ).countDocuments();
+    const unVerified: number = await UserModel.find(
+      filterUnVerified
+    ).countDocuments();
 
-      const All:number = await UserModel.find({adminId: adminId}).countDocuments();
-      const unknown: number = await UserModel.find(filterVerified).countDocuments()
-      const verified: number = await UserModel.find(filterUnknown).countDocuments()
-      const unVerified: number = await UserModel.find(filterUnVerified).countDocuments()
-
-      return {All, unknown, verified, unVerified}
+    return { All, unknown, verified, unVerified };
   }
 
+  async FindUserByUserId(userId: string): Promise<User | null> {
+    return await UserModel.findOne({ _id: userId });
+  }
+
+  async FindUserByIdAndDelete(userId: string): Promise<string> {
+    const deleted = await UserModel.findOneAndUpdate(
+      { _id: userId },
+      {
+        $set: {
+          deleted: true,
+        },
+      },
+      { new: true }
+    );
+    return deleted ? "Deleted" : "Failed";
+  }
+
+  async FindConversationByIdAndDelete(conId: string): Promise<string> {
+    const deleted = await ConversationModel.findOneAndUpdate(
+      { _id: conId },
+      {
+        deleted: true,
+      },
+      { new: true }
+    );
+    return deleted ? "Deleted" : "Failed";
+  }
 }

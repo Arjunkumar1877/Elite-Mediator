@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { Req, Res, Route } from "../../../frameworks/types/ServerTypes";
 import { JwtTokenAdapter } from "../../../frameworks/services/jwtService/TokenService";
-import { InjectedAdminSignUpController, InjectedAdminlogincontroller, InjectedGenerateQrCodeController, InjectedGetAdminDataController, InjectedGetAdminAllPropertyDataController, InjectedGetUnverifiedAdminController, InjectedGoogleLoginController, InjectedSavePropertyDataController, InjectedUpdateAdminProfileController, InjectedUpdateVerifyAdminController, InjectedUpdateConversationReadCountToZeroController, InjectedGetSelectedConversationController, InjectedGetConversationListController, InjectedGetAdminsCallListController, InjectedGetUsersListController, InjectedClearAdminChatMessagesController, InjectedEditUnknownUsernameController, InjectedAddNewFcmTokenOrGetExsistingeController, InjectedSendAdminMessageController, InjectedUserStatisticsGraphController, InjectedGetAdminPropertyDataForFilteringController } from "../../../frameworks/injection/AdminInjects";
+import { InjectedAdminSignUpController, InjectedAdminlogincontroller, InjectedGenerateQrCodeController, InjectedGetAdminDataController, InjectedGetAdminAllPropertyDataController, InjectedGetUnverifiedAdminController, InjectedGoogleLoginController, InjectedSavePropertyDataController, InjectedUpdateAdminProfileController, InjectedUpdateVerifyAdminController, InjectedUpdateConversationReadCountToZeroController, InjectedGetSelectedConversationController, InjectedGetConversationListController, InjectedGetAdminsCallListController, InjectedGetUsersListController, InjectedClearAdminChatMessagesController, InjectedEditUnknownUsernameController, InjectedAddNewFcmTokenOrGetExsistingeController, InjectedSendAdminMessageController, InjectedUserStatisticsGraphController, InjectedGetAdminPropertyDataForFilteringController, InjectedDeleteUserDataAndConversationController } from "../../../frameworks/injection/AdminInjects";
 import { InjectedCallingFunctionalitiesController, InjectedGetMessagesController, InjectedSendMesssage } from "../../../frameworks/injection/CommonInjects";
 import { InjectedCreateConversationController } from "../../../frameworks/injection/UserInjects";
 import { UserModel } from "../../database/models/user/User";
@@ -52,6 +52,8 @@ router.get("/get_admin_property_data/:id", JwtToken.verifyToken, InjectedGetAdmi
 router.get("/get_admin_property_data_filtering/:adminId", JwtToken.verifyToken, InjectedGetAdminPropertyDataForFilteringController.GetAdminPropertyDataForFilteringControl.bind(InjectedGetAdminPropertyDataForFilteringController));
 
 
+router.get('/admin_delete_user_data/:userId', InjectedDeleteUserDataAndConversationController.DeleteUserDataConversatiionControl.bind(InjectedDeleteUserDataAndConversationController))
+
 // -------------------------------------| SEND MESSAGE FROM ADMIN SIDE TO USER -------------------------------------------------------------------------|
 router.post('/admin_send_message',  InjectedSendAdminMessageController.SendAdminMessageControl.bind(InjectedSendAdminMessageController));
 
@@ -68,7 +70,7 @@ router.get('/selected_conversation/:id',JwtToken.verifyToken,  InjectedGetSelect
 router.get('/get_admin_messages/:conId',JwtToken.verifyToken, InjectedGetMessagesController.GetMessagesControl.bind(InjectedGetMessagesController));
 
 // -------------------------------------| FECH ALL AND FILTERED ADMINS CHAT LIST  ----------------------------------------------------------------------|
-router.get('/conversations_list',JwtToken.verifyToken, InjectedGetConversationListController.GetConversationListControl.bind(InjectedGetConversationListController));
+router.get('/get_conversations_list',JwtToken.verifyToken, InjectedGetConversationListController.GetConversationListControl.bind(InjectedGetConversationListController));
 
 // -------------------------------------| STARTING A CALL AND SAVING THE DATA TO THE DATABASE  ---------------------------------------------------------|
 router.post("/start_call",JwtToken.verifyToken, InjectedCallingFunctionalitiesController.StartingCallControl.bind(InjectedCallingFunctionalitiesController));

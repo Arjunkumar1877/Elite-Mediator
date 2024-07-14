@@ -73,7 +73,7 @@ const AdminChatListSection: React.FC = () => {
 
   const fetchConversations = async () => {
     try {
-      const response = await axios.get("/api/conversations_list", {
+      const response = await axios.get("/api/get_conversations_list", {
         params: {
           adminId: currentAdmin._id,
           page: currentPage,
@@ -164,15 +164,27 @@ const AdminChatListSection: React.FC = () => {
     setCurrentPage((prevPage) => Math.min(prevPage + 1, totalPages));
   };
 
-  const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const searchText: string = e.target.value.toLowerCase();
-    setSearchTerm(searchText);
+  // const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
+  //   const searchText: string = e.target.value.toLowerCase();
+  //   setSearchTerm(searchText);
 
-    const filtered: ConversationDataType[] = conversations.filter((conversation) =>
-      conversation.userId.username.toLowerCase().includes(searchText)
-    );
-    setConversations(filtered);
+  //   const filtered: ConversationDataType[] = conversations.filter((conversation) =>
+  //     conversation.userId.username.toLowerCase().includes(searchText)
+  //   );
+  //   setConversations(filtered);
+  // };
+
+  
+  const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
   };
+
+  const filteredChatsList = conversations.filter((con) =>
+    con.userId.username.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+
+
 
   const handleFilterChatByProperty = (data: string) => {
     setSearchTerm("");
@@ -322,8 +334,8 @@ const AdminChatListSection: React.FC = () => {
           </div>
 
           <div className="flex flex-col gap-4 overflow-y-auto h-[380px]">
-            {conversations &&
-              conversations.map((conversation: any) => (
+            {filteredChatsList &&
+              filteredChatsList.map((conversation: any) => (
                 <Link
                   to={`/admin_chat?conId=${conversation._id}`}
                   key={conversation._id}

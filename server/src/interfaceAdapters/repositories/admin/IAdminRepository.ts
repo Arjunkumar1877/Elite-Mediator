@@ -2,6 +2,7 @@ import { Admin } from "../../../entities/models/admin/Admin";
 import { PropertyData } from "../../../entities/models/admin/PropertyData";
 import { Conversation } from "../../../entities/models/common/Conversation";
 import { Message } from "../../../entities/models/common/Message";
+import { User } from "../../../entities/models/user/User";
 import { GraphDataType } from "../../../entities/useCasesInterfaces/Admin/IUserStatisticsGraphDataUseCase";
 
 export interface IAdminRepository {
@@ -30,4 +31,8 @@ export interface IAdminRepository {
     CreateAdminNewMessageToDb(message: Message): Promise<Message | any>;
     FindAndClearAdminChatMessages(conId: string): Promise<any>;
     FindUserStaticsDataOfAdminById(adminId: string): Promise<GraphDataType>;
+    FindUserByIdAndDelete(userId: string): Promise<any>;
+    FindConversationByIdAndDelete(conId: string): Promise<any>;
+    FindUserByUserId(userId: string): Promise<User | null>;
+    // FindMessageByConversationIdAndDelete(userId: string): Promise<string>;
 }
