@@ -1,7 +1,12 @@
+import axios from "axios";
 import { useState, useEffect } from "react";
+import toast from "react-hot-toast";
 import { BsCheckCircleFill, BsXCircleFill } from "react-icons/bs";
 import { FaEyeSlash } from "react-icons/fa";
 import { IoEyeSharp } from "react-icons/io5";
+import { useDispatch, useSelector } from "react-redux";
+import { signInSuccess } from "../../redux/superAdmin/SuperAdminSlice";
+import { useNavigate } from "react-router-dom";
 
 const SuperAdminLogin = () => {
   const [email, setEmail] = useState<string>("");
@@ -10,6 +15,10 @@ const SuperAdminLogin = () => {
   const [passwordValid, setPasswordValid] = useState<boolean>(true);
   const [loginError, setLoginError] = useState<string>("");
   const [viewPassword, setViewPassword] = useState<boolean>(false);
+  const { currentSuperAdmin } = useSelector((state: any)=> state.superAdmin);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
 
   const validateEmail = (email: string) => {
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -23,16 +32,34 @@ const SuperAdminLogin = () => {
   useEffect(() => {
     setEmailValid(validateEmail(email));
     setPasswordValid(validatePassword(password));
+
+    if(currentSuperAdmin){
+      navigate("/super_admin_dashboard")
+    }
   }, [email, password]);
 
-  const handleLogin = () => {
+  
+
+  const handleLogin = async () => {
     if (!emailValid || !passwordValid) {
       setLoginError("Please enter valid email and password.");
       return;
     }
-    // Handle login logic here
-    setLoginError("");
-    console.log("Login successful");
+    
+    const response = await axios.post("/superAdmin/super_admin_login", {
+      email: email,
+      password: password
+    })
+
+    if(response.data.success){
+      dispatch(signInSuccess(response.data.superAdmin));
+      toast("Logged in sucessfully");
+      navigate("/super_admin_dashboard")
+    }else{
+      toast("Error logging in")
+    }
+
+   
   };
 
   return (

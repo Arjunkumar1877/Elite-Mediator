@@ -37,7 +37,7 @@ const initialState: UserStateType = {
   messages: [],
 };
 
-const userSlice = createSlice({
+const superAdminSlice = createSlice({
   name: 'superAdmin',
   initialState,
   reducers: {
@@ -58,6 +58,6 @@ const userSlice = createSlice({
   }
 });
 
-export const { signInSuccess, setMessages, signoutSuccess } = userSlice.actions;
+export const { signInSuccess, setMessages, signoutSuccess } = superAdminSlice.actions;
 
-export default userSlice.reducer;
+export default superAdminSlice.reducer;

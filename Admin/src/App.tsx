@@ -30,13 +30,13 @@ import SuperAdminDashboardPage from "./pages/SuperAdmin/SuperAdminDashboardPage"
 import SuperAdminRegisteredAdminsListPage from "./pages/SuperAdmin/SuperAdminRegisteredAdminsListPage";
 import SuperAdminRegisteredAdminProfilePage from "./pages/SuperAdmin/SuperAdminRegisteredAdminProfilePage";
 import SuperAdmiPosterPage from "./pages/SuperAdmin/SuperAdmiPosterPage";
+import SuperAdminPrivateRoute from "./component/SuperAdmin/SuperAdminPrivateRoute";
 
 const App: React.FC = () => {
   useEffect(() => {
     requestPermission();
 
     const unsubscribe = onMessageListener();
-   
 
     return () => {
       unsubscribe.then(() => {}).catch((err) => console.log("failed " + err));
@@ -68,8 +68,21 @@ const App: React.FC = () => {
               <Route path="/call_admin_page" element={<AdminCallPage />} />
             </Route>
 
+
+
+
+
+
+
+
+
+            
+
             <Route path="/new_user" element={<InitialDataPage />} />
-            <Route path="/user_verify_otp_page/:id" element={<UserLoginOtpVerify />} />
+            <Route
+              path="/user_verify_otp_page/:id"
+              element={<UserLoginOtpVerify />}
+            />
             <Route element={<UserPrivateRoute />}>
               <Route path="/chat_user" element={<UserChatPage />} />
               <Route path="/call_page_user" element={<UserCallPage />} />
@@ -79,17 +92,37 @@ const App: React.FC = () => {
 
 
 
-        <Route path="/super_admin_dashboard"  element={<SuperAdminDashboardPage />}/>
-        <Route path="/super_admin_login"  element={<SuperAdminLogin />}/>
-        <Route path="/super_admin_registered_admin_list" element={<SuperAdminRegisteredAdminsListPage />} />
-        <Route path="/super_admin_registered_admin_profile" element={<SuperAdminRegisteredAdminProfilePage/>} />
-        <Route path="/super_admin_poster_page" element={<SuperAdmiPosterPage/>} />
 
+
+
+
+
+
+            <Route path="/super_admin_login" element={<SuperAdminLogin />} />
+
+            <Route element={<SuperAdminPrivateRoute />}>
+              <Route
+                path="/super_admin_dashboard"
+                element={<SuperAdminDashboardPage />}
+              />
+              <Route
+                path="/super_admin_registered_admin_list"
+                element={<SuperAdminRegisteredAdminsListPage />}
+              />
+              <Route
+                path="/super_admin_registered_admin_profile"
+                element={<SuperAdminRegisteredAdminProfilePage />}
+              />
+              <Route
+                path="/super_admin_poster_page"
+                element={<SuperAdmiPosterPage />}
+              />
+            </Route>
           </Routes>
         </BrowserRouter>
       </SocketProvider>
     </div>
   );
-}
+};
 
 export default App;

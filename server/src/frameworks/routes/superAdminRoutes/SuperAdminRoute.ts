@@ -4,12 +4,22 @@ import { InjectedGetAllAdminsDataForSuperAdminController, InjectedGetAnAdminForS
 import { Req, Res } from "../../types/ServerTypes";
 import { PosterModel } from "../../../entities/models/superAdmin/Posters";
 import { AdminModel } from "../../database/models/admin/AdminModel";
+import { SuperAdminModel } from "../../database/models/superAdmin/SuperAdminModel";
 
 
 const router = Router();
 
 
-router.post('/superadmin_login', SuperAdminLoginController.SuperAdminLoginControl);
+router.post('/super_admin_login', async(req: Req, res: Res)=>{
+    const { email , password} = req.body;
+    console.log(req.body)
+    const logged = await SuperAdminModel.findOne({email, password})
+    if(logged){
+        res.json({ success: true, superAdmin: logged});
+    }else{
+        res.json({success: false, superAdmin: ""});
+    }
+});
 
 
 
