@@ -1,8 +1,28 @@
 import { Link } from "react-router-dom";
 import Footer from "../../component/Admin/Footer";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import toast from "react-hot-toast";
 
-
+type PostersDataType = {
+  _id: string;
+  imageUrl: string;
+};
 const ServicePage = () => {
+  const [posters, setPosters] = useState<PostersDataType[]>([]);
+  useEffect(()=>{
+    handleFetchPosters();
+    },[])
+  
+    const handleFetchPosters = async () => {
+      try {
+        const response = await axios.get('/superAdmin/get_posters');
+        setPosters(response.data);
+      } catch (error) {
+        console.log(error);
+        toast("Failed to fetch posters.");
+      }
+    };
   return (
     <div className="relative bg-white  overflow-hidden p-8 md:p-10 lg:p-0">
       <div className="absolute rounded-2xl top-0 left-1/4 transform -translate-x-1/2 -translate-y-1/2 bg-blue-100 w-40 h-40 lg:w-72 lg:h-72 rotate-45"></div>
@@ -11,7 +31,7 @@ const ServicePage = () => {
       <div className="relative mb-10 flex flex-col lg:flex-row items-center justify-between space-y-8 lg:space-y-0 mt-40">
         <div className="lg:w-1/2 flex justify-center lg:justify-end">
           <img
-            src="public/Domestic.jpg"
+            src={posters.length > 0 ? posters[6].imageUrl : 'https://firebasestorage.googleapis.com/v0/b/elite-mediator.appspot.com/o/1721057219908_Domestic.jpg?alt=media&token=8ba48abf-8c4e-432b-a892-f42d86190fa2'}
             alt="Illustration"
             className="max-w-full mt-10 h-auto"
           />
@@ -60,13 +80,13 @@ const ServicePage = () => {
         </div>
 
         <div className="w-1/2 flex justify-center items-center ml-14">
-          <img src="public/Bussiness.jpg" alt="" className="" />
+          <img src={posters.length > 0 ? posters[7].imageUrl : "https://firebasestorage.googleapis.com/v0/b/elite-mediator.appspot.com/o/1721057233070_Bussiness.jpg?alt=media&token=e378a80b-11bc-473d-888e-9c91419e74c2"} alt="" className="" />
         </div>
       </div>
 
       <div className="mt-16  mb-32 flex flex-col gap-5 lg:flex-row lg:justify-between">
         <div className="">
-          <img src="public/visitors.webp" alt="" />
+          <img src={posters.length > 0 ? posters[8].imageUrl : "https://firebasestorage.googleapis.com/v0/b/elite-mediator.appspot.com/o/1721057243593_visitors.webp?alt=media&token=7bd7a863-f40f-4c4e-9272-8172284648fc"} alt="" />
         </div>
 
         <div className="flex flex-col justify-center gap-5">
