@@ -57,7 +57,7 @@ type ConversationDataType = {
 const socket = io("http://localhost:7000");
 
 const AdminChatListSection: React.FC = () => {
-  const [conversations, setConversations] = useState<ConversationDataType[]>(
+  const [conversations, setConversations] = useState<any>(
     []
   );
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -177,7 +177,7 @@ const AdminChatListSection: React.FC = () => {
     setSearchTerm(e.target.value);
   };
 
-  const filteredChatsList = conversations.filter((con) =>
+  const filteredChatsList = conversations.filter((con: any) =>
     con.userId.username.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -350,7 +350,7 @@ const AdminChatListSection: React.FC = () => {
                 >
                   <div className="flex items-center justify-between border-2 p-4 rounded hover:bg-gray-100 transition relative">
                     <div className="absolute top-0 left-0 w-full h-full flex justify-center items-center">
-                      {getUserTypeBanner(conversation.propertyId.userType)}
+                      {getUserTypeBanner(conversation?.propertyId?.userType)}
                     </div>
                     <div className="flex items-center gap-3 relative z-10 mt-3">
                       <img

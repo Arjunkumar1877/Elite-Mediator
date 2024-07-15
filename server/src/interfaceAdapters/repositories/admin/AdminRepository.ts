@@ -1,4 +1,3 @@
-import { ObjectId } from "mongoose";
 import { Admin } from "../../../entities/models/admin/Admin";
 import { AdminModel } from "../../../frameworks/database/models/admin/AdminModel";
 import { IAdminRepository } from "./IAdminRepository";
@@ -6,7 +5,6 @@ import { QrModel } from "../../../frameworks/database/models/admin/QrDataModel";
 import { PropertyData } from "../../../entities/models/admin/PropertyData";
 import { ConversationModel } from "../../../frameworks/database/models/admin/ConversationModel";
 import { Conversation } from "../../../entities/models/common/Conversation";
-import moment from "moment";
 import { CallModel } from "../../../frameworks/database/models/admin/CallModel";
 import { UserModel } from "../../../frameworks/database/models/user/User";
 import { MessageModel } from "../../../frameworks/database/models/admin/MessageModel";

@@ -42,7 +42,7 @@ import { GetUserStatisticsGraphDataController } from '../../interfaceAdapters/co
 import { GetAdminPropertDataForFilteringController } from '../../interfaceAdapters/controllers/Admin/GetAdminPropertDataForFilteringController';
 import { GetAdminPropertyDataForFilterUseCase } from '../../useCases/admin/GetAdminPropertyDataForFilterUseCase';
 import { DeleteUserDataUseCase } from '../../useCases/admin/DeleteUserDataUseCase';
-import { DeleteUserDataAndConversationController } from '../../interfaceAdapters/controllers/Admin/DEleteUserDAtaAndConversationController';
+import { DeleteUserDataAndConversationController } from '../../interfaceAdapters/controllers/Admin/DeleteUserDataAndConversationController';
 const mongoRepo = new MongoAdminRepository();
 
 // -----------------------------| ADMIN SIGNUP INJECTION ----------------------------------------------------------------------------------------

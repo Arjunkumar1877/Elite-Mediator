@@ -83,7 +83,7 @@ const phonenum:number = 0;
    
  const loginUnknown = async (propertyId:string) => {
   try {
-      const userIdS = `${Date.now()}000000`; // Generate a unique userId
+      const userIdS = `${Date.now()}000000`; 
       const res = await fetch("/user/create_unknown_user_data", {
           method: "POST",
           headers: {
@@ -156,7 +156,7 @@ const phonenum:number = 0;
           setFormData({...formData, propId: adminsPropertyData._id});
           setPropertyData(adminsPropertyData);
   
-          if (currentUser && currentUser.propId === adminsPropertyData._id) {
+          if (currentUser && currentUser.propId._id === adminsPropertyData._id) {
             toast("You have an old chat list here");
             navigate(`/chat_user?conId=${currentUser.conversationId}`);
           } else {

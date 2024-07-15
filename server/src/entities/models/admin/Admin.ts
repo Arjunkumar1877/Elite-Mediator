@@ -12,4 +12,6 @@ export interface Admin {
     image?: string
     landmark?: string
     fcmToken?: string
+    createdAt?: number;
+    updatedAt?: number
 }

@@ -8,7 +8,6 @@ import path from "path";
 import { createServer, Server as HTTPServer } from 'http';
 import { initializeSocket } from "../../services/socketIo/SocketIo";
 import { Server as SocketIoServer } from 'socket.io';
-import { exec } from 'child_process';
 import dotenv from "dotenv";
 
 // Load environment variables
@@ -35,18 +34,15 @@ export class ExpressServer {
         this.app.use(cors());
         this.app.use(cookieParser());
 
-        // Serve static files (if any)
         const publicPath = path.join(__dirname, '..', 'public');
         this.app.use(express.static(publicPath));
     }
 
     private configureRoutes(): void {
-        // Mount your routes here
         this.app.use("/api", adminRoutes);
         this.app.use("/user", userRoutes);
-        this.app.use("/superadmin", superAdminRoute);
+        this.app.use("/superAdmin", superAdminRoute);
 
-        // Add a catch-all route for handling undefined routes
         this.app.use('*', (req: Request, res: Response) => {
             res.status(404).json({
                 success: false,
@@ -68,7 +64,7 @@ export class ExpressServer {
     }
 
     private startServer(): void {
-        const port = process.env.PORT || 7000;  // Use environment variable for port if available
+        const port = process.env.PORT || 7000;  
         this.server.listen(port, () => {
             console.log(`Express server running on port ${port}`);
         });

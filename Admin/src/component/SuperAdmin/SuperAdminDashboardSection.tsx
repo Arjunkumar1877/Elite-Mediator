@@ -1,10 +1,60 @@
 import { FaSearch } from "react-icons/fa";
-
-// type Props = {}
-
 import SuperAdminBarGraph from "./SuperAdminBarGraph";
 import SuperAdminLineGraph from "./SuperAdminLineGraph";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { IoIosSend } from "react-icons/io";
+import { Link } from "react-router-dom";
+
+// type SuperAdminDataType = {
+//   _id?: string;
+//   email: string;
+//   password: string;
+// }
+
+
+interface AdminDataTypes {
+  _id?: string;
+  username: string;
+  email: string;
+  phone: number;
+  password: string;
+  address?: string | null;
+  state?: string | null;
+  city?: string | null;
+  pincode?: number | null;
+  verified?: boolean
+  firebaseConfirm?: string | null;
+  image?: string
+  landmark?: string
+  fcmToken?: string
+  createdAt?: number;
+  updatedAt?: number
+}
+
+
 const SuperAdminDashboardSection = () => {
+const [adminsData, setAdminsData] = useState<AdminDataTypes[] | null>();
+
+
+  const fetchAdmins = async()=>{
+    try {
+      const response = await axios.get('/superAdmin/get_admin_data');
+
+      
+      console.log(response);
+      setAdminsData(response.data)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  useEffect(()=>{
+ fetchAdmins();
+  },[])
+
+  console.log(adminsData)
+
   return (
     <div className="container mx-auto">
         <div className="absolute z-0 rounded-2xl -top-14 sm:ml-30 md:ml-28 lg:left-20 transform translate-x-1/2 -translate-y-1/2 bg-zinc-300 w-40 h-40 lg:w-72 lg:h-72 rotate-45"></div>
@@ -43,18 +93,17 @@ const SuperAdminDashboardSection = () => {
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td className="p-2 border-b">#12345</td>
-                  <td className="p-2 border-b">John Doe</td>
-                  <td className="p-2 border-b">john.doe@example.com</td>
-                  <td className="p-2 border-b">Details</td>
+                {
+                  adminsData && adminsData.map((data: AdminDataTypes)=>(
+                    <tr key={data?._id}>
+                  <td className="p-2 border-b">#{data?._id?.substring(0, 5)}</td>
+                  <td className="p-2 border-b">{data?.username}</td>
+                  <td className="p-2 border-b">{data?.email}</td>
+                  <td className="p-2 border-b hover:text-sky-500 cursor-pointer"><Link to={`/super_admin_registered_admin_profile?adminId=${data._id}`}><IoIosSend className="text-lg md:text-2xl " /></Link></td>
                 </tr>
-                <tr>
-                  <td className="p-2 border-b">#12346</td>
-                  <td className="p-2 border-b">Jane Smith</td>
-                  <td className="p-2 border-b">jane.smith@example.com</td>
-                  <td className="p-2 border-b">Details</td>
-                </tr>
+                  ))
+                }
+                
               </tbody>
             </table>
 

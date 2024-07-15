@@ -6,78 +6,85 @@ import { ConversationModel } from "../../../frameworks/database/models/admin/Con
 import { MessageModel } from "../../../frameworks/database/models/admin/MessageModel";
 import { ICommonRepository } from "./ICommonRepository";
 
+export class MongoCommonRepository implements ICommonRepository {
+  async CreateNewMessageToDb(message: any): Promise<Message | any> {
+    console.log(message);
+    console.log(
+      "😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️"
+    );
+    const newMessage = new MessageModel(message.messageData);
+    const save = await newMessage.save();
 
+    return save;
+  }
 
-export class MongoCommonRepository implements ICommonRepository{
-    async CreateNewMessageToDb(message: any): Promise<Message | any> {
-      console.log(message )
-      console.log("😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️")
-        const newMessage = new MessageModel(message.messageData);
-        const save =   await newMessage.save();
-  
-        return save;
-    }
+  async GetConversationFromDb(
+    conversationId: string
+  ): Promise<Conversation | any> {
+    const conversation = await ConversationModel.findOne({
+      _id: conversationId,
+    });
 
-    async GetConversationFromDb(conversationId: string): Promise<Conversation | any>{
-      const conversation = await ConversationModel.findOne({ _id: conversationId });
-  
-      return conversation
-    }
+    return conversation;
+  }
 
-    async GetMessagesFromDb(conversationId: string): Promise<Message[] | any> {
-      console.log("😣😣😣😣🔥🔥🔥🔥🔥 fetching messages in repository data");
-      const messages = await MessageModel.find({ conversationId: conversationId, adminDeleted: false }).sort({ createdAt: 1 });
-        // console.log(messages);
-      return messages;
-    }
-    
-    async CreateACallToDb(callData: Call): Promise<any> {
-      return await CallModel.create(callData); 
-    }
+  async GetMessagesFromDb(conversationId: string): Promise<Message[] | any> {
+    console.log("😣😣😣😣🔥🔥🔥🔥🔥 fetching messages in repository data");
+    const messages = await MessageModel.find({
+      conversationId: conversationId,
+      adminDeleted: false,
+    }).sort({ createdAt: 1 });
+    // console.log(messages);
+    return messages;
+  }
 
-    async AcceptCallAndUpdatOnDb(id: string): Promise<any> {
-      const update = await CallModel.findByIdAndUpdate(
-        id,
-        {
-          callStarted: Date.now(),
-          callStatus: 'answered',
-        },
-        { new: true }
-      );
-    
-      return update;
-    }
+  async CreateACallToDb(callData: Call): Promise<any> {
+    return await CallModel.create(callData);
+  }
 
-    async DisconnectCallAndUpdateOnDb(id: string): Promise<any> {
-      const call = await CallModel.findById(id);
-  
-      const callEnded = new Date();
-      const callStarted = call?.callStarted ? new Date(call.callStarted).getTime() : 0;
-      const callDuration = callStarted ? callEnded.getTime() - callStarted : 0;
-  
-      const update = await CallModel.findByIdAndUpdate(
-        id,
-        {
-          callEnded: callEnded,
-          callDuration: callDuration,
-        },
-        { new: true }
-      );
+  async AcceptCallAndUpdatOnDb(id: string): Promise<any> {
+    const update = await CallModel.findByIdAndUpdate(
+      id,
+      {
+        callStarted: Date.now(),
+        callStatus: "answered",
+      },
+      { new: true }
+    );
 
-      return update;
-    }
+    return update;
+  }
 
-     async DeclineCallAndUpdateOnDb(id: string): Promise<any> {
-      const call = await CallModel.findById(id);
+  async DisconnectCallAndUpdateOnDb(id: string): Promise<any> {
+    const call = await CallModel.findById(id);
 
-    
-      const update = await CallModel.findByIdAndUpdate(
-        id,
-        { callStatus: 'declined' },
-        { new: true }
-      );
+    const callEnded = new Date();
+    const callStarted = call?.callStarted
+      ? new Date(call.callStarted).getTime()
+      : 0;
+    const callDuration = callStarted ? callEnded.getTime() - callStarted : 0;
 
-      return update;
-    }
+    const update = await CallModel.findByIdAndUpdate(
+      id,
+      {
+        callEnded: callEnded,
+        callDuration: callDuration,
+      },
+      { new: true }
+    );
 
+    return update;
+  }
+
+  async DeclineCallAndUpdateOnDb(id: string): Promise<any> {
+    const call = await CallModel.findById(id);
+
+    const update = await CallModel.findByIdAndUpdate(
+      id,
+      { callStatus: "declined" },
+      { new: true }
+    );
+
+    return update;
+  }
 }

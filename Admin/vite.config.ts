@@ -13,6 +13,10 @@ export default defineConfig({
         target: 'http://localhost:7000',
         secure: false,
       },
+      '/superAdmin':{
+        target: 'http://localhost:7000',
+        secure: false,
+      },
     },
   },
   plugins: [react()],
