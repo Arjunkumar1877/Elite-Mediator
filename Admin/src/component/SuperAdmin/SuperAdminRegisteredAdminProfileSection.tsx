@@ -1,8 +1,10 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import { BsCheckCircleFill } from "react-icons/bs";
 import { FaRegUser } from "react-icons/fa";
 import { useLocation } from "react-router-dom";
+import Swal from "sweetalert2";
 
 interface AdminDataTypes {
   _id?: string;
@@ -21,6 +23,7 @@ interface AdminDataTypes {
   fcmToken?: string
   createdAt?: number;
   updatedAt?: number
+  blocked: boolean;
 }
 
 
@@ -73,10 +76,6 @@ const SuperAdminRegisteredAdminProfileSection = () => {
     }
   };
 
-  
-
-
-
   const formatDateTime = (dateString: any) => {
     const options: Intl.DateTimeFormatOptions = {
       year: 'numeric',
@@ -88,8 +87,63 @@ const SuperAdminRegisteredAdminProfileSection = () => {
     };
     return new Date(dateString).toLocaleString([], options);
   };
-  
 
+  const handleUnBlockAdmins = async(id: string | undefined)=>{
+    const res = await axios.get(`/superAdmin/unblock_an_admin/${id}`)
+    if(res.data.unblocked){
+      toast("Admin was sucessfully unblocked");
+      fetchAdminProfile()
+    }else{
+      toast("failed unblocking admin")
+    }
+  }
+
+  const confirmAdminBlock = (id: string | undefined) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "Do you want to block this Admin from accesing his account ?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!"
+    }).then((result) => {
+      if (result.isConfirmed) {
+     handleBlockadmins(id)
+       
+      }
+    });
+  };
+
+  const handleBlockadmins  = async(id: string | undefined)=>{
+      const res = await axios.get(`/superAdmin/block_an_admin/${id}`);
+
+      if(res.data.blocked){
+        Swal.fire("Admin was sucessfully blocked..");
+        fetchAdminProfile()
+      }else{
+        toast("Failed blocking the admin");
+      }
+  }
+
+  const confirmAdminUnBlock = (id: string | undefined) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "Do you want to block this Admin from accesing his account ?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!"
+    }).then((result) => {
+      if (result.isConfirmed) {
+     handleUnBlockAdmins(id)
+       
+      }
+    });
+  };
+
+  
 
   useEffect(()=>{
   fetchAdminProfile();
@@ -113,9 +167,15 @@ const SuperAdminRegisteredAdminProfileSection = () => {
               <img src={adminProfileData?.image} className="w-32 md:w-50 rounded " alt="" />
             </div>
             <div className="flex justify-end w-15 h-8 md:w-20 m-2">
-              <button className="p-1 bg-red-500 w-full rounded text-white hover:bg-red-900 ">
+             {
+              adminProfileData && adminProfileData.blocked ?  <button onClick={()=> confirmAdminUnBlock(adminProfileData?._id)} className="p-1 bg-red-500 w-full rounded text-white hover:bg-red-900 ">
+              Unblock
+            </button> :    <button onClick={()=> confirmAdminBlock(adminProfileData?._id)} className="p-1 bg-red-500 w-full rounded text-white hover:bg-red-900 ">
                 Block
               </button>
+             }
+
+           
             </div>
           </div>
 
@@ -131,7 +191,7 @@ const SuperAdminRegisteredAdminProfileSection = () => {
 
               <div className="flex relative mx-auto w-full">
                 <FaRegUser className="absolute right-4 top-1/2 transform -translate-y-1/2 text-lg md:text-xl" />
-                <input
+                <input disabled
                   type="text"
                   className="border-2 w-full rounded-md   placeholder-text-black placeholder-gray-900 py-2 px-4 md:py-3 md:px-5"
                   placeholder={adminProfileData?.username}
@@ -150,7 +210,7 @@ const SuperAdminRegisteredAdminProfileSection = () => {
 
               <div className="flex relative mx-auto w-full">
                 <FaRegUser className="absolute right-4 top-1/2 transform -translate-y-1/2 text-lg md:text-xl" />
-                <input
+                <input disabled
                   type="text"
                   className="border-2 w-full rounded-md   placeholder-text-black placeholder-gray-900 py-2 px-4 md:py-3 md:px-5"
                   placeholder={adminProfileData?.email}
@@ -169,7 +229,7 @@ const SuperAdminRegisteredAdminProfileSection = () => {
 
               <div className="flex relative mx-auto w-full">
                 <FaRegUser className="absolute right-4 top-1/2 transform -translate-y-1/2 text-lg md:text-xl" />
-                <input
+                <input disabled
                   type="text"
                   className="border-2 w-full rounded-md   placeholder-text-black placeholder-gray-900 py-2 px-4 md:py-3 md:px-5"
                   placeholder={adminProfileData && adminProfileData?.address}
@@ -188,7 +248,7 @@ const SuperAdminRegisteredAdminProfileSection = () => {
 
               <div className="flex relative mx-auto w-full">
                 <FaRegUser className="absolute right-4 top-1/2 transform -translate-y-1/2 text-lg md:text-xl" />
-                <input
+                <input disabled
                   type="text"
                   className="border-2 w-full rounded-md   placeholder-text-black placeholder-gray-900 py-2 px-4 md:py-3 md:px-5"
                   placeholder={`${adminProfileData?.phone}`}
@@ -207,7 +267,7 @@ const SuperAdminRegisteredAdminProfileSection = () => {
 
               <div className="flex relative mx-auto w-full">
                 <FaRegUser className="absolute right-4 top-1/2 transform -translate-y-1/2 text-lg md:text-xl" />
-                <input
+                <input disabled
                   type="text"
                   className="border-2 w-full rounded-md   placeholder-text-black placeholder-gray-900 py-2 px-4 md:py-3 md:px-5"
                   placeholder={adminProfileData?.state}
@@ -226,7 +286,7 @@ const SuperAdminRegisteredAdminProfileSection = () => {
 
               <div className="flex relative mx-auto w-full">
                 <FaRegUser className="absolute right-4 top-1/2 transform -translate-y-1/2 text-lg md:text-xl" />
-                <input
+                <input disabled
                   type="text"
                   className="border-2 w-full rounded-md   placeholder-text-black placeholder-gray-900 py-2 px-4 md:py-3 md:px-5"
                   placeholder={adminProfileData?.city}
@@ -245,7 +305,7 @@ const SuperAdminRegisteredAdminProfileSection = () => {
 
               <div className="flex relative mx-auto w-full">
                 <FaRegUser className="absolute right-4 top-1/2 transform -translate-y-1/2 text-lg md:text-xl" />
-                <input
+                <input disabled
                   type="text"
                   className="border-2 w-full rounded-md   placeholder-text-black placeholder-gray-900 py-2 px-4 md:py-3 md:px-5"
                   placeholder={adminProfileData?.landmark}
@@ -264,7 +324,7 @@ const SuperAdminRegisteredAdminProfileSection = () => {
 
               <div className="flex relative mx-auto w-full">
                 <FaRegUser className="absolute right-4 top-1/2 transform -translate-y-1/2 text-lg md:text-xl" />
-                <input
+                <input disabled
                   type="text"
                   className="border-2 w-full rounded-md   placeholder-text-black placeholder-gray-900 py-2 px-4 md:py-3 md:px-5"
                   placeholder={adminProfileData?.pincode}

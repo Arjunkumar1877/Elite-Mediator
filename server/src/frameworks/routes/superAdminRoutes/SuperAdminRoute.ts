@@ -3,6 +3,7 @@ import { SuperAdminLoginController } from "../../../interfaceAdapters/controller
 import { InjectedGetAllAdminsDataForSuperAdminController, InjectedGetAnAdminForSuperAdminController, InjectedGetAnAdminsVisitorDataForSuperAdminController } from "../../injection/SuperAdminInjects";
 import { Req, Res } from "../../types/ServerTypes";
 import { PosterModel } from "../../../entities/models/superAdmin/Posters";
+import { AdminModel } from "../../database/models/admin/AdminModel";
 
 
 const router = Router();
@@ -41,5 +42,34 @@ router.get('/get_posters', async(req: Req, res: Res)=> {
     res.json(newData)
 })
 
+
+router.get("/block_an_admin/:adminId", async(req: Req, res: Res)=>{
+    const blocked = await AdminModel.findOneAndUpdate({_id: req.params.adminId},{
+        $set: {
+            blocked: true
+        }
+    });
+
+    if(blocked){
+        res.json({blocked: true})
+    }else{
+        res.json({blocked: false})
+    }
+})
+
+
+router.get("/unblock_an_admin/:adminId", async(req: Req, res: Res)=>{
+    const blocked = await AdminModel.findOneAndUpdate({_id: req.params.adminId},{
+        $set: {
+            blocked: false
+        }
+    });
+
+    if(blocked){
+        res.json({unblocked: true})
+    }else{
+        res.json({unblocked: false})
+    }
+})
 
 export default router;

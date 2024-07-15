@@ -13,6 +13,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 // import io from 'socket.io-client';
 import { useSocket } from "../../contexts/AdminContext";
 import toast from "react-hot-toast";
+import axios from "axios";
 
 // const socket = io('http://localhost:7000');
 
@@ -36,6 +37,21 @@ const SideNavBar: React.FC<SideNavBarProps> = ({ navShowSet }) => {
     navShowSet(showNav);
   }, [navShowSet, showNav]);
 
+
+  const fetchAdminData = async()=>{
+    try {
+      const response = await axios.get(`/api/get_admin/${currentAdmin._id}`);
+
+      if(response.data.blocked){
+       dispatch(signoutSuccess());
+       toast("You are blocked by the super Admin")
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+
   const handleNotify = (unreadCount: any) => {
     console.log(unreadCount);
     setNotificationCount(unreadCount);
@@ -45,6 +61,7 @@ const SideNavBar: React.FC<SideNavBarProps> = ({ navShowSet }) => {
   };
 
   useEffect(() => {
+    fetchAdminData()
     if (currentAdmin && currentAdmin._id) {
       socket.emit("join room", currentAdmin._id);
       // socket.emit("notify", currentAdmin._id);

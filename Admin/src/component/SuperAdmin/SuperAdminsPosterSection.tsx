@@ -99,6 +99,8 @@ const SuperAdminsPosterSection = () => {
     handleFetchPosters();
   }, []);
 
+
+
   return (
     <div className="container mx-auto">
       <div className="p-6">
