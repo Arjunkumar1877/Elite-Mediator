@@ -29,7 +29,8 @@ const SideNavBar: React.FC<SideNavBarProps> = ({ navShowSet }) => {
   const { socket } = useSocket();
   const location = useLocation();
   const { notificationCount, setNotificationCount }: any = useSocket();
-  console.log(location.pathname);
+  // console.log(location.pathname);
+  console.log("side navbar rendering 💕💕💕💕💕💕");
 
   useEffect(() => {
     navShowSet(showNav);

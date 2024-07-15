@@ -184,11 +184,11 @@ const UsersListSection = () => {
                   {/* <option value="All">Select property</option> */}
                   <option value="All">All Properties</option>
                   {properties && properties.map((prop: PropertyDataType) => (
-    <>
+   
     <option className={`${!prop.deleted ? 'font-bold text-green-500' : 'text-red-500'}`} key={prop._id} value={prop._id}>
       {prop.propertyName} {prop.deleted ? " - (Deleted)" : " -  (Active)"} 
      </option>
-    </>
+   
   ))}
                 </select>
               </div>

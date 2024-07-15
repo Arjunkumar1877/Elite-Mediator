@@ -1,6 +1,8 @@
-import { useState } from "react";
+import axios from "axios";
+import { useEffect, useState } from "react";
 import { BsCheckCircleFill } from "react-icons/bs";
 import { FaRegUser } from "react-icons/fa";
+import { useLocation } from "react-router-dom";
 
 interface AdminDataTypes {
   _id?: string;
@@ -8,12 +10,12 @@ interface AdminDataTypes {
   email: string;
   phone: number;
   password: string;
-  address?: string | null;
-  state?: string | null;
-  city?: string | null;
-  pincode?: number | null;
+  address?: string | any;
+  state?: string | any;
+  city?: string | any;
+  pincode?: number | any;
   verified?: boolean
-  firebaseConfirm?: string | null;
+  firebaseConfirm?: string | any;
   image?: string
   landmark?: string
   fcmToken?: string
@@ -21,9 +23,83 @@ interface AdminDataTypes {
   updatedAt?: number
 }
 
-const SuperAdminRegisteredAdminProfileSection = () => {
 
-  const [adminProfileData, setAdminProfileData]  = useState<AdminDataTypes>()
+type UserDataType = {
+  adminId: string;
+  conversationId: string;
+  createdAt: string;
+  deleted: false;
+  firebaseCode: string;
+  phone: number;
+  propId: string;
+  purpose: string;
+  updatedAt?: number;
+  userId: string;
+  username: string;
+  verified?: boolean;
+  _id?: string;
+  fcmToken: string;
+};
+
+
+const SuperAdminRegisteredAdminProfileSection = () => {
+  const location = useLocation();
+  const query = new URLSearchParams(location.search);
+  const adminId: any = query.get("adminId");
+  const [adminProfileData, setAdminProfileData]  = useState<AdminDataTypes>();
+  const [userType, setUserType] = useState<string>("All");
+  const [adminsVisitors, setAdminsVisitors] = useState<UserDataType[] | null>()
+
+  const fetchAdminProfile = async()=>{
+    try {
+      const res = await axios.get(`/superAdmin/get_admin_profile/${adminId}`)
+      setAdminProfileData(res.data)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const fetchAdminsVisitors = async () => {
+    try {
+      const response = await axios.post('/superAdmin/get_admin_visitors', {
+        adminId: adminId,
+        userType: userType
+      });
+  
+      console.log(response)
+      setAdminsVisitors(response.data);
+    } catch (error) {
+      console.error('Error fetching admin visitors:', error);
+    }
+  };
+
+  
+
+
+
+  const formatDateTime = (dateString: any) => {
+    const options: Intl.DateTimeFormatOptions = {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true,
+    };
+    return new Date(dateString).toLocaleString([], options);
+  };
+  
+
+
+  useEffect(()=>{
+  fetchAdminProfile();
+  fetchAdminsVisitors();
+  },[userType])
+
+  // console.log(adminProfileData);
+  console.log(userType)
+  console.log(adminId)
+  console.log(adminsVisitors)
 
   return (
     <div className="container mx-auto">
@@ -34,10 +110,10 @@ const SuperAdminRegisteredAdminProfileSection = () => {
         <div className="flex flex-col border-2 rounded relative z-30">
           <div className="flex flex-col md:flex-row justify-between items-center px-28 py-3">
             <div className="flex justify-center">
-              <img src="public/userIcon.webp" className="w-32 " alt="" />
+              <img src={adminProfileData?.image} className="w-32 md:w-50 rounded " alt="" />
             </div>
             <div className="flex justify-end w-15 h-8 md:w-20 m-2">
-              <button className="p-1 bg-red-500 w-full rounded text-white hover:bg-red-400 ">
+              <button className="p-1 bg-red-500 w-full rounded text-white hover:bg-red-900 ">
                 Block
               </button>
             </div>
@@ -57,8 +133,8 @@ const SuperAdminRegisteredAdminProfileSection = () => {
                 <FaRegUser className="absolute right-4 top-1/2 transform -translate-y-1/2 text-lg md:text-xl" />
                 <input
                   type="text"
-                  className="border-2 w-full rounded-md   placeholder-text-black placeholder-gray-400 py-2 px-4 md:py-3 md:px-5"
-                  placeholder="Enter your username"
+                  className="border-2 w-full rounded-md   placeholder-text-black placeholder-gray-900 py-2 px-4 md:py-3 md:px-5"
+                  placeholder={adminProfileData?.username}
                 />
               </div>
             </div>
@@ -76,8 +152,8 @@ const SuperAdminRegisteredAdminProfileSection = () => {
                 <FaRegUser className="absolute right-4 top-1/2 transform -translate-y-1/2 text-lg md:text-xl" />
                 <input
                   type="text"
-                  className="border-2 w-full rounded-md   placeholder-text-black placeholder-gray-400 py-2 px-4 md:py-3 md:px-5"
-                  placeholder="Enter your username"
+                  className="border-2 w-full rounded-md   placeholder-text-black placeholder-gray-900 py-2 px-4 md:py-3 md:px-5"
+                  placeholder={adminProfileData?.email}
                 />
               </div>
             </div>
@@ -95,8 +171,8 @@ const SuperAdminRegisteredAdminProfileSection = () => {
                 <FaRegUser className="absolute right-4 top-1/2 transform -translate-y-1/2 text-lg md:text-xl" />
                 <input
                   type="text"
-                  className="border-2 w-full rounded-md   placeholder-text-black placeholder-gray-400 py-2 px-4 md:py-3 md:px-5"
-                  placeholder="Enter your username"
+                  className="border-2 w-full rounded-md   placeholder-text-black placeholder-gray-900 py-2 px-4 md:py-3 md:px-5"
+                  placeholder={adminProfileData && adminProfileData?.address}
                 />
               </div>
             </div>
@@ -114,8 +190,8 @@ const SuperAdminRegisteredAdminProfileSection = () => {
                 <FaRegUser className="absolute right-4 top-1/2 transform -translate-y-1/2 text-lg md:text-xl" />
                 <input
                   type="text"
-                  className="border-2 w-full rounded-md   placeholder-text-black placeholder-gray-400 py-2 px-4 md:py-3 md:px-5"
-                  placeholder="Enter your username"
+                  className="border-2 w-full rounded-md   placeholder-text-black placeholder-gray-900 py-2 px-4 md:py-3 md:px-5"
+                  placeholder={`${adminProfileData?.phone}`}
                 />
               </div>
             </div>
@@ -133,8 +209,8 @@ const SuperAdminRegisteredAdminProfileSection = () => {
                 <FaRegUser className="absolute right-4 top-1/2 transform -translate-y-1/2 text-lg md:text-xl" />
                 <input
                   type="text"
-                  className="border-2 w-full rounded-md   placeholder-text-black placeholder-gray-400 py-2 px-4 md:py-3 md:px-5"
-                  placeholder="Enter your username"
+                  className="border-2 w-full rounded-md   placeholder-text-black placeholder-gray-900 py-2 px-4 md:py-3 md:px-5"
+                  placeholder={adminProfileData?.state}
                 />
               </div>
             </div>
@@ -152,8 +228,8 @@ const SuperAdminRegisteredAdminProfileSection = () => {
                 <FaRegUser className="absolute right-4 top-1/2 transform -translate-y-1/2 text-lg md:text-xl" />
                 <input
                   type="text"
-                  className="border-2 w-full rounded-md   placeholder-text-black placeholder-gray-400 py-2 px-4 md:py-3 md:px-5"
-                  placeholder="Enter your username"
+                  className="border-2 w-full rounded-md   placeholder-text-black placeholder-gray-900 py-2 px-4 md:py-3 md:px-5"
+                  placeholder={adminProfileData?.city}
                 />
               </div>
             </div>
@@ -171,8 +247,8 @@ const SuperAdminRegisteredAdminProfileSection = () => {
                 <FaRegUser className="absolute right-4 top-1/2 transform -translate-y-1/2 text-lg md:text-xl" />
                 <input
                   type="text"
-                  className="border-2 w-full rounded-md   placeholder-text-black placeholder-gray-400 py-2 px-4 md:py-3 md:px-5"
-                  placeholder="Enter your username"
+                  className="border-2 w-full rounded-md   placeholder-text-black placeholder-gray-900 py-2 px-4 md:py-3 md:px-5"
+                  placeholder={adminProfileData?.landmark}
                 />
               </div>
             </div>
@@ -190,8 +266,8 @@ const SuperAdminRegisteredAdminProfileSection = () => {
                 <FaRegUser className="absolute right-4 top-1/2 transform -translate-y-1/2 text-lg md:text-xl" />
                 <input
                   type="text"
-                  className="border-2 w-full rounded-md   placeholder-text-black placeholder-gray-400 py-2 px-4 md:py-3 md:px-5"
-                  placeholder="Enter your username"
+                  className="border-2 w-full rounded-md   placeholder-text-black placeholder-gray-900 py-2 px-4 md:py-3 md:px-5"
+                  placeholder={adminProfileData?.pincode}
                 />
               </div>
             </div>
@@ -203,38 +279,46 @@ const SuperAdminRegisteredAdminProfileSection = () => {
                 All Visitors
               </h1>
               <select
-                name=""
-                id=""
-                className="bg-sky-500 text-white rounded-full md:py-1 md:px-5"
-              >
-                <option value="">Unknown</option>
-                <option value="">Unknown</option>
-                <option value="">Unknown</option>
-              </select>
+  value={userType}
+  id="userTypeSelect"
+  className="bg-sky-500 text-white rounded-full md:py-1 md:px-5"
+  onChange={(e) => setUserType(e.target.value)}
+>
+  <option value="All">All Visitors</option>
+  <option value="Verified">Verified Visitors</option>
+  <option value="Unverified">Unverified Visitors</option>
+  <option value="Unknown">Unknown Visitors</option>
+</select>
+
             </div>
 
             <table className="w-full text-left p-5 mt-4 text-xs md:text-sm lg:text-lg ">
               <thead>
                 <tr>
                   <th className="p-2 border-b">ID</th>
+                  <th className="p-2 border-b">Visited at</th>
                   <th className="p-2 border-b">NAME</th>
-                  <th className="p-2 border-b">EMAIL</th>
-                  <th className="p-2 border-b">DETAILS</th>
+                  <th className="p-2 border-b">PURPOSE</th>
+                  <th className="p-2 border-b">PHONE</th>
                 </tr>
               </thead>
               <tbody>
+             {
+              adminsVisitors && adminsVisitors.length > 0 ? adminsVisitors.map((data)=> (
                 <tr>
-                  <td className="p-2 border-b">#12345</td>
-                  <td className="p-2 border-b">John Doe</td>
-                  <td className="p-2 border-b">john.doe@example.com</td>
-                  <td className="p-2 border-b">Details</td>
-                </tr>
-                <tr>
-                  <td className="p-2 border-b">#12346</td>
-                  <td className="p-2 border-b">Jane Smith</td>
-                  <td className="p-2 border-b">jane.smith@example.com</td>
-                  <td className="p-2 border-b">Details</td>
-                </tr>
+                <td className="p-2 border-b">#{data._id?.substring(0,5)}</td>
+                <td className="p-2 border-b">{formatDateTime(data.createdAt)}</td>
+                <td className="p-2 border-b">{data.username}</td>
+                <td className="p-2 border-b">{data.purpose}</td>
+                <td className="p-2 border-b">{data.phone !== 0 ? data.phone: "Unknown"}</td>
+              </tr>
+              )) : (
+             <div className="flex justify-center text-4xl p-6 font-bold">
+              No users visited
+             </div>
+              )
+             }
+               
               </tbody>
             </table>
           </div>

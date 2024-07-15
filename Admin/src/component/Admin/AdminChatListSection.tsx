@@ -273,7 +273,7 @@ const AdminChatListSection: React.FC = () => {
                   </option>
                   {properties &&
                     properties.map((prop: PropertyDataType) => (
-                      <>
+                     
                         <option
                           className={`${
                             !prop.deleted
@@ -286,7 +286,7 @@ const AdminChatListSection: React.FC = () => {
                           {prop.propertyName}{" "}
                           {prop.deleted ? " -  (Removed)" : " -  (Active)"}
                         </option>
-                      </>
+                    
                     ))}
                 </select>
               </div>

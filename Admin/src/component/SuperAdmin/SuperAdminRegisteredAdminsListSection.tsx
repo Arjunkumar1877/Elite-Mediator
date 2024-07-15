@@ -1,8 +1,54 @@
+import axios from "axios";
+import { useEffect, useState } from "react";
 import { FaArrowLeft, FaArrowRight, FaSearch } from "react-icons/fa";
 import { IoIosSend } from "react-icons/io";
+import { Link } from "react-router-dom";
+interface AdminDataTypes {
+  _id?: string;
+  username: string;
+  email: string;
+  phone: number;
+  password: string;
+  address?: string | null;
+  state?: string | null;
+  city?: string | null;
+  pincode?: number | null;
+  verified?: boolean
+  firebaseConfirm?: string | null;
+  image?: string
+  landmark?: string
+  fcmToken?: string
+  createdAt?: number;
+  updatedAt?: number
+}
 
 
 const SuperAdminRegisteredAdminsListSection = () => {
+  const [adminsData, setAdminsData] = useState<AdminDataTypes[] | null>();
+  const [searchTerm, setSearchTerm] = useState<string>('');
+
+
+  const fetchAdmins = async()=>{
+    try {
+      const response = await axios.get('/superAdmin/get_all_admins_data');
+
+      
+      console.log(response);
+      setAdminsData(response.data)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const filteredAdminData = adminsData?.filter((data)=> 
+    data.username.toLowerCase().includes(searchTerm?.toLocaleLowerCase())
+  )
+
+  useEffect(()=>{
+ fetchAdmins();
+  },[])
+
+  console.log(adminsData)
   return (
     <div className="container mx-auto">
       <div className="absolute z-0 rounded-2xl -top-14 sm:ml-30 md:ml-28 lg:left-20 transform translate-x-1/2 -translate-y-1/2 bg-zinc-300 w-40 h-40 lg:w-72 lg:h-72 rotate-45"></div>
@@ -31,7 +77,7 @@ const SuperAdminRegisteredAdminsListSection = () => {
 
             <div className="flex my-2 px-5">
               <div className="flex rounded justify-between items-center mt-2 border-2 p-2 w-full shadow-md">
-                <input type="text" className="mx-4 w-full h-full outline-none" placeholder="Search..." />
+                <input type="text" className="mx-4 w-full h-full outline-none" onChange={(e)=> setSearchTerm(e.target.value)} placeholder="Search..." />
                 <FaSearch className="cursor-pointer mr-1 rounded text-zinc-500 md:text-2xl" />
               </div>
             </div>
@@ -48,21 +94,23 @@ const SuperAdminRegisteredAdminsListSection = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  <tr className="even:bg-gray-50">
-                    <td className="p-2 border-b">#12345</td>
-                    <td className="p-2 border-b">John Doe</td>
-                    <td className="p-2 border-b">john.doe@example.com</td>
-                    <td className="p-2 border-b">123-456-7890</td>
-                    <td className="p-2 border-b px-6"><IoIosSend className="text-lg md:text-2xl" /></td>
+                 {
+                  filteredAdminData && filteredAdminData.length  > 0 ? filteredAdminData.map((data)=> (
+                    <tr className="even:bg-gray-50" key={data._id}>
+                    <td className="p-2 border-b">#{data._id?.substring(0,6)}</td>
+                    <td className="p-2 border-b">{data.username}</td>
+                    <td className="p-2 border-b">{data.email}</td>
+                    <td className="p-2 border-b">{data.phone}</td>
+                    <td className="p-2 border-b hover:text-sky-500 cursor-pointer"><Link to={`/super_admin_registered_admin_profile?adminId=${data._id}`}><IoIosSend className="text-lg md:text-2xl" /></Link></td>
 
                   </tr>
-                  <tr className="even:bg-gray-50">
-                    <td className="p-2 border-b">#12346</td>
-                    <td className="p-2 border-b">Jane Smith</td>
-                    <td className="p-2 border-b">jane.smith@example.com</td>
-                    <td className="p-2 border-b">123-456-7890</td>
-                    <td className="p-2 border-b px-6"><IoIosSend className="text-lg md:text-2xl" /></td>
-                  </tr>
+                  )) : (
+                    <div className="flex justify-center text-4xl p-6 font-bold">
+                    No Data available
+                   </div>
+                  )
+                 }
+                
                 </tbody>
               </table>
 

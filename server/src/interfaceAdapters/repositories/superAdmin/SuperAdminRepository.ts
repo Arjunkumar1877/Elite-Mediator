@@ -21,25 +21,23 @@ export class MongoSuperAdminRepository implements ISuperAdminRepository {
   }
 
   async FindFilteredUserForSuperAdmin(adminId: string, userType: string): Promise<any> {
+    const filterUser: any = { adminId };
+  // console.log("super admin repository 💕💕💕💕💕💕💕💕💕💕💕💕💕🖼️🖼️")
+  // console.log(userType, " ", adminId)
+    if (userType === 'All') {
+    const users: any = await UserModel.find({adminId: adminId});
+    // console.log(users)
+
+    return users
+    }else{
+      const properties = await QrModel.find({ userType });
+      const propertyIds = properties.map(property => property._id);
+      filterUser.propId = { $in: propertyIds };
+    }
+  
+    const filteredUsers: any = await UserModel.find(filterUser);
+    return filteredUsers;
     
-    const filterUser: any = {
-      adminId: adminId,
-    };
-
-    const properties = await QrModel.find({ userType: userType });
-    const propertiesId = properties.map(
-      (property) => property._id
-    );
-    filterUser.propId = { $in: propertiesId };
-
-
-    const FilteredUser = await UserModel.find(
-      filterUser
-    );
-
-
-    return FilteredUser;
-
   }
 
 

@@ -35,11 +35,12 @@ interface AdminDataTypes {
 
 const SuperAdminDashboardSection = () => {
 const [adminsData, setAdminsData] = useState<AdminDataTypes[] | null>();
+const [searchTerm, setSearchTerm] = useState<any>('');
 
 
   const fetchAdmins = async()=>{
     try {
-      const response = await axios.get('/superAdmin/get_admin_data');
+      const response = await axios.get('/superAdmin/get_all_admins_data');
 
       
       console.log(response);
@@ -49,11 +50,19 @@ const [adminsData, setAdminsData] = useState<AdminDataTypes[] | null>();
     }
   }
 
+  
+  const filteredAdminData = adminsData?.filter((data)=> 
+    data.username.toLowerCase().includes(searchTerm?.toLocaleLowerCase())
+  )
+
+
   useEffect(()=>{
  fetchAdmins();
   },[])
 
-  console.log(adminsData)
+  console.log(adminsData);
+
+
 
   return (
     <div className="container mx-auto">
@@ -78,7 +87,7 @@ const [adminsData, setAdminsData] = useState<AdminDataTypes[] | null>();
 
     <div className="flex justify-start px-5 h-10 md:h-14">
      <div className="flex rounded justify-between items-center mt-2 border-2 h-8 p-2 md:w-[900px] md:h-12">
-     <input type="text" className="mx-4 w-full h-full" placeholder="Search..."/>
+     <input type="text" className="mx-4 w-full h-full" onChange={(e)=> setSearchTerm(e.target.value)} placeholder="Search..."/>
      <FaSearch className="cursor-pointer mr-1 rounded text-zinc-500 md:text-2xl" />
      </div>
     </div>
@@ -94,14 +103,18 @@ const [adminsData, setAdminsData] = useState<AdminDataTypes[] | null>();
               </thead>
               <tbody>
                 {
-                  adminsData && adminsData.map((data: AdminDataTypes)=>(
+                  filteredAdminData && filteredAdminData.length > 0 ? filteredAdminData.map((data: AdminDataTypes)=>(
                     <tr key={data?._id}>
                   <td className="p-2 border-b">#{data?._id?.substring(0, 5)}</td>
                   <td className="p-2 border-b">{data?.username}</td>
                   <td className="p-2 border-b">{data?.email}</td>
                   <td className="p-2 border-b hover:text-sky-500 cursor-pointer"><Link to={`/super_admin_registered_admin_profile?adminId=${data._id}`}><IoIosSend className="text-lg md:text-2xl " /></Link></td>
                 </tr>
-                  ))
+                  )) : (
+                    <div className="flex justify-center text-4xl p-6 font-bold">
+                    No Data available
+                   </div>
+                  )
                 }
                 
               </tbody>
