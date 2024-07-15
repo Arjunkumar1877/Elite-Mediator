@@ -116,9 +116,9 @@ const SuperAdminSideNavbar:  React.FC<SideNavBarProps> = ({navShowSet}) => {
           </Link>
 
           <Link
-            to="/super_admin_dashboard"
+            to="/super_admin_poster_page"
             className={`flex gap-5 self-start ${
-              location.pathname === "/super_admin"
+              location.pathname === "/super_admin_poster_page"
                 ? "text-black"
                 : "text-sky-500"
             } px-5 hover:text-black cursor-pointer items-center text-xl`}

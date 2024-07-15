@@ -3,18 +3,40 @@ import Footer from "../../component/Admin/Footer";
 import { IoBusiness } from "react-icons/io5";
 import { Link } from "react-router-dom";
 import { requestPermission } from "../../firebase/firebase";
-import { useEffect} from "react";
+import { useEffect, useState} from "react";
 import { useSocket } from "../../contexts/AdminContext";
+import axios from "axios";
+import toast from "react-hot-toast";
+
+type PostersDataType = {
+  _id: string;
+  imageUrl: string;
+};
 
 const Landing = () => {
   const { setToken }: any = useSocket()
+  const [posters, setPosters] = useState<PostersDataType[]>([]);
   const getToken = async()=>{
    const token: string = await requestPermission();
    setToken(token)
   }
   useEffect(()=>{
   getToken();
-  })
+  handleFetchPosters();
+  },[])
+
+  const handleFetchPosters = async () => {
+    try {
+      const response = await axios.get('/superAdmin/get_posters');
+      setPosters(response.data);
+    } catch (error) {
+      console.log(error);
+      toast("Failed to fetch posters.");
+    }
+  };
+
+  console.log(posters)
+
   return (
     <div className="relative bg-white  overflow-hidden p-8 md:p-10 lg:p-0">
       <div className="absolute rounded-2xl top-0 left-1/4 transform -translate-x-1/2 -translate-y-1/2 bg-blue-100 w-40 h-40 lg:w-72 lg:h-72 rotate-45"></div>
@@ -42,7 +64,7 @@ const Landing = () => {
 
         <div className="lg:w-1/2 flex justify-center lg:justify-end">
           <img
-            src="/src/assets/Capture.png"
+            src={ posters  ? posters[0]?.imageUrl : "https://firebasestorage.googleapis.com/v0/b/elite-mediator.appspot.com/o/1721058856452_Capture.PNG?alt=media&token=8e4ddf1c-00a3-4077-b2be-36bea2bbdb04"}
             alt="Illustration"
             className="max-w-full h-auto"
           />
@@ -101,7 +123,7 @@ const Landing = () => {
       <div className="flex flex-col lg:flex-row lg:justify-between">
         <div className="">
           <img
-            src="public/landingpage2.png"
+            src={posters  ?  posters[1]?.imageUrl : "https://firebasestorage.googleapis.com/v0/b/elite-mediator.appspot.com/o/1721057073374_landingpage2.png?alt=media&token=ad06005d-e2de-4981-8c44-dc3016d7caa9"}
             alt=""
             className="h-auto w-90 md:h-72 md:60"
           />
@@ -163,7 +185,7 @@ const Landing = () => {
       <div className="mt-8 mb-32 flex flex-col lg:flex-row lg:justify-between">
         <div className="">
           <img
-            src="public/landingpage3.png"
+            src={posters ? posters[2]?.imageUrl : "https://firebasestorage.googleapis.com/v0/b/elite-mediator.appspot.com/o/1721057084411_landingpage3.png?alt=media&token=91cb7b6e-3c32-4f9f-b07b-7094f1fb4869"}
             alt=""
             className="h-auto w-90 md:h-72 md:60"
           />
@@ -204,7 +226,7 @@ const Landing = () => {
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
           <div className=" bg-blue-100 rounded-xl md:w-90 md:h-72 overflow-hidden">
             <img
-              src="public/landingPageImg1.avif"
+              src={posters ? posters[3]?.imageUrl : "https://firebasestorage.googleapis.com/v0/b/elite-mediator.appspot.com/o/1721057095865_landingPageImg1.avif?alt=media&token=ded48002-ad32-4146-ac94-7390cbb472d2"}
               alt=""
               className="object-cover w-full h-full"
             />
@@ -218,7 +240,7 @@ const Landing = () => {
 
           <div className=" bg-blue-100 rounded-xl md:w-90 md:h-72 overflow-hidden">
             <img
-              src="public/landingPageImg2.avif"
+               src={posters ? posters[4]?.imageUrl : "https://firebasestorage.googleapis.com/v0/b/elite-mediator.appspot.com/o/1721057116338_landingPageImg2.avif?alt=media&token=315fa014-7816-4406-85a3-d1c46e1ad53a"}
               alt=""
               className="object-cover w-full h-full"
             />
@@ -232,7 +254,7 @@ const Landing = () => {
 
           <div className=" bg-blue-100 rounded-xl md:w-90 md:h-72 overflow-hidden">
             <img
-              src="public/landingPageImg3.avif"
+               src={posters ? posters[5]?.imageUrl : "https://firebasestorage.googleapis.com/v0/b/elite-mediator.appspot.com/o/1721057130775_landingPageImg3.avif?alt=media&token=e6b97baa-1d3b-4b6d-b961-d93f66388d25"}
               alt=""
               className="object-cover w-full h-full"
             />

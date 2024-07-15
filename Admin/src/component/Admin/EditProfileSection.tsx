@@ -93,6 +93,8 @@ const EditProfileSection: React.FC = () => {
     }
   };
 
+  
+
   useEffect(() => {
     const fetchUser = async () => {
       const res = await fetch(`/api/get_admin/${currentAdmin._id}`);

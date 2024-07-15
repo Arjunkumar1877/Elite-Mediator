@@ -29,6 +29,7 @@ import SuperAdminLogin from "./pages/SuperAdmin/SuperAdminLogin";
 import SuperAdminDashboardPage from "./pages/SuperAdmin/SuperAdminDashboardPage";
 import SuperAdminRegisteredAdminsListPage from "./pages/SuperAdmin/SuperAdminRegisteredAdminsListPage";
 import SuperAdminRegisteredAdminProfilePage from "./pages/SuperAdmin/SuperAdminRegisteredAdminProfilePage";
+import SuperAdmiPosterPage from "./pages/SuperAdmin/SuperAdmiPosterPage";
 
 const App: React.FC = () => {
   useEffect(() => {
@@ -82,6 +83,7 @@ const App: React.FC = () => {
         <Route path="/super_admin_login"  element={<SuperAdminLogin />}/>
         <Route path="/super_admin_registered_admin_list" element={<SuperAdminRegisteredAdminsListPage />} />
         <Route path="/super_admin_registered_admin_profile" element={<SuperAdminRegisteredAdminProfilePage/>} />
+        <Route path="/super_admin_poster_page" element={<SuperAdmiPosterPage/>} />
 
           </Routes>
         </BrowserRouter>
