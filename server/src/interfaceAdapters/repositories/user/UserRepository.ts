@@ -1,7 +1,9 @@
 import { PropertyData } from "../../../entities/models/admin/PropertyData";
+import { Call } from "../../../entities/models/common/Call";
 import { Conversation } from "../../../entities/models/common/Conversation";
 import { Message } from "../../../entities/models/common/Message";
 import { User } from "../../../entities/models/user/User";
+import { CallModel } from "../../../frameworks/database/models/admin/CallModel";
 import { ConversationModel } from "../../../frameworks/database/models/admin/ConversationModel";
 import { MessageModel } from "../../../frameworks/database/models/admin/MessageModel";
 import { QrModel } from "../../../frameworks/database/models/admin/QrDataModel";
@@ -154,6 +156,54 @@ export class MongoUserRepository implements IUserRepository {
 
   }
 
-  // async 
+   
+  async CreateUserCallToDb(callData: Call): Promise<any> {
+    return await CallModel.create(callData);
+  }
 
+  async AcceptUserCallAndUpdatOnDb(id: string): Promise<any> {
+    const update = await CallModel.findByIdAndUpdate(
+      id,
+      {
+        callStarted: Date.now(),
+        callStatus: "answered",
+      },
+      { new: true }
+    );
+
+    return update;
+  }
+
+  async DisconnectUserCallAndUpdateOnDb(id: string): Promise<any> {
+    const call = await CallModel.findById(id);
+
+    const callEnded = new Date();
+    const callStarted = call?.callStarted
+      ? new Date(call.callStarted).getTime()
+      : 0;
+    const callDuration = callStarted ? callEnded.getTime() - callStarted : 0;
+
+    const update = await CallModel.findByIdAndUpdate(
+      id,
+      {
+        callEnded: callEnded,
+        callDuration: callDuration,
+      },
+      { new: true }
+    );
+
+    return update;
+  }
+
+  async DeclineUserCallAndUpdateOnDb(id: string): Promise<any> {
+    const call = await CallModel.findById(id);
+
+    const update = await CallModel.findByIdAndUpdate(
+      id,
+      { callStatus: "declined" },
+      { new: true }
+    );
+
+    return update;
+  }
 }

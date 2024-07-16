@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import toast from "react-hot-toast";
 import { TfiSave } from "react-icons/tfi";
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 type FormDataType = {
   adminId: string;
@@ -186,9 +186,9 @@ const QrCodeGenerateSection = () => {
               </button>
 
               <div className="flex gap-4 lg:gap-8">
-                <button type="button" className="bg-sky-500 text-white text-xs px-2 py-1 gap-1 rounded-lg hover:bg-sky-600 lg:text-lg lg:py-2 lg:px-8 lg:gap-2 flex items-center">
+                <Link to={"/qrCodes"} type="button" className="bg-sky-500 text-white text-xs px-2 py-1 gap-1 rounded-lg hover:bg-sky-600 lg:text-lg lg:py-2 lg:px-8 lg:gap-2 flex items-center">
                   CANCEL
-                </button>
+                </Link>
                 <button type="submit" className="bg-sky-500 text-white text-xs px-2 py-1 gap-1 rounded-lg hover:bg-sky-600 lg:text-lg lg:py-2 lg:px-8 lg:gap-2 flex items-center">
                   SAVE & DOWNLOAD <TfiSave className="ml-2" />
                 </button>

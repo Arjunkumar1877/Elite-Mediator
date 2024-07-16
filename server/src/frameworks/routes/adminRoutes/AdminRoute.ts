@@ -1,8 +1,8 @@
 import { Router } from "express";
 import { Req, Res, Route } from "../../../frameworks/types/ServerTypes";
 import { JwtTokenAdapter } from "../../../frameworks/services/jwtService/TokenService";
-import { InjectedAdminSignUpController, InjectedAdminlogincontroller, InjectedGenerateQrCodeController, InjectedGetAdminDataController, InjectedGetAdminAllPropertyDataController, InjectedGetUnverifiedAdminController, InjectedGoogleLoginController, InjectedSavePropertyDataController, InjectedUpdateAdminProfileController, InjectedUpdateVerifyAdminController, InjectedUpdateConversationReadCountToZeroController, InjectedGetSelectedConversationController, InjectedGetConversationListController, InjectedGetAdminsCallListController, InjectedGetUsersListController, InjectedClearAdminChatMessagesController, InjectedEditUnknownUsernameController, InjectedAddNewFcmTokenOrGetExsistingeController, InjectedSendAdminMessageController, InjectedUserStatisticsGraphController, InjectedGetAdminPropertyDataForFilteringController, InjectedDeleteUserDataAndConversationController } from "../../../frameworks/injection/AdminInjects";
-import { InjectedCallingFunctionalitiesController, InjectedGetMessagesController, InjectedSendMesssage } from "../../../frameworks/injection/CommonInjects";
+import { InjectedAdminSignUpController, InjectedAdminlogincontroller, InjectedGenerateQrCodeController, InjectedGetAdminDataController, InjectedGetAdminAllPropertyDataController, InjectedGetUnverifiedAdminController, InjectedGoogleLoginController, InjectedSavePropertyDataController, InjectedUpdateAdminProfileController, InjectedUpdateVerifyAdminController, InjectedUpdateConversationReadCountToZeroController, InjectedGetSelectedConversationController, InjectedGetConversationListController, InjectedGetAdminsCallListController, InjectedGetUsersListController, InjectedClearAdminChatMessagesController, InjectedEditUnknownUsernameController, InjectedAddNewFcmTokenOrGetExsistingeController, InjectedSendAdminMessageController, InjectedUserStatisticsGraphController, InjectedGetAdminPropertyDataForFilteringController, InjectedDeleteUserDataAndConversationController, InjectedAdminCallFunctionalitiesController } from "../../../frameworks/injection/AdminInjects";
+import {  InjectedGetMessagesController  } from "../../../frameworks/injection/CommonInjects";
 import { InjectedCreateConversationController } from "../../../frameworks/injection/UserInjects";
 import { UserModel } from "../../database/models/user/User";
 import { QrModel } from "../../database/models/admin/QrDataModel";
@@ -73,23 +73,22 @@ router.get('/get_admin_messages/:conId',JwtToken.verifyToken, InjectedGetMessage
 router.get('/get_conversations_list',JwtToken.verifyToken, InjectedGetConversationListController.GetConversationListControl.bind(InjectedGetConversationListController));
 
 // -------------------------------------| STARTING A CALL AND SAVING THE DATA TO THE DATABASE  ---------------------------------------------------------|
-router.post("/start_call",JwtToken.verifyToken, InjectedCallingFunctionalitiesController.StartingCallControl.bind(InjectedCallingFunctionalitiesController));
+router.post("/start_call",JwtToken.verifyToken, InjectedAdminCallFunctionalitiesController.StartingCallControl.bind(InjectedAdminCallFunctionalitiesController));
 
 // -------------------------------------| ACCEPTING THE CALL AND UPDATING THE DATABASE  ----------------------------------------------------------------|
-router.post("/accept_call/:callerId",JwtToken.verifyToken, InjectedCallingFunctionalitiesController.AcceptingCallControl.bind(InjectedCallingFunctionalitiesController));
+router.post("/accept_call/:callerId",JwtToken.verifyToken, InjectedAdminCallFunctionalitiesController.AcceptingCallControl.bind(InjectedAdminCallFunctionalitiesController));
 
 // -------------------------------------| DECLINING THE CALL BY THE USER AND UPDATING IT TO THE DATABASE  ----------------------------------------------|
-router.post("/decline_call/:callerId",JwtToken.verifyToken, InjectedCallingFunctionalitiesController.DecliningCallControl.bind(InjectedCallingFunctionalitiesController));
+router.post("/decline_call/:callerId",JwtToken.verifyToken, InjectedAdminCallFunctionalitiesController.DecliningCallControl.bind(InjectedAdminCallFunctionalitiesController));
 
 // -------------------------------------| DISCONNECT THE CONNECTED CALL BY THE USER AND UPDATING IT TO THE DATABASE  -----------------------------------|
-router.post("/disconnect_call/:callerId",JwtToken.verifyToken, InjectedCallingFunctionalitiesController.DisconnectingControl.bind(InjectedCallingFunctionalitiesController));
+router.post("/disconnect_call/:callerId",JwtToken.verifyToken, InjectedAdminCallFunctionalitiesController.DisconnectingControl.bind(InjectedAdminCallFunctionalitiesController));
 
 // -------------------------------------| FETCH ALL THE CALL LIST OF THE ADMIN FROM THE DATABASE  ------------------------------------------------------|
-router.get("/get_calls/:adminId",JwtToken.verifyToken, InjectedGetAdminsCallListController.GetAdminsCallListControl.bind(InjectedGetAdminsCallListController));
+router.get("/get_calls/:adminId/:page",JwtToken.verifyToken, InjectedGetAdminsCallListController.GetAdminsCallListControl.bind(InjectedGetAdminsCallListController));
 
 // -------------------------------------| FETCH ALL THE USER LIST OF THE ADMIN FROM THE DATABASE  ------------------------------------------------------|
 router.get("/get_users_list",JwtToken.verifyToken, InjectedGetUsersListController.GetTheUserListControl.bind(InjectedGetUsersListController));
-
 
 // -------------------------------------| CLEAR ADMIN CHAT MESSAGES  -----------------------------------------------------------------------------------|
 router.get('/clear_admin_chat/:conId', JwtToken.verifyToken, InjectedClearAdminChatMessagesController.clearAllAdminMessagesControl.bind(InjectedClearAdminChatMessagesController));

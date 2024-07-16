@@ -36,6 +36,7 @@ const AdminCallPage: React.FC = () => {
 
 
   useEffect(() => {
+    socket.emit("join room", conId);
     const timer = setInterval(() => {
       setSeconds(prevSeconds => prevSeconds + 1);
     }, 1000);

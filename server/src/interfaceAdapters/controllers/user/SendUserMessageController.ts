@@ -20,14 +20,23 @@ export class SendUserMessageController {
         message
       );
 
+      console.log("🖼️🖼️🖼️🖼️🖼️🖼️")
+      console.log(username, token , " By user ")
+      console.log("🖼️🖼️🖼️🖼️🖼️🖼️")
+      const link: string = `${req.protocol}://${req.headers.host}/admin_chat?conId=${message.conversationId}`;
+
+
+    
+
       if (data.text.startsWith("https://")) {
-        const message = sendPushMessage(
+        const message = await sendPushMessage(
           "🖼️ User shared a media file",
           username,
-          token
+          token,
+          link
         );
       } else {
-        const message = sendPushMessage(data.text, username, token);
+        const message = await sendPushMessage(data.text, username, token, link);
       }
 
       res.json(data);

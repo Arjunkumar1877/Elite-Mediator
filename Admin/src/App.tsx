@@ -31,6 +31,7 @@ import SuperAdminRegisteredAdminsListPage from "./pages/SuperAdmin/SuperAdminReg
 import SuperAdminRegisteredAdminProfilePage from "./pages/SuperAdmin/SuperAdminRegisteredAdminProfilePage";
 import SuperAdmiPosterPage from "./pages/SuperAdmin/SuperAdmiPosterPage";
 import SuperAdminPrivateRoute from "./component/SuperAdmin/SuperAdminPrivateRoute";
+import AdminAllCallListPage from "./pages/Admin/AdminAllCallListPage";
 
 const App: React.FC = () => {
   useEffect(() => {
@@ -65,6 +66,7 @@ const App: React.FC = () => {
               <Route path="/generate_qr" element={<GenerateQrCodePage />} />
               <Route path="/chat_list" element={<AdminChatListPage />} />
               <Route path="/admin_chat" element={<AdminChatPage />} />
+              <Route path="/admin_call_List" element={<AdminAllCallListPage />} />
               <Route path="/call_admin_page" element={<AdminCallPage />} />
             </Route>
 

@@ -5,8 +5,9 @@ import { IAdminRepository } from "../../interfaceAdapters/repositories/admin/IAd
 export class GetAdminCallListUseCase implements IGetAdminCallListUseCase{
     constructor(private adminrespository: IAdminRepository){};
     
-    async GetAdminsCallList(id: string): Promise<Call[] | null> {
-      const data = await this.adminrespository.FindAdminsCallListByAdminId(id);
-      return data;    
+    async GetAdminsCallList(id: string, page: number): Promise<Call[] | any> {
+      const calls = await this.adminrespository.FindAdminsCallListByAdminId(id, page);
+      const totalCalls = await this.adminrespository.FindTotalCountOftheCallList(id);
+      return {calls, totalCalls};    
     }
 }

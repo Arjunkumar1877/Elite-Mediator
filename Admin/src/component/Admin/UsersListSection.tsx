@@ -165,7 +165,7 @@ const UsersListSection = () => {
                   className="py-3 px-2 bg-white lg:px-16 text-xs rounded-full cursor-pointer"
                 >
                   {/* <option value="All">Select user type</option> */}
-                  <option value="All">All Users</option>
+                  <option value="">All Users</option>
                   <option value="Unknown">Unknown</option>
                   <option value="Unverified">Unverified</option>
                   <option value="Verified">Verified</option>

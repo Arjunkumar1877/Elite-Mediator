@@ -8,6 +8,7 @@ import { GetUserDataByIdController } from "../../interfaceAdapters/controllers/u
 import { GetUserDataByPhoneController } from "../../interfaceAdapters/controllers/user/GetUserDataByPhoneController";
 import { GetUserMessagesController } from "../../interfaceAdapters/controllers/user/GetUserMessagesController";
 import { SendUserMessageController } from "../../interfaceAdapters/controllers/user/SendUserMessageController";
+import { UserCallingFunctionalitiesController } from "../../interfaceAdapters/controllers/user/UserCallingFunctionalitiesController";
 import { VerifyAndUpdateUserController } from "../../interfaceAdapters/controllers/user/UserVerifyAndUpdateController";
 import { MongoUserRepository } from "../../interfaceAdapters/repositories/user/UserRepository";
 import { AddUserFcmTokenUseCase } from "../../useCases/user/AddUserFcmTokenUseCase";
@@ -20,6 +21,7 @@ import { GetUserDataByPhoneUseCase } from "../../useCases/user/GetUserDataByPhon
 import { GetUserMessagesUseCase } from "../../useCases/user/GetUserMessagesUseCase";
 import { SaveNewUserDataUseCase } from "../../useCases/user/SaveNewUserDataUseCase";
 import { SendAndCreateUserMessageUseCase } from "../../useCases/user/SendAndCreateUserMessage";
+import { UserCallingFunctionalitiesUseCase } from "../../useCases/user/UserCallingFunctionalitiesUseCase";
 import { VerifyUserUseCase } from "../../useCases/user/VerifyUserUseCase";
 
 
@@ -77,4 +79,9 @@ export const InjectedSendAndCreateUserMessageController = new SendUserMessageCon
 const getUserMessagesUse = new GetUserMessagesUseCase(mongoRepo)
 export const InjectedGetUserMessagesController = new GetUserMessagesController(getUserMessagesUse);
 
+
+
+// -----------------------------| CALLING FUNCTIONALITIES FROM THE USER TO THE ADMIN  ----------------------------------------------------------------------------------------
+const usercallfunctionalitiesUse = new UserCallingFunctionalitiesUseCase(mongoRepo)
+export const InjectedUserCallingFunctionalitiesController = new UserCallingFunctionalitiesController(usercallfunctionalitiesUse)
 

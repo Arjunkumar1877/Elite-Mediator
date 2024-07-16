@@ -1,10 +1,10 @@
 import { Router } from "express";
 import { Route } from "../../../frameworks/types/ServerTypes";
-import { InjectedAddUserFcmCodeController, InjectedChekAndSaveUnknwnUserController, InjectedCreateConversationController, InjectedCreateNewUserDataController, InjectedGetAdminsPropertdataController, InjectedGetUnverifiedUserDataController, InjectedGetUserDataByPhoneController, InjectedGetUserMessagesController, InjectedSendAndCreateUserMessageController, InjectedVerifyAndUpdateUserDataController } from "../../../frameworks/injection/UserInjects";
+import { InjectedAddUserFcmCodeController, InjectedChekAndSaveUnknwnUserController, InjectedCreateConversationController, InjectedCreateNewUserDataController, InjectedGetAdminsPropertdataController, InjectedGetUnverifiedUserDataController, InjectedGetUserDataByPhoneController, InjectedGetUserMessagesController, InjectedSendAndCreateUserMessageController, InjectedUserCallingFunctionalitiesController, InjectedVerifyAndUpdateUserDataController } from "../../../frameworks/injection/UserInjects";
 import { ConversationModel } from "../../../frameworks/database/models/admin/ConversationModel";
 import { MessageModel } from "../../../frameworks/database/models/admin/MessageModel";
 import { UserModel } from "../../../frameworks/database/models/user/User";
-import { InjectedCallingFunctionalitiesController, InjectedGetMessagesController, InjectedSendMesssage } from "../../../frameworks/injection/CommonInjects";
+import {  InjectedGetMessagesController, InjectedSendMesssage } from "../../../frameworks/injection/CommonInjects";
 import { CallModel } from "../../database/models/admin/CallModel";
 import {  getMacAddressFromDevice } from "../../services/GetMacAddress/GetMacAddress";
 const router:Route = Router();
@@ -51,20 +51,20 @@ router.post('/user_send_message_to_admin', InjectedSendAndCreateUserMessageContr
 router.get('/get_user_messages/:conId', InjectedGetUserMessagesController.GetUserMessagesControl.bind(InjectedGetUserMessagesController));
 
 
-// -------------------------------------| STARTING A CALL AND SAVING THE DATA TO THE DATABASE  --------------------------------------------------------------------|
-router.post("/start_call", InjectedCallingFunctionalitiesController.StartingCallControl.bind(InjectedCallingFunctionalitiesController));
+// // -------------------------------------| STARTING A CALL AND SAVING THE DATA TO THE DATABASE  --------------------------------------------------------------------|
+router.post("/start_call", InjectedUserCallingFunctionalitiesController.StartingCallControl.bind(InjectedUserCallingFunctionalitiesController));
 
 
 // -------------------------------------| ACCEPTING THE CALL AND UPDATING THE DATABASE  --------------------------------------------------------------------|
-router.post("/accept_call/:callerId", InjectedCallingFunctionalitiesController.AcceptingCallControl.bind(InjectedCallingFunctionalitiesController));
+router.post("/accept_call/:callerId", InjectedUserCallingFunctionalitiesController.AcceptingCallControl.bind(InjectedUserCallingFunctionalitiesController));
 
 
 // -------------------------------------| DECLINING THE CALL BY THE USER AND UPDATING IT TO THE DATABASE  --------------------------------------------------------------------|
-router.post("/decline_call/:callerId", InjectedCallingFunctionalitiesController.DecliningCallControl.bind(InjectedCallingFunctionalitiesController));
+router.post("/decline_call/:callerId", InjectedUserCallingFunctionalitiesController.DecliningCallControl.bind(InjectedUserCallingFunctionalitiesController));
 
 
 // -------------------------------------| DISCONNECT THE CONNECTED CALL BY THE USER AND UPDATING IT TO THE DATABASE  --------------------------------------------------------------------|
-router.post("/disconnect_call/:callerId", InjectedCallingFunctionalitiesController.DisconnectingControl.bind(InjectedCallingFunctionalitiesController));
+router.post("/disconnect_call/:callerId", InjectedUserCallingFunctionalitiesController.DisconnectingControl.bind(InjectedUserCallingFunctionalitiesController));
 
 
 

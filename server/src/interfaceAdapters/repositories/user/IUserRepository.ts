@@ -1,4 +1,5 @@
 import { PropertyData } from "../../../entities/models/admin/PropertyData";
+import { Call } from "../../../entities/models/common/Call";
 import { Conversation } from "../../../entities/models/common/Conversation";
 import { Message } from "../../../entities/models/common/Message";
 import { User } from "../../../entities/models/user/User";
@@ -21,4 +22,8 @@ export interface IUserRepository{
     FindTheUserById(userId: string): Promise<User | null>;
     FindConversationAndUpdateDeleted(conId: string | undefined): Promise<any>;
     FindUserAndUpdateDeletedUser(userId: string): Promise<any>;
+    CreateUserCallToDb(callData: Call): Promise<Call | any>;
+    AcceptUserCallAndUpdatOnDb(id: string): Promise<Call | any>;
+    DeclineUserCallAndUpdateOnDb(id: string): Promise<Call | any>;
+    DisconnectUserCallAndUpdateOnDb(id: string): Promise<Call | any>;
 }

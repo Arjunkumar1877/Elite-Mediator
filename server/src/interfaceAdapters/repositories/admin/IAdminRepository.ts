@@ -1,5 +1,6 @@
 import { Admin } from "../../../entities/models/admin/Admin";
 import { PropertyData } from "../../../entities/models/admin/PropertyData";
+import { Call } from "../../../entities/models/common/Call";
 import { Conversation } from "../../../entities/models/common/Conversation";
 import { Message } from "../../../entities/models/common/Message";
 import { User } from "../../../entities/models/user/User";
@@ -25,7 +26,8 @@ export interface IAdminRepository {
     FindSelectedConversation(id: string): Promise<any>;
     FilterConversationList(adminId: string, page: number, propertyFilter: string, startDate: number, endDate: number): Promise<any>;
     FindConversationListCount(adminId: string): Promise<any>;
-    FindAdminsCallListByAdminId(adminId: string): Promise<any>;
+    FindAdminsCallListByAdminId(adminId: string, page: number): Promise<any>;
+    FindTotalCountOftheCallList(adminId: string): Promise<number | null>;
     FindUsersListByAdminId(adminId: string, startDate: string, endDate: string, propertyName: string, userType: string): Promise<any>;
     FindAndEditUnknownUser(userId: string, username: string): Promise<any>;
     CreateAdminNewMessageToDb(message: Message): Promise<Message | any>;
@@ -34,5 +36,8 @@ export interface IAdminRepository {
     FindUserByIdAndDelete(userId: string): Promise<any>;
     FindConversationByIdAndDelete(conId: string): Promise<any>;
     FindUserByUserId(userId: string): Promise<User | null>;
-    // FindMessageByConversationIdAndDelete(userId: string): Promise<string>;
+    CreateAdminCallToDb(callData: Call): Promise<Call | any>;
+    AcceptAdminCallAndUpdatOnDb(id: string): Promise<Call | any>;
+    DeclineAdminCallAndUpdateOnDb(id: string): Promise<Call | any>;
+    DisconnectAdminCallAndUpdateOnDb(id: string): Promise<Call | any>;
 }

@@ -11,6 +11,7 @@ import { MessageModel } from "../../../frameworks/database/models/admin/MessageM
 import { Message } from "../../../entities/models/common/Message";
 import { GraphDataType } from "../../../entities/useCasesInterfaces/Admin/IUserStatisticsGraphDataUseCase";
 import { User } from "../../../entities/models/user/User";
+import { Call } from "../../../entities/models/common/Call";
 
 export class MongoAdminRepository implements IAdminRepository {
   async CreateAdmin(admin: Admin): Promise<any> {
@@ -234,11 +235,18 @@ export class MongoAdminRepository implements IAdminRepository {
     return totalConversations;
   }
 
-  async FindAdminsCallListByAdminId(adminId: string): Promise<any> {
-    const calles = await CallModel.find({ adminId: adminId })
+  async FindAdminsCallListByAdminId(adminId: string, page: number): Promise<any> {
+    let limit: number  = 10;
+    const calles = await CallModel.find({ adminId: adminId }).skip((page - 1) * limit)
+    .limit(limit)
       .populate("userId")
       .sort({ createdAt: -1 });
     return calles;
+  }
+
+  async FindTotalCountOftheCallList(adminId: string): Promise<number | null> {
+    const count = await CallModel.find({adminId: adminId}).countDocuments();
+    return count;
   }
 
   async FindUsersListByAdminId(
@@ -397,5 +405,56 @@ export class MongoAdminRepository implements IAdminRepository {
       { new: true }
     );
     return deleted ? "Deleted" : "Failed";
+  }
+
+  
+  async CreateAdminCallToDb(callData: Call): Promise<any> {
+    return await CallModel.create(callData);
+  }
+
+  async AcceptAdminCallAndUpdatOnDb(id: string): Promise<any> {
+    const update = await CallModel.findByIdAndUpdate(
+      id,
+      {
+        callStarted: Date.now(),
+        callStatus: "answered",
+      },
+      { new: true }
+    );
+
+    return update;
+  }
+
+  async DisconnectAdminCallAndUpdateOnDb(id: string): Promise<any> {
+    const call = await CallModel.findById(id);
+
+    const callEnded = new Date();
+    const callStarted = call?.callStarted
+      ? new Date(call.callStarted).getTime()
+      : 0;
+    const callDuration = callStarted ? callEnded.getTime() - callStarted : 0;
+
+    const update = await CallModel.findByIdAndUpdate(
+      id,
+      {
+        callEnded: callEnded,
+        callDuration: callDuration,
+      },
+      { new: true }
+    );
+
+    return update;
+  }
+
+  async DeclineAdminCallAndUpdateOnDb(id: string): Promise<any> {
+    const call = await CallModel.findById(id);
+
+    const update = await CallModel.findByIdAndUpdate(
+      id,
+      { callStatus: "declined" },
+      { new: true }
+    );
+
+    return update;
   }
 }

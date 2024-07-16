@@ -13,16 +13,25 @@ export class  SendAdminMessageController{
     const username: string = req.body.username;
     const data = await this.isendandcreateadminmessageusecase.SendNeMessageByAdmin(message);
 
+    console.log("🖼️🖼️🖼️🖼️🖼️🖼️")
+    console.log(username, token , " By Admin")
+    console.log("🖼️🖼️🖼️🖼️🖼️🖼️")
+let link =   `${req.protocol}://${req.headers.host}/chat_user?conId=${message.conversationId}`;
     
     if (data.text.startsWith("https://")) {
-        const message = sendPushMessage(
+        const message = await sendPushMessage(
           "🖼️ User shared a media file",
           username,
-          token
+          token,
+          link
         );
       } else {
-        const message = sendPushMessage(data.text, username, token);
+        const message = await sendPushMessage(data.text, username, token, link);
+        console.log("pushed messge by admin to user 🔥🔥🔥🔥💕💕💕💕💕")
       }
+
+     await sendPushMessage(data.text, username, token, link);
+
 
       res.json(data);
  }

@@ -6,6 +6,8 @@ import { Link } from "react-router-dom";
 import { FiUsers } from "react-icons/fi";
 import { BsFilePost } from "react-icons/bs";
 import { TbLogout2 } from "react-icons/tb";
+import { useDispatch } from "react-redux";
+import { signoutSuccess } from "../../redux/superAdmin/SuperAdminSlice";
 interface SideNavBarProps {
     navShowSet: (show: boolean) => void;
   }
@@ -15,7 +17,7 @@ interface SideNavBarProps {
 
 const SuperAdminSideNavbar:  React.FC<SideNavBarProps> = ({navShowSet}) => {
   const [showNav, setShowNav] = useState<boolean>(true);
-
+  const dispatch = useDispatch();
 
   useEffect(() => {
     navShowSet(showNav);
@@ -33,6 +35,10 @@ const SuperAdminSideNavbar:  React.FC<SideNavBarProps> = ({navShowSet}) => {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
+
+  const handleSignOut = ()=>{
+   dispatch(signoutSuccess())
+  }
 
 
   return (
@@ -135,8 +141,8 @@ const SuperAdminSideNavbar:  React.FC<SideNavBarProps> = ({navShowSet}) => {
             </span>
           </Link>
 
-          <Link
-            to="/super_admin_dashboard"
+          <div
+            onClick={handleSignOut}
             className={`flex gap-5 self-start ${
               location.pathname === "/super_admin"
                 ? "text-black"
@@ -153,7 +159,7 @@ const SuperAdminSideNavbar:  React.FC<SideNavBarProps> = ({navShowSet}) => {
             >
               LOGOUT{" "}
             </span>
-          </Link>
+          </div>
         </div>
       </div>
     </div>

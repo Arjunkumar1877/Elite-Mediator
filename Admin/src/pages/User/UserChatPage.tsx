@@ -185,13 +185,17 @@ const UserChatPage: React.FC = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
+          callData: {
           conversationId: currentUser.conversationId,
           adminId: currentUser.adminId._id,
           userId: currentUser._id,
           caller: "User",
           callType: isVideo ? "video" : "audio",
           receiver: "Admin",
-        }),
+        },
+        token: currentUser.adminId.fcmToken,
+        username: currentUser.username
+      }),
       });
 
       const data: any = await res.json();

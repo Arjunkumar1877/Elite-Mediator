@@ -15,14 +15,16 @@ function DashboardSection() {
   const [admincallList, setAdminCallList] = useState<any>();
   const [usersList, setUsersList] = useState<any>();
   const { socket, setIsVideoCall }: any = useSocket();
+  const [totalCalls, setTotalCalls] = useState<number>();
   const [graphData, setGraphData] = useState<any>();
   const fetchCalls = async()=>{
     try {
-      const res = await fetch(`/api/get_calls/${currentAdmin._id}`);
+      const res = await fetch(`/api/get_calls/${currentAdmin._id}/1`);
       const data: any = await res.json();
-
+  console.log(data)
       if(data){
-        setAdminCallList(data)
+        setAdminCallList(data.calls)
+        setTotalCalls(data.totalCalls)
       }
 
     } catch (error) {
@@ -38,11 +40,11 @@ function DashboardSection() {
         },
       });
 
-      const data = await res;
+    
       
-      console.log(data.data); 
-      if(data.data !== 'Empty list'){
-        setUsersList(data.data);
+      // console.log(res.data); 
+      if(res.data !== 'Empty list'){
+        setUsersList(res.data);
       }
     } catch (error: unknown) {
       if (error instanceof Error) {
@@ -58,7 +60,7 @@ function DashboardSection() {
     try {
       const res = await axios.get(`/api/admin_dash_graph/${currentAdmin._id}`);
 
-      console.log(res.data)
+      // console.log(res.data)
       setGraphData(res.data)
     } catch (error) {
       console.log(error)
@@ -140,9 +142,9 @@ function DashboardSection() {
     fetchUser()
   },[])
 
-  console.log(usersList)
-  // console.log(adminData);
-  console.log(admincallList)
+  // console.log(usersList)
+  // // console.log(adminData);
+  // console.log(admincallList)
 
   return (
     <div className="container mx-auto p-4">
@@ -199,7 +201,9 @@ function DashboardSection() {
       <div className="p-4 w-full lg:w-1/3 border-2 rounded-lg shadow-lg bg-white">
       <div className="flex justify-between items-center px-5 py-2 border-b cursor-pointer">
         <h2 className="text-2xl font-bold">Recent Calls</h2>
-        <h3 className="text-sky-500 font-bold">(10) All</h3>
+        <Link to={'/admin_call_List'}>
+        <h3 className="text-sky-500 font-bold">({totalCalls && totalCalls}) All</h3>
+        </Link>
       </div>
       <div className="overflow-y-scroll max-h-96">
         {admincallList &&

@@ -43,6 +43,8 @@ import { GetAdminPropertDataForFilteringController } from '../../interfaceAdapte
 import { GetAdminPropertyDataForFilterUseCase } from '../../useCases/admin/GetAdminPropertyDataForFilterUseCase';
 import { DeleteUserDataUseCase } from '../../useCases/admin/DeleteUserDataUseCase';
 import { DeleteUserDataAndConversationController } from '../../interfaceAdapters/controllers/Admin/DeleteUserDataAndConversationController';
+import { AdminCallingFunctionalitesUseCase } from '../../useCases/admin/AdminCallingFunctionalitesUseCase';
+import { AdminCallingFunctionalitiesController } from '../../interfaceAdapters/controllers/Admin/AdminCallingFunctionalitiesController';
 const mongoRepo = new MongoAdminRepository();
 
 // -----------------------------| ADMIN SIGNUP INJECTION ----------------------------------------------------------------------------------------
@@ -155,4 +157,10 @@ export const InjectedUserStatisticsGraphController = new GetUserStatisticsGraphD
 // -----------------------------| GET USER DAT ASTATISTICS FOR THE ADMIN DASHBOARD ----------------------------------------------------------------------------------------
 const deleteUserDataUse = new DeleteUserDataUseCase(mongoRepo);
 export const InjectedDeleteUserDataAndConversationController = new DeleteUserDataAndConversationController(deleteUserDataUse);
+
+
+
+// -----------------------------| CALLING FUNCTIONALITIES FROM ADMIN TO THE USER ----------------------------------------------------------------------------------------
+const adminCallFunctionalitiesUse = new AdminCallingFunctionalitesUseCase(mongoRepo);
+export const InjectedAdminCallFunctionalitiesController = new AdminCallingFunctionalitiesController(adminCallFunctionalitiesUse);
 

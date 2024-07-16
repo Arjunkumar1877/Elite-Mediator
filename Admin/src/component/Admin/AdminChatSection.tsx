@@ -73,6 +73,7 @@ type PropertyDataType = {
 };
 
 type ConversationDataType = {
+  _id?:string;
   adminId: string;
   createdAt: number;
   deleted: boolean;
@@ -129,6 +130,9 @@ const AdminChatSection: React.FC = () => {
     text: "",
   });
   const fileRef: any = useRef<HTMLInputElement>(null);
+ 
+  
+
 
   const handleMessageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setMessageData({ ...messageData, text: e.target.value });
@@ -156,6 +160,7 @@ const AdminChatSection: React.FC = () => {
   const startCall = async (isVideo = false) => {
     try {
       setIsVideoCall(isVideo);
+      
 
       const res = await fetch("/api/start_call", {
         method: "POST",
@@ -163,6 +168,7 @@ const AdminChatSection: React.FC = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
+          callData: {
           conversationId: conId,
           callerId: currentAdmin._id,
           adminId: currentAdmin._id,
@@ -170,7 +176,11 @@ const AdminChatSection: React.FC = () => {
           caller: "Admin",
           callType: isVideo ? "video" : "audio",
           receiver: "User",
-        }),
+        }, 
+      
+token: selectedConversation?.userId.fcmToken,
+username: currentAdmin.username
+       }),
       });
 
       const data: CallDataType = await res.json();
@@ -178,7 +188,6 @@ const AdminChatSection: React.FC = () => {
         console.log(
           "emitted for calling 💕💕💕💕💕💕💕💕💕💕💕💕💕💕💕💕💕💕💕💕"
         );
-
         console.log(data)
         socket.emit("incoming-call", {
           conId,
@@ -246,7 +255,6 @@ const AdminChatSection: React.FC = () => {
 
   const sendMessage = async () => {
     console.log(messageData);
-
     try {
       const response: any = await axios.post<Message>("/api/admin_send_message", {
         messageData: messageData,

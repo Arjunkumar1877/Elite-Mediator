@@ -178,7 +178,7 @@ const AdminChatListSection: React.FC = () => {
   };
 
   const filteredChatsList = conversations.filter((con: any) =>
-    con.userId.username.toLowerCase().includes(searchTerm.toLowerCase())
+    con?.userId?.username.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const handleFilterChatByProperty = (data: string) => {
