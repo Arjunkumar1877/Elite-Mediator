@@ -25,15 +25,10 @@ const AdminCallPage: React.FC = () => {
   const conId = query.get("conId");
   const incommingId = query.get("incommingId");
   const callerId = query.get("callerId");
-
-
-
   const [isMuted, setIsMuted] = useState<boolean>(false);
   const [seconds, setSeconds] = useState<number>(0);
   const [callConnected, setCallConnected] = useState<boolean>(false);
   const [callConnecting, setCallConnecting] = useState<boolean>(true);
-
-
 
   useEffect(() => {
     socket.emit("join room", conId);
@@ -51,7 +46,6 @@ const AdminCallPage: React.FC = () => {
     const getHours = `0${Math.floor(seconds / 3600)}`.slice(-2);
     return `${getHours}:${getMinutes}:${getSeconds}`;
   };
-
 
   const fetchSelectedConversation = async()=>{
     try {

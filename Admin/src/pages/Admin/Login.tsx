@@ -6,8 +6,13 @@ import { signInStart,signInSuccess } from "../../redux/admin/adminSlice";
 import { FaEyeSlash } from "react-icons/fa";
 import OAuth from "../../component/Admin/OAuth";
 import { IoEyeSharp } from "react-icons/io5";
-
 import toast from "react-hot-toast";
+import axios from "axios";
+
+type PostersDataType = {
+  _id: string;
+  imageUrl: string;
+};
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState<string>("");
@@ -19,8 +24,21 @@ const Login: React.FC = () => {
   const { currentAdmin } = useSelector((state: any) => state.admin);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [posters, setPosters] = useState<PostersDataType[]>([]);
+  
+
+    const handleFetchPosters = async () => {
+      try {
+        const response = await axios.get('/superAdmin/get_posters');
+        setPosters(response.data);
+      } catch (error) {
+        console.log(error);
+        toast("Failed to fetch posters.");
+      }
+    };
 
   useEffect(()=>{
+    handleFetchPosters();
   if(currentAdmin && currentAdmin.address){
     navigate('/profile')
   }else if(currentAdmin && !currentAdmin.address){
@@ -90,7 +108,7 @@ const Login: React.FC = () => {
     <div className="flex justify-center h-[700px] w-full">
       <div className="hidden sm:flex sm:flex-1 sm:h-full">
         <img
-          src="public/login.jpg"
+          src={posters.length > 0 ? posters[9].imageUrl : 'https://firebasestorage.googleapis.com/v0/b/elite-mediator.appspot.com/o/login.jpg?alt=media&token=23fd7400-7426-40c8-87c3-dc4c1eabc8c9'}
           alt="Dummy"
           className="h-full object-cover w-full"
         />
