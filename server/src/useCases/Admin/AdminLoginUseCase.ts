@@ -1,4 +1,4 @@
-import { Admin } from "../../entities/models/admin/Admin";
+
 import { IAdminLoginUseCase } from "../../entities/useCasesInterfaces/Admin/IAdminLoginUseCase";
 import { IAdminRepository } from "../../interfaceAdapters/repositories/admin/IAdminRepository";
 import bcrypt from 'bcrypt';
