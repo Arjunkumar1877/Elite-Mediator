@@ -27,7 +27,7 @@ const Landing = () => {
 
   const handleFetchPosters = async () => {
     try {
-      const response = await axios.get('/superAdmin/get_posters');
+      const response = await axios.get('http://13.60.104.214/superAdmin/get_posters');
       setPosters(response.data);
     } catch (error) {
       console.log(error);
