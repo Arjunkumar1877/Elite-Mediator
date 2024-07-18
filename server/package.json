@@ -3,9 +3,10 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "npx nodemon",
-    "build": "tsc"
+    "start": "node dist/index.js",
+    "build": "tsc --project .",
+    "test": "echo \"Error: no test specified\" && exit 1.",
+    "dev": "nodemon ts-node ./src/index.ts"
   },
   "author": "",
   "license": "ISC",
