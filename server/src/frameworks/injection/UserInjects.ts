@@ -9,7 +9,7 @@ import { GetUserDataByPhoneController } from "../../interfaceAdapters/controller
 import { GetUserMessagesController } from "../../interfaceAdapters/controllers/user/GetUserMessagesController";
 import { SendUserMessageController } from "../../interfaceAdapters/controllers/user/SendUserMessageController";
 import { UserCallingFunctionalitiesController } from "../../interfaceAdapters/controllers/user/UserCallingFunctionalitiesController";
-import { VerifyAndUpdateUserController } from "../../interfaceAdapters/controllers/user/UserVerifyAndUpdateController";
+import { VerifyAndUpdateUserController } from "../../interfaceAdapters/controllers/user/userVerifyAndUpdateController";
 import { MongoUserRepository } from "../../interfaceAdapters/repositories/user/UserRepository";
 import { AddUserFcmTokenUseCase } from "../../useCases/user/AddUserFcmTokenUseCase";
 import { CheckAndSaveUnknownUserUseCase } from "../../useCases/user/CheckAndSaveUnknownUserUseCase";
