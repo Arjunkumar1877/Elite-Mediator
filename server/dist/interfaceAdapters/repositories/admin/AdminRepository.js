@@ -339,6 +339,15 @@ class MongoAdminRepository {
             return deleted ? "Deleted" : "Failed";
         });
     }
+    FindAllAdminMessages(conId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const messages = yield MessageModel_1.MessageModel.find({
+                conversationId: conId,
+                adminDeleted: false,
+            }).sort({ createdAt: 1 });
+            return messages;
+        });
+    }
     CreateAdminCallToDb(callData) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield CallModel_1.CallModel.create(callData);
@@ -373,6 +382,14 @@ class MongoAdminRepository {
             const call = yield CallModel_1.CallModel.findById(id);
             const update = yield CallModel_1.CallModel.findByIdAndUpdate(id, { callStatus: "declined" }, { new: true });
             return update;
+        });
+    }
+    FindPropertyByIdAndDelete(propId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const deletedQr = yield QrDataModel_1.QrModel.findOneAndUpdate({ _id: propId }, {
+                deleted: true
+            });
+            return deletedQr;
         });
     }
 }

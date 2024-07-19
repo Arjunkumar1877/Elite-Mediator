@@ -1,4 +1,3 @@
-import { Conversation } from "../../entities/models/common/Conversation";
 import { IGetSelecetedConversationUseCase } from "../../entities/useCasesInterfaces/Admin/IGetSelecetedConversationUseCase";
 import { IAdminRepository } from "../../interfaceAdapters/repositories/admin/IAdminRepository";
 

@@ -123,7 +123,7 @@ const SuperAdminRegisteredAdminsListSection = () => {
                   <FaArrowLeft />
                 </button>
                 <span>
-                  Page {0} of {3}
+                  Page {1} of {1}
                 </span>
                 <button
                   className="p-2 bg-sky-500 text-white rounded hover:bg-sky-600 transition duration-300"

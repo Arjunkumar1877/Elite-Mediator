@@ -1,7 +1,6 @@
 import { hashSync } from "bcrypt";
 import { Admin } from "../../entities/models/admin/Admin";
 import { IAdminRepository } from "../../interfaceAdapters/repositories/admin/IAdminRepository";
-import bcrypt from "bcrypt";
 import { IAdminSignUp } from "../../entities/useCasesInterfaces/Admin/IAdminSignupUseCase";
 
 export class AdminSignupUseCase implements IAdminSignUp {

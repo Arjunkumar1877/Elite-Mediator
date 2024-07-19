@@ -22,7 +22,7 @@ class SuperAdminLoginUseCase {
                 return emailExist;
             }
             else {
-                return "Invalid credentials";
+                return "Invalid";
             }
         });
     }

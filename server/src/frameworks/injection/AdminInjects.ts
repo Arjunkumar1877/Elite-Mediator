@@ -45,6 +45,10 @@ import { DeleteUserDataUseCase } from '../../useCases/admin/DeleteUserDataUseCas
 import { DeleteUserDataAndConversationController } from '../../interfaceAdapters/controllers/Admin/DeleteUserDataAndConversationController';
 import { AdminCallingFunctionalitesUseCase } from '../../useCases/admin/AdminCallingFunctionalitesUseCase';
 import { AdminCallingFunctionalitiesController } from '../../interfaceAdapters/controllers/Admin/AdminCallingFunctionalitiesController';
+import { GetAdminMessagesUseCase } from '../../useCases/admin/GetAdminMessagesUseCase';
+import { GetAdminMessagesController } from '../../interfaceAdapters/controllers/Admin/GetAdminMessagesController';
+import { DeleteAdminPropertyUseCase } from '../../useCases/admin/DeleteAdminPropertyUseCase';
+import { DeleteAdminPropertyController } from '../../interfaceAdapters/controllers/Admin/DeleteAdminPropertyController';
 const mongoRepo = new MongoAdminRepository();
 
 // -----------------------------| ADMIN SIGNUP INJECTION ----------------------------------------------------------------------------------------
@@ -108,6 +112,12 @@ const updateConversationReadCountUse = new UpdateConversationReadCountToZeroUseC
 export const InjectedUpdateConversationReadCountToZeroController = new UpdateConversationReadToZeroController(updateConversationReadCountUse);
 
 
+// -----------------------------| DELET ETHE CREATED ADMIN PROPERTY DATA WITH QR CODE MAKING A SOFT DELETE ----------------------------------------------------------------------------------------
+const deletepropertyDataUse = new DeleteAdminPropertyUseCase(mongoRepo);
+export const InjectedDeleteAdminPropertDataController = new DeleteAdminPropertyController(deletepropertyDataUse);
+
+
+
 // -----------------------------| GET ADMIN'S SELECTED CONVERSATION INJECTION ----------------------------------------------------------------------------------------
 const getSelectedConversationUse = new GetSelectedConversationUseCase(mongoRepo);
 export const InjectedGetSelectedConversationController = new GetSelectedConversationController(getSelectedConversationUse);
@@ -126,6 +136,11 @@ export const InjectedGetAdminsCallListController = new GetAdminsCallListControll
 // -----------------------------| GET VISITORS  LIST INJECTION ----------------------------------------------------------------------------------------
 const getUsersListUse = new GetUsersListUseCase(mongoRepo);
 export const InjectedGetUsersListController = new GetUsersListController(getUsersListUse);
+
+
+// -----------------------------| GET ALL MESSAGES OF ADMIN  ----------------------------------------------------------------------------------------
+const getAdminsmessagesUse = new GetAdminMessagesUseCase(mongoRepo);
+export const InjectedGetAdminMessagessController = new GetAdminMessagesController(getAdminsmessagesUse);
 
 
 // -----------------------------| CLEAR ADMIN CHAT MESSAGES ----------------------------------------------------------------------------------------
@@ -163,4 +178,5 @@ export const InjectedDeleteUserDataAndConversationController = new DeleteUserDat
 // -----------------------------| CALLING FUNCTIONALITIES FROM ADMIN TO THE USER ----------------------------------------------------------------------------------------
 const adminCallFunctionalitiesUse = new AdminCallingFunctionalitesUseCase(mongoRepo);
 export const InjectedAdminCallFunctionalitiesController = new AdminCallingFunctionalitiesController(adminCallFunctionalitiesUse);
+
 

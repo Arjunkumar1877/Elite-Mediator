@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.InjectedAdminCallFunctionalitiesController = exports.InjectedDeleteUserDataAndConversationController = exports.InjectedUserStatisticsGraphController = exports.InjectedSendAdminMessageController = exports.InjectedAddNewFcmTokenOrGetExsistingeController = exports.InjectedEditUnknownUsernameController = exports.InjectedClearAdminChatMessagesController = exports.InjectedGetUsersListController = exports.InjectedGetAdminsCallListController = exports.InjectedGetConversationListController = exports.InjectedGetSelectedConversationController = exports.InjectedUpdateConversationReadCountToZeroController = exports.InjectedGetAdminPropertyDataForFilteringController = exports.InjectedGetAdminAllPropertyDataController = exports.InjectedSavePropertyDataController = exports.InjectedGenerateQrCodeController = exports.InjectedGetAdminDataController = exports.InjectedUpdateAdminProfileController = exports.InjectedAdminlogincontroller = exports.InjectedUpdateVerifyAdminController = exports.InjectedGoogleLoginController = exports.InjectedGetUnverifiedAdminController = exports.InjectedAdminSignUpController = void 0;
+exports.InjectedAdminCallFunctionalitiesController = exports.InjectedDeleteUserDataAndConversationController = exports.InjectedUserStatisticsGraphController = exports.InjectedSendAdminMessageController = exports.InjectedAddNewFcmTokenOrGetExsistingeController = exports.InjectedEditUnknownUsernameController = exports.InjectedClearAdminChatMessagesController = exports.InjectedGetAdminMessagessController = exports.InjectedGetUsersListController = exports.InjectedGetAdminsCallListController = exports.InjectedGetConversationListController = exports.InjectedGetSelectedConversationController = exports.InjectedDeleteAdminPropertDataController = exports.InjectedUpdateConversationReadCountToZeroController = exports.InjectedGetAdminPropertyDataForFilteringController = exports.InjectedGetAdminAllPropertyDataController = exports.InjectedSavePropertyDataController = exports.InjectedGenerateQrCodeController = exports.InjectedGetAdminDataController = exports.InjectedUpdateAdminProfileController = exports.InjectedAdminlogincontroller = exports.InjectedUpdateVerifyAdminController = exports.InjectedGoogleLoginController = exports.InjectedGetUnverifiedAdminController = exports.InjectedAdminSignUpController = void 0;
 const AdminLoginController_1 = require("../../interfaceAdapters/controllers/Admin/AdminLoginController");
 const GenerateQrCodeController_1 = require("../../interfaceAdapters/controllers/Admin/GenerateQrCodeController");
 const GetAdminDataController_1 = require("../../interfaceAdapters/controllers/Admin/GetAdminDataController");
@@ -48,6 +48,10 @@ const DeleteUserDataUseCase_1 = require("../../useCases/admin/DeleteUserDataUseC
 const DeleteUserDataAndConversationController_1 = require("../../interfaceAdapters/controllers/Admin/DeleteUserDataAndConversationController");
 const AdminCallingFunctionalitesUseCase_1 = require("../../useCases/admin/AdminCallingFunctionalitesUseCase");
 const AdminCallingFunctionalitiesController_1 = require("../../interfaceAdapters/controllers/Admin/AdminCallingFunctionalitiesController");
+const GetAdminMessagesUseCase_1 = require("../../useCases/admin/GetAdminMessagesUseCase");
+const GetAdminMessagesController_1 = require("../../interfaceAdapters/controllers/Admin/GetAdminMessagesController");
+const DeleteAdminPropertyUseCase_1 = require("../../useCases/admin/DeleteAdminPropertyUseCase");
+const DeleteAdminPropertyController_1 = require("../../interfaceAdapters/controllers/Admin/DeleteAdminPropertyController");
 const mongoRepo = new AdminRepository_1.MongoAdminRepository();
 // -----------------------------| ADMIN SIGNUP INJECTION ----------------------------------------------------------------------------------------
 const adminSignupUse = new AdminSignUseCase_1.AdminSignupUseCase(mongoRepo);
@@ -85,6 +89,9 @@ exports.InjectedGetAdminPropertyDataForFilteringController = new GetAdminPropert
 // -----------------------------| GET EACH ADMIN'S PROPERTY DATA AND QRCODE'S INJECTION ----------------------------------------------------------------------------------------
 const updateConversationReadCountUse = new UpdateConversationReadCountToZeroUseCase_1.UpdateConversationReadCountToZeroUseCase(mongoRepo);
 exports.InjectedUpdateConversationReadCountToZeroController = new UpdateConversationReadToZeroController_1.UpdateConversationReadToZeroController(updateConversationReadCountUse);
+// -----------------------------| DELET ETHE CREATED ADMIN PROPERTY DATA WITH QR CODE MAKING A SOFT DELETE ----------------------------------------------------------------------------------------
+const deletepropertyDataUse = new DeleteAdminPropertyUseCase_1.DeleteAdminPropertyUseCase(mongoRepo);
+exports.InjectedDeleteAdminPropertDataController = new DeleteAdminPropertyController_1.DeleteAdminPropertyController(deletepropertyDataUse);
 // -----------------------------| GET ADMIN'S SELECTED CONVERSATION INJECTION ----------------------------------------------------------------------------------------
 const getSelectedConversationUse = new GetSelectedConversationUseCase_1.GetSelectedConversationUseCase(mongoRepo);
 exports.InjectedGetSelectedConversationController = new GetSelectedConversationController_1.GetSelectedConversationController(getSelectedConversationUse);
@@ -97,6 +104,9 @@ exports.InjectedGetAdminsCallListController = new GetAdminsCallListController_1.
 // -----------------------------| GET VISITORS  LIST INJECTION ----------------------------------------------------------------------------------------
 const getUsersListUse = new GetUsersListUseCase_1.GetUsersListUseCase(mongoRepo);
 exports.InjectedGetUsersListController = new GetUsersListController_1.GetUsersListController(getUsersListUse);
+// -----------------------------| GET ALL MESSAGES OF ADMIN  ----------------------------------------------------------------------------------------
+const getAdminsmessagesUse = new GetAdminMessagesUseCase_1.GetAdminMessagesUseCase(mongoRepo);
+exports.InjectedGetAdminMessagessController = new GetAdminMessagesController_1.GetAdminMessagesController(getAdminsmessagesUse);
 // -----------------------------| CLEAR ADMIN CHAT MESSAGES ----------------------------------------------------------------------------------------
 const clearAdminChatMessagesUse = new ClearAdminChatUseCase_1.ClearAdminChatUseCase(mongoRepo);
 exports.InjectedClearAdminChatMessagesController = new ClearAdminChatMessagesController_1.ClearAdminChatMessagesController(clearAdminChatMessagesUse);

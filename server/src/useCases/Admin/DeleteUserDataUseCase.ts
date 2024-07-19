@@ -5,22 +5,6 @@ import { IAdminRepository } from "../../interfaceAdapters/repositories/admin/IAd
 export class DeleteUserDataUseCase implements IDeleteUserDataUseCase{
     constructor(private iadminrepository: IAdminRepository){};
 
-//     async DeleteUserDataAndConversation(userId: string): Promise<string> {
-//         const userData: any = await this.iadminrepository.FindUserByUserId(userId);
-//         const conId: string = userData?.conversationId;
-//    const deletedConversation = await this.iadminrepository.FindConversationByIdAndDelete(conId);
-
-//    if(deletedConversation){
-//    const deletemessages = await this.iadminrepository.FindAndClearAdminChatMessages(conId);
-
-//     return 'deleted';
-//    }else{
-//    return 'failed';
-//    }
-//     }
-
-
-
  async DeleteUserDataAndConversation(userId: string): Promise<string> {
     try {
       const userData: User | null = await this.iadminrepository.FindUserByUserId(userId);

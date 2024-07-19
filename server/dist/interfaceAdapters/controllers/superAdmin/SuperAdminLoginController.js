@@ -10,16 +10,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SuperAdminLoginController = void 0;
-const SuperAdminLoginUsecase_1 = require("../../../useCases/superAdmin/SuperAdminLoginUsecase");
-const SuperAdminRepository_1 = require("../../repositories/superAdmin/SuperAdminRepository");
-const superAdminRepository = new SuperAdminRepository_1.MongoSuperAdminRepository();
 class SuperAdminLoginController {
-    static SuperAdminLoginControl(req, res) {
+    constructor(isuperadminloginusecase) {
+        this.isuperadminloginusecase = isuperadminloginusecase;
+    }
+    SuperAdminLoginControl(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const loginSuperAdmin = new SuperAdminLoginUsecase_1.SuperAdminLoginUseCase(superAdminRepository);
-                const data = yield loginSuperAdmin.SuperAdminLogin(req.body.email, req.body.password);
-                console.log("Super admin loginController");
+                const data = yield this.isuperadminloginusecase.SuperAdminLogin(req.body.email, req.body.password);
                 res.json(data);
             }
             catch (error) {

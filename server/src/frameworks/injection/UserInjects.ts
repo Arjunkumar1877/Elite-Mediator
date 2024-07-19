@@ -1,4 +1,3 @@
-import { AddAdminFcmTokenController } from "../../interfaceAdapters/controllers/Admin/AddAdminFcmTokenController";
 import { AddUserFcmTokenController } from "../../interfaceAdapters/controllers/user/AddUserFcmTokenController";
 import { CheckAndSaveUnknownUserController } from "../../interfaceAdapters/controllers/user/CheckAndSaveUnknownUserController";
 import { CreateConversationController } from "../../interfaceAdapters/controllers/user/CreateConversationController";
@@ -78,7 +77,6 @@ export const InjectedSendAndCreateUserMessageController = new SendUserMessageCon
 // -----------------------------| GET ALL MESSAGES FOR THE USER CHAT  ----------------------------------------------------------------------------------------
 const getUserMessagesUse = new GetUserMessagesUseCase(mongoRepo)
 export const InjectedGetUserMessagesController = new GetUserMessagesController(getUserMessagesUse);
-
 
 
 // -----------------------------| CALLING FUNCTIONALITIES FROM THE USER TO THE ADMIN  ----------------------------------------------------------------------------------------

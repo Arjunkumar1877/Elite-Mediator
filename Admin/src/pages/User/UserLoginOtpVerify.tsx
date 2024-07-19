@@ -33,8 +33,6 @@ const UserLoginOtpVerify = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  
-
 
   useEffect(() => {
     if (seconds > 0) {
@@ -42,6 +40,7 @@ const UserLoginOtpVerify = () => {
       return () => clearTimeout(timer);
     }
   }, [seconds]);
+
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -60,6 +59,7 @@ const UserLoginOtpVerify = () => {
     fetchUser();
   }, [params.id]);
 
+
   const handleChange = (element: HTMLInputElement, index: number) => {
     if (isNaN(Number(element.value))) return;
 
@@ -71,6 +71,7 @@ const UserLoginOtpVerify = () => {
       (element.nextSibling as HTMLInputElement).focus();
     }
   };
+
 
   const handleResendOtp = async () => {
     setSeconds(60);
@@ -109,8 +110,6 @@ const UserLoginOtpVerify = () => {
     }
   };
 
-
-  
 
   const handleVerifyOtp = async () => {
     const enteredOtp = otp.join('');

@@ -51,7 +51,6 @@ const InitialDataPage = () => {
   const query = useQuery();
   const adminIdQ = query.get("adminId");
   const propIdQ = query.get("propId");
-
   const [formData, setFormData] = useState<UserType>({
     userId: "12345678",
     adminId: adminIdQ || "",
@@ -74,9 +73,6 @@ const InitialDataPage = () => {
   };
 
  
-
-
-
 console.log(formData);
 console.log(propertyData)
 const phonenum:number = 0;

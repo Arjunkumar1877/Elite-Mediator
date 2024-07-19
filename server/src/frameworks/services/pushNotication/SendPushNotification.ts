@@ -3,7 +3,6 @@
 
 import admin from 'firebase-admin';
 import { getMessaging } from 'firebase-admin/messaging';
-import { Req, Res } from '../../types/ServerTypes';
 import dotenv from 'dotenv';
 
 dotenv.config();

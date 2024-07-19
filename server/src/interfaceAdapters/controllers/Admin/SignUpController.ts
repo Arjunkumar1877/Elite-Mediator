@@ -1,5 +1,4 @@
 import { Request as Req, Response as Res } from 'express';
-import { MongoAdminRepository } from '../../repositories/admin/AdminRepository'; 
 import { IAdminSignUp } from '../../../entities/useCasesInterfaces/Admin/IAdminSignupUseCase';
 
 

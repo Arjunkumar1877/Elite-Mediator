@@ -407,7 +407,15 @@ export class MongoAdminRepository implements IAdminRepository {
     return deleted ? "Deleted" : "Failed";
   }
 
-  
+  async FindAllAdminMessages(conId: string): Promise<any> {
+    const messages = await MessageModel.find({
+      conversationId: conId,
+      adminDeleted: false,
+    }).sort({ createdAt: 1 });
+
+    return messages
+  }
+
   async CreateAdminCallToDb(callData: Call): Promise<any> {
     return await CallModel.create(callData);
   }
@@ -456,5 +464,12 @@ export class MongoAdminRepository implements IAdminRepository {
     );
 
     return update;
+  }
+
+  async FindPropertyByIdAndDelete(propId: string): Promise<any> {
+    const deletedQr: any  = await QrModel.findOneAndUpdate({_id: propId}, {
+      deleted: true
+  });
+  return deletedQr;
   }
 }

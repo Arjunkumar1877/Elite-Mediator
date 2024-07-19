@@ -40,4 +40,6 @@ export interface IAdminRepository {
     AcceptAdminCallAndUpdatOnDb(id: string): Promise<Call | any>;
     DeclineAdminCallAndUpdateOnDb(id: string): Promise<Call | any>;
     DisconnectAdminCallAndUpdateOnDb(id: string): Promise<Call | any>;
+    FindAllAdminMessages(conId: string): Promise<any>;
+    FindPropertyByIdAndDelete(propId: string): Promise<any>;
 }

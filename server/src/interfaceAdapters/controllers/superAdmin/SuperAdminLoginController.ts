@@ -1,14 +1,13 @@
+import { ISuperAdminLoginUseCase } from "../../../entities/useCasesInterfaces/superAdmin/ISuperAdminLoginUseCase";
 import { Req, Res } from "../../../frameworks/types/ServerTypes";
-import { SuperAdminLoginUseCase } from "../../../useCases/superAdmin/SuperAdminLoginUsecase";
-import { MongoSuperAdminRepository } from "../../repositories/superAdmin/SuperAdminRepository";
 
-const superAdminRepository = new MongoSuperAdminRepository();
 export class SuperAdminLoginController{
-    static async SuperAdminLoginControl(req: Req, res: Res){
+
+constructor(private isuperadminloginusecase: ISuperAdminLoginUseCase){}
+ async SuperAdminLoginControl(req: Req, res: Res){
         try {
-            const loginSuperAdmin = new SuperAdminLoginUseCase(superAdminRepository);
-            const data = await loginSuperAdmin.SuperAdminLogin(req.body.email, req.body.password);
-            console.log("Super admin loginController")
+            const data = await this.isuperadminloginusecase.SuperAdminLogin(req.body.email, req.body.password);
+           
             res.json(data);
         } catch (error) {
             res.status(404).json(error);

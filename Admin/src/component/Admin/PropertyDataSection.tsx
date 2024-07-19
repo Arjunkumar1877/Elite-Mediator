@@ -48,9 +48,11 @@ const PropertyDataSection = () => {
   const handleDeleteProperty = async (id: string) => {
     try {
       const response = await axios.get(`/api/delete_property/${id}`);
-      console.log(response);
-      // Refresh the property data after deletion
+      console.log(response.data);
+     if(response.data.success){
       fetchPropertyData();
+
+     }
     } catch (error) {
       console.log(error);
     }

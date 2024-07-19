@@ -214,6 +214,8 @@ const UserChatPage: React.FC = () => {
     }
   };
 
+  console.log(currentUser)
+
   useEffect(() => {
     socket.on("recieve_message", (msg: Message) => {
       if (msg.conversationId === conId) {

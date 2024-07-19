@@ -3,9 +3,6 @@ import { Route } from "../../../frameworks/types/ServerTypes";
 import { InjectedAddUserFcmCodeController, InjectedChekAndSaveUnknwnUserController, InjectedCreateConversationController, InjectedCreateNewUserDataController, InjectedGetAdminsPropertdataController, InjectedGetUnverifiedUserDataController, InjectedGetUserDataByPhoneController, InjectedGetUserMessagesController, InjectedSendAndCreateUserMessageController, InjectedUserCallingFunctionalitiesController, InjectedVerifyAndUpdateUserDataController } from "../../../frameworks/injection/UserInjects";
 import { ConversationModel } from "../../../frameworks/database/models/admin/ConversationModel";
 import { MessageModel } from "../../../frameworks/database/models/admin/MessageModel";
-import { UserModel } from "../../../frameworks/database/models/user/User";
-import {  InjectedGetMessagesController, InjectedSendMesssage } from "../../../frameworks/injection/CommonInjects";
-import { CallModel } from "../../database/models/admin/CallModel";
 import {  getMacAddressFromDevice } from "../../services/GetMacAddress/GetMacAddress";
 const router:Route = Router();
 

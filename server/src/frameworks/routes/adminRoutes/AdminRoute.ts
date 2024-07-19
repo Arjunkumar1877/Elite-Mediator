@@ -1,11 +1,8 @@
 import { Router } from "express";
-import { Req, Res, Route } from "../../../frameworks/types/ServerTypes";
+import {  Route } from "../../../frameworks/types/ServerTypes";
 import { JwtTokenAdapter } from "../../../frameworks/services/jwtService/TokenService";
-import { InjectedAdminSignUpController, InjectedAdminlogincontroller, InjectedGenerateQrCodeController, InjectedGetAdminDataController, InjectedGetAdminAllPropertyDataController, InjectedGetUnverifiedAdminController, InjectedGoogleLoginController, InjectedSavePropertyDataController, InjectedUpdateAdminProfileController, InjectedUpdateVerifyAdminController, InjectedUpdateConversationReadCountToZeroController, InjectedGetSelectedConversationController, InjectedGetConversationListController, InjectedGetAdminsCallListController, InjectedGetUsersListController, InjectedClearAdminChatMessagesController, InjectedEditUnknownUsernameController, InjectedAddNewFcmTokenOrGetExsistingeController, InjectedSendAdminMessageController, InjectedUserStatisticsGraphController, InjectedGetAdminPropertyDataForFilteringController, InjectedDeleteUserDataAndConversationController, InjectedAdminCallFunctionalitiesController } from "../../../frameworks/injection/AdminInjects";
-import {  InjectedGetMessagesController  } from "../../../frameworks/injection/CommonInjects";
+import { InjectedAdminSignUpController, InjectedAdminlogincontroller, InjectedGenerateQrCodeController, InjectedGetAdminDataController, InjectedGetAdminAllPropertyDataController, InjectedGetUnverifiedAdminController, InjectedGoogleLoginController, InjectedSavePropertyDataController, InjectedUpdateAdminProfileController, InjectedUpdateVerifyAdminController, InjectedUpdateConversationReadCountToZeroController, InjectedGetSelectedConversationController, InjectedGetConversationListController, InjectedGetAdminsCallListController, InjectedGetUsersListController, InjectedClearAdminChatMessagesController, InjectedEditUnknownUsernameController, InjectedAddNewFcmTokenOrGetExsistingeController, InjectedSendAdminMessageController, InjectedUserStatisticsGraphController, InjectedGetAdminPropertyDataForFilteringController, InjectedDeleteUserDataAndConversationController, InjectedAdminCallFunctionalitiesController, InjectedGetAdminMessagessController, InjectedDeleteAdminPropertDataController } from "../../../frameworks/injection/AdminInjects";
 import { InjectedCreateConversationController } from "../../../frameworks/injection/UserInjects";
-import { UserModel } from "../../database/models/user/User";
-import { QrModel } from "../../database/models/admin/QrDataModel";
 
 const router: Route = Router();
 
@@ -47,10 +44,8 @@ router.post("/save_property_data",JwtToken.verifyToken, InjectedSavePropertyData
 // -------------------------------------| GET ADMINS PROPERTY DATA AND QRCODE --------------------------------------------------------------------------|
 router.get("/get_admin_property_data/:id", JwtToken.verifyToken, InjectedGetAdminAllPropertyDataController.GetAdminPropertyDataControl.bind(InjectedGetAdminAllPropertyDataController));
 
-
 // -------------------------------------| GET ADMINS PROPERTY DATA AND QRCODE --------------------------------------------------------------------------|
 router.get("/get_admin_property_data_filtering/:adminId", JwtToken.verifyToken, InjectedGetAdminPropertyDataForFilteringController.GetAdminPropertyDataForFilteringControl.bind(InjectedGetAdminPropertyDataForFilteringController));
-
 
 router.get('/admin_delete_user_data/:userId', InjectedDeleteUserDataAndConversationController.DeleteUserDataConversatiionControl.bind(InjectedDeleteUserDataAndConversationController))
 
@@ -67,7 +62,7 @@ router.get('/update_conversation_unread_count/:id',JwtToken.verifyToken, Injecte
 router.get('/selected_conversation/:id',JwtToken.verifyToken,  InjectedGetSelectedConversationController.GetSelectedConversationControl.bind(InjectedGetSelectedConversationController));
 
 // -------------------------------------| GETTING ALL THE ADMIN CHAT LIST MESSAGES FROM THE DATABASE  --------------------------------------------------|
-router.get('/get_admin_messages/:conId',JwtToken.verifyToken, InjectedGetMessagesController.GetMessagesControl.bind(InjectedGetMessagesController));
+router.get('/get_admin_messages/:conId',JwtToken.verifyToken,  InjectedGetAdminMessagessController.GetAdminMessagescontrol.bind(InjectedGetAdminMessagessController));
 
 // -------------------------------------| FECH ALL AND FILTERED ADMINS CHAT LIST  ----------------------------------------------------------------------|
 router.get('/get_conversations_list',JwtToken.verifyToken, InjectedGetConversationListController.GetConversationListControl.bind(InjectedGetConversationListController));
@@ -99,21 +94,8 @@ router.post('/edit_unknown_username', JwtToken.verifyToken, InjectedEditUnknownU
 // -------------------------------------| LOGOUT THE USER AND REMOVE THE JWT TOKEN FROM THE COOKIES   -----------------------------------------------------------------------------------|
 router.get("/admin_logout", JwtToken.removeToken);
 
-router.get("/delete_property/:propertyId", async(req: Req, res: Res)=>{
-    const id = req.params.propertyId;
-    const deletedQr  = await QrModel.findOneAndUpdate({_id: id}, {
-        deleted: true
-    });
+router.get("/delete_property/:propertyId", InjectedDeleteAdminPropertDataController.DeleteAdminPropertyControl.bind(InjectedDeleteAdminPropertDataController))
 
 
-    if(deletedQr){
-    res.json({sucess: true});
-    }else{
-        res.json({sucess: false})
-    }
-})
-
-
-// router.post("/send_push", sendPushMessage);
 
 export default router;

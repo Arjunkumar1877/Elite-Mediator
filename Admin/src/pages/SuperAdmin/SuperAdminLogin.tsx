@@ -51,8 +51,8 @@ const SuperAdminLogin = () => {
       password: password
     })
 
-    if(response.data.success){
-      dispatch(signInSuccess(response.data.superAdmin));
+    if(response.data !== "Invalid"){
+      dispatch(signInSuccess(response.data));
       toast("Logged in sucessfully");
       navigate("/super_admin_dashboard")
     }else{

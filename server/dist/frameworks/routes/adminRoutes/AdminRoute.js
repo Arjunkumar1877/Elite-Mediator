@@ -1,20 +1,9 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const TokenService_1 = require("../../../frameworks/services/jwtService/TokenService");
 const AdminInjects_1 = require("../../../frameworks/injection/AdminInjects");
-const CommonInjects_1 = require("../../../frameworks/injection/CommonInjects");
 const UserInjects_1 = require("../../../frameworks/injection/UserInjects");
-const QrDataModel_1 = require("../../database/models/admin/QrDataModel");
 const router = (0, express_1.Router)();
 const JwtToken = new TokenService_1.JwtTokenAdapter();
 // -------------------------------------| ADMIN SIGN UP-------------------------------------------------------------------------------------------------|
@@ -53,7 +42,7 @@ router.get('/update_conversation_unread_count/:id', JwtToken.verifyToken, AdminI
 // -------------------------------------| FETCH THE CONVERSATION'S DOCUMENT USING THE ID ---------------------------------------------------------------|
 router.get('/selected_conversation/:id', JwtToken.verifyToken, AdminInjects_1.InjectedGetSelectedConversationController.GetSelectedConversationControl.bind(AdminInjects_1.InjectedGetSelectedConversationController));
 // -------------------------------------| GETTING ALL THE ADMIN CHAT LIST MESSAGES FROM THE DATABASE  --------------------------------------------------|
-router.get('/get_admin_messages/:conId', JwtToken.verifyToken, CommonInjects_1.InjectedGetMessagesController.GetMessagesControl.bind(CommonInjects_1.InjectedGetMessagesController));
+router.get('/get_admin_messages/:conId', JwtToken.verifyToken, AdminInjects_1.InjectedGetAdminMessagessController.GetAdminMessagescontrol.bind(AdminInjects_1.InjectedGetAdminMessagessController));
 // -------------------------------------| FECH ALL AND FILTERED ADMINS CHAT LIST  ----------------------------------------------------------------------|
 router.get('/get_conversations_list', JwtToken.verifyToken, AdminInjects_1.InjectedGetConversationListController.GetConversationListControl.bind(AdminInjects_1.InjectedGetConversationListController));
 // -------------------------------------| STARTING A CALL AND SAVING THE DATA TO THE DATABASE  ---------------------------------------------------------|
@@ -74,17 +63,5 @@ router.get('/clear_admin_chat/:conId', JwtToken.verifyToken, AdminInjects_1.Inje
 router.post('/edit_unknown_username', JwtToken.verifyToken, AdminInjects_1.InjectedEditUnknownUsernameController.EditUnknownUsernameControl.bind(AdminInjects_1.InjectedEditUnknownUsernameController));
 // -------------------------------------| LOGOUT THE USER AND REMOVE THE JWT TOKEN FROM THE COOKIES   -----------------------------------------------------------------------------------|
 router.get("/admin_logout", JwtToken.removeToken);
-router.get("/delete_property/:propertyId", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const id = req.params.propertyId;
-    const deletedQr = yield QrDataModel_1.QrModel.findOneAndUpdate({ _id: id }, {
-        deleted: true
-    });
-    if (deletedQr) {
-        res.json({ sucess: true });
-    }
-    else {
-        res.json({ sucess: false });
-    }
-}));
-// router.post("/send_push", sendPushMessage);
+router.get("/delete_property/:propertyId", AdminInjects_1.InjectedDeleteAdminPropertDataController.DeleteAdminPropertyControl.bind(AdminInjects_1.InjectedDeleteAdminPropertDataController));
 exports.default = router;

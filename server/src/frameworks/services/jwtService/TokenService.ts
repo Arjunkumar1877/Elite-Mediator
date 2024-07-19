@@ -2,7 +2,6 @@ import { NextFunction } from "express";
 import { TokenServices } from "./ITokenServices";
 import { Req, Res } from "../../types/ServerTypes";
 import jwt from "jsonwebtoken";
-import { MongoAdminRepository } from "../../../interfaceAdapters/repositories/admin/AdminRepository";
 import { Errors } from "../../../entities/utils/errors/Error.";
 
 const errorFun = new Errors();

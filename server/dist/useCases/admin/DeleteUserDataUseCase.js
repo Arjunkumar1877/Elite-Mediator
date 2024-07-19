@@ -15,17 +15,6 @@ class DeleteUserDataUseCase {
         this.iadminrepository = iadminrepository;
     }
     ;
-    //     async DeleteUserDataAndConversation(userId: string): Promise<string> {
-    //         const userData: any = await this.iadminrepository.FindUserByUserId(userId);
-    //         const conId: string = userData?.conversationId;
-    //    const deletedConversation = await this.iadminrepository.FindConversationByIdAndDelete(conId);
-    //    if(deletedConversation){
-    //    const deletemessages = await this.iadminrepository.FindAndClearAdminChatMessages(conId);
-    //     return 'deleted';
-    //    }else{
-    //    return 'failed';
-    //    }
-    //     }
     DeleteUserDataAndConversation(userId) {
         return __awaiter(this, void 0, void 0, function* () {
             try {

@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.MongoSuperAdminRepository = void 0;
 const AdminModel_1 = require("../../../frameworks/database/models/admin/AdminModel");
 const QrDataModel_1 = require("../../../frameworks/database/models/admin/QrDataModel");
+const PostersModel_1 = require("../../../frameworks/database/models/superAdmin/PostersModel");
 const SuperAdminModel_1 = require("../../../frameworks/database/models/superAdmin/SuperAdminModel");
 const User_1 = require("../../../frameworks/database/models/user/User");
 class MongoSuperAdminRepository {
@@ -47,6 +48,57 @@ class MongoSuperAdminRepository {
             }
             const filteredUsers = yield User_1.UserModel.find(filterUser);
             return filteredUsers;
+        });
+    }
+    FindAPosterByIdAndUpdate(imageUrl, posterId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const saved = yield PostersModel_1.PosterModel.findOneAndUpdate({ _id: posterId }, {
+                $set: {
+                    imageUrl: imageUrl
+                }
+            }, { new: true });
+            if (saved) {
+                return "saved";
+            }
+            else {
+                return "failed";
+            }
+        });
+    }
+    FindAllPosters() {
+        return __awaiter(this, void 0, void 0, function* () {
+            const posters = yield PostersModel_1.PosterModel.find({});
+            return posters;
+        });
+    }
+    FindByIdAndBlockAnAdmin(adminId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const blocked = yield AdminModel_1.AdminModel.findOneAndUpdate({ _id: adminId }, {
+                $set: {
+                    blocked: true
+                }
+            });
+            if (blocked) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        });
+    }
+    FindByIdAndUnblockAnAdmin(adminId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const Unblocked = yield AdminModel_1.AdminModel.findOneAndUpdate({ _id: adminId }, {
+                $set: {
+                    blocked: false
+                }
+            });
+            if (Unblocked) {
+                return true;
+            }
+            else {
+                return false;
+            }
         });
     }
 }

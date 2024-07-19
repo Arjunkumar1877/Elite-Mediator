@@ -1,23 +1,21 @@
 import { SuperAdmin } from "../../entities/models/superAdmin/SuperAdmin";
-import { ISuperAdminLogin } from "../../entities/useCasesInterfaces/superAdmin/ISuperAdminLoginUseCase";
-import { AdminLoginController } from "../../interfaceAdapters/controllers/Admin/AdminLoginController";
+import { ISuperAdminLoginUseCase } from "../../entities/useCasesInterfaces/superAdmin/ISuperAdminLoginUseCase";
 import { ISuperAdminRepository } from "../../interfaceAdapters/repositories/superAdmin/ISuperAdminRepository";
-import { AdminLoginUseCase } from "../admin/AdminLoginUseCase";
 
 
 
 
-export class SuperAdminLoginUseCase implements ISuperAdminLogin{
+export class SuperAdminLoginUseCase implements ISuperAdminLoginUseCase{
 
     constructor(private superAdminRepository: ISuperAdminRepository){}
 
    async  SuperAdminLogin(email: string, password: string): Promise<SuperAdmin | string> {
 
-    const emailExist = await this.superAdminRepository.FindByEmail(email);;
+    const emailExist: any = await this.superAdminRepository.FindByEmail(email);;
     if(emailExist && emailExist?.password === password){
         return emailExist
     }else{
-        return "Invalid credentials";
+        return "Invalid";
     }
     }
 }
