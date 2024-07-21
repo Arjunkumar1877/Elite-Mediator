@@ -354,7 +354,7 @@ const AdminChatListSection: React.FC = () => {
                     </div>
                     <div className="flex items-center gap-3 relative z-10 mt-3">
                       <img
-                        src="public/userIcon.webp"
+                        src="https://cdn-icons-png.flaticon.com/512/9385/9385289.png"
                         alt="User"
                         className="h-14 w-14 rounded-full"
                       />

@@ -186,16 +186,16 @@ const UserChatPage: React.FC = () => {
         },
         body: JSON.stringify({
           callData: {
-          conversationId: currentUser.conversationId,
-          adminId: currentUser.adminId._id,
-          userId: currentUser._id,
-          caller: "User",
-          callType: isVideo ? "video" : "audio",
-          receiver: "Admin",
-        },
-        token: currentUser.adminId.fcmToken,
-        username: currentUser.username
-      }),
+            conversationId: currentUser.conversationId,
+            adminId: currentUser.adminId._id,
+            userId: currentUser._id,
+            caller: "User",
+            callType: isVideo ? "video" : "audio",
+            receiver: "Admin",
+          },
+          token: currentUser.adminId.fcmToken,
+          username: currentUser.username,
+        }),
       });
 
       const data: any = await res.json();
@@ -214,7 +214,7 @@ const UserChatPage: React.FC = () => {
     }
   };
 
-  console.log(currentUser)
+  console.log(currentUser);
 
   useEffect(() => {
     socket.on("recieve_message", (msg: Message) => {
