@@ -14,7 +14,7 @@ type SocketProviderProps = {
 
 const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
   // const socket: Socket = io("http://13.60.104.214");
-  const socket: Socket = io("http://localhost:7000");
+  const socket: Socket = io("https://elitemediator.shop");
   const localVideoRef: any = useRef<HTMLVideoElement>(null);
   const remoteVideoRef: any= useRef<HTMLVideoElement>(null);
   const [isVideoCall, setIsVideoCall] = useState<boolean>();

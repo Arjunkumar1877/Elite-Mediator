@@ -3,20 +3,24 @@ import react from '@vitejs/plugin-react'
 
 export default defineConfig({
   server: {
+    host: '0.0.0.0', // Allow access from any IP
+      port: 7000 ,
     proxy: {
       '/api': {
         // target: 'http://13.60.104.214',
-        target: 'http://localhost:7000',
+        // target: 'http://localhost:7000',
+        target: "https://elitemediator.shop",
         secure: false,
       },
       '/user': {
-        // target: 'http://13.60.104.214',
-        target: 'http://localhost:7000',
+        // target: 'http://localhost:7000',
+        target: "https://elitemediator.shop",
         secure: false,
       },
       '/superAdmin': {
-        // target: 'http://13.60.104.214',
-        target: 'http://localhost:7000',
+        // target: 'http://localhost:7000',
+        target: "https://elitemediator.shop",
+
         secure: false,
       },
     },

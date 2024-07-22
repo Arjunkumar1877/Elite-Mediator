@@ -20,7 +20,7 @@ export default app;
 export const auth = getAuth(app);
 export const storage = getStorage(app);
 export const messaging = getMessaging(app);
-// console.log(import.meta.env.VITE_VAPID_KEY)
+
 
 
 const requestPermission = async (): Promise<any> => {

@@ -31,7 +31,12 @@ export class ExpressServer {
 
     private configureMiddleware(): void {
         this.app.use(express.json());
-        this.app.use(cors());
+        this.app.use(cors({
+            origin: "https://elitemediator.shop", // Replace with your frontend domain
+            methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+            allowedHeaders: ["Authorization", "Content-Type"],
+            credentials: true,
+        }));
         this.app.use(cookieParser());
 
         const publicPath = path.join(__dirname, '..', 'public');

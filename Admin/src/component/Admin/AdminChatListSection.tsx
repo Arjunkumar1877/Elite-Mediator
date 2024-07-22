@@ -4,7 +4,6 @@ import { Link } from "react-router-dom";
 import { useState, useEffect, ChangeEvent } from "react";
 import axios from "axios";
 import { useSelector } from "react-redux";
-import io from "socket.io-client";
 import { useSocket } from "../../contexts/AdminContext";
 import { MdOutlinePermMedia } from "react-icons/md";
 import toast from "react-hot-toast";
@@ -54,7 +53,7 @@ type ConversationDataType = {
   userId: UserDataType;
 };
 
-const socket = io("http://localhost:7000");
+// const socket = io("http://localhost:7000");
 
 const AdminChatListSection: React.FC = () => {
   const [conversations, setConversations] = useState<any>(
@@ -64,11 +63,12 @@ const AdminChatListSection: React.FC = () => {
   const [totalPages, setTotalPages] = useState<number>(1);
   const [searchTerm, setSearchTerm] = useState<string>("");
   const { currentAdmin } = useSelector((state: any) => state.admin);
-  const { setNotificationCount }: any = useSocket();
+  const { setNotificationCount, socket }: any = useSocket();
   const [properties, setProperties] = useState<PropertyDataType[]>([]);
   const [propertyFilter, setPropertyFilter] = useState<string>("");
   const [startDate, setStartDate] = useState<string>("");
   const [endDate, setEndDate] = useState<string>("");
+
 
   const fetchConversations = async () => {
     try {

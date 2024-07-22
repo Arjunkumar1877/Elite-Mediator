@@ -27,7 +27,8 @@ import ReactLoading from "react-loading";
 import { confirmAlert } from "react-confirm-alert";
 import AudioRecorder from "../../component/Admin/AudioRecorder";
 
-const socket = io("http://localhost:7000");
+const socket = io("https://elitemediator.shop");
+// const socket = io("http://localhost:7000");
 
 interface Message {
   _id?: string;

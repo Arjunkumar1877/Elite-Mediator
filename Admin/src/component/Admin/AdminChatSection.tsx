@@ -132,8 +132,6 @@ const AdminChatSection: React.FC = () => {
   const fileRef: any = useRef<HTMLInputElement>(null);
  
   
-
-
   const handleMessageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setMessageData({ ...messageData, text: e.target.value });
   };

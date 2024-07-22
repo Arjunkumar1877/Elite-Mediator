@@ -64,6 +64,12 @@ const SideNavBar: React.FC<SideNavBarProps> = ({ navShowSet }) => {
     fetchAdminData()
     if (currentAdmin && currentAdmin._id) {
       socket.emit("join room", currentAdmin._id);
+
+      socket.on("join room", (data)=>{
+        console.log(data);
+        console.log("socket connected 📀🔥💕💕💕💕")
+      })
+
       // socket.emit("notify", currentAdmin._id);
       if (location.pathname !== "/chat_list") {
         if (location.pathname !== "/admin_chat") {

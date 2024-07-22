@@ -8,10 +8,13 @@ function initializeSocket(server: HTTPServer): SocketIoServer {
 
   const io = new SocketIoServer(server, {
     cors: {
-      origin: "*",
+      origin: "https://elitemediator.shop", // Replace with your domain
       methods: ["GET", "POST"],
+      allowedHeaders: ["Authorization", "Content-Type"],
+      credentials: true,
     },
   });
+  
 
   io.on("connection", (socket) => {
     console.log("A user connected: " + socket.id);
