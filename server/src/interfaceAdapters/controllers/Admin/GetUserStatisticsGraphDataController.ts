@@ -6,7 +6,7 @@ export class GetUserStatisticsGraphDataController{
 
   async GetUserStatisticsGraphDataControl(req: Req, res: Res): Promise<void>{
    try {
-    const data = await this.iuserstatisticsgraphdatausecase.GetUserStatisticGraphData(req.params.adminId);
+    const data: any = await this.iuserstatisticsgraphdatausecase.GetUserStatisticGraphData(req.params.adminId);
     console.log(data);
 
     res.status(200).json(data)

@@ -16,9 +16,9 @@ class UpdateConversationReadCountToZeroUseCase {
     }
     UpdateConversationReadCount(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            var _a;
+            var _a, _b;
             const con = yield this.iadminrepository.FindConversationById(id);
-            if (((_a = con === null || con === void 0 ? void 0 : con.lastMessage) === null || _a === void 0 ? void 0 : _a.text) && con.lastMessage.time) {
+            if (((_a = con === null || con === void 0 ? void 0 : con.lastMessage) === null || _a === void 0 ? void 0 : _a.text) && ((_b = con === null || con === void 0 ? void 0 : con.lastMessage) === null || _b === void 0 ? void 0 : _b.time)) {
                 // Ensure the time is of type Date
                 const time = typeof con.lastMessage.time === 'string' ? new Date(con.lastMessage.time) : con.lastMessage.time;
                 const update = yield this.iadminrepository.UpdateLastMessageUnreadToZero(id, con.lastMessage.text, time, 0);
@@ -34,7 +34,7 @@ class UpdateConversationReadCountToZeroUseCase {
             }
             else {
                 // Handle the case where lastMessage or its properties are undefined
-                throw new Error('Conversation last message is missing text or time.');
+                console.log('Conversation last message is missing text or time.');
             }
         });
     }

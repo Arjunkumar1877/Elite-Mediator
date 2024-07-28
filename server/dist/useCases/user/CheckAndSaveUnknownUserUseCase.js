@@ -17,22 +17,22 @@ class CheckAndSaveUnknownUserUseCase {
     CheckAndSaveTheUnknownUser(user) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                // Ensure that macId and propId are provided
                 if (!(user === null || user === void 0 ? void 0 : user.macId) || !(user === null || user === void 0 ? void 0 : user.propId)) {
                     throw new Error("macId and propId are required fields.");
                 }
-                // Check if the user exists
                 const userExists = yield this.userRepository.FindUserByMacId(user.macId, user.propId);
                 if (userExists) {
                     console.log(userExists);
                     console.log("exsisting");
-                    return userExists; // Return existing user if found
+                    return userExists;
                 }
                 else {
-                    // Create a new user if not found
                     const saveData = yield this.userRepository.CreateNewUser(user);
                     console.log("not exsisting");
-                    return saveData;
+                    if (saveData) {
+                        const userData = this.userRepository.FindUserByIdPopulateAdminData(saveData._id);
+                        return userData;
+                    }
                 }
             }
             catch (error) {

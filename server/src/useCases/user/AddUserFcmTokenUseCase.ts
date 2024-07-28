@@ -6,7 +6,7 @@ export class AddUserFcmTokenUseCase implements IAddUserFcmTokenUseCase {
   constructor(private iuserrepository: IUserRepository) {}
 
   async AddUserFcmToken(userId: string, token: string): Promise<User> {
-    const exsistingData = await this.iuserrepository.FindUserFcmToken(
+    const exsistingData: any = await this.iuserrepository.FindUserFcmToken(
       token,
       userId
     );
@@ -14,11 +14,13 @@ export class AddUserFcmTokenUseCase implements IAddUserFcmTokenUseCase {
     if (exsistingData) {
       return exsistingData;
     } else {
-      const addedToken = await this.iuserrepository.FindUserAndAddFcmToken(
+      const addedToken: any = await this.iuserrepository.FindUserAndAddFcmToken(
         token,
         userId
       );
-      return addedToken;
+      console.log(addedToken)
+        const userData: any = await this.iuserrepository.FindUserByIdPopulateAdminData(userId);
+        return userData
     }
   }
 }

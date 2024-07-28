@@ -44,7 +44,7 @@ export class MongoUserRepository implements IUserRepository {
   }
 
   async FindByPhoneAndPropId(phone: number, propId: string): Promise<any> {
-    return await UserModel.findOne({ phone, propId });
+    return await UserModel.findOne({ phone, propId }).populate('adminId');
   }
 
   async FindByPhoneAndPropIdAndDelete(
@@ -94,8 +94,12 @@ export class MongoUserRepository implements IUserRepository {
     return await ConversationModel.findOne({ userId, adminId, propertyId });
   }
   
-  async FindUserByMacId(macId: string, propId: string): Promise<User | null> {
-   return await UserModel.findOne({macId: macId, propId: propId});   
+  async FindUserByMacId(macId: string, propId: string): Promise<any> {
+   return await UserModel.findOne({macId: macId, propId: propId}).populate('adminId');   
+  }
+
+  async FindUserByIdPopulateAdminData(userId: string): Promise<any> {
+    return await UserModel.findOne({_id: userId}).populate('adminId');   
   }
 
   async FindAndGetUserMessages(conId: string): Promise<any> {

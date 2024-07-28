@@ -7,7 +7,7 @@ export class GetAdminPropertDataForFilteringController{
  async GetAdminPropertyDataForFilteringControl(req: Req, res: Res): Promise<void>{
     try {
         console.log("propert data for filtering 📀📀💕💕🔥🔥🔥🔥🔥❤️❤️❤️❤️");
-        const data = await this.igetadminpropertydataforfilteringusecase.GetAdminPropertDataForFiltering(req.params.adminId);
+        const data: any = await this.igetadminpropertydataforfilteringusecase.GetAdminPropertDataForFiltering(req.params.adminId);
 
         res.json(data);
     } catch (error) {

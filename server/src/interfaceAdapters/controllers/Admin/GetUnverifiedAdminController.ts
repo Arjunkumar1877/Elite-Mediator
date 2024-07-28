@@ -6,8 +6,8 @@ export class GetUnverifiedAdminController {
 
   async getUnverifiedAdminController(req: Req, res: Res): Promise<void> {
     try {
-      const phone = parseInt(req.params.phone);
-      const data = await this.getunverifiedadminusecase.GetUnverifiedAdminData(
+      const phone: number = parseInt(req.params.phone);
+      const data: any = await this.getunverifiedadminusecase.GetUnverifiedAdminData(
         phone
       );
       if (data) {

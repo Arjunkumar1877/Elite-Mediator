@@ -23,6 +23,8 @@ class SendAndCreateUserMessageUseCase {
             if (userData && userData.deleted === true) {
                 const updateConversation = yield this.iuserRepository.FindConversationAndUpdateDeleted(userData === null || userData === void 0 ? void 0 : userData.conversationId);
                 const updateUser = yield this.iuserRepository.FindUserAndUpdateDeletedUser(message.senderId);
+                console.log(updateConversation);
+                console.log(updateUser);
             }
             const newMessage = yield this.iuserRepository.CreateUserNewMessageToDb(message);
             return newMessage;

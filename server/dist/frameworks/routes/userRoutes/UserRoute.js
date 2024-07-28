@@ -16,11 +16,11 @@ const MessageModel_1 = require("../../../frameworks/database/models/admin/Messag
 const GetMacAddress_1 = require("../../services/GetMacAddress/GetMacAddress");
 const router = (0, express_1.Router)();
 // -------------------------------------| SAVE NEW USER DATA INTO THE DATABASE --------------------------------------------------------------------|
-router.post("/create_user", UserInjects_1.InjectedCreateNewUserDataController.UserCreateControl.bind(UserInjects_1.InjectedCreateNewUserDataController));
+router.post("/create_verified_user", UserInjects_1.InjectedCheckAndSaveVerifiedUsersController.CheckAndSaveVerifiedUserControl.bind(UserInjects_1.InjectedCheckAndSaveVerifiedUsersController));
 // -------------------------------------| GET THE MAC ADDRESS OF THE DEVICE THE USER IS IN --------------------------------------------------------------------|
 router.get("/getmac_address", GetMacAddress_1.getMacAddressFromDevice.findMacAddress);
 // -------------------------------------| SAVE NEW UNVERIFIED USER DATA INTO THE DATABASE --------------------------------------------------------------------|
-router.post("/create_unverified_user", UserInjects_1.InjectedCreateNewUserDataController.SaveUnverifiedUsderControl.bind(UserInjects_1.InjectedCreateNewUserDataController));
+router.post("/create_unverified_user", UserInjects_1.InjectedCheckAndSaveUnVerifiedUsersController.CheckAndSaveUnverifiedUserControl.bind(UserInjects_1.InjectedCheckAndSaveUnVerifiedUsersController));
 // // -------------------------------------| SAVE NEW UNVERIFIED USER DATA INTO THE DATABASE --------------------------------------------------------------------|
 router.post("/create_unknown_user_data", UserInjects_1.InjectedChekAndSaveUnknwnUserController.CheckAndSaveUnknownUserControl.bind(UserInjects_1.InjectedChekAndSaveUnknwnUserController));
 // -------------------------------------| VERIFY THE USER DATA USING FIREBASE CODE IN THE CLIENT SIDE AND UPDATE --------------------------------------------------------------------|

@@ -440,7 +440,7 @@ const UserChatPage: React.FC = () => {
         <div className="flex justify-between items-center px-5 py-3 border-b-2">
           <div className="flex gap-5 items-center">
             <img
-              src="/public/userIcon.webp"
+              src={currentUser.adminId.image || "https://cdn-icons-png.flaticon.com/512/9385/9385289.png"}
               className="w-10 h-10 rounded-full"
               alt="User"
             />
@@ -484,7 +484,7 @@ const UserChatPage: React.FC = () => {
                 >
                   {message.senderModel !== "User" && (
                     <img
-                      src="/public/userIcon.webp"
+                      src={message.senderModel === 'User' ? 'https://cdn-icons-png.flaticon.com/512/9385/9385289.png' : currentUser?.adminId?.image}
                       alt="User"
                       className="w-10 h-10 rounded-full"
                     />

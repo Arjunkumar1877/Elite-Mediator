@@ -22,7 +22,9 @@ class AddUserFcmTokenUseCase {
             }
             else {
                 const addedToken = yield this.iuserrepository.FindUserAndAddFcmToken(token, userId);
-                return addedToken;
+                console.log(addedToken);
+                const userData = yield this.iuserrepository.FindUserByIdPopulateAdminData(userId);
+                return userData;
             }
         });
     }

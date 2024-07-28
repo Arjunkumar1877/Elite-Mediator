@@ -9,20 +9,26 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.SaveNewUserDataUseCase = void 0;
-class SaveNewUserDataUseCase {
+exports.CheckAndSaveVerifiedUseUseCase = void 0;
+class CheckAndSaveVerifiedUseUseCase {
     constructor(iuserrepository) {
         this.iuserrepository = iuserrepository;
     }
     ;
-    SaveNewUser(user) {
+    CheckAndSaveVerifiedUser(user) {
         return __awaiter(this, void 0, void 0, function* () {
-            const newUser = this.iuserrepository.CreateNewUser(user);
-            if (newUser) {
-                const userData = this.iuserrepository.FindUserByIdPopulateAdminData(newUser._id);
-                return userData;
+            const existingUser = yield this.iuserrepository.FindByPhoneAndPropId(user.phone, user.propId);
+            if (existingUser) {
+                return existingUser;
+            }
+            else {
+                const userCreated = yield this.iuserrepository.CreateNewUser(user);
+                if (userCreated) {
+                    const userData = yield this.iuserrepository.FindUserByIdPopulateAdminData(userCreated._id);
+                    return userData;
+                }
             }
         });
     }
 }
-exports.SaveNewUserDataUseCase = SaveNewUserDataUseCase;
+exports.CheckAndSaveVerifiedUseUseCase = CheckAndSaveVerifiedUseUseCase;

@@ -6,14 +6,15 @@ export class CheckExisitingUserUseCase implements ICheckExisitingUserUseCase {
     constructor(private iuserrepository: IUserRepository) {}
   
     async CheckExisitingUser(phone: number, propId: string, adminId: string): Promise<string | User> {
-      const user = await this.iuserrepository.FindByPhoneAndPropId(phone, propId)
+      const user: any = await this.iuserrepository.FindByPhoneAndPropId(phone, propId)
   
       if (user) {
        if(user.verified){
         return user;
     
        }else{
-        const userdeleted = await this.iuserrepository.FindByPhoneAndPropIdAndDelete(phone, propId);
+        const userdeleted: any = await this.iuserrepository.FindByPhoneAndPropIdAndDelete(phone, propId);
+        console.log(userdeleted)
         return "user not verified"
        }        
         

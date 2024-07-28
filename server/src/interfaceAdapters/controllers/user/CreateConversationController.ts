@@ -12,8 +12,10 @@ export class  CreateConversationController{
    try {
     const { userId, adminId, propertyId} = req.body;
 
-    const conversationData = await this.icreateconversationusecase.CreateConvesationUseCase(userId, adminId, propertyId);
-    const userData = await this.igetuserdatabyid.GetTheUserDataById(userId)
+    const conversationData: any = await this.icreateconversationusecase.CreateConvesationUseCase(userId, adminId, propertyId);
+    const userData: any = await this.igetuserdatabyid.GetTheUserDataById(userId);
+
+    console.log(userData)
     // const userData = await 
 
     res.json({conversation: conversationData, user: userData});

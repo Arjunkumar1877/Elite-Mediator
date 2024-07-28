@@ -6,7 +6,7 @@ import { Req, Res } from '../../../frameworks/types/ServerTypes';
 
     async AddUserFcmTokenControl(req: Req, res: Res): Promise<void>{
 try {
-    const data = await this.iadduserfcmtokenusecase.AddUserFcmToken(req.body.userId, req.body.token);
+    const data: any = await this.iadduserfcmtokenusecase.AddUserFcmToken(req.body.userId, req.body.token);
 
     res.json(data);
     

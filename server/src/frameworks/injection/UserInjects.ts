@@ -1,5 +1,7 @@
 import { AddUserFcmTokenController } from "../../interfaceAdapters/controllers/user/AddUserFcmTokenController";
 import { CheckAndSaveUnknownUserController } from "../../interfaceAdapters/controllers/user/CheckAndSaveUnknownUserController";
+import { CheckAndSaveUnverifiedUserController } from "../../interfaceAdapters/controllers/user/CheckAndSaveUnverifiedUserController";
+import { CheckAndSaveVerifiedUserController } from "../../interfaceAdapters/controllers/user/CheckAndSaveVerifiedUserController";
 import { CreateConversationController } from "../../interfaceAdapters/controllers/user/CreateConversationController";
 import { CreateUserController } from "../../interfaceAdapters/controllers/user/CreateUserController";
 import { GetAdminsPropertyDataController } from "../../interfaceAdapters/controllers/user/GetAdminsPropertyDataController";
@@ -12,6 +14,8 @@ import { VerifyAndUpdateUserController } from "../../interfaceAdapters/controlle
 import { MongoUserRepository } from "../../interfaceAdapters/repositories/user/UserRepository";
 import { AddUserFcmTokenUseCase } from "../../useCases/user/AddUserFcmTokenUseCase";
 import { CheckAndSaveUnknownUserUseCase } from "../../useCases/user/CheckAndSaveUnknownUserUseCase";
+import { CheckAndSaveUnverifiedUserUsecase } from "../../useCases/user/CheckAndSaveUnverifiedUserUsecase";
+import { CheckAndSaveVerifiedUseUseCase } from "../../useCases/user/CheckAndSaveVerifiedUserUseCase";
 import { CheckExisitingUserUseCase } from "../../useCases/user/CheckExisitingUserUseCase";
 import { CreateConversationUseCase } from "../../useCases/user/CreateConversationUseCase";
 import { GetAdminsPropertDataUseCase } from "../../useCases/user/GetAdminsPropertDataUseCase";
@@ -32,6 +36,16 @@ const mongoRepo = new MongoUserRepository();
 const saveUserUse = new SaveNewUserDataUseCase(mongoRepo);
 const checkUserDataUse = new CheckExisitingUserUseCase(mongoRepo);
 export const InjectedCreateNewUserDataController = new CreateUserController(saveUserUse, checkUserDataUse);
+
+
+// -----------------------------| CHECK AND SAVE VERIFIED USER DATA INJECTION ----------------------------------------------------------------------------------------
+const checkAndSaveVerifiedUserDataUse = new CheckAndSaveVerifiedUseUseCase(mongoRepo);
+export const InjectedCheckAndSaveVerifiedUsersController = new CheckAndSaveVerifiedUserController(checkAndSaveVerifiedUserDataUse);
+
+
+// -----------------------------| CHECK AND SAVE UNVERIFIED USER DATA INJECTION ----------------------------------------------------------------------------------------
+const checkAndSaveUnVerifiedUserDataUse = new CheckAndSaveUnverifiedUserUsecase(mongoRepo);
+export const InjectedCheckAndSaveUnVerifiedUsersController = new CheckAndSaveUnverifiedUserController(checkAndSaveUnVerifiedUserDataUse);
 
 
 // -----------------------------| NEW USER LOGIN AND SAVE DATA INJECTION ----------------------------------------------------------------------------------------

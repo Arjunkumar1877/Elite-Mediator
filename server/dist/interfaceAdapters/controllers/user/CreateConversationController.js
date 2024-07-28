@@ -22,6 +22,7 @@ class CreateConversationController {
                 const { userId, adminId, propertyId } = req.body;
                 const conversationData = yield this.icreateconversationusecase.CreateConvesationUseCase(userId, adminId, propertyId);
                 const userData = yield this.igetuserdatabyid.GetTheUserDataById(userId);
+                console.log(userData);
                 // const userData = await 
                 res.json({ conversation: conversationData, user: userData });
             }

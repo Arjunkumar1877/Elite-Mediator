@@ -1,10 +1,6 @@
 import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema({
-    userId: {
-        type: String,
-        unique: true
-    },
     adminId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Admin',

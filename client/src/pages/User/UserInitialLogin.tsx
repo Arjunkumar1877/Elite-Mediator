@@ -13,7 +13,6 @@ import { v4 as uuidv4 } from 'uuid';
 
 type UserType = {
   _id?: string;
-  userId: string;
   adminId: string;
   propId: string;
   username: string;
@@ -52,7 +51,6 @@ const InitialDataPage = () => {
   const adminIdQ = query.get("adminId");
   const propIdQ = query.get("propId");
   const [formData, setFormData] = useState<UserType>({
-    userId: "12345678",
     adminId: adminIdQ || "",
     propId: propertyData?._id || "",
     username: "",
@@ -73,20 +71,19 @@ const InitialDataPage = () => {
   };
 
  
-console.log(formData);
-console.log(propertyData)
+// console.log(formData);
+// console.log(propertyData)
 const phonenum:number = 0;
    
  const loginUnknown = async (propertyId:string) => {
   try {
-      const userIdS = `${Date.now()}000000`; 
+
       const res = await fetch("/user/create_unknown_user_data", {
           method: "POST",
           headers: {
               "Content-Type": "application/json",
           },
           body: JSON.stringify({
-              userId: userIdS,
               adminId: adminIdQ,
               propId: propertyId,
               username: "Unknown",
@@ -114,29 +111,29 @@ const phonenum:number = 0;
                       navigate(`/chat_user?conId=${response.data.user.conversationId}`);
                   }
               } catch (error) {
-                  console.error("Error starting conversation:", error);
+                  // console.error("Error starting conversation:", error);
               }
           }
       } else {
           throw new Error("Failed to create unknown user");
       }
   } catch (error) {
-      console.error("Error creating unknown user:", error);
+      // console.error("Error creating unknown user:", error);
       toast.error("Failed to create unknown user. Please try again.");
   }
 };
 
 
-  console.log(macAddress)
+  // console.log(macAddress)
 
   useEffect(() => {
   
   const macID = getOrSetUUID();
-  console.log('MAC ID:', macID);
+  // console.log('MAC ID:', macID);
   if(macID){
     setMacAddress(macID)
   }
-  console.log(macID);
+  // console.log(macID);
     const fetchData = async () => {
       try {
         const resp = await fetch("/user/get_admins_property_data", {
@@ -166,7 +163,7 @@ const phonenum:number = 0;
           throw new Error("Failed to fetch property data");
         }
       } catch (error) {
-        console.error("Error fetching property data:", error);
+        // console.error("Error fetching property data:", error);
         toast.error("Failed to fetch property data. Please try again.");
       }
     };
@@ -200,7 +197,10 @@ const phonenum:number = 0;
       return toast.error("Please fill out all fields.");
     }
 
+  
+
     if (propertyData?.userType === "Unverified") {
+      console.log("unverified user clicked 🔥🔥🔥🔥");
   
       const res = await fetch("/user/create_unverified_user", {
         method: "POST",
@@ -220,7 +220,7 @@ const phonenum:number = 0;
         try {
           const response = await axios.post("/user/start_conversation", {
             userId: createdUnverifieduserData._id,
-            adminId: createdUnverifieduserData.adminId,
+            adminId: createdUnverifieduserData.adminId._id,
             propertyId: propertyData?._id,
           });
 
@@ -228,9 +228,10 @@ const phonenum:number = 0;
             toast("successful!");
             dispatch(signInSuccess(response.data.user));
             navigate(`/chat_user?conId=${response.data.user.conversationId}`);
+            console.log(response.data.user);
           }
         } catch (error) {
-          console.error("Error starting conversation:", error);
+          // console.error("Error starting conversation:", error);
         }
       }
     } else if (propertyData?.userType === "Verified") {
@@ -242,7 +243,7 @@ const phonenum:number = 0;
     try {
 
 
-      const res = await fetch("/user/create_user", {
+      const res = await fetch("/user/create_verified_user", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -254,15 +255,14 @@ const phonenum:number = 0;
         throw new Error("Network response was not ok");
       }
 
-      const data = await res.json();
-
-      if (data.message === "User already exists") {
-        navigate(`/user_verify_otp_page/${data.data._id}`);
-      } else {
-        navigate(`/user_verify_otp_page/${data.data._id}`);
-      }
+      const data: any = await res.json();
+        // console.log(data)
+        console.log(data)
+      if (data._id) {
+        navigate(`/user_verify_otp_page/${data._id}`);
+      } 
     } catch (error) {
-      console.error(error);
+      // console.error(error);
       toast.error("Something went wrong. Please try again.");
     }
   };
@@ -288,17 +288,17 @@ const phonenum:number = 0;
         setFormData(updatedFormData);
         createUserData(updatedFormData);
       } else {
-        console.log("Error confirming the captcha.");
+        // console.log("Error confirming the captcha.");
       }
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       toast.error("Failed to send OTP. Please try again.");
     }
   };
 
 
-// console.log(formData);
-// console.log(propertyData)
+console.log(formData);
+console.log(propertyData)
 
 
   return (

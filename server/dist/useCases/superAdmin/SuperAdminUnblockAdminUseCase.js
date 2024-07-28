@@ -9,20 +9,17 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.SaveNewUserDataUseCase = void 0;
-class SaveNewUserDataUseCase {
-    constructor(iuserrepository) {
-        this.iuserrepository = iuserrepository;
+exports.SuperAdminUnblockAdminUseCase = void 0;
+class SuperAdminUnblockAdminUseCase {
+    constructor(isuperadminrepository) {
+        this.isuperadminrepository = isuperadminrepository;
     }
     ;
-    SaveNewUser(user) {
+    UnblockAnAdmin(adminId) {
         return __awaiter(this, void 0, void 0, function* () {
-            const newUser = this.iuserrepository.CreateNewUser(user);
-            if (newUser) {
-                const userData = this.iuserrepository.FindUserByIdPopulateAdminData(newUser._id);
-                return userData;
-            }
+            const data = yield this.isuperadminrepository.FindByIdAndUnblockAnAdmin(adminId);
+            return data;
         });
     }
 }
-exports.SaveNewUserDataUseCase = SaveNewUserDataUseCase;
+exports.SuperAdminUnblockAdminUseCase = SuperAdminUnblockAdminUseCase;

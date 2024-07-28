@@ -13,8 +13,8 @@ import { GetAnAdminsVisitorsForSuperAdminUseCase } from "../../useCases/superAdm
 import { SuperAdminAddNewPosterUseCase } from "../../useCases/superAdmin/SuperAdminAddNewPosterUseCase";
 import { SuperAdminLoginUseCase } from "../../useCases/superAdmin/SuperAdminLoginUsecase";
 import { SuperAdmnGetPostersUseCase } from "../../useCases/superAdmin/SuperAdmnGetPostersUseCase";
-import { SuperAdminBlockAdminUseCase } from "../../useCases/user/SuperAdminBlockAdminUseCase";
-import { SuperAdminUnblockAdminUseCase } from "../../useCases/user/SuperAdminUnblockAdminUseCase";
+import { SuperAdminBlockAdminUseCase } from "../../useCases/superAdmin/SuperAdminBlockAdminUseCase";
+import { SuperAdminUnblockAdminUseCase } from "../../useCases/superAdmin/SuperAdminUnblockAdminUseCase";
 
 
 

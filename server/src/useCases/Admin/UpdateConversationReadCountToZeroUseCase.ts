@@ -7,16 +7,16 @@ export class UpdateConversationReadCountToZeroUseCase implements IUpdateConversa
     async UpdateConversationReadCount(id: string): Promise<any> {
         const con = await this.iadminrepository.FindConversationById(id);
         
-        if (con?.lastMessage?.text && con.lastMessage.time) {
+        if (con?.lastMessage?.text && con?.lastMessage?.time) {
             // Ensure the time is of type Date
-            const time = typeof con.lastMessage.time === 'string' ? new Date(con.lastMessage.time) : con.lastMessage.time;
+            const time: any = typeof con.lastMessage.time === 'string' ? new Date(con.lastMessage.time) : con.lastMessage.time;
             
-            const update = await this.iadminrepository.UpdateLastMessageUnreadToZero(id, con.lastMessage.text, time, 0);
+            const update: any = await this.iadminrepository.UpdateLastMessageUnreadToZero(id, con.lastMessage.text, time, 0);
             
             if (update) {
 
               console.log(update)
-                const conversations = await this.iadminrepository.FindAdminsConversationsByAdminId(update.adminId);
+                const conversations: any = await this.iadminrepository.FindAdminsConversationsByAdminId(update.adminId);
                 return conversations;
             } else {
                 // Handle the case where the update fails
@@ -24,7 +24,7 @@ export class UpdateConversationReadCountToZeroUseCase implements IUpdateConversa
             }
         } else {
             // Handle the case where lastMessage or its properties are undefined
-            throw new Error('Conversation last message is missing text or time.');
+           console.log('Conversation last message is missing text or time.');
         }
     }
 }

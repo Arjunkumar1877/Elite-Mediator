@@ -6,7 +6,7 @@ export class GetUserMessagesUseCase implements IGetUserMessagesUseCase{
     constructor(private iuserrepository: IUserRepository){};
  async GetUserMessagesUse(adminId: string): Promise<any> {
     try {
-        const getMessages = await this.iuserrepository.FindAndGetUserMessages(adminId);
+        const getMessages: any = await this.iuserrepository.FindAndGetUserMessages(adminId);
         return getMessages;
     } catch (error) {
         return error;

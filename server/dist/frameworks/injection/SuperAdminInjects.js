@@ -16,8 +16,8 @@ const GetAnAdminsVisitorsForSuperAdminUseCase_1 = require("../../useCases/superA
 const SuperAdminAddNewPosterUseCase_1 = require("../../useCases/superAdmin/SuperAdminAddNewPosterUseCase");
 const SuperAdminLoginUsecase_1 = require("../../useCases/superAdmin/SuperAdminLoginUsecase");
 const SuperAdmnGetPostersUseCase_1 = require("../../useCases/superAdmin/SuperAdmnGetPostersUseCase");
-const SuperAdminBlockAdminUseCase_1 = require("../../useCases/user/SuperAdminBlockAdminUseCase");
-const SuperAdminUnblockAdminUseCase_1 = require("../../useCases/user/SuperAdminUnblockAdminUseCase");
+const SuperAdminBlockAdminUseCase_1 = require("../../useCases/superAdmin/SuperAdminBlockAdminUseCase");
+const SuperAdminUnblockAdminUseCase_1 = require("../../useCases/superAdmin/SuperAdminUnblockAdminUseCase");
 const mongoRepo = new SuperAdminRepository_1.MongoSuperAdminRepository();
 // -----------------------------| SUPER ADMIN LOGIN  ----------------------------------------------------------------------------------------
 const loginSuperAdminUse = new SuperAdminLoginUsecase_1.SuperAdminLoginUseCase(mongoRepo);

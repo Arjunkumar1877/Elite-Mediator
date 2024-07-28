@@ -16,8 +16,8 @@ function initializeSocket(server) {
     console.log("Initializing socket");
     const io = new socket_io_1.Server(server, {
         cors: {
-            // origin: "https://elitemediator.shop", // Replace with your domain
-            origin: "*",
+            origin: "https://elitemediator.shop", // Replace with your domain
+            // origin: "*",
             methods: ["GET", "POST"],
             allowedHeaders: ["Authorization", "Content-Type"],
             credentials: true,

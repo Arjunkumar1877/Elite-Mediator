@@ -8,7 +8,7 @@ export class GetUserDataByPhoneController{
 
       async GetUserDataByPhone(req: Req, res: Res): Promise<void>{
       try {
-        const data = await this.igetuserdatabyphone.FindUserDataByPhone(req.body.phone);
+        const data: any = await this.igetuserdatabyphone.FindUserDataByPhone(req.body.phone);
         res.json(data);
         
       } catch (error:any) {

@@ -8,8 +8,7 @@ export class GetAdminsPropertyDataController{
     async GetAdminsPropertyDataControl(req: Req, res: Res): Promise<void>{
        try {
          const data = await this.igetadminspropertydatausecase.GetAdminsPropertDataUseCase(req.body.propId, req.body.adminId);
-
-         res.json(data)
+         res.json(data);
        } catch (error) {
         console.log(error)
        }

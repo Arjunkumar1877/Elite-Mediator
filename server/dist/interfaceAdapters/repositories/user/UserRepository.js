@@ -50,7 +50,7 @@ class MongoUserRepository {
     }
     FindByPhoneAndPropId(phone, propId) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield User_1.UserModel.findOne({ phone, propId });
+            return yield User_1.UserModel.findOne({ phone, propId }).populate('adminId');
         });
     }
     FindByPhoneAndPropIdAndDelete(phone, propId) {
@@ -91,7 +91,12 @@ class MongoUserRepository {
     }
     FindUserByMacId(macId, propId) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield User_1.UserModel.findOne({ macId: macId, propId: propId });
+            return yield User_1.UserModel.findOne({ macId: macId, propId: propId }).populate('adminId');
+        });
+    }
+    FindUserByIdPopulateAdminData(userId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield User_1.UserModel.findOne({ _id: userId }).populate('adminId');
         });
     }
     FindAndGetUserMessages(conId) {

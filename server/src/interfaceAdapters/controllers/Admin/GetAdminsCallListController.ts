@@ -6,7 +6,7 @@ export class GetAdminsCallListController{
 
    async GetAdminsCallListControl(req: Req, res: Res): Promise<void> {
     try {
-        const data = await this.igetAdmincalllistusecase.GetAdminsCallList(req.params.adminId, req.params.page);
+        const data: any = await this.igetAdmincalllistusecase.GetAdminsCallList(req.params.adminId, req.params.page);
         
         res.json(data);
     } catch (error) {

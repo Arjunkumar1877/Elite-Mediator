@@ -53,7 +53,7 @@ type ConversationDataType = {
   userId: UserDataType;
 };
 
-// const socket = io("http://localhost:7000");
+
 
 const AdminChatListSection: React.FC = () => {
   const [conversations, setConversations] = useState<any>(

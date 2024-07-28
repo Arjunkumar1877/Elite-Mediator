@@ -516,7 +516,7 @@ if (loading) {
               <MdArrowBackIosNew className="text-xl cursor-pointer" />
             </Link>
             <img
-              src="/public/userIcon.webp"
+              src="https://cdn-icons-png.flaticon.com/512/9385/9385289.png"
               className="w-10 h-10 rounded-full"
               alt="User"
             />
@@ -587,7 +587,7 @@ if (loading) {
               >
                 {message.senderModel !== "Admin" && (
                   <img
-                    src="/public/userIcon.webp"
+                    src={message.senderModel !== "User" ? currentAdmin?.image : "https://cdn-icons-png.flaticon.com/512/9385/9385289.png"}
                     alt="User"
                     className="w-10 h-10 rounded-full"
                   />

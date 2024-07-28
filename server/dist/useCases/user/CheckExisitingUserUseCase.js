@@ -23,6 +23,7 @@ class CheckExisitingUserUseCase {
                 }
                 else {
                     const userdeleted = yield this.iuserrepository.FindByPhoneAndPropIdAndDelete(phone, propId);
+                    console.log(userdeleted);
                     return "user not verified";
                 }
             }

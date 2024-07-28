@@ -7,23 +7,25 @@ export class CheckAndSaveUnknownUserUseCase implements ICheckAndSaveUnknownUserU
 
     async CheckAndSaveTheUnknownUser(user: User): Promise<any> {
         try {
-            // Ensure that macId and propId are provided
+           
             if (!user?.macId || !user?.propId) {
                 throw new Error("macId and propId are required fields.");
             }
 
-            // Check if the user exists
-            const userExists = await this.userRepository.FindUserByMacId(user.macId, user.propId);
+         
+            const userExists: any = await this.userRepository.FindUserByMacId(user.macId, user.propId);
 
             if (userExists) {
                 console.log(userExists);
                 console.log("exsisting")
-                return userExists; // Return existing user if found
+                return userExists; 
             } else {
-                // Create a new user if not found
-                const saveData = await this.userRepository.CreateNewUser(user);
+                const saveData: any = await this.userRepository.CreateNewUser(user);
                 console.log("not exsisting")
-                return saveData;
+                if(saveData){
+                    const userData: any = this.userRepository.FindUserByIdPopulateAdminData(saveData._id);
+                    return userData;
+                }
                 
             }
         } catch (error) {

@@ -6,7 +6,7 @@ export class  DeleteUserDataAndConversationController {
 
     async DeleteUserDataConversatiionControl(req: Req, res: Res): Promise<void>{
       try {
-        const data = await this.ideleteuserdatausecase.DeleteUserDataAndConversation(req.params.userId);
+        const data: any = await this.ideleteuserdatausecase.DeleteUserDataAndConversation(req.params.userId);
 
         res.status(200).json(data);
       } catch (error) {

@@ -8,7 +8,7 @@ export class ClearAdminChatMessagesController{
   async clearAllAdminMessagesControl(req: Req, res: Res): Promise<void>{
     try {
         const { conId } = req.params;
-        const result = await this.iclearadminchatmessages.ClearAdminChatMessages(conId)
+        const result: any = await this.iclearadminchatmessages.ClearAdminChatMessages(conId)
         res.status(200).json({
             success: true,
             message: `Messages with conversation ID ${conId} have been marked as deleted.`,
