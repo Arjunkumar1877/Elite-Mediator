@@ -1,4 +1,3 @@
-
 name: CI/CD Pipeline
 
 on:
@@ -28,16 +27,21 @@ jobs:
         echo "Checking SSH connection..."
         ssh -o StrictHostKeyChecking=no -i private_key.pem $EC2_USER@$EC2_HOST 'echo "SSH connection successful"'
         
-        # Pull latest code
-        echo "Pulling latest code..."
+        # Pull latest code and install dependencies
+        echo "Pulling latest code and installing dependencies..."
         ssh -o StrictHostKeyChecking=no -i private_key.pem $EC2_USER@$EC2_HOST "
           cd /var/www/Elite-Mediator
-          git pull origin main
+          sudo git pull origin main
+          
+          cd /var/www/Elite-Mediator/client
+          sudo npm install
+          
+          cd /var/www/Elite-Mediator/server
+          sudo npm install
+          
           sudo pm2 restart all
           sudo systemctl reload nginx
         "
 
         echo "Deployment finished."
         rm -f private_key.pem
-
-
