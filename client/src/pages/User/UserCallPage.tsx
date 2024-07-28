@@ -19,26 +19,26 @@ const UserCallPage = () => {
   const query = new URLSearchParams(location.search);
   const conId = query.get("conId");
   const incommingId = query.get("incommingId");
-  const callerId = query.get("callerId");
+  const callerId: string | null = query.get("callerId");
+  const IsvideoCall: string  | null = query.get('videoCall');
+  const videoCall: boolean = IsvideoCall === 'true' ? true : false; 
+
   const {
-    socket,
-    localVideoRef,
-    remoteVideoRef,
-    isVideoCall,
-    setIsVideoCall,
+    socket
   }: any = useSocket();
   const [isMuted, setIsMuted] = useState<boolean>(false);
   const [seconds, setSeconds] = useState<number>(0);
   const [callConnected, setCallConnected] = useState<boolean>(false);
   const [callConnecting, setCallConnecting] = useState<boolean>(true);
-
+  const localVideoRef: any = useRef<HTMLVideoElement>(null);
+  const remoteVideoRef: any= useRef<HTMLVideoElement>(null);
+  let pc = useRef<RTCPeerConnection | null>(null);
 
 
   useEffect(() => {
     const timer = setInterval(() => {
       setSeconds(prevSeconds => prevSeconds + 1);
     }, 1000);
-  
     return () => clearInterval(timer); 
   }, []);
   
@@ -51,8 +51,7 @@ const UserCallPage = () => {
   };
 
 
-console.log(localVideoRef);
-console.log(remoteVideoRef);
+
   const toggleMute = () => {
     console.log("localVideoRef.current:", localVideoRef.current);
     
@@ -79,29 +78,31 @@ console.log(remoteVideoRef);
     }
   };
 
-  const pc = useRef<RTCPeerConnection>(
-    new RTCPeerConnection({
-      iceServers: [{ urls: "stun:stun.l.google.com:19302" }],
-    })
-  );
+  
 
   useEffect(() => {
+
+    if (!pc.current) {
+      pc.current = new RTCPeerConnection({
+        iceServers: [{ urls: "stun:stun.l.google.com:19302" }],
+      });
+    } 
     socket.emit("join room", conId);
 
     const createOffer = async () => {
       try {
-        const constraints = { audio: true, video: isVideoCall };
+        const constraints = { audio: true, video: videoCall  };
         const stream = await navigator.mediaDevices.getUserMedia(constraints);
-        stream.getTracks().forEach((track) => pc.current.addTrack(track, stream));
+        stream.getTracks().forEach((track) => pc?.current?.addTrack(track, stream));
 
         if (localVideoRef.current) {
           localVideoRef.current.srcObject = stream;
           console.log('Stream assigned to localVideoRef');
         }
 
-        const offer = await pc.current.createOffer();
-        await pc.current.setLocalDescription(offer);
-        socket.emit("webrtc-offer", { incommingId: currentUser.username, room: conId, isVideo: isVideoCall, offer, callerId: callerId });
+        const offer = await pc?.current?.createOffer();
+        await pc?.current?.setLocalDescription(offer);
+        socket.emit("webrtc-offer", { incommingId: currentUser.username, room: conId, isVideo: videoCall, offer, callerId: callerId });
       } catch (error) {
         console.error("Error creating offer:", error);
       }
@@ -122,11 +123,11 @@ console.log(remoteVideoRef);
               label: 'Yes',
               onClick: async () => {
                 try {
-                  setIsVideoCall(offer.isVideo);
+                  // setIsVideoCall(offer.isVideo);
                   updateCallAnswering(offer.callerId);
                   const constraints = { audio: true, video: offer.isVideo };
                   const stream = await navigator.mediaDevices.getUserMedia(constraints);
-                  stream.getTracks().forEach((track) => pc.current.addTrack(track, stream));
+                  stream.getTracks().forEach((track) => pc?.current?.addTrack(track, stream));
     
                    if (localVideoRef.current) {
                     localVideoRef.current.srcObject = stream;
@@ -135,9 +136,9 @@ console.log(remoteVideoRef);
 
                   console.log(localVideoRef)
     
-                  await pc.current.setRemoteDescription(new RTCSessionDescription(offer.offer));
-                  const answer = await pc.current.createAnswer();
-                  await pc.current.setLocalDescription(answer);
+                  await pc?.current?.setRemoteDescription(new RTCSessionDescription(offer.offer));
+                  const answer = await pc?.current?.createAnswer();
+                  await pc?.current?.setLocalDescription(answer);
                   socket.emit("webrtc-answer", { room: conId, answer, incommingId: currentUser.username, callerId: offer.callerId });
                 } catch (error) {
                   console.error('Error handling offer acceptance:', error);
@@ -165,21 +166,23 @@ console.log(remoteVideoRef);
     const handleAnswer = async (data: any) => {
       const { incommingId, answer } = data;
       if (currentUser.username !== incommingId) {
-        if (pc.current.signalingState === "have-local-offer") {
+        if (pc?.current?.signalingState === "have-local-offer") {
           try {
-            await pc.current.setRemoteDescription(new RTCSessionDescription(answer));
+            await pc?.current?.setRemoteDescription(new RTCSessionDescription(answer));
           } catch (error) {
             console.error("Error setting remote description:", error);
           }
         } else {
-          console.warn("Signaling state is not 'have-local-offer'. Current state: ", pc.current.signalingState);
+          console.warn("Signaling state is not 'have-local-offer'. Current state: ", pc?.current?.signalingState);
         }
       }
     };
 
     const handleIceCandidate = async (candidate: any) => {
       try {
-        await pc.current.addIceCandidate(new RTCIceCandidate(candidate));
+        await pc?.current?.addIceCandidate(new RTCIceCandidate(candidate));
+        console.log(localVideoRef);
+console.log(remoteVideoRef);
       } catch (error) {
         console.error("Error adding received ice candidate", error);
       }
@@ -225,7 +228,6 @@ console.log(remoteVideoRef);
       if (event.streams && event.streams.length > 0) {
         setCallConnecting(false);
         setCallConnected(true)
-
         remoteVideoRef.current.srcObject = event.streams[0];
       }
     };
@@ -236,7 +238,7 @@ console.log(remoteVideoRef);
       socket.off("webrtc-ice-candidate", handleIceCandidate);
       socket.off("webrtc-disconnect", handleDisconnect);
     };
-  }, [conId, currentUser.username, isVideoCall, socket]);
+  }, [conId, currentUser.username, videoCall]);
 
   const updateCallCancelling = async (callerId: any) => {
     try {
@@ -330,10 +332,15 @@ console.log(remoteVideoRef);
       <div className="flex flex-col gap-y-16 p-9">
         <div className="flex flex-col gap-5 mb-10">
           <div className="flex justify-center">
-            <h3 className="text-2xl font-bold">Connected</h3>
+            {
+                callConnecting && callConnecting ?   <h3 className="text-2xl font-bold">Calling....</h3> :  <h3 className="text-2xl font-bold">Connected</h3>
+
+
+
+            }
           </div>
           <div className="flex justify-center">
-            {isVideoCall ? (
+            {videoCall ? (
               <div className="flex flex-col justify-center items-center relative">
                 <video
                   ref={localVideoRef}
@@ -348,11 +355,25 @@ console.log(remoteVideoRef);
                 ></video>
               </div>
             ) : (
+              <div className="flex flex-col justify-center items-center">
               <div className={`w-52 h-52 rounded-full flex justify-center items-center ${callConnected && ' bg-green-300'}`}>
-                <div className="w-48 h-48 bg-sky-500 rounded-full flex justify-center items-center">
-                  <FaUserAlt className="text-white text-9xl p-2" />
-                </div>
+              <div className="w-48 h-48 bg-sky-500 rounded-full flex justify-center items-center">
+                <FaUserAlt className="text-white text-9xl p-2" />
               </div>
+           
+            </div>
+            <div className="w-[50px] h-[50px]" >
+            <video
+             ref={localVideoRef}
+             autoPlay
+             muted
+           ></video>
+             <video
+             ref={remoteVideoRef}
+             autoPlay
+           ></video>
+            </div>
+           </div>
             )}
           </div>
           <div className="flex justify-center">

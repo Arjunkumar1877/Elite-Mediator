@@ -22,6 +22,7 @@
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
+    "express-http-proxy": "^2.0.0",
     "firebase": "^10.12.2",
     "firebase-admin": "^12.2.0",
     "getmac": "^6.6.0",
@@ -30,8 +31,6 @@
     "mongoose": "^8.4.1",
     "node-macaddress": "^0.2.4",
     "nodemon": "^3.1.3",
-    "peer": "^1.0.2",
-    "peerjs": "^1.5.4",
     "qrcode": "^1.5.3",
     "socket.io": "^4.7.5",
     "ts-node": "^10.9.2",
@@ -41,6 +40,7 @@
     "@types/bcrypt": "^5.0.2",
     "@types/cookie-parser": "^1.4.7",
     "@types/cors": "^2.8.17",
+    "@types/express-http-proxy": "^1.6.6",
     "@types/jsonwebtoken": "^9.0.6",
     "@types/qrcode": "^1.5.5"
   }

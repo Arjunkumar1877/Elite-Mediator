@@ -11,25 +11,28 @@ import "react-confirm-alert/src/react-confirm-alert.css"; // Import css
 
 const AdminCallPage: React.FC = () => {
   const {
-    socket,
-    localVideoRef,
-    remoteVideoRef,
-    isVideoCall,
-    setIsVideoCall
+    socket
   }: any = useSocket();
   const navigate = useNavigate();
+  let  localVideoRef = useRef<any>();
+  let remoteVideoRef = useRef<any>();
   const { currentAdmin } = useSelector((state: any) => state.admin);
   const [callerName, setCallerName] = useState<string>('');
   const location = useLocation();
   const query = new URLSearchParams(location.search);
   const conId = query.get("conId");
-  const incommingId = query.get("incommingId");
-  const callerId = query.get("callerId");
+  const incommingId: string | null = query.get("incommingId");
+  const callerId: string | null = query.get("callerId");
+  const VideoCall: string  | null = query.get('videoCall');
+  const videoCall: boolean = VideoCall === 'true' ? true : false; 
+
   const [isMuted, setIsMuted] = useState<boolean>(false);
   const [seconds, setSeconds] = useState<number>(0);
   const [callConnected, setCallConnected] = useState<boolean>(false);
   const [callConnecting, setCallConnecting] = useState<boolean>(true);
+  let pc = useRef<RTCPeerConnection | null>(null);
 
+ 
   useEffect(() => {
     socket.emit("join room", conId);
     const timer = setInterval(() => {
@@ -68,12 +71,6 @@ const AdminCallPage: React.FC = () => {
       setIsMuted(prevState => !prevState);
     }
   };
-
-  const pc = useRef<RTCPeerConnection>(
-    new RTCPeerConnection({
-      iceServers: [{ urls: "stun:stun.l.google.com:19302" }],
-    })
-  );
 
   const updateCallCancelling = async (callerId: any) => {
     try {
@@ -136,27 +133,33 @@ const AdminCallPage: React.FC = () => {
   };
 
   useEffect(() => {
+
+    if (!pc.current) {
+      pc.current = new RTCPeerConnection({
+        iceServers: [{ urls: "stun:stun.l.google.com:19302" }],
+      });
+    } 
     fetchSelectedConversation();
     socket.emit("join room", conId);
 
     const createOffer = async () => {
       try {
-        const constraints = { audio: true, video: isVideoCall };
+        const constraints = { audio: true, video: videoCall };
         const stream = await navigator.mediaDevices.getUserMedia(constraints);
         stream
           .getTracks()
-          .forEach((track) => pc.current.addTrack(track, stream));
+          .forEach((track) => pc?.current?.addTrack(track, stream));
 
         if (localVideoRef.current) {
           localVideoRef.current.srcObject = stream;
         }
 
-        const offer = await pc.current.createOffer();
-        await pc.current.setLocalDescription(offer);
+        const offer = await pc?.current?.createOffer();
+        await pc?.current?.setLocalDescription(offer);
         socket.emit("webrtc-offer", {
           incommingId: currentAdmin.username,
           room: conId,
-          isVideo: isVideoCall,
+          isVideo: videoCall,
           offer,
           callerId: callerId
         });
@@ -164,7 +167,6 @@ const AdminCallPage: React.FC = () => {
         console.error("Error creating offer:", error);
       }
     };
-
     console.log(incommingId + "  " +  currentAdmin.username)
 
     if (incommingId === currentAdmin._id) {
@@ -172,6 +174,8 @@ const AdminCallPage: React.FC = () => {
     }
 
     const handleOffer = async (offer: any) => {
+      console.log("handling offer 💕💕💕💕💕💕");
+
       if (offer.incommingId !== currentAdmin.username) {
         confirmAlert({
           title: "Incoming Call",
@@ -180,24 +184,23 @@ const AdminCallPage: React.FC = () => {
             {
               label: "Yes",
               onClick: async () => {
-                setIsVideoCall(offer.isVideo);
                 const constraints = { audio: true, video: offer.isVideo };
                 const stream = await navigator.mediaDevices.getUserMedia(
                   constraints
                 );
                 stream
                   .getTracks()
-                  .forEach((track) => pc.current.addTrack(track, stream));
+                  .forEach((track) => pc?.current?.addTrack(track, stream));
 
                 if (localVideoRef.current) {
                   localVideoRef.current.srcObject = stream;
                 }
 
-                await pc.current.setRemoteDescription(
+                await pc?.current?.setRemoteDescription(
                   new RTCSessionDescription(offer.offer)
                 );
-                const answer = await pc.current.createAnswer();
-                await pc.current.setLocalDescription(answer);
+                const answer = await pc?.current?.createAnswer();
+                await pc?.current?.setLocalDescription(answer);
                 socket.emit("webrtc-answer", {
                   room: conId,
                   answer,
@@ -221,11 +224,13 @@ const AdminCallPage: React.FC = () => {
     };
 
     const handleAnswer = async (data: any) => {
+
+      console.log("handling answer 💕💕💕💕💕💕");
       const { incommingId, answer } = data;
       if (currentAdmin.username !== incommingId) {
-        if (pc.current.signalingState === "have-local-offer") {
+        if (pc?.current?.signalingState === "have-local-offer") {
           try {
-            await pc.current.setRemoteDescription(
+            await pc?.current?.setRemoteDescription(
               new RTCSessionDescription(answer)
             );
           } catch (error) {
@@ -234,15 +239,17 @@ const AdminCallPage: React.FC = () => {
         } else {
           console.warn(
             "Signaling state is not 'have-local-offer'. Current state: ",
-            pc.current.signalingState
+            pc?.current?.signalingState
           );
         }
       }
     };
 
     const handleIceCandidate = async (candidate: any) => {
+      console.log("handling icecandidate 💕💕💕💕💕💕");
+
       try {
-        await pc.current.addIceCandidate(new RTCIceCandidate(candidate));
+        await pc?.current?.addIceCandidate(new RTCIceCandidate(candidate));
       } catch (error) {
         console.error("Error adding received ice candidate", error);
       }
@@ -295,16 +302,18 @@ const AdminCallPage: React.FC = () => {
         setCallConnecting(false)
         setCallConnected(true)
         remoteVideoRef.current.srcObject = event.streams[0];
+        console.log(localVideoRef)
+        console.log(remoteVideoRef) 
       }
     };
 
     return () => {
-      socket.off("webrtc-offer", handleOffer);
-      socket.off("webrtc-answer", handleAnswer);
-      socket.off("webrtc-ice-candidate", handleIceCandidate);
-      socket.off("webrtc-disconnect", handleDisconnect);
+      socket.off("webrtc-offer")
+      socket.off("webrtc-answer");
+      socket.off("webrtc-ice-candidate");
+      socket.off("webrtc-disconnect");
     };
-  }, [conId, currentAdmin.username, isVideoCall, socket]);
+  }, [conId, currentAdmin.username, socket]);
 
   const handleCutTheCall = () => {
     if (localVideoRef.current && localVideoRef.current.srcObject) {
@@ -341,7 +350,7 @@ const AdminCallPage: React.FC = () => {
         <h3 className="text-2xl font-bold">Connected</h3>
       </div>
       <div className="flex justify-center">
-        {isVideoCall ? (
+        {videoCall ? (
           <div className="flex flex-col justify-center items-center relative">
             <video
               ref={localVideoRef}

@@ -102,8 +102,6 @@ function initializeSocket(server) {
             console.log(conId, callerId + "💕💕💕💕💕💕");
             io.to(conId).emit('webrtc-disconnect', conId, callerId);
         });
-        socket.on("end-call", (data) => {
-        });
     });
     return io;
 }

@@ -110,7 +110,7 @@ const AdminChatSection: React.FC = () => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { currentAdmin } = useSelector((state: any) => state?.admin);
   const navigate = useNavigate();
-  const { socket, setIsVideoCall }: any = useSocket();
+  const { socket }: any = useSocket();
   const [editingName, setEditingName] = useState<boolean>(false);
   const [showOptions, setShowOptions] = useState<boolean>(false);
   const [newName, setNewName] = useState<string>("");
@@ -130,8 +130,7 @@ const AdminChatSection: React.FC = () => {
     text: "",
   });
   const fileRef: any = useRef<HTMLInputElement>(null);
- 
-  
+   
   const handleMessageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setMessageData({ ...messageData, text: e.target.value });
   };
@@ -143,7 +142,7 @@ const AdminChatSection: React.FC = () => {
       console.log(data);
       if (data) {
         navigate(
-          `/call_admin_page?conId=${data.conId}&incommingId=${data.incommingId}&callerId=${data.callerId}`
+          `/call_admin_page?conId=${data.conId}&incommingId=${data.incommingId}&callerId=${data.callerId}&videoCall=${data.videoCall}`
         );
       }
     };
@@ -157,9 +156,7 @@ const AdminChatSection: React.FC = () => {
 
   const startCall = async (isVideo = false) => {
     try {
-      setIsVideoCall(isVideo);
-      
-
+     
       const res = await fetch("/api/start_call", {
         method: "POST",
         headers: {
@@ -192,6 +189,7 @@ username: currentAdmin.username
           incommingId: currentAdmin._id,
           adminId: currentAdmin._id,
           callerId: data._id,
+          videoCall: isVideo
         });
       }
     } catch (error: any) {

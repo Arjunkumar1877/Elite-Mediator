@@ -43,7 +43,7 @@ interface Message {
 const UserChatPage: React.FC = () => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { currentUser, messages } = useSelector((state: any) => state.user);
-  const { setIsVideoCall,socket }: any = useSocket();
+  const { socket }: any = useSocket();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
@@ -164,7 +164,7 @@ const UserChatPage: React.FC = () => {
       console.log(data);
       if (data.callerId) {
         navigate(
-          `/call_page_user?conId=${data.conId}&incommingId=${data.incommingId}&callerId=${data.callerId}`
+          `/call_page_user?conId=${data.conId}&incommingId=${data.incommingId}&callerId=${data.callerId}&videoCall=${data.videoCall}`
         );
       }
     };
@@ -178,7 +178,6 @@ const UserChatPage: React.FC = () => {
 
   const startCall = async (isVideo = false) => {
     try {
-      setIsVideoCall(isVideo);
       const res = await fetch("/user/start_call", {
         method: "POST",
         headers: {
@@ -207,6 +206,7 @@ const UserChatPage: React.FC = () => {
           incommingId: currentUser._id,
           adminId: currentUser.adminId,
           callerId: data._id,
+          videoCall: isVideo
         });
       }
     } catch (error) {

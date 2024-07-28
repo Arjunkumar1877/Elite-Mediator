@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, ReactNode, useRef, useEffect } from "react";
+import React, { createContext, useContext, useState, ReactNode, useEffect } from "react";
 import { useSelector } from "react-redux";
 import io, { Socket } from "socket.io-client";
 
@@ -15,8 +15,6 @@ type SocketProviderProps = {
 const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
   // const socket: Socket = io("http://localhost:7000");
   const socket: Socket = io("https://elitemediator.shop");
-  const localVideoRef: any = useRef<HTMLVideoElement>(null);
-  const remoteVideoRef: any= useRef<HTMLVideoElement>(null);
   const [isVideoCall, setIsVideoCall] = useState<boolean>();
   const [notificationCount, setNotificationCount] = useState<number>();
   const [callConnected, setCallConnected] = useState<boolean>(false);
@@ -32,7 +30,7 @@ const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
 
 
   return (
-    <SocketContext.Provider value={{ socket, localVideoRef, remoteVideoRef, callConnected, setCallConnected , setIsVideoCall, isVideoCall, notificationCount, setNotificationCount, token, setToken }}>
+    <SocketContext.Provider value={{ socket, callConnected, setCallConnected , setIsVideoCall, isVideoCall, notificationCount, setNotificationCount, token, setToken }}>
       {children}
     </SocketContext.Provider>
   );

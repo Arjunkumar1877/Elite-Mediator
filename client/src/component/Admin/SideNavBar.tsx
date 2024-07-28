@@ -123,7 +123,8 @@ const SideNavBar: React.FC<SideNavBarProps> = ({ navShowSet }) => {
           showNav ? "bg-sky-50 w-[250px]" : "w-[60px]"
         }`}
       >
-        <div className="p-4 rounded bg-sky-500 font-sans text-center">EM</div>
+        {/* <div className="p-4 rounded bg-sky-500 font-sans text-center">EM</div> */}
+        <img className=" rounded bg-sky-500 font-sans w-14 text-center" src="https://firebasestorage.googleapis.com/v0/b/elite-mediator.appspot.com/o/logo.png?alt=media&token=d632f87d-5330-4f8d-bf5c-67780c74798d" alt="" />
         <span
           className={`flex justify-center items-center text-2xl transition-all duration-300 whitespace-nowrap ${
             showNav ? "opacity-100" : "opacity-0"
@@ -133,10 +134,7 @@ const SideNavBar: React.FC<SideNavBarProps> = ({ navShowSet }) => {
         </span>
       </div>
 
-      <div
-        className={`
-        }`}
-      >
+      <div>
         <span
           className="hidden md:flex justify-center items-center bg-sky-500 rounded-full w-7 h-7 absolute -right-2 cursor-pointer"
           onClick={() => setShowNav(!showNav)}

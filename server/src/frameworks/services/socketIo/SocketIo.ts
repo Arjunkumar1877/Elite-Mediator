@@ -105,9 +105,7 @@ function initializeSocket(server: HTTPServer): SocketIoServer {
       io.to(conId).emit('webrtc-disconnect', conId, callerId);
     });
 
-    socket.on("end-call", (data)=>{
-
-    })
+  
   });
 
   return io;

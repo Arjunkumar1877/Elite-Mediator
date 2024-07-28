@@ -244,7 +244,7 @@ const AdminChatListSection: React.FC = () => {
   };
 
   return (
-    <div className="bg-gray-50 min-h-screen p-4">
+    <div className="bg-gray-50 max-h-screen p-1">
       <div className="absolute z-0 rounded-2xl -top-64 left-1/2 transform -translate-x-1/2 bg-zinc-300 w-60 h-40 lg:h-96 rotate-45"></div>
 
       <div className="relative z-10 flex justify-between items-center p-3">
