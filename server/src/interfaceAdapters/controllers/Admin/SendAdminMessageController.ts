@@ -1,4 +1,4 @@
-import { ISendAndCreateAdminMessageUseCase } from "../../../entities/useCasesInterfaces/Admin/ISendAndCreateAdminMessageUseCase";
+import { ISendAndCreateAdminMessageUseCase } from "../../../entities/useCasesInterfaces/admin/ISendAndCreateAdminMessageUseCase";
 import { sendPushMessage } from "../../../frameworks/services/pushNotication/SendPushNotification";
 import { Req, Res } from "../../../frameworks/types/ServerTypes";
 

@@ -1,4 +1,4 @@
-import { IGetUnverifiedAdmin } from "../../../entities/useCasesInterfaces/Admin/IGetUnverifiedAdminUseCase";
+import { IGetUnverifiedAdmin } from "../../../entities/useCasesInterfaces/admin/IGetUnverifiedAdminUseCase";
 import { Req, Res } from "../../../frameworks/types/ServerTypes";
 
 export class GetUnverifiedAdminController {

@@ -1,4 +1,4 @@
-import { IUserStatisticsGraphDataUseCase } from "../../../entities/useCasesInterfaces/Admin/IUserStatisticsGraphDataUseCase";
+import { IUserStatisticsGraphDataUseCase } from "../../../entities/useCasesInterfaces/admin/IUserStatisticsGraphDataUseCase";
 import { Req, Res } from "../../../frameworks/types/ServerTypes";
 
 export class GetUserStatisticsGraphDataController{

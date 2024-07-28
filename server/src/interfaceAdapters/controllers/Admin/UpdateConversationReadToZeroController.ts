@@ -1,4 +1,4 @@
-import { IUpdateConversationReadCountToZeroUseCase } from "../../../entities/useCasesInterfaces/Admin/IUpdateConversationReadCountToZeroUseCase";
+import { IUpdateConversationReadCountToZeroUseCase } from "../../../entities/useCasesInterfaces/admin/IUpdateConversationReadCountToZeroUseCase";
 import { Req, Res } from "../../../frameworks/types/ServerTypes";
 
 

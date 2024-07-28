@@ -1,4 +1,4 @@
-import { IGetAdminPropertyDataForFilterUseCase } from "../../../entities/useCasesInterfaces/Admin/IGetAdminPropertyDataForFilterUseCase";
+import { IGetAdminPropertyDataForFilterUseCase } from "../../../entities/useCasesInterfaces/admin/IGetAdminPropertyDataForFilterUseCase";
 import { Req, Res } from "../../../frameworks/types/ServerTypes";
 
 export class GetAdminPropertDataForFilteringController{

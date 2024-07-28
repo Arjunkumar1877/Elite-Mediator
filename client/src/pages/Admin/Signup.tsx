@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { BsCheckCircleFill } from "react-icons/bs";
 import { Link, useNavigate } from "react-router-dom";
 import PhoneInput from "react-phone-input-2";
@@ -9,6 +9,7 @@ import OAuth from "../../component/Admin/OAuth";
 import toast from "react-hot-toast";
 import { FaEyeSlash } from "react-icons/fa";
 import { IoEyeSharp } from "react-icons/io5";
+import axios from "axios";
 
 interface Errors {
   username?: string;
@@ -16,6 +17,11 @@ interface Errors {
   phone?: string;
   password?: string;
 }
+
+type PostersDataType = {
+  _id: string;
+  imageUrl: string;
+};
 
 const Signup: React.FC = () => {
   const [username, setUsername] = useState<string>("");
@@ -25,6 +31,7 @@ const Signup: React.FC = () => {
   const [errors, setErrors] = useState<Errors>({});
   const [confirmOtp, setConfirmOtp] = useState<any>(null);
   const [viewPassword, setViewPassword] = useState<boolean>(false);
+  const [posters, setPosters] = useState<PostersDataType[]>([]);
   const navigate = useNavigate();
 
   const validateForm = (): boolean => {
@@ -87,6 +94,7 @@ const Signup: React.FC = () => {
       console.log(error);
     }
   };
+
   const onSendOtp = async () => {
     if (!validateForm()) {
       return;
@@ -107,6 +115,19 @@ const Signup: React.FC = () => {
     }
   };
 
+  const handleFetchPosters = async () => {
+    try {
+      const response = await axios.get('/superAdmin/get_posters');
+      setPosters(response.data);
+    } catch (error) {
+      console.log(error);
+      toast("Failed to fetch posters.");
+    }
+  };
+
+  useEffect(()=>{
+    handleFetchPosters();
+  },[])
 
 
   console.log(confirmOtp);
@@ -115,7 +136,7 @@ const Signup: React.FC = () => {
     <div className="flex justify-center h-[700px] w-full">
       <div className="hidden sm:flex sm:flex-1 sm:h-full">
         <img
-          src="public/login.jpg"
+          src={posters.length > 0 ? posters[9].imageUrl : 'https://firebasestorage.googleapis.com/v0/b/elite-mediator.appspot.com/o/login.jpg?alt=media&token=23fd7400-7426-40c8-87c3-dc4c1eabc8c9'}
           alt="Dummy"
           className="h-full object-cover w-full"
         />

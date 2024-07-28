@@ -1,4 +1,4 @@
-import { IAdminLoginUseCase } from "../../../entities/useCasesInterfaces/Admin/IAdminLoginUseCase";
+import { IAdminLoginUseCase } from "../../../entities/useCasesInterfaces/admin/IAdminLoginUseCase";
 import { Req, Res } from "../../../frameworks/types/ServerTypes";
 
 export class AdminLoginController {

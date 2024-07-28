@@ -1,4 +1,4 @@
-import { IAddAdminFcmTokenUseCase } from "../../../entities/useCasesInterfaces/Admin/IAddAdminFcmTokenUseCase";
+import { IAddAdminFcmTokenUseCase } from "../../../entities/useCasesInterfaces/admin/IAddAdminFcmTokenUseCase";
 import { Req, Res } from "../../../frameworks/types/ServerTypes";
 
 

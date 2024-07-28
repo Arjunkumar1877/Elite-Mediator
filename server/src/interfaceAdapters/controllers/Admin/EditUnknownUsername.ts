@@ -1,4 +1,4 @@
-import { IEditUnknownUsernameUseCase } from "../../../entities/useCasesInterfaces/Admin/IEditUnknownUsernameUseCase";
+import { IEditUnknownUsernameUseCase } from "../../../entities/useCasesInterfaces/admin/IEditUnknownUsernameUseCase";
 import { Req, Res } from "../../../frameworks/types/ServerTypes";
 
 

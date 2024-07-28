@@ -4,7 +4,7 @@ import { Call } from "../../../entities/models/common/Call";
 import { Conversation } from "../../../entities/models/common/Conversation";
 import { Message } from "../../../entities/models/common/Message";
 import { User } from "../../../entities/models/user/User";
-import { GraphDataType } from "../../../entities/useCasesInterfaces/Admin/IUserStatisticsGraphDataUseCase";
+import { GraphDataType } from "../../../entities/useCasesInterfaces/admin/IUserStatisticsGraphDataUseCase";
 
 export interface IAdminRepository {
     CreateAdmin(admin: Admin): Promise<Admin>;

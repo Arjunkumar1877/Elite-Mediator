@@ -1,4 +1,4 @@
-import { IGetAdminCallListUseCase } from "../../../entities/useCasesInterfaces/Admin/IGetAdminCallListUseCase";
+import { IGetAdminCallListUseCase } from "../../../entities/useCasesInterfaces/admin/IGetAdminCallListUseCase";
 import { Req, Res } from "../../../frameworks/types/ServerTypes";
 
 export class GetAdminsCallListController{

@@ -12,7 +12,6 @@ import {
   setMessages,
   signInSuccess,
 } from "../../redux/user/UserSlice";
-import io from "socket.io-client";
 import { useSocket } from "../../contexts/AdminContext";
 import { MdCleaningServices, MdOutlineZoomOutMap } from "react-icons/md";
 import { Toaster, toast } from "react-hot-toast";
@@ -26,8 +25,8 @@ import app, { requestPermission } from "../../firebase/firebase";
 import ReactLoading from "react-loading";
 import { confirmAlert } from "react-confirm-alert";
 import AudioRecorder from "../../component/Admin/AudioRecorder";
-
-const socket = io("https://elitemediator.shop");
+// import { useSocket } from "../../contexts/AdminContext";
+// const socket = io("https://elitemediator.shop");
 // const socket = io("http://localhost:7000");
 
 interface Message {
@@ -44,7 +43,7 @@ interface Message {
 const UserChatPage: React.FC = () => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { currentUser, messages } = useSelector((state: any) => state.user);
-  const { setIsVideoCall }: any = useSocket();
+  const { setIsVideoCall,socket }: any = useSocket();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();

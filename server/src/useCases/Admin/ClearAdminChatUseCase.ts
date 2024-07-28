@@ -1,5 +1,5 @@
 import { Message } from "../../entities/models/common/Message";
-import { IClearAdminChatUseCase } from "../../entities/useCasesInterfaces/Admin/IClearAdminChatUseCase";
+import { IClearAdminChatUseCase } from "../../entities/useCasesInterfaces/admin/IClearAdminChatUseCase";
 import { IAdminRepository } from "../../interfaceAdapters/repositories/admin/IAdminRepository";
 
 export class ClearAdminChatUseCase implements IClearAdminChatUseCase{

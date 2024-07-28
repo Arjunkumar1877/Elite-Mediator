@@ -1,5 +1,5 @@
 import { User } from "../../entities/models/user/User";
-import { IDeleteUserDataUseCase } from "../../entities/useCasesInterfaces/Admin/IDeleteUserDataUseCase";
+import { IDeleteUserDataUseCase } from "../../entities/useCasesInterfaces/admin/IDeleteUserDataUseCase";
 import { IAdminRepository } from "../../interfaceAdapters/repositories/admin/IAdminRepository";
 
 export class DeleteUserDataUseCase implements IDeleteUserDataUseCase{

@@ -1,4 +1,4 @@
-import { IUpdateUnverifiedUseCase } from "../../../entities/useCasesInterfaces/Admin/IUpdateUnverifiedAdminUseCase";
+import { IUpdateUnverifiedUseCase } from "../../../entities/useCasesInterfaces/admin/IUpdateUnverifiedAdminUseCase";
 import { Next, Req, Res } from "../../../frameworks/types/ServerTypes";
 
 export class UpdateUnverifiedAdminController {

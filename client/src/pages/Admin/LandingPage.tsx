@@ -45,7 +45,7 @@ const Landing = () => {
       <div className="relative flex flex-col lg:flex-row items-center justify-between space-y-8 lg:space-y-0 mt-40">
         <div className="lg:w-1/2 flex flex-col space-y-4 lg:p-16">
           <h1 className="text-3xl lg:text-5xl font-bold text-zinc-600">
-            DON'T MISS ANYONE.....
+            DON'T MISS ANYONE..... CICD TES
           </h1>
           <h2 className="text-xl lg:text-2xl font-semibold text-sky-500">
             WHO TRY TO REACH YOU

@@ -9,7 +9,7 @@ import { CallModel } from "../../../frameworks/database/models/admin/CallModel";
 import { UserModel } from "../../../frameworks/database/models/user/User";
 import { MessageModel } from "../../../frameworks/database/models/admin/MessageModel";
 import { Message } from "../../../entities/models/common/Message";
-import { GraphDataType } from "../../../entities/useCasesInterfaces/Admin/IUserStatisticsGraphDataUseCase";
+import { GraphDataType } from "../../../entities/useCasesInterfaces/admin/IUserStatisticsGraphDataUseCase";
 import { User } from "../../../entities/models/user/User";
 import { Call } from "../../../entities/models/common/Call";
 

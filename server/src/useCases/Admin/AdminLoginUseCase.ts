@@ -1,5 +1,5 @@
 
-import { IAdminLoginUseCase } from "../../entities/useCasesInterfaces/Admin/IAdminLoginUseCase";
+import { IAdminLoginUseCase } from "../../entities/useCasesInterfaces/admin/IAdminLoginUseCase";
 import { IAdminRepository } from "../../interfaceAdapters/repositories/admin/IAdminRepository";
 import bcrypt from 'bcrypt';
 

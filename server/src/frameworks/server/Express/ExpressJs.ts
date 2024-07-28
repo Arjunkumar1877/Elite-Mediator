@@ -37,6 +37,7 @@ export class ExpressServer {
             allowedHeaders: ["Authorization", "Content-Type"],
             credentials: true,
         }));
+        // this.app.use(cors());
         this.app.use(cookieParser());
 
         const publicPath = path.join(__dirname, '..', 'public');

@@ -1,5 +1,5 @@
 import { User } from "../../entities/models/user/User";
-import { IEditUnknownUsernameUseCase } from "../../entities/useCasesInterfaces/Admin/IEditUnknownUsernameUseCase";
+import { IEditUnknownUsernameUseCase } from "../../entities/useCasesInterfaces/admin/IEditUnknownUsernameUseCase";
 import { IAdminRepository } from "../../interfaceAdapters/repositories/admin/IAdminRepository";
 
 export class EditUnknownUsernameUseCase implements IEditUnknownUsernameUseCase{

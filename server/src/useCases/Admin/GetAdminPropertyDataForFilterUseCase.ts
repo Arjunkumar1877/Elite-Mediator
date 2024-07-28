@@ -1,5 +1,5 @@
 import { PropertyData } from "../../entities/models/admin/PropertyData";
-import { IGetAdminPropertyDataForFilterUseCase } from "../../entities/useCasesInterfaces/Admin/IGetAdminPropertyDataForFilterUseCase";
+import { IGetAdminPropertyDataForFilterUseCase } from "../../entities/useCasesInterfaces/admin/IGetAdminPropertyDataForFilterUseCase";
 import { IAdminRepository } from "../../interfaceAdapters/repositories/admin/IAdminRepository";
 
 export class GetAdminPropertyDataForFilterUseCase implements IGetAdminPropertyDataForFilterUseCase{

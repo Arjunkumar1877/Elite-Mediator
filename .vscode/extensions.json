@@ -3,6 +3,7 @@
         "bradlc.vscode-tailwindcss",
         "rodrigovallades.es7-react-js-snippets",
         "burkeholland.simple-react-snippets",
-        "infeng.vscode-react-typescript"
+        "infeng.vscode-react-typescript",
+        "ms-azuretools.vscode-docker"
     ]
 }

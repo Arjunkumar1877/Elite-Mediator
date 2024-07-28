@@ -8,6 +8,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { signInSuccess } from "../../redux/superAdmin/SuperAdminSlice";
 import { useNavigate } from "react-router-dom";
 
+type PostersDataType = {
+  _id: string;
+  imageUrl: string;
+};
+
 const SuperAdminLogin = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -16,9 +21,19 @@ const SuperAdminLogin = () => {
   const [loginError, setLoginError] = useState<string>("");
   const [viewPassword, setViewPassword] = useState<boolean>(false);
   const { currentSuperAdmin } = useSelector((state: any)=> state.superAdmin);
+  const [posters, setPosters] = useState<PostersDataType[]>([]);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const handleFetchPosters = async () => {
+    try {
+      const response = await axios.get('/superAdmin/get_posters');
+      setPosters(response.data);
+    } catch (error) {
+      console.log(error);
+      toast("Failed to fetch posters.");
+    }
+  };
 
   const validateEmail = (email: string) => {
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -30,6 +45,7 @@ const SuperAdminLogin = () => {
   };
 
   useEffect(() => {
+    handleFetchPosters();
     setEmailValid(validateEmail(email));
     setPasswordValid(validatePassword(password));
 
@@ -66,7 +82,8 @@ const SuperAdminLogin = () => {
     <div className="flex justify-center h-[700px] w-full">
       <div className="hidden sm:flex sm:flex-1 sm:h-full">
         <img
-          src="public/login.jpg"
+                  src={posters.length > 0 ? posters[9].imageUrl : 'https://firebasestorage.googleapis.com/v0/b/elite-mediator.appspot.com/o/login.jpg?alt=media&token=23fd7400-7426-40c8-87c3-dc4c1eabc8c9'}
+
           alt="Dummy"
           className="h-full object-cover w-full"
         />

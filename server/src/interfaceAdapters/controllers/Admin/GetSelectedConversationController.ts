@@ -1,4 +1,4 @@
-import { IGetSelecetedConversationUseCase } from "../../../entities/useCasesInterfaces/Admin/IGetSelecetedConversationUseCase";
+import { IGetSelecetedConversationUseCase } from "../../../entities/useCasesInterfaces/admin/IGetSelecetedConversationUseCase";
 import { Req, Res } from "../../../frameworks/types/ServerTypes";
 
 

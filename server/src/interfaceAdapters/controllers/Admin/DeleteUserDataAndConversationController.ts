@@ -1,4 +1,4 @@
-import { IDeleteUserDataUseCase } from "../../../entities/useCasesInterfaces/Admin/IDeleteUserDataUseCase";
+import { IDeleteUserDataUseCase } from "../../../entities/useCasesInterfaces/admin/IDeleteUserDataUseCase";
 import { Req, Res } from "../../../frameworks/types/ServerTypes";
 
 export class  DeleteUserDataAndConversationController {

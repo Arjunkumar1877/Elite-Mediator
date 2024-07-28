@@ -1,4 +1,4 @@
-import { IGetConversationListUseCase } from "../../entities/useCasesInterfaces/Admin/IGetConversationListUseCase";
+import { IGetConversationListUseCase } from "../../entities/useCasesInterfaces/admin/IGetConversationListUseCase";
 import { IAdminRepository } from "../../interfaceAdapters/repositories/admin/IAdminRepository";
 
 export class GetConversationListUseCase implements IGetConversationListUseCase{

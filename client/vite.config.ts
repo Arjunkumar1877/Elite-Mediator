@@ -5,19 +5,18 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        // target: 'http://13.60.104.214',
-        // target: 'http://localhost:7000',
-        target: "https://elitemediator.shop",
+        target: 'http://localhost:7000',
+        // target: "https://elitemediator.shop",
         secure: false,
       },
       '/user': {
-        // target: 'http://localhost:7000',
-        target: "https://elitemediator.shop",
+        target: 'http://localhost:7000',
+        // target: "https://elitemediator.shop",
         secure: false,
       },
       '/superAdmin': {
-        // target: 'http://localhost:7000',
-        target: "https://elitemediator.shop",
+        target: 'http://localhost:7000',
+        // target: "https://elitemediator.shop",
 
         secure: false,
       },

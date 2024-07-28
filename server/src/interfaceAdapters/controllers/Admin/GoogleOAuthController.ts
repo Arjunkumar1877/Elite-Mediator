@@ -1,4 +1,4 @@
-import { IGoogleAuth } from "../../../entities/useCasesInterfaces/Admin/IGoogleAuthUseCase";
+import { IGoogleAuth } from "../../../entities/useCasesInterfaces/admin/IGoogleAuthUseCase";
 import { Req, Res } from "../../../frameworks/types/ServerTypes";
 
 export class GoogleOAthController {

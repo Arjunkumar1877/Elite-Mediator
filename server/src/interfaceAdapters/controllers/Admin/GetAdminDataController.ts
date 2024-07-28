@@ -1,4 +1,4 @@
-import {  IGetAdminUseCase } from "../../../entities/useCasesInterfaces/Admin/IGetAdminUseCase";
+import {  IGetAdminUseCase } from "../../../entities/useCasesInterfaces/admin/IGetAdminUseCase";
 import { Req, Res } from "../../../frameworks/types/ServerTypes";
 
 

@@ -1,4 +1,4 @@
-import { IGetAdminAllPropertyDataUseCase } from "../../entities/useCasesInterfaces/Admin/IGetAdminAllPropertyDataUseCase";
+import { IGetAdminAllPropertyDataUseCase } from "../../entities/useCasesInterfaces/admin/IGetAdminAllPropertyDataUseCase";
 import { IAdminRepository } from "../../interfaceAdapters/repositories/admin/IAdminRepository";
 
 

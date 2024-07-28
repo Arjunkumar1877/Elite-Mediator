@@ -1,5 +1,5 @@
 import { Call } from "../../entities/models/common/Call";
-import { IGetAdminCallListUseCase } from "../../entities/useCasesInterfaces/Admin/IGetAdminCallListUseCase";
+import { IGetAdminCallListUseCase } from "../../entities/useCasesInterfaces/admin/IGetAdminCallListUseCase";
 import { IAdminRepository } from "../../interfaceAdapters/repositories/admin/IAdminRepository";
 
 export class GetAdminCallListUseCase implements IGetAdminCallListUseCase{

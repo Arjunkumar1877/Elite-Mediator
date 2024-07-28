@@ -1,5 +1,5 @@
 import { Admin } from "../../entities/models/admin/Admin";
-import { IAddAdminFcmTokenUseCase } from "../../entities/useCasesInterfaces/Admin/IAddAdminFcmTokenUseCase";
+import { IAddAdminFcmTokenUseCase } from "../../entities/useCasesInterfaces/admin/IAddAdminFcmTokenUseCase";
 import { IAdminRepository } from "../../interfaceAdapters/repositories/admin/IAdminRepository";
 
 

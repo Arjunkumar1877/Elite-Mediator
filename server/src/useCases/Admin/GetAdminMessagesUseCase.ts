@@ -1,5 +1,5 @@
 import { Message } from "../../entities/models/common/Message";
-import { IGetAdminMessagesUseCase } from "../../entities/useCasesInterfaces/Admin/IGetAdminMessagesUseCase";
+import { IGetAdminMessagesUseCase } from "../../entities/useCasesInterfaces/admin/IGetAdminMessagesUseCase";
 import { IAdminRepository } from "../../interfaceAdapters/repositories/admin/IAdminRepository";
 
 export class GetAdminMessagesUseCase implements IGetAdminMessagesUseCase {

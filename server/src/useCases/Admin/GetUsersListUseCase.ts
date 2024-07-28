@@ -1,4 +1,4 @@
-import { IGetUsersListUseCase } from "../../entities/useCasesInterfaces/Admin/IGetUsersListUseCase";
+import { IGetUsersListUseCase } from "../../entities/useCasesInterfaces/admin/IGetUsersListUseCase";
 import { IAdminRepository } from "../../interfaceAdapters/repositories/admin/IAdminRepository";
 
 export class GetUsersListUseCase implements IGetUsersListUseCase{

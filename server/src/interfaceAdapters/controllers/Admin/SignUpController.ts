@@ -1,5 +1,5 @@
 import { Request as Req, Response as Res } from 'express';
-import { IAdminSignUp } from '../../../entities/useCasesInterfaces/Admin/IAdminSignupUseCase';
+import { IAdminSignUp } from '../../../entities/useCasesInterfaces/admin/IAdminSignupUseCase';
 
 
 

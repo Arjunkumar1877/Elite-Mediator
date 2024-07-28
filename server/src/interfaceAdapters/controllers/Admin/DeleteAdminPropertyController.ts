@@ -1,4 +1,4 @@
-import { IDeleteAdminPropertyUseCase } from "../../../entities/useCasesInterfaces/Admin/IDeleteAdminPropertyUseCase";
+import { IDeleteAdminPropertyUseCase } from "../../../entities/useCasesInterfaces/admin/IDeleteAdminPropertyUseCase";
 import { Req, Res } from "../../../frameworks/types/ServerTypes";
 
 

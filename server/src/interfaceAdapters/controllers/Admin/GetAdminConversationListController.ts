@@ -1,4 +1,4 @@
-import { IGetConversationListUseCase } from "../../../entities/useCasesInterfaces/Admin/IGetConversationListUseCase";
+import { IGetConversationListUseCase } from "../../../entities/useCasesInterfaces/admin/IGetConversationListUseCase";
 import { Req, Res } from "../../../frameworks/types/ServerTypes";
 
 export class GetAdminConversationListController{

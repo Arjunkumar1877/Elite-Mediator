@@ -1,4 +1,4 @@
-import { IGetAdminMessagesUseCase } from '../../../entities/useCasesInterfaces/Admin/IGetAdminMessagesUseCase';
+import { IGetAdminMessagesUseCase } from '../../../entities/useCasesInterfaces/admin/IGetAdminMessagesUseCase';
 import { Req, Res } from '../../../frameworks/types/ServerTypes';
 
 export class GetAdminMessagesController{

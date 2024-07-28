@@ -1,4 +1,4 @@
-import { IGetUsersListUseCase } from "../../../entities/useCasesInterfaces/Admin/IGetUsersListUseCase";
+import { IGetUsersListUseCase } from "../../../entities/useCasesInterfaces/admin/IGetUsersListUseCase";
 import { Req, Res } from "../../../frameworks/types/ServerTypes";
 
 export class GetUsersListController {

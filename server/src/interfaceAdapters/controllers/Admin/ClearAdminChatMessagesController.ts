@@ -1,4 +1,4 @@
-import { IClearAdminChatUseCase } from "../../../entities/useCasesInterfaces/Admin/IClearAdminChatUseCase";
+import { IClearAdminChatUseCase } from "../../../entities/useCasesInterfaces/admin/IClearAdminChatUseCase";
 import { Req, Res } from "../../../frameworks/types/ServerTypes";
 
 

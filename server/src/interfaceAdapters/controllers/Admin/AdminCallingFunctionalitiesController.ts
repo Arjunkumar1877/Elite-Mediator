@@ -1,4 +1,4 @@
-import { IAdminCallingFunctionsUseCase } from "../../../entities/useCasesInterfaces/Admin/IAdminCallingFunctionalitesUseCase";
+import { IAdminCallingFunctionsUseCase } from "../../../entities/useCasesInterfaces/admin/IAdminCallingFunctionalitesUseCase";
 import { sendPushMessage } from "../../../frameworks/services/pushNotication/SendPushNotification";
 import { Req, Res } from "../../../frameworks/types/ServerTypes";
 

@@ -28,12 +28,13 @@ class ExpressServer {
     }
     configureMiddleware() {
         this.app.use(express_1.default.json());
-        this.app.use((0, cors_1.default)({
-            origin: "https://elitemediator.shop", // Replace with your frontend domain
-            methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-            allowedHeaders: ["Authorization", "Content-Type"],
-            credentials: true,
-        }));
+        // this.app.use(cors({
+        //     origin: "https://elitemediator.shop", // Replace with your frontend domain
+        //     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+        //     allowedHeaders: ["Authorization", "Content-Type"],
+        //     credentials: true,
+        // }));
+        this.app.use((0, cors_1.default)());
         this.app.use((0, cookie_parser_1.default)());
         const publicPath = path_1.default.join(__dirname, '..', 'public');
         this.app.use(express_1.default.static(publicPath));

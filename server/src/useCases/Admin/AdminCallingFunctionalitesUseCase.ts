@@ -1,5 +1,5 @@
 import { Call } from "../../entities/models/common/Call";
-import { IAdminCallingFunctionsUseCase } from "../../entities/useCasesInterfaces/Admin/IAdminCallingFunctionalitesUseCase";
+import { IAdminCallingFunctionsUseCase } from "../../entities/useCasesInterfaces/admin/IAdminCallingFunctionalitesUseCase";
 import { IAdminRepository } from "../../interfaceAdapters/repositories/admin/IAdminRepository";
 
 export class  AdminCallingFunctionalitesUseCase implements IAdminCallingFunctionsUseCase{

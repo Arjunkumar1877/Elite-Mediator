@@ -1,4 +1,4 @@
-import { IUpdateAdminProfileUseCase } from "../../../entities/useCasesInterfaces/Admin/IAdminUpdateProfileUseCase";
+import { IUpdateAdminProfileUseCase } from "../../../entities/useCasesInterfaces/admin/IAdminUpdateProfileUseCase";
 import { Req, Res } from "../../../frameworks/types/ServerTypes";
 
 export class UpdateAdminProfileController {
