@@ -14,10 +14,13 @@ const socket_io_1 = require("socket.io");
 const ConversationModel_1 = require("../../database/models/admin/ConversationModel");
 function initializeSocket(server) {
     console.log("Initializing socket");
+    const allowedOrigins = [
+        "https://elitemediator.shop",
+        "https://www.elitemediator.shop"
+    ];
     const io = new socket_io_1.Server(server, {
         cors: {
-            origin: "https://elitemediator.shop", // Replace with your domain
-            // origin: "*",
+            origin: allowedOrigins,
             methods: ["GET", "POST"],
             allowedHeaders: ["Authorization", "Content-Type"],
             credentials: true,

@@ -45,7 +45,7 @@ const Landing = () => {
       <div className="relative flex flex-col lg:flex-row items-center justify-between space-y-8 lg:space-y-0 mt-40">
         <div className="lg:w-1/2 flex flex-col space-y-4 lg:p-16">
           <h1 className="text-3xl lg:text-5xl font-bold text-zinc-600">
-            DON'T MISS ANYONE...
+            DON'T MISS ANYONE
                       </h1>
           <h2 className="text-xl lg:text-2xl font-semibold text-sky-500">
             WHO TRY TO REACH YOU
@@ -54,9 +54,9 @@ const Landing = () => {
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
             eiusmod tempor incididunt ut labore et dolore magna aliqua.
           </p>
-        <Link to={'/service'}>
+        <Link to={'/signup'}>
         <button className="bg-sky-500 hover:bg-sky-600 text-white px-4 py-2 rounded self-start">
-            SERVICES
+            REGISTER
           </button>
         </Link>
         </div>
@@ -274,7 +274,9 @@ const Landing = () => {
         <h1 className="mt-2 text-sm md:mt-8  md:text-5xl font-semibold text-sky-500">ANYWHERE</h1>
 
         <button className="mt-8 bg-sky-500  text-white px-4 py-2  rounded self-center">
-            Register
+           <Link to={'/signup'}>
+           REGISTER                                           
+           </Link>
           </button>
       </div>
 

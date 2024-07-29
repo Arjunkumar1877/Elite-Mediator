@@ -28,8 +28,12 @@ class ExpressServer {
     }
     configureMiddleware() {
         this.app.use(express_1.default.json());
+        const allowedOrigins = [
+            "https://elitemediator.shop",
+            "https://www.elitemediator.shop"
+        ];
         this.app.use((0, cors_1.default)({
-            origin: "https://elitemediator.shop", // Replace with your frontend domain
+            origin: allowedOrigins,
             methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
             allowedHeaders: ["Authorization", "Content-Type"],
             credentials: true,

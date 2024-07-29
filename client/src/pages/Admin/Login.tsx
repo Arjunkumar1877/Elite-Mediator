@@ -147,7 +147,6 @@ const Login: React.FC = () => {
               onChange={(e) => setEmail(e.target.value)}
             />
           </div>
-
           <div className="flex flex-col pt-5">
             <div className="flex justify-between px-5 py-1">
               <span className="text-xs text-zinc-500">Password</span>

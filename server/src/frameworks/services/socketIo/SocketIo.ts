@@ -6,16 +6,23 @@ import { ConversationModel } from "../../database/models/admin/ConversationModel
 function initializeSocket(server: HTTPServer): SocketIoServer {
   console.log("Initializing socket");
 
+  
+  
+
+  const allowedOrigins: any = [
+    "https://elitemediator.shop",
+    "https://www.elitemediator.shop"
+  ];
+  
   const io = new SocketIoServer(server, {
     cors: {
-      origin: "https://elitemediator.shop", // Replace with your domain
-      // origin: "*",
+      origin: allowedOrigins,
       methods: ["GET", "POST"],
       allowedHeaders: ["Authorization", "Content-Type"],
       credentials: true,
     },
   });
-  
+
 
   io.on("connection", (socket) => {
     console.log("A user connected: " + socket.id);

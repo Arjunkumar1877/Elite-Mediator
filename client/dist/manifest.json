@@ -1,0 +1,16 @@
+{
+    "short_name": "Elite Mediator App",
+    "name": "Elite Mediator App PWA",
+    "icons": [
+        {
+            "src": "/logo.png",
+            "type": "image.png",
+            "size": "1024*1024"
+        }
+    ],
+    "start_url": ".",
+    "display": "standalone",
+    "theme_color": "#00000",
+    "background_color": "#ffffff"
+
+}
