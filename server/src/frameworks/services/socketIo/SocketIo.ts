@@ -52,7 +52,7 @@ function initializeSocket(server: HTTPServer): SocketIoServer {
           newUnreadCount = 0;
         } else if (msg.senderModel === "User") {
           newUnreadCount = (conversation?.lastMessage?.unread || 0) + 1;
-          console.log(`User message. Incrementing unread count to ${newUnreadCount} for conversation ${msg.conversationId}`);
+          // console.log(`User message. Incrementing unread count to ${newUnreadCount} for conversation ${msg.conversationId}`);
         }
 
         await ConversationModel.findByIdAndUpdate(msg.conversationId, {
@@ -86,13 +86,16 @@ function initializeSocket(server: HTTPServer): SocketIoServer {
 
     socket.on("incoming-call", (data) => {
       console.log("💕💕💕💕💕Incoming call", data);
-      io.to(data.conId).emit("incoming-call", data);
-      io.to(data.adminId).emit("incoming-call", data);
-      io.to(data.adminId._id).emit("incoming-call", data);
+if(data.admin){
+  io.to(data.conId).emit("incoming-call", data);
+}else{
+  io.to(data.adminId).emit("incoming-call", data);
+}      
+      // io.to(data.adminId._id).emit("incoming-call", data);
     });
 
     socket.on("webrtc-offer", (data) => {
-      console.log("Received WebRTC offer:", data);
+      // console.log("Received WebRTC offer:", data);
       io.to(data.adminId).emit('webrtc-offer', data);
       io.to(data.room).emit("webrtc-offer", data);
     });
@@ -108,7 +111,7 @@ function initializeSocket(server: HTTPServer): SocketIoServer {
     });
 
     socket.on("webrtc-disconnect", (conId, callerId) => {
-      console.log(conId, callerId + "💕💕💕💕💕💕")
+      // console.log(conId, callerId + "💕💕💕💕💕💕")
       io.to(conId).emit('webrtc-disconnect', conId, callerId);
     });
 

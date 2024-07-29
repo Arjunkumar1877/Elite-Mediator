@@ -71,6 +71,8 @@ function DashboardSection() {
   const startCall = async (isVideo: boolean = false, conId: string, userId: string, token: string) => {
     try {
       setIsVideoCall(isVideo);
+      socket.emit("join room", conId);
+
 
       const res = await fetch("/api/start_call", {
         method: "POST",
@@ -102,6 +104,8 @@ function DashboardSection() {
           incommingId: currentAdmin._id,
           adminId: currentAdmin._id,
           callerId: data._id,
+          videoCall: isVideo ? true : false,
+          admin: true
         });
       }
     } catch (error) {

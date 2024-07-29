@@ -329,7 +329,7 @@ console.log(remoteVideoRef);
   return (
     <div>
       <ToastContainer />
-      <div className="flex flex-col gap-y-16 p-9">
+      <div className="flex flex-col gap-y-2 p-9">
         <div className="flex flex-col gap-5 mb-10">
           <div className="flex justify-center">
             {

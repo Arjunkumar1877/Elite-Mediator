@@ -52,7 +52,7 @@ function initializeSocket(server) {
                 }
                 else if (msg.senderModel === "User") {
                     newUnreadCount = (((_a = conversation === null || conversation === void 0 ? void 0 : conversation.lastMessage) === null || _a === void 0 ? void 0 : _a.unread) || 0) + 1;
-                    console.log(`User message. Incrementing unread count to ${newUnreadCount} for conversation ${msg.conversationId}`);
+                    // console.log(`User message. Incrementing unread count to ${newUnreadCount} for conversation ${msg.conversationId}`);
                 }
                 yield ConversationModel_1.ConversationModel.findByIdAndUpdate(msg.conversationId, {
                     lastMessage: {
@@ -84,12 +84,16 @@ function initializeSocket(server) {
         }));
         socket.on("incoming-call", (data) => {
             console.log("💕💕💕💕💕Incoming call", data);
-            io.to(data.conId).emit("incoming-call", data);
-            io.to(data.adminId).emit("incoming-call", data);
-            io.to(data.adminId._id).emit("incoming-call", data);
+            if (data.admin) {
+                io.to(data.conId).emit("incoming-call", data);
+            }
+            else {
+                io.to(data.adminId).emit("incoming-call", data);
+            }
+            // io.to(data.adminId._id).emit("incoming-call", data);
         });
         socket.on("webrtc-offer", (data) => {
-            console.log("Received WebRTC offer:", data);
+            // console.log("Received WebRTC offer:", data);
             io.to(data.adminId).emit('webrtc-offer', data);
             io.to(data.room).emit("webrtc-offer", data);
         });
@@ -102,7 +106,7 @@ function initializeSocket(server) {
             io.to(data.room).emit("webrtc-ice-candidate", data.candidate);
         });
         socket.on("webrtc-disconnect", (conId, callerId) => {
-            console.log(conId, callerId + "💕💕💕💕💕💕");
+            // console.log(conId, callerId + "💕💕💕💕💕💕")
             io.to(conId).emit('webrtc-disconnect', conId, callerId);
         });
     });

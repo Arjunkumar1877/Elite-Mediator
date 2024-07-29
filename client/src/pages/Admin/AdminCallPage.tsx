@@ -344,7 +344,7 @@ const AdminCallPage: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col gap-y-5 p-9">
+    <div className="flex flex-col max-h-screen gap-y-2 p-9">
     <div className="flex flex-col gap-5 mb-10">
       <div className="flex justify-center">
         <h3 className="text-2xl font-bold">Connected</h3>

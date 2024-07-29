@@ -10,6 +10,7 @@ import toast from "react-hot-toast";
 import { FaEyeSlash } from "react-icons/fa";
 import { IoEyeSharp } from "react-icons/io5";
 import axios from "axios";
+import { useSelector } from "react-redux";
 
 interface Errors {
   username?: string;
@@ -32,7 +33,18 @@ const Signup: React.FC = () => {
   const [confirmOtp, setConfirmOtp] = useState<any>(null);
   const [viewPassword, setViewPassword] = useState<boolean>(false);
   const [posters, setPosters] = useState<PostersDataType[]>([]);
+  const { currentAdmin } = useSelector((state: any)=> state.admin);
   const navigate = useNavigate();
+
+
+  useEffect(()=>{
+    handleFetchPosters();
+  if(currentAdmin && currentAdmin.address){
+    navigate('/profile')
+  }else if(currentAdmin && !currentAdmin.address){
+    navigate('/admin-data')
+  }
+  },[])
 
   const validateForm = (): boolean => {
     let formErrors: Errors = {};
@@ -133,7 +145,7 @@ const Signup: React.FC = () => {
   console.log(confirmOtp);
 
   return (
-    <div className="flex justify-center h-[700px] w-full">
+    <div className="flex justify-center h-screen w-full">
       <div className="hidden sm:flex sm:flex-1 sm:h-full">
         <img
           src={posters.length > 0 ? posters[9].imageUrl : 'https://firebasestorage.googleapis.com/v0/b/elite-mediator.appspot.com/o/login.jpg?alt=media&token=23fd7400-7426-40c8-87c3-dc4c1eabc8c9'}

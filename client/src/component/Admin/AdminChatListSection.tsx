@@ -253,20 +253,19 @@ const AdminChatListSection: React.FC = () => {
 
       <div className="relative z-10 p-2 flex flex-col justify-between border-2 rounded bg-white shadow-lg h-full overflow-hidden">
         <div className="flex flex-col gap-4">
-          <div className="flex flex-col lg:flex-row justify-between bg-sky-500 p-4 rounded">
-            <div className="flex gap-16 lg:gap-16 justify-center items-center px-2 lg:px-5">
+          <div className="flex flex-col lg:flex-row justify-between px-6 lg:16 bg-sky-500 p-4 rounded">
+            <div className="flex-col  justify-center items-center ">
               <button
                 onClick={() => handleFilterChatByProperty("All")}
-                className="py-3 bg-white px-4 lg:px-8 text-xs rounded-full hover:bg-sky-300"
+                className="py-2 w-full bg-white  text-xs rounded-full hover:bg-sky-300"
               >
                 All chats
               </button>
-              <div className="flex relative">
-                <select
+              <select
                   onChange={(e: ChangeEvent<HTMLSelectElement>) =>
                     handleFilterChatByProperty(e.target.value)
                   }
-                  className="py-3 px-2 bg-white lg:px-16 text-xs rounded-full cursor-pointer"
+                  className="py-2 w-full bg-white mt-4 text-xs rounded-full cursor-pointer"
                 >
                   <option className="font-bold" value="">
                     All Properties
@@ -289,12 +288,12 @@ const AdminChatListSection: React.FC = () => {
                     
                     ))}
                 </select>
-              </div>
+           
             </div>
 
-            <div className="flex flex-col lg:flex-row gap-4 mt-4 lg:mt-0 bg-sky-300 rounded p-3">
+            <div className="flex flex-col lg:flex-row gap-2 mt-4 lg:mt-0 bg-sky-300 rounded p-2">
               <div className="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-4">
-                <div className="flex mr-12 pr-4 items-center space-x-2">
+                <div className="flex mr-12  items-center space-x-2">
                   <label htmlFor="start-date" className="text-xs">
                     Start Date:
                   </label>
@@ -304,7 +303,7 @@ const AdminChatListSection: React.FC = () => {
                     name="start-date"
                     value={startDate}
                     onChange={handleStartDateChange}
-                    className="py-2 px-4 rounded-full border border-gray-300 cursor-pointer"
+                    className="py-2 px-2 rounded-full border border-gray-300 cursor-pointer"
                   />
                 </div>
                 <div className="flex items-center space-x-2">
@@ -317,7 +316,7 @@ const AdminChatListSection: React.FC = () => {
                     name="end-date"
                     value={endDate}
                     onChange={handleEndDateChange}
-                    className="py-2 px-4 rounded-full border border-gray-300 cursor-pointer"
+                    className="py-2 px-2 rounded-full border border-gray-300 cursor-pointer"
                   />
                   <button
                     className="bg-white text-xs p-3 rounded-full font-semibold hover:bg-sky-200 "

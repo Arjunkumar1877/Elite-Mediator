@@ -159,6 +159,7 @@ const UserChatPage: React.FC = () => {
   useEffect(() => {
     fetchOrSaveFcmToken();
     socket.emit("join room", conId);
+    socket.emit("join room", currentUser.adminId._id);
 
     const handleIncomingCall = (data: any) => {
       console.log(data);
@@ -204,9 +205,10 @@ const UserChatPage: React.FC = () => {
         socket.emit("incoming-call", {
           conId,
           incommingId: currentUser._id,
-          adminId: currentUser.adminId,
+          adminId: currentUser.adminId._id,
           callerId: data._id,
-          videoCall: isVideo
+          videoCall: isVideo,
+          admin: false
         });
       }
     } catch (error) {
@@ -484,8 +486,8 @@ const UserChatPage: React.FC = () => {
                 >
                   {message.senderModel !== "User" && (
                     <img
-                      src={message.senderModel === 'User' ? 'https://cdn-icons-png.flaticon.com/512/9385/9385289.png' : currentUser?.adminId?.image}
-                      alt="User"
+                      src={currentUser?.adminId?.image}
+                      alt="Admin"
                       className="w-10 h-10 rounded-full"
                     />
                   )}
@@ -541,7 +543,7 @@ const UserChatPage: React.FC = () => {
                   </div>
                   {message.senderModel === "User" && (
                     <img
-                      src="/public/userIcon.webp"
+                      src="https://cdn-icons-png.flaticon.com/512/9385/9385289.png"
                       alt="User"
                       className="w-10 h-10 rounded-full"
                     />

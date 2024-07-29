@@ -189,7 +189,8 @@ username: currentAdmin.username
           incommingId: currentAdmin._id,
           adminId: currentAdmin._id,
           callerId: data._id,
-          videoCall: isVideo
+          videoCall: isVideo,
+          admin: true
         });
       }
     } catch (error: any) {

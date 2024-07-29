@@ -82,7 +82,7 @@ const SideNavBar: React.FC<SideNavBarProps> = ({ navShowSet }) => {
       if (location.pathname !== `/admin_chat?conId=${data.conId}`) {
         console.log("emitted on side nave bar....🤷‍♂️🤷‍♂️🤷‍♂️💕💕🔥🔥🔥🔥");
         navigate(
-          `/call_admin_page?conId=${data.conId}&incommingId=${data.incommingId}&callerId=${data.callerId}`
+          `/call_admin_page?conId=${data.conId}&incommingId=${data.incommingId}&callerId=${data.callerId}&videoCall=${data.videoCall}`
         );
       }
     });
