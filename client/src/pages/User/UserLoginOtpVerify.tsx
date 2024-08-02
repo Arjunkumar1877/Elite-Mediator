@@ -205,7 +205,7 @@ const UserLoginOtpVerify = () => {
       <div className="bg-white shadow-lg rounded-lg p-8 max-w-sm w-full">
         <div className="flex justify-center mb-6">
           <img
-            src="/public/otpverify.jpg"
+            src="https://firebasestorage.googleapis.com/v0/b/elite-mediator.appspot.com/o/360_F_523692923_hxuZgDZr6uzJx6yVvNjOGfgVnQVXrKad.jpg?alt=media&token=f218a4b5-325b-45bb-9ff6-b66d056c74b6"
             alt="OTP Icon"
             className="w-50 h-60 object-cover"
           />

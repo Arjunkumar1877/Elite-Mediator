@@ -113,7 +113,7 @@ const OtpVerification: React.FC = () => {
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4">
       <div className="bg-white shadow-lg rounded-lg p-8 max-w-sm w-full">
         <div className="flex justify-center mb-6">
-          <img src="/public/otpverify.jpg" alt="OTP Icon" className="w-50 h-60 object-cover" />
+          <img src="https://firebasestorage.googleapis.com/v0/b/elite-mediator.appspot.com/o/360_F_523692923_hxuZgDZr6uzJx6yVvNjOGfgVnQVXrKad.jpg?alt=media&token=f218a4b5-325b-45bb-9ff6-b66d056c74b6" alt="OTP Icon" className="w-50 h-60 object-cover" />
         </div>
         <h2 className="text-center text-lg font-semibold mb-4">Enter the OTP sent to your mobile</h2>
         <div className="flex justify-center mb-4 space-x-2">

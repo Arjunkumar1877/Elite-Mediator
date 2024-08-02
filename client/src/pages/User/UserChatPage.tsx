@@ -442,7 +442,7 @@ const UserChatPage: React.FC = () => {
         <div className="flex justify-between items-center px-5 py-3 border-b-2">
           <div className="flex gap-5 items-center">
             <img
-              src={currentUser.adminId.image || "https://cdn-icons-png.flaticon.com/512/9385/9385289.png"}
+              src={currentUser?.adminId?.image || "https://cdn-icons-png.flaticon.com/512/9385/9385289.png"}
               className="w-10 h-10 rounded-full"
               alt="User"
             />
