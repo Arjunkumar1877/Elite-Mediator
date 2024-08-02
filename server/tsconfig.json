@@ -19,7 +19,7 @@
     "module": "commonjs",
     "outDir": "./dist",
     "strict": true,
-    "types": ["node"],
+    "types": ["node", "jest"],
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true
