@@ -19,7 +19,7 @@ class GetAllAdminsForSuperAdminController {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const data = yield this.igetalladminsforsuperadminusecase.FindAllAdmins();
-                res.json(data);
+                res.status(200).json(data);
             }
             catch (error) {
                 console.log(error);

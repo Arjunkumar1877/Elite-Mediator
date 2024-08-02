@@ -43,6 +43,10 @@ const qrDataSchema = new mongoose_1.default.Schema({
     deleted: {
         type: Boolean,
         default: false
-    }
+    },
+    scannedCount: {
+        type: Number,
+        default: 0
+    },
 }, { timestamps: true });
 exports.QrModel = mongoose_1.default.model('QrModel', qrDataSchema);

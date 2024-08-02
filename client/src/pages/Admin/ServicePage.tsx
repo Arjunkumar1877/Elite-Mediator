@@ -46,14 +46,10 @@ const ServicePage = () => {
             DOMESTIC
           </h1>
           <p className=" text-zinc-700 text-sm  lg:text-lg z-20">
-            Acting as the perfect mediator, our service helps visitors reach you
-            through a generated QR code when you're not at home, ensuring a
-            seamless experience while keeping your personal data private.
+          For domestic users, Elite Mediator offers a convenient way to stay connected without sharing private information. By creating unique QR codes, users can communicate with strangers safely, whether they're away from home or managing personal interactions. The app allows for real-time communication via video calls, audio calls, or text messages, providing a secure and private channel for interaction. 
           </p>
           <p className="text-slate-300 text-sm lg:text-lg z-20">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem
-            ipsum dolor sit amet
+          The flexibility to choose between verified, unverified, or unknown user statuses ensures that you can control the level of access and verification required for each interaction. With push notifications, PWA compatibility, and comprehensive visitor management features, Elite Mediator seamlessly integrates into your daily life, offering a reliable and secure means of communication while safeguarding your personal data.
           </p>
           <div className="absolute rounded-2xl -right-20 -bottom-32  sm:ml-30 md:ml-28  transform translate-x-1/2 -translate-y-1/2 bg-sky-500 w-40 h-40 md:-right-20 md:-bottom-20 lg:w-72 lg:h-60 rotate-45 lg:-bottom-40 lg:-right-6"></div>
         </div>
@@ -69,11 +65,7 @@ const ServicePage = () => {
                 Business
               </h1>
               <p className="w-[800px] text-sm mt-5  text-zinc-700 lg:text-lg">
-                Acting as the perfect mediator, our services facilitate renting
-                and selling your properties seamlessly. Users can reach you
-                through a generated QR code, ensuring your private phone number
-                remains confidential. Enjoy a seamless experience with our app,
-                designed for effortless and secure transactions.
+              Elite Mediator is a cutting-edge communication platform designed to connect users with strangers securely and efficiently. Whether you're in business or managing personal interactions, our app provides an innovative solution to maintain privacy while facilitating communication. Businesses can generate unique property QR codes for various purposes, such as selling, renting, or offering services. These QR codes enable potential clients to reach out through video calls, audio calls, or text messages without disclosing personal phone numbers. The app supports the inclusion of property names, addresses, and customizable verification options, ensuring that your business interactions remain professional and secure. With options to control video call permissions and filter chat interactions based on user verification status, Elite Mediator enhances your ability to manage and grow your business while preserving your privacy.
               </p>
             </div>
           </div>
@@ -98,12 +90,7 @@ const ServicePage = () => {
           </div>
           <div className="h-40 w-[600px] lg:w-[900px] pr-40 mr-10">
             <p className="pr-10 text-sm text-zinc-700 lg:text-lg">
-              Experience a seamless user interface with our web app, offering
-              integrated chat, voice call, and video call functionalities.
-              Effortlessly communicate in real-time, whether you prefer texting,
-              talking, or face-to-face interactions. Our platform ensures smooth
-              and uninterrupted connectivity, enhancing your online
-              communication experience.
+            Our platform features robust visitor management tools that allow property owners to filter and manage interactions effectively. You can sort visitors by date, property, or time to streamline communication and follow up with leads efficiently. Additionally, the app provides direct contact options, including mobile numbers and WhatsApp integration, so you can easily reach out to verified or unverified visitors based on the information they provided.
             </p>
           </div>
         </div>

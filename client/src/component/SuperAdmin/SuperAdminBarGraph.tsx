@@ -8,6 +8,8 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 ChartJS.register(
   CategoryScale,
@@ -18,13 +20,30 @@ ChartJS.register(
   Legend
 );
 
+type statistics = {
+  All: number;
+    unknown: number;
+    unverified: number;
+    verified: number;
+}
+
 const SuperAdminBarGraph = () => {
+  const [statistics, setStatistics] = useState<statistics | null>()
+const fetchAllGeneratedPropertyData = async()=>{
+  const data = await axios.get('/superAdmin/admin_generated_qrcodes');
+  setStatistics(data.data);
+}
+
+useEffect(()=>{
+ fetchAllGeneratedPropertyData();
+},[])
+
   const chartData = {
-    labels: ["All Users", "Verified Users", "Unverified Users", "Unknown Users"],
+    labels: ["Total QrCode's", "Verified QrCode's", "Unverified QrCode's", "Unknown QrCode's"],
     datasets: [
       {
-        label: "User Statistics",
-        data: [10, 20, 30, 60],
+        label: "Generated Qr Code's Statistics",
+        data: [statistics?.All, statistics?.verified, statistics?.unverified, statistics?.unknown],
         borderColor: "rgb(14 165 233)",
         backgroundColor: "rgba(75, 192, 192, 0.2)",
         fill: false,

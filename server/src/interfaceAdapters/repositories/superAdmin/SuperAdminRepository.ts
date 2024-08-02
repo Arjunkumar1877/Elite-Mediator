@@ -41,7 +41,55 @@ export class MongoSuperAdminRepository implements ISuperAdminRepository {
     
   }
 
-
+  async FindAllRegisteredAdminsAndVisitors(): Promise<{
+    Admins: number;
+    AllVisitors: number;
+    VerifiedVisitors: number;
+    UnknownVisitors: number;
+    UnverifiedVisitors: number;
+  }> {
+    const Admins = await AdminModel.countDocuments();
+  
+    const UnknownVisitors = await QrModel.find({ userType: 'Unknown' });
+    const UnverifiedVisitors = await QrModel.find({ userType: 'Unverified' });
+    const VerifiedVisitors = await QrModel.find({ userType: 'Verified' });
+  
+    // Helper function to sum up scannedCount across an array of visitors
+    const sumScannedCount = (visitors: any[]): number => {
+      return visitors.reduce((sum, visitor) => sum + (visitor.scannedCount || 0), 0);
+    };
+  
+    const AllVisitors = sumScannedCount(UnknownVisitors) + sumScannedCount(UnverifiedVisitors) + sumScannedCount(VerifiedVisitors);
+  
+    return {
+      Admins,
+      AllVisitors,
+      VerifiedVisitors: sumScannedCount(VerifiedVisitors),
+      UnknownVisitors: sumScannedCount(UnknownVisitors),
+      UnverifiedVisitors: sumScannedCount(UnverifiedVisitors),
+    };
+  }
+  
+  async FindAllGeneratedQrCodesCounts(): Promise<{
+    All: number;
+    unknown: number;
+    unverified: number;
+    verified: number;
+  }> {
+   
+    const AllCodes = await QrModel.countDocuments();
+    const VerifiedCodes = await QrModel.countDocuments({ userType: 'Verified' });
+    const UnVerifiedcodes = await QrModel.countDocuments({ userType: 'Unverified' });
+    const UnknownCodes = await QrModel.countDocuments({ userType: 'Unknown' });
+  
+    return {
+      All: AllCodes,
+      unknown: UnknownCodes,
+      unverified: UnVerifiedcodes,
+      verified: VerifiedCodes,
+    };
+  }
+  
   async FindAPosterByIdAndUpdate(imageUrl: string, posterId: string): Promise<any>{
     const saved = await PosterModel.findOneAndUpdate({_id: posterId}, {
       $set: {

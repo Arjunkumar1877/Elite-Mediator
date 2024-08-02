@@ -64,6 +64,18 @@ class MongoUserRepository {
             return data;
         });
     }
+    FindPropertyDataBypropIdAndAddScanCount(propId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const propertyData = yield QrDataModel_1.QrModel.findOne({ propId: propId });
+            if (propertyData) {
+                const updateProperty = yield QrDataModel_1.QrModel.findOneAndUpdate({ propId: propId }, { $inc: { scannedCount: 1 } }, { new: true });
+                if (updateProperty) {
+                    return "success";
+                }
+            }
+            return "failed";
+        });
+    }
     CreateConversation(userId, adminId, propertyId) {
         return __awaiter(this, void 0, void 0, function* () {
             const save = yield ConversationModel_1.ConversationModel.create({

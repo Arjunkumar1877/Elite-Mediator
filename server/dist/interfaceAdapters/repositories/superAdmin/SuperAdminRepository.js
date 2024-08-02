@@ -50,6 +50,40 @@ class MongoSuperAdminRepository {
             return filteredUsers;
         });
     }
+    FindAllRegisteredAdminsAndVisitors() {
+        return __awaiter(this, void 0, void 0, function* () {
+            const Admins = yield AdminModel_1.AdminModel.countDocuments();
+            const UnknownVisitors = yield QrDataModel_1.QrModel.find({ userType: 'Unknown' });
+            const UnverifiedVisitors = yield QrDataModel_1.QrModel.find({ userType: 'Unverified' });
+            const VerifiedVisitors = yield QrDataModel_1.QrModel.find({ userType: 'Verified' });
+            // Helper function to sum up scannedCount across an array of visitors
+            const sumScannedCount = (visitors) => {
+                return visitors.reduce((sum, visitor) => sum + (visitor.scannedCount || 0), 0);
+            };
+            const AllVisitors = sumScannedCount(UnknownVisitors) + sumScannedCount(UnverifiedVisitors) + sumScannedCount(VerifiedVisitors);
+            return {
+                Admins,
+                AllVisitors,
+                VerifiedVisitors: sumScannedCount(VerifiedVisitors),
+                UnknownVisitors: sumScannedCount(UnknownVisitors),
+                UnverifiedVisitors: sumScannedCount(UnverifiedVisitors),
+            };
+        });
+    }
+    FindAllGeneratedQrCodesCounts() {
+        return __awaiter(this, void 0, void 0, function* () {
+            const AllCodes = yield QrDataModel_1.QrModel.countDocuments();
+            const VerifiedCodes = yield QrDataModel_1.QrModel.countDocuments({ userType: 'Verified' });
+            const UnVerifiedcodes = yield QrDataModel_1.QrModel.countDocuments({ userType: 'Unverified' });
+            const UnknownCodes = yield QrDataModel_1.QrModel.countDocuments({ userType: 'Unknown' });
+            return {
+                All: AllCodes,
+                unknown: UnknownCodes,
+                unverified: UnVerifiedcodes,
+                verified: VerifiedCodes,
+            };
+        });
+    }
     FindAPosterByIdAndUpdate(imageUrl, posterId) {
         return __awaiter(this, void 0, void 0, function* () {
             const saved = yield PostersModel_1.PosterModel.findOneAndUpdate({ _id: posterId }, {

@@ -32,6 +32,9 @@ router.post("/save_property_data", JwtToken.verifyToken, AdminInjects_1.Injected
 router.get("/get_admin_property_data/:id", JwtToken.verifyToken, AdminInjects_1.InjectedGetAdminAllPropertyDataController.GetAdminPropertyDataControl.bind(AdminInjects_1.InjectedGetAdminAllPropertyDataController));
 // -------------------------------------| GET ADMINS PROPERTY DATA AND QRCODE --------------------------------------------------------------------------|
 router.get("/get_admin_property_data_filtering/:adminId", JwtToken.verifyToken, AdminInjects_1.InjectedGetAdminPropertyDataForFilteringController.GetAdminPropertyDataForFilteringControl.bind(AdminInjects_1.InjectedGetAdminPropertyDataForFilteringController));
+// -------------------------------------| SOFT DELETE THE PROPERTY DATA --------------------------------------------------------------------------|
+router.get("/delete_property/:propertyId", AdminInjects_1.InjectedDeleteAdminPropertDataController.DeleteAdminPropertyControl.bind(AdminInjects_1.InjectedDeleteAdminPropertDataController));
+// -------------------------------------| SOFT DELETE THE USER DATA --------------------------------------------------------------------------|
 router.get('/admin_delete_user_data/:userId', AdminInjects_1.InjectedDeleteUserDataAndConversationController.DeleteUserDataConversatiionControl.bind(AdminInjects_1.InjectedDeleteUserDataAndConversationController));
 // -------------------------------------| SEND MESSAGE FROM ADMIN SIDE TO USER -------------------------------------------------------------------------|
 router.post('/admin_send_message', AdminInjects_1.InjectedSendAdminMessageController.SendAdminMessageControl.bind(AdminInjects_1.InjectedSendAdminMessageController));
@@ -63,5 +66,4 @@ router.get('/clear_admin_chat/:conId', JwtToken.verifyToken, AdminInjects_1.Inje
 router.post('/edit_unknown_username', JwtToken.verifyToken, AdminInjects_1.InjectedEditUnknownUsernameController.EditUnknownUsernameControl.bind(AdminInjects_1.InjectedEditUnknownUsernameController));
 // -------------------------------------| LOGOUT THE USER AND REMOVE THE JWT TOKEN FROM THE COOKIES   -----------------------------------------------------------------------------------|
 router.get("/admin_logout", JwtToken.removeToken);
-router.get("/delete_property/:propertyId", AdminInjects_1.InjectedDeleteAdminPropertDataController.DeleteAdminPropertyControl.bind(AdminInjects_1.InjectedDeleteAdminPropertDataController));
 exports.default = router;

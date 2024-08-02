@@ -8,4 +8,5 @@ export interface PropertyData {
     url: string;
     code: string;
     deleted?: boolean;
+    scannedCount: number;
 }

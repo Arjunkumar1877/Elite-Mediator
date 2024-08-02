@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.InjectedUserCallingFunctionalitiesController = exports.InjectedGetUserMessagesController = exports.InjectedSendAndCreateUserMessageController = exports.InjectedCreateConversationController = exports.InjectedGetAdminsPropertdataController = exports.InjectedGetUserDataByPhoneController = exports.InjectedAddUserFcmCodeController = exports.InjectedVerifyAndUpdateUserDataController = exports.InjectedGetUnverifiedUserDataController = exports.InjectedChekAndSaveUnknwnUserController = exports.InjectedCheckAndSaveUnVerifiedUsersController = exports.InjectedCheckAndSaveVerifiedUsersController = exports.InjectedCreateNewUserDataController = void 0;
+exports.InjectedUserCallingFunctionalitiesController = exports.InjectedGetUserMessagesController = exports.InjectedSendAndCreateUserMessageController = exports.InjectedCreateConversationController = exports.InjectedGetAdminsPropertdataController = exports.InjectedGetUserDataByPhoneController = exports.InjectedAddUserFcmCodeController = exports.InjectedVerifyAndUpdateUserDataController = exports.InjectedGetUnverifiedUserDataController = exports.InjectedChekAndSaveUnknwnUserController = exports.InjectedUpdatePropertyScannedCountController = exports.InjectedCheckAndSaveUnVerifiedUsersController = exports.InjectedCheckAndSaveVerifiedUsersController = exports.InjectedCreateNewUserDataController = void 0;
 const AddUserFcmTokenController_1 = require("../../interfaceAdapters/controllers/user/AddUserFcmTokenController");
 const CheckAndSaveUnknownUserController_1 = require("../../interfaceAdapters/controllers/user/CheckAndSaveUnknownUserController");
 const CheckAndSaveUnverifiedUserController_1 = require("../../interfaceAdapters/controllers/user/CheckAndSaveUnverifiedUserController");
@@ -12,6 +12,7 @@ const GetUserDataByIdController_1 = require("../../interfaceAdapters/controllers
 const GetUserDataByPhoneController_1 = require("../../interfaceAdapters/controllers/user/GetUserDataByPhoneController");
 const GetUserMessagesController_1 = require("../../interfaceAdapters/controllers/user/GetUserMessagesController");
 const SendUserMessageController_1 = require("../../interfaceAdapters/controllers/user/SendUserMessageController");
+const UpdatePropertDataSacnnedCountController_1 = require("../../interfaceAdapters/controllers/user/UpdatePropertDataSacnnedCountController");
 const UserCallingFunctionalitiesController_1 = require("../../interfaceAdapters/controllers/user/UserCallingFunctionalitiesController");
 const userVerifyAndUpdateController_1 = require("../../interfaceAdapters/controllers/user/userVerifyAndUpdateController");
 const UserRepository_1 = require("../../interfaceAdapters/repositories/user/UserRepository");
@@ -27,6 +28,7 @@ const GetUserDataByPhoneUseCase_1 = require("../../useCases/user/GetUserDataByPh
 const GetUserMessagesUseCase_1 = require("../../useCases/user/GetUserMessagesUseCase");
 const SaveNewUserDataUseCase_1 = require("../../useCases/user/SaveNewUserDataUseCase");
 const SendAndCreateUserMessage_1 = require("../../useCases/user/SendAndCreateUserMessage");
+const UpdatePropertyScannedCountUseCase_1 = require("../../useCases/user/UpdatePropertyScannedCountUseCase");
 const UserCallingFunctionalitiesUseCase_1 = require("../../useCases/user/UserCallingFunctionalitiesUseCase");
 const VerifyUserUseCase_1 = require("../../useCases/user/VerifyUserUseCase");
 const mongoRepo = new UserRepository_1.MongoUserRepository();
@@ -40,6 +42,9 @@ exports.InjectedCheckAndSaveVerifiedUsersController = new CheckAndSaveVerifiedUs
 // -----------------------------| CHECK AND SAVE UNVERIFIED USER DATA INJECTION ----------------------------------------------------------------------------------------
 const checkAndSaveUnVerifiedUserDataUse = new CheckAndSaveUnverifiedUserUsecase_1.CheckAndSaveUnverifiedUserUsecase(mongoRepo);
 exports.InjectedCheckAndSaveUnVerifiedUsersController = new CheckAndSaveUnverifiedUserController_1.CheckAndSaveUnverifiedUserController(checkAndSaveUnVerifiedUserDataUse);
+// -----------------------------| CHECK AND SAVE UNVERIFIED USER DATA INJECTION ----------------------------------------------------------------------------------------
+const updatePropertSacnnedUse = new UpdatePropertyScannedCountUseCase_1.UpdatePropertyScannedCountUseCase(mongoRepo);
+exports.InjectedUpdatePropertyScannedCountController = new UpdatePropertDataSacnnedCountController_1.UpdatePropertDataSacnnedCountController(updatePropertSacnnedUse);
 // -----------------------------| NEW USER LOGIN AND SAVE DATA INJECTION ----------------------------------------------------------------------------------------
 const checkAndSaveUnknownUserUse = new CheckAndSaveUnknownUserUseCase_1.CheckAndSaveUnknownUserUseCase(mongoRepo);
 exports.InjectedChekAndSaveUnknwnUserController = new CheckAndSaveUnknownUserController_1.CheckAndSaveUnknownUserController(checkAndSaveUnknownUserUse);

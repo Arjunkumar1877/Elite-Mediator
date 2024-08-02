@@ -45,14 +45,13 @@ const Landing = () => {
       <div className="relative flex flex-col lg:flex-row items-center justify-between space-y-8 lg:space-y-0 mt-40">
         <div className="lg:w-1/2 flex flex-col space-y-4 lg:p-16">
           <h1 className="text-3xl lg:text-5xl font-bold text-zinc-600">
-            DON'T MISS ANYONE...
+            DON'T MISS ANYONE
                       </h1>
           <h2 className="text-xl lg:text-2xl font-semibold text-sky-500">
             WHO TRY TO REACH YOU
           </h2>
           <p className="text-gray-600 text-sm lg:text-base">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua.
+          At Elite Mediator, we offer a revolutionary platform designed to facilitate secure and seamless communication with strangers while safeguarding your personal information.
           </p>
         <Link to={'/signup'}>
         <button className="bg-sky-500 hover:bg-sky-600 text-white px-4 py-2 rounded self-start">
@@ -91,9 +90,7 @@ const Landing = () => {
               </div>
               <h3 className="text-xl font-semibold">Domestic</h3>
               <p className="text-gray-600">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
-                adibced sit amet justo ipsum. Sed accumsan quam vitae est
-                varius.
+              Domestic users can create their own unique property QR codes to facilitate communication with strangers while they are away from home. This feature allows users to interact with others through video calls, audio calls, or text messages without having to share personal information. It’s a secure way to stay connected and manage communications from a distance, ensuring your privacy is always maintained.
               </p>
             </div>
 
@@ -103,9 +100,7 @@ const Landing = () => {
               </div>
               <h3 className="text-xl font-semibold">Business</h3>
               <p className="text-gray-600">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
-                adibced sit amet justo ipsum. Sed accumsan quam vitae est
-                varius.
+              You can generate unique property QR codes for your business, whether for selling, renting, or offering services. These QR codes let users contact you directly through video calls, audio calls, or text messages without sharing personal phone numbers, helping you manage and grow your business while maintaining privac
               </p>
             </div>
           </div>
@@ -141,13 +136,7 @@ const Landing = () => {
           </div>
           <div className="h-40 w-[900px] pr-40">
             <p className="">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Minus
-              eveniet labore, adipisci vitae doloremque eligendi qui magnam
-              eaque nihil? Quasi ipsum, saepe consectetur aspernatur
-              consequuntur numquam alias culpa, incidunt hic ad eligendi iusto
-              repellendus accusamus voluptates amet molestias laudantium,
-              molestiae ab earum quia minima repellat dolor. Praesentium ab vero
-              totam!
+            Elite Mediator offers flexible communication settings to suit your preferences. You can decide whether or not to enable video calls for users scanning your QR code. If you choose to disable video calls, users will only be able to communicate via text or audio. This level of control ensures that your communication preferences are respected while still providing various ways to interact with others.
             </p>
           </div>
           <div className="text-start">
@@ -203,13 +192,7 @@ const Landing = () => {
           </div>
           <div className="h-40 w-[900px] pr-40">
             <p className="">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Minus
-              eveniet labore, adipisci vitae doloremque eligendi qui magnam
-              eaque nihil? Quasi ipsum, saepe consectetur aspernatur
-              consequuntur numquam alias culpa, incidunt hic ad eligendi iusto
-              repellendus accusamus voluptates amet molestias laudantium,
-              molestiae ab earum quia minima repellat dolor. Praesentium ab vero
-              totam! Lorem ipsum dolor sit amet consectetur adipisicing elit. Beatae illo, totam exercitationem officia quod reiciendis perferendis quis, sequi, esse neque minus recusandae reprehenderit molestias debitis! Non quo eaque consequatur, consequuntur veniam ut. Error, quos debitis? Lorem ipsum dolor sit amet consectetur, adipisicing elit. Labore officiis odio ex porro sit omnis quo. Dolore modi earum illum natus iusto exercitationem commodi voluptatem, ipsa delectus! Cupiditate molestias nam aspernatur nostrum sint reiciendis eligendi facere architecto doloremque, repudiandae omnis.
+            Security is our top priority at Elite Mediator. We ensure that all your private data is protected with state-of-the-art security measures. Our platform provides a safe environment for all communications, so you can confidently interact with strangers without worrying about your personal information being compromised.
             </p>
           </div>
         </div>

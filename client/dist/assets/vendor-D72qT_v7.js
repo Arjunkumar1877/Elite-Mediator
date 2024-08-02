@@ -274,7 +274,7 @@ Error generating stack: `+o.message+`
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */class hP{constructor(e){this.container=e}getPlatformInfoString(){return this.container.getProviders().map(n=>{if(pP(n)){const r=n.getImmediate();return`${r.library}/${r.version}`}else return null}).filter(n=>n).join(" ")}}function pP(t){const e=t.getComponent();return(e==null?void 0:e.type)==="VERSION"}const Sg="@firebase/app",Lv="0.10.6";/**
+ */class hP{constructor(e){this.container=e}getPlatformInfoString(){return this.container.getProviders().map(n=>{if(pP(n)){const r=n.getImmediate();return`${r.library}/${r.version}`}else return null}).filter(n=>n).join(" ")}}function pP(t){const e=t.getComponent();return(e==null?void 0:e.type)==="VERSION"}const Sg="@firebase/app",Lv="0.10.7";/**
  * @license
  * Copyright 2019 Google LLC
  *
@@ -289,7 +289,7 @@ Error generating stack: `+o.message+`
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */const rs=new dS("@firebase/app"),gP="@firebase/app-compat",mP="@firebase/analytics-compat",yP="@firebase/analytics",vP="@firebase/app-check-compat",wP="@firebase/app-check",bP="@firebase/auth",_P="@firebase/auth-compat",SP="@firebase/database",CP="@firebase/database-compat",xP="@firebase/functions",kP="@firebase/functions-compat",EP="@firebase/installations",TP="@firebase/installations-compat",PP="@firebase/messaging",OP="@firebase/messaging-compat",IP="@firebase/performance",AP="@firebase/performance-compat",RP="@firebase/remote-config",MP="@firebase/remote-config-compat",LP="@firebase/storage",NP="@firebase/storage-compat",DP="@firebase/firestore",BP="@firebase/vertexai-preview",zP="@firebase/firestore-compat",FP="firebase",jP="10.12.3";/**
+ */const rs=new dS("@firebase/app"),gP="@firebase/app-compat",mP="@firebase/analytics-compat",yP="@firebase/analytics",vP="@firebase/app-check-compat",wP="@firebase/app-check",bP="@firebase/auth",_P="@firebase/auth-compat",SP="@firebase/database",CP="@firebase/database-compat",xP="@firebase/functions",kP="@firebase/functions-compat",EP="@firebase/installations",TP="@firebase/installations-compat",PP="@firebase/messaging",OP="@firebase/messaging-compat",IP="@firebase/performance",AP="@firebase/performance-compat",RP="@firebase/remote-config",MP="@firebase/remote-config-compat",LP="@firebase/storage",NP="@firebase/storage-compat",DP="@firebase/firestore",BP="@firebase/vertexai-preview",zP="@firebase/firestore-compat",FP="firebase",jP="10.12.4";/**
  * @license
  * Copyright 2019 Google LLC
  *
@@ -409,7 +409,7 @@ Error generating stack: `+o.message+`
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */function eO(t){Mr(new mr("platform-logger",e=>new hP(e),"PRIVATE")),Mr(new mr("heartbeat",e=>new JP(e),"PRIVATE")),Qn(Sg,Lv,t),Qn(Sg,Lv,"esm2017"),Qn("fire-js","")}eO("");var tO="firebase",nO="10.12.3";/**
+ */function eO(t){Mr(new mr("platform-logger",e=>new hP(e),"PRIVATE")),Mr(new mr("heartbeat",e=>new JP(e),"PRIVATE")),Qn(Sg,Lv,t),Qn(Sg,Lv,"esm2017"),Qn("fire-js","")}eO("");var tO="firebase",nO="10.12.4";/**
  * @license
  * Copyright 2020 Google LLC
  *

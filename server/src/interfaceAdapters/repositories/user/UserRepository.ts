@@ -59,6 +59,25 @@ export class MongoUserRepository implements IUserRepository {
     return  data;
   }
 
+  async FindPropertyDataBypropIdAndAddScanCount(propId: string): Promise<string> {
+    const propertyData: any = await QrModel.findOne({ propId: propId });
+  
+    if (propertyData) {
+      const updateProperty: any = await QrModel.findOneAndUpdate(
+        { propId: propId },
+        { $inc: { scannedCount: 1 } }, 
+        { new: true }
+      );
+  
+      if (updateProperty) {
+        return "success";
+      }
+    }
+  
+    return "failed";
+  }
+  
+
   async CreateConversation(
     userId: string,
     adminId: string,

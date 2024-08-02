@@ -47,6 +47,10 @@ router.get("/get_admin_property_data/:id", JwtToken.verifyToken, InjectedGetAdmi
 // -------------------------------------| GET ADMINS PROPERTY DATA AND QRCODE --------------------------------------------------------------------------|
 router.get("/get_admin_property_data_filtering/:adminId", JwtToken.verifyToken, InjectedGetAdminPropertyDataForFilteringController.GetAdminPropertyDataForFilteringControl.bind(InjectedGetAdminPropertyDataForFilteringController));
 
+// -------------------------------------| SOFT DELETE THE PROPERTY DATA --------------------------------------------------------------------------|
+router.get("/delete_property/:propertyId", InjectedDeleteAdminPropertDataController.DeleteAdminPropertyControl.bind(InjectedDeleteAdminPropertDataController))
+
+// -------------------------------------| SOFT DELETE THE USER DATA --------------------------------------------------------------------------|
 router.get('/admin_delete_user_data/:userId', InjectedDeleteUserDataAndConversationController.DeleteUserDataConversatiionControl.bind(InjectedDeleteUserDataAndConversationController))
 
 // -------------------------------------| SEND MESSAGE FROM ADMIN SIDE TO USER -------------------------------------------------------------------------|
@@ -94,7 +98,6 @@ router.post('/edit_unknown_username', JwtToken.verifyToken, InjectedEditUnknownU
 // -------------------------------------| LOGOUT THE USER AND REMOVE THE JWT TOKEN FROM THE COOKIES   -----------------------------------------------------------------------------------|
 router.get("/admin_logout", JwtToken.removeToken);
 
-router.get("/delete_property/:propertyId", InjectedDeleteAdminPropertDataController.DeleteAdminPropertyControl.bind(InjectedDeleteAdminPropertDataController))
 
 
 

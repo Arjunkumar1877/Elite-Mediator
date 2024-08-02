@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { Route } from "../../../frameworks/types/ServerTypes";
-import { InjectedAddUserFcmCodeController, InjectedCheckAndSaveUnVerifiedUsersController, InjectedCheckAndSaveVerifiedUsersController, InjectedChekAndSaveUnknwnUserController, InjectedCreateConversationController, InjectedCreateNewUserDataController, InjectedGetAdminsPropertdataController, InjectedGetUnverifiedUserDataController, InjectedGetUserDataByPhoneController, InjectedGetUserMessagesController, InjectedSendAndCreateUserMessageController, InjectedUserCallingFunctionalitiesController, InjectedVerifyAndUpdateUserDataController } from "../../../frameworks/injection/UserInjects";
+import { InjectedAddUserFcmCodeController, InjectedCheckAndSaveUnVerifiedUsersController, InjectedCheckAndSaveVerifiedUsersController, InjectedChekAndSaveUnknwnUserController, InjectedCreateConversationController, InjectedCreateNewUserDataController, InjectedGetAdminsPropertdataController, InjectedGetUnverifiedUserDataController, InjectedGetUserDataByPhoneController, InjectedGetUserMessagesController, InjectedSendAndCreateUserMessageController, InjectedUpdatePropertyScannedCountController, InjectedUserCallingFunctionalitiesController, InjectedVerifyAndUpdateUserDataController } from "../../../frameworks/injection/UserInjects";
 import { ConversationModel } from "../../../frameworks/database/models/admin/ConversationModel";
 import { MessageModel } from "../../../frameworks/database/models/admin/MessageModel";
 import {  getMacAddressFromDevice } from "../../services/GetMacAddress/GetMacAddress";
@@ -9,11 +9,18 @@ const router:Route = Router();
 // -------------------------------------| SAVE NEW USER DATA INTO THE DATABASE --------------------------------------------------------------------|
 router.post("/create_verified_user", InjectedCheckAndSaveVerifiedUsersController.CheckAndSaveVerifiedUserControl.bind(InjectedCheckAndSaveVerifiedUsersController));
 
+
 // -------------------------------------| GET THE MAC ADDRESS OF THE DEVICE THE USER IS IN --------------------------------------------------------------------|
 router.get("/getmac_address", getMacAddressFromDevice.findMacAddress);
 
+
 // -------------------------------------| SAVE NEW UNVERIFIED USER DATA INTO THE DATABASE --------------------------------------------------------------------|
 router.post("/create_unverified_user", InjectedCheckAndSaveUnVerifiedUsersController.CheckAndSaveUnverifiedUserControl.bind(InjectedCheckAndSaveUnVerifiedUsersController));
+
+
+// -------------------------------------| UPDATE THE SANNED COUNT OF THE PROPERTY DATA INTO THE DATABASE --------------------------------------------------------------------|
+router.get("/update_property_scanned_count/:propId", InjectedUpdatePropertyScannedCountController.UpdatePropertyDataScannedCount.bind(InjectedUpdatePropertyScannedCountController));
+
 
 
 // // -------------------------------------| SAVE NEW UNVERIFIED USER DATA INTO THE DATABASE --------------------------------------------------------------------|

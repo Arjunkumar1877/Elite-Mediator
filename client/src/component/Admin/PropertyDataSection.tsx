@@ -15,6 +15,7 @@ type PropertyDataType = {
   verifyUsers: boolean;
   url: string;
   code: string;
+  scannedCount: number;
 };
 
 type RootState = {
@@ -111,9 +112,10 @@ const PropertyDataSection = () => {
                 <th className="flex-1 text-left">DELETE</th>
               </tr>
             </thead>
-            <tbody className="text-white">
+            <tbody className="text-white flex flex-col">
               {propertyData.length > 0 ? (
                 propertyData.map((data: PropertyDataType) => (
+                 <>
                   <tr key={data._id} className="flex gap-5 justify-center items-center mt-5 bg-sky-500 text-xs lg:text-lg px-2 py-2 rounded lg:gap-x-28">
                     <td className="flex-1 text-left">
                       <img
@@ -141,6 +143,13 @@ const PropertyDataSection = () => {
                       </button>
                     </td>
                   </tr>
+
+                  <div className="flex text-slate-600 bg-sky-400 justify-between py-1 px-8 font-bold">
+                    <h2>Scanned count :- </h2>
+                    <h2>{data?.scannedCount}</h2>
+                  </div>
+                 </>
+
                 ))
               ) : (
                 <tr>

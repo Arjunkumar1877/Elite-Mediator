@@ -9,7 +9,7 @@ constructor(private igetalladminsforsuperadminusecase: IGetAllAdminsForSuperAdmi
     try {
         const data = await this.igetalladminsforsuperadminusecase.FindAllAdmins();
 
-        res.json(data)
+        res.status(200).json(data)
     } catch (error) {
         console.log(error)
     }

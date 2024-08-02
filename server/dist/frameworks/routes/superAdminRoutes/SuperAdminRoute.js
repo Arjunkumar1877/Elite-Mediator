@@ -19,4 +19,8 @@ router.get('/get_posters', SuperAdminInjects_1.InjectedSuperAdminGetAllPostersCo
 router.get("/block_an_admin/:adminId", SuperAdminInjects_1.InjectedSuperAdminBlockAdminController.SuperAdminBlockAdminControl.bind(SuperAdminInjects_1.InjectedSuperAdminBlockAdminController));
 // -------------------------------------| UBLOCK AN ADMIN BY THE SUPER ADMIN -------------------------------------------------------------------------|
 router.get("/unblock_an_admin/:adminId", SuperAdminInjects_1.InjectedSuperAdminUnblockAdminController.SuperAdminUnblockAdminControl.bind(SuperAdminInjects_1.InjectedSuperAdminUnblockAdminController));
+// -------------------------------------| GET ALL REGISTERED ADMIN AND VISITORS FOR THE SUPER ADMIN GRAPH IN DASHBOARD -------------------------------------------------------------------------|
+router.get('/admin_and_visitors_count', SuperAdminInjects_1.InjectedRegisteredPropertyOwnersAndVisitorsController.GetPropertyOwnersAndVisitorsControl.bind(SuperAdminInjects_1.InjectedRegisteredPropertyOwnersAndVisitorsController));
+// -------------------------------------| GET ALL GENERATED QR CODES FOR THE SUPER ADMIN GRAPH IN DASHBOARD -------------------------------------------------------------------------|
+router.get('/admin_generated_qrcodes', SuperAdminInjects_1.InjectedGetGeneratedQrCodedatasForGraphController.GetGeneratedPropertyDataCountControl.bind(SuperAdminInjects_1.InjectedGetGeneratedQrCodedatasForGraphController));
 exports.default = router;

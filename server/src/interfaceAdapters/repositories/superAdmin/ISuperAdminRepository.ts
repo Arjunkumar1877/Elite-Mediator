@@ -11,4 +11,6 @@ export interface ISuperAdminRepository {
     FindAllPosters(): Promise<Posters[] | null>;
     FindByIdAndBlockAnAdmin(adminId: string): Promise<boolean>;
     FindByIdAndUnblockAnAdmin(adminId: string): Promise<boolean>;
+    FindAllRegisteredAdminsAndVisitors(): Promise<any>;
+    FindAllGeneratedQrCodesCounts(): Promise<any>;
 }

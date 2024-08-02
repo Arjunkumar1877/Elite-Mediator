@@ -337,13 +337,13 @@ const UsersListSection = () => {
   //     </div>
   //   </div>
 
-  <div className="p-4 h-screen">
+  <div className="p-2 h-screen">
       <div className="flex flex-col h-full">
         <h1 className="text-2xl font-bold p-4">All Visitors</h1>
 
         <div className="flex flex-col border  p-4 rounded-lg gap-4 bg-white shadow-lg h-full">
          
-        <div className="flex flex-col xl:flex-row justify-between bg-sky-500 p-4 rounded">
+        <div className="flex flex-col gap-1 xl:flex-row justify-between bg-sky-500 p-4 rounded">
   <div className="flex flex-col lg:flex-row gap-4 lg:gap-16 justify-center items-center px-2 lg:px-5">
     <div className="flex relative w-full lg:w-auto">
       <select
@@ -369,7 +369,7 @@ const UsersListSection = () => {
           setEndDate("");
           setStartDate("");
         }}
-        className="py-3 px-1 bg-white lg:px-5 text-xs rounded-full cursor-pointer w-full lg:w-auto"
+        className="py-3  px-2 bg-white lg:px-5 text-xs rounded-full cursor-pointer w-full lg:w-auto"
       >
         <option value="All">All Properties</option>
         {properties && properties.map((prop: PropertyDataType) => (
@@ -397,11 +397,12 @@ const UsersListSection = () => {
           name="start-date"
           value={startDate}
           onChange={handleStartDateChange}
-          className="py-2 px-4 rounded-full border border-gray-300 cursor-pointer w-full lg:w-auto"
+          className="py-2 px-2 rounded-full border border-gray-300 cursor-pointer w-full lg:w-auto"
         />
       </div>
-      <div className="flex items-center space-x-2 w-full lg:w-auto mt-4 sm:mt-0">
-        <label htmlFor="end-date" className="text-xs">
+      <div className="flex-col md:flex-row items-center space-x-2 w-full lg:w-auto mt-4 sm:mt-0">
+      <div className="flex items-center space-x-2 w-full lg:w-auto">
+      <label htmlFor="end-date" className="text-xs">
           End Date:
         </label>
         <input
@@ -410,15 +411,17 @@ const UsersListSection = () => {
           name="end-date"
           value={endDate}
           onChange={handleEndDateChange}
-          className="py-2 px-4 rounded-full border border-gray-300 cursor-pointer w-full lg:w-auto"
+          className="py-2 px-2 rounded-full border border-gray-300 cursor-pointer w-full lg:w-auto"
         />
-        <button
+      </div>
+      
+      </div>
+      <button
           className="bg-white text-xs p-3 rounded-full font-semibold hover:bg-sky-200 w-full lg:w-auto mt-4 sm:mt-0"
           onClick={handleFilterByDate}
         >
           Apply
         </button>
-      </div>
     </div>
   </div>
 </div>

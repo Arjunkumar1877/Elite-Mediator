@@ -21,6 +21,8 @@ router.post("/create_verified_user", UserInjects_1.InjectedCheckAndSaveVerifiedU
 router.get("/getmac_address", GetMacAddress_1.getMacAddressFromDevice.findMacAddress);
 // -------------------------------------| SAVE NEW UNVERIFIED USER DATA INTO THE DATABASE --------------------------------------------------------------------|
 router.post("/create_unverified_user", UserInjects_1.InjectedCheckAndSaveUnVerifiedUsersController.CheckAndSaveUnverifiedUserControl.bind(UserInjects_1.InjectedCheckAndSaveUnVerifiedUsersController));
+// -------------------------------------| UPDATE THE SANNED COUNT OF THE PROPERTY DATA INTO THE DATABASE --------------------------------------------------------------------|
+router.get("/update_property_scanned_count/:propId", UserInjects_1.InjectedUpdatePropertyScannedCountController.UpdatePropertyDataScannedCount.bind(UserInjects_1.InjectedUpdatePropertyScannedCountController));
 // // -------------------------------------| SAVE NEW UNVERIFIED USER DATA INTO THE DATABASE --------------------------------------------------------------------|
 router.post("/create_unknown_user_data", UserInjects_1.InjectedChekAndSaveUnknwnUserController.CheckAndSaveUnknownUserControl.bind(UserInjects_1.InjectedChekAndSaveUnknwnUserController));
 // -------------------------------------| VERIFY THE USER DATA USING FIREBASE CODE IN THE CLIENT SIDE AND UPDATE --------------------------------------------------------------------|

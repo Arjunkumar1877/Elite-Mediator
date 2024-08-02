@@ -15,6 +15,10 @@ import { SuperAdminLoginUseCase } from "../../useCases/superAdmin/SuperAdminLogi
 import { SuperAdmnGetPostersUseCase } from "../../useCases/superAdmin/SuperAdmnGetPostersUseCase";
 import { SuperAdminBlockAdminUseCase } from "../../useCases/superAdmin/SuperAdminBlockAdminUseCase";
 import { SuperAdminUnblockAdminUseCase } from "../../useCases/superAdmin/SuperAdminUnblockAdminUseCase";
+import { GetRegisteredPropertyOwnersandVisitorsForGraphUseCase } from "../../useCases/superAdmin/GetRegisteredPropertyOwnersandVisitorsForGraphUseCase";
+import { GetRegisteredPropertyOwnersAndVisitorsController } from "../../interfaceAdapters/controllers/superAdmin/GetRegisteredPropertyOwnersAndVisitorsController";
+import { GetCreatedPropertyDatasCountForGraphnUseCase } from "../../useCases/superAdmin/GetCreatedPropertyDatasCountForGraphnUseCase";
+import { GetCreatedPropertyDataCountForGraphController } from "../../interfaceAdapters/controllers/superAdmin/GetCreatedPropertyDataCountForGraphController";
 
 
 
@@ -24,34 +28,39 @@ const mongoRepo = new MongoSuperAdminRepository();
 const loginSuperAdminUse = new SuperAdminLoginUseCase(mongoRepo);
 export const InjectedSuperAdminloginController = new SuperAdminLoginController(loginSuperAdminUse)
 
-
 // -----------------------------| GET ALL ADMINS COLLECTIONS FOR SUPERADMIN  ----------------------------------------------------------------------------------------
 const getAllAdminsDataUse = new GetAllAdminsForSuperAdminUseCase(mongoRepo);
 export const InjectedGetAllAdminsDataForSuperAdminController = new GetAllAdminsForSuperAdminController(getAllAdminsDataUse)
-
 
 // -----------------------------| GET AN ADMINS PROFILE DATA FOR SUPERADMIN  ----------------------------------------------------------------------------------------
 const getAnAdminDataUse = new GetAnAdminForSuperAdminUseCase(mongoRepo);
 export const InjectedGetAnAdminForSuperAdminController = new GetAnAdminForSuperAdminController(getAnAdminDataUse)
 
-
 // -----------------------------| GET AN ADMINS PROFILE DATA FOR SUPERADMIN  ----------------------------------------------------------------------------------------
 const getAnAdminsVisitorsUse = new GetAnAdminsVisitorsForSuperAdminUseCase(mongoRepo);
 export const InjectedGetAnAdminsVisitorDataForSuperAdminController = new GetAnAdminvisitorsDataForSuperAdminController(getAnAdminsVisitorsUse)
-
 
 // -----------------------------| EDIT AND ADD NEW POSTERS  ---------------------------------------------------------------------------------------
 const AddNewPosterUse = new SuperAdminAddNewPosterUseCase(mongoRepo);
 export const InjectedSuperAdminAddNewPosterController = new SuperAdminAddNewPosterController(AddNewPosterUse);
 
-// -----------------------------| EDIT AND ADD NEW POSTERS  ---------------------------------------------------------------------------------------
+// -----------------------------| GET ALL THE POSTERS  ---------------------------------------------------------------------------------------
 const getAllPostersUse = new SuperAdmnGetPostersUseCase(mongoRepo);
 export const InjectedSuperAdminGetAllPostersController = new SuperAdminGetAllPostersControllers(getAllPostersUse)
 
-// -----------------------------| EDIT AND ADD NEW POSTERS  ---------------------------------------------------------------------------------------
+// -----------------------------| SUPER ADMIN BLOCK AN ADMIN  ---------------------------------------------------------------------------------------
 const superAdminBlockAdminUse = new SuperAdminBlockAdminUseCase(mongoRepo);
 export const InjectedSuperAdminBlockAdminController = new SuperAdminBlockAdminController(superAdminBlockAdminUse)
 
-// -----------------------------| EDIT AND ADD NEW POSTERS  ---------------------------------------------------------------------------------------
+// -----------------------------| SUPER ADMIN UN BLOCK AN ADMIN  ---------------------------------------------------------------------------------------
 const superAdminUnblockAdminUse = new SuperAdminUnblockAdminUseCase(mongoRepo);
 export const InjectedSuperAdminUnblockAdminController = new SuperAdminUnblockAdminController(superAdminUnblockAdminUse)
+
+// -----------------------------| SUPER ADMIN UN BLOCK AN ADMIN  ---------------------------------------------------------------------------------------
+const getResisteredAdminsAndVisitorsUse = new GetRegisteredPropertyOwnersandVisitorsForGraphUseCase(mongoRepo);
+export const InjectedRegisteredPropertyOwnersAndVisitorsController = new GetRegisteredPropertyOwnersAndVisitorsController(getResisteredAdminsAndVisitorsUse);
+
+
+// -----------------------------| SUPER ADMIN UN BLOCK AN ADMIN  ---------------------------------------------------------------------------------------
+const getGEneratedQrCodesUse = new GetCreatedPropertyDatasCountForGraphnUseCase(mongoRepo);
+export const InjectedGetGeneratedQrCodedatasForGraphController = new GetCreatedPropertyDataCountForGraphController(getGEneratedQrCodesUse)

@@ -276,7 +276,7 @@ const phonenum:number = 0;
       const recaptchaVerifier = new RecaptchaVerifier(auth, "recaptcha", {});
       const phoneNum = "+" + formData.phone;
       const confirmationResult = await signInWithPhoneNumber(auth, phoneNum, recaptchaVerifier);
-
+      console.log(confirmationResult)
       if (confirmationResult) {
         const userIdS = formData.phone + "" + Date.now();
         const updatedFormData = {
@@ -288,10 +288,10 @@ const phonenum:number = 0;
         setFormData(updatedFormData);
         createUserData(updatedFormData);
       } else {
-        // console.log("Error confirming the captcha.");
+        console.log("Error confirming the captcha.");
       }
     } catch (error) {
-      // console.log(error);
+      console.log(error);
       toast.error("Failed to send OTP. Please try again.");
     }
   };
@@ -395,7 +395,6 @@ console.log(propertyData)
 };
 
 export default InitialDataPage;
-
 
 
 

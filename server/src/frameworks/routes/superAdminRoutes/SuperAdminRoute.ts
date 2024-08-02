@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { InjectedGetAllAdminsDataForSuperAdminController, InjectedGetAnAdminForSuperAdminController, InjectedGetAnAdminsVisitorDataForSuperAdminController, InjectedSuperAdminAddNewPosterController, InjectedSuperAdminBlockAdminController, InjectedSuperAdminGetAllPostersController, InjectedSuperAdminloginController, InjectedSuperAdminUnblockAdminController } from "../../injection/SuperAdminInjects";
+import { InjectedGetAllAdminsDataForSuperAdminController, InjectedGetAnAdminForSuperAdminController, InjectedGetAnAdminsVisitorDataForSuperAdminController, InjectedGetGeneratedQrCodedatasForGraphController, InjectedRegisteredPropertyOwnersAndVisitorsController, InjectedSuperAdminAddNewPosterController, InjectedSuperAdminBlockAdminController, InjectedSuperAdminGetAllPostersController, InjectedSuperAdminloginController, InjectedSuperAdminUnblockAdminController } from "../../injection/SuperAdminInjects";
 import { Route } from "../../types/ServerTypes";
 
 
@@ -28,5 +28,15 @@ router.get("/block_an_admin/:adminId", InjectedSuperAdminBlockAdminController.Su
 
 // -------------------------------------| UBLOCK AN ADMIN BY THE SUPER ADMIN -------------------------------------------------------------------------|
 router.get("/unblock_an_admin/:adminId", InjectedSuperAdminUnblockAdminController.SuperAdminUnblockAdminControl.bind(InjectedSuperAdminUnblockAdminController))
+
+// -------------------------------------| GET ALL REGISTERED ADMIN AND VISITORS FOR THE SUPER ADMIN GRAPH IN DASHBOARD -------------------------------------------------------------------------|
+router.get('/admin_and_visitors_count', InjectedRegisteredPropertyOwnersAndVisitorsController.GetPropertyOwnersAndVisitorsControl.bind(InjectedRegisteredPropertyOwnersAndVisitorsController));
+
+// -------------------------------------| GET ALL GENERATED QR CODES FOR THE SUPER ADMIN GRAPH IN DASHBOARD -------------------------------------------------------------------------|
+router.get('/admin_generated_qrcodes', InjectedGetGeneratedQrCodedatasForGraphController.GetGeneratedPropertyDataCountControl.bind(InjectedGetGeneratedQrCodedatasForGraphController));
+
+
+
+
 
 export default router;

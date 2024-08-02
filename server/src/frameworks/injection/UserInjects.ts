@@ -9,6 +9,7 @@ import { GetUserDataByIdController } from "../../interfaceAdapters/controllers/u
 import { GetUserDataByPhoneController } from "../../interfaceAdapters/controllers/user/GetUserDataByPhoneController";
 import { GetUserMessagesController } from "../../interfaceAdapters/controllers/user/GetUserMessagesController";
 import { SendUserMessageController } from "../../interfaceAdapters/controllers/user/SendUserMessageController";
+import { UpdatePropertDataSacnnedCountController } from "../../interfaceAdapters/controllers/user/UpdatePropertDataSacnnedCountController";
 import { UserCallingFunctionalitiesController } from "../../interfaceAdapters/controllers/user/UserCallingFunctionalitiesController";
 import { VerifyAndUpdateUserController } from "../../interfaceAdapters/controllers/user/userVerifyAndUpdateController";
 import { MongoUserRepository } from "../../interfaceAdapters/repositories/user/UserRepository";
@@ -24,6 +25,7 @@ import { GetUserDataByPhoneUseCase } from "../../useCases/user/GetUserDataByPhon
 import { GetUserMessagesUseCase } from "../../useCases/user/GetUserMessagesUseCase";
 import { SaveNewUserDataUseCase } from "../../useCases/user/SaveNewUserDataUseCase";
 import { SendAndCreateUserMessageUseCase } from "../../useCases/user/SendAndCreateUserMessage";
+import { UpdatePropertyScannedCountUseCase } from "../../useCases/user/UpdatePropertyScannedCountUseCase";
 import { UserCallingFunctionalitiesUseCase } from "../../useCases/user/UserCallingFunctionalitiesUseCase";
 import { VerifyUserUseCase } from "../../useCases/user/VerifyUserUseCase";
 
@@ -46,6 +48,11 @@ export const InjectedCheckAndSaveVerifiedUsersController = new CheckAndSaveVerif
 // -----------------------------| CHECK AND SAVE UNVERIFIED USER DATA INJECTION ----------------------------------------------------------------------------------------
 const checkAndSaveUnVerifiedUserDataUse = new CheckAndSaveUnverifiedUserUsecase(mongoRepo);
 export const InjectedCheckAndSaveUnVerifiedUsersController = new CheckAndSaveUnverifiedUserController(checkAndSaveUnVerifiedUserDataUse);
+
+
+// -----------------------------| CHECK AND SAVE UNVERIFIED USER DATA INJECTION ----------------------------------------------------------------------------------------
+const updatePropertSacnnedUse = new UpdatePropertyScannedCountUseCase(mongoRepo);
+export const InjectedUpdatePropertyScannedCountController = new UpdatePropertDataSacnnedCountController(updatePropertSacnnedUse);
 
 
 // -----------------------------| NEW USER LOGIN AND SAVE DATA INJECTION ----------------------------------------------------------------------------------------

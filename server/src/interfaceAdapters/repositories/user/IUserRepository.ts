@@ -20,11 +20,13 @@ export interface IUserRepository{
     CreateUserNewMessageToDb(message: any): Promise<Message | any>;
     FindAndGetUserMessages(conId: string): Promise<any>;
     FindTheUserById(userId: string): Promise<User | null>;
-    FindUserByIdPopulateAdminData(userId: string): Promise<any>
+    FindUserByIdPopulateAdminData(userId: string): Promise<any>;
+    FindPropertyDataBypropIdAndAddScanCount(propId: string): Promise<string>;
     FindConversationAndUpdateDeleted(conId: string | undefined): Promise<any>;
     FindUserAndUpdateDeletedUser(userId: string): Promise<any>;
     CreateUserCallToDb(callData: Call): Promise<Call | any>;
     AcceptUserCallAndUpdatOnDb(id: string): Promise<Call | any>;
     DeclineUserCallAndUpdateOnDb(id: string): Promise<Call | any>;
     DisconnectUserCallAndUpdateOnDb(id: string): Promise<Call | any>;
+
 }

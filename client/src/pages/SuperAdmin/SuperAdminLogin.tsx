@@ -79,7 +79,7 @@ const SuperAdminLogin = () => {
   };
 
   return (
-    <div className="flex justify-center h-[700px] w-full">
+    <div className="flex justify-center h-screen w-full">
       <div className="hidden sm:flex sm:flex-1 sm:h-full">
         <img
                   src={posters.length > 0 ? posters[9].imageUrl : 'https://firebasestorage.googleapis.com/v0/b/elite-mediator.appspot.com/o/login.jpg?alt=media&token=23fd7400-7426-40c8-87c3-dc4c1eabc8c9'}
