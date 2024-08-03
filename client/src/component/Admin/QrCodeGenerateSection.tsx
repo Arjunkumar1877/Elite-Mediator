@@ -3,6 +3,8 @@ import toast from "react-hot-toast";
 import { TfiSave } from "react-icons/tfi";
 import { useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
+import { FaCircleExclamation } from "react-icons/fa6";
+
 
 type FormDataType = {
   adminId: string;
@@ -17,6 +19,7 @@ type FormDataType = {
 
 const QrCodeGenerateSection = () => {
   const { currentAdmin } = useSelector((state: any) => state.admin);
+  const [showUserTypeDetails, setShowUserTypeDetails] = useState<boolean>(false)
   // const [propIdS, setPorpIdS] = useState<string>();
   const navigate = useNavigate();
   const propId = currentAdmin._id + Date.now();
@@ -65,6 +68,10 @@ const QrCodeGenerateSection = () => {
 
   const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if(formData.allowVedioCalls === false || formData.code === '' || formData?.propertyAddress === "" || formData.propertyName === "" || formData.url === ""){
+      return toast("Give the necessary details and generate a code before saving")
+    }
     try {
       const res = await fetch('/api/save_property_data', {
         method: "POST",
@@ -128,9 +135,25 @@ const QrCodeGenerateSection = () => {
             />
           </div>
 
-          <div className="flex justify-between px-7 pt-5 gap-4 flex-col lg:flex-row">
+          {/* <div className="flex justify-between px-7 pt-5 gap-4 flex-col lg:flex-row">
             <div className="flex flex-col w-full lg:w-1/2">
-              <label className="font-medium">User Type</label>
+          {
+            showUserTypeDetails &&   <div className="flex flex-col shadow-2xl p-2 rounded-md">
+              <div className="flex justify-end p-2 hover:text-xl cursor-pointer ">
+                <span className=" flex justify-center items-center hover:bg-sky-400 rounded-full px-2">
+                x
+                </span>
+              </div>
+              <p><span>Verified:-</span> The user scanning the code can only contact you after verifiying them using and otp</p>
+              <p><span>Unverified:-</span> The user scanning the code can contact you after endering there phone, purpose and name without verification</p>
+              <p><span>Unknown:-</span> The user scanning the code can directly contact you</p>
+            </div>
+          }
+              <span className="flex gap-2  items-center"><label className="font-medium">User Type</label> <FaCircleExclamation  onClick={()=> {
+               setShowUserTypeDetails(!showUserTypeDetails)
+              }} className="text-slate-500 cursor-pointer hover:text-slate-800" />
+               
+              </span>
               <select 
                 name="userType" 
                 value={formData.userType}
@@ -170,7 +193,73 @@ const QrCodeGenerateSection = () => {
                 </label>
               </div>
             </div>
-          </div>
+          </div> */}
+
+<div className="flex justify-between px-7 pt-5 gap-8 flex-col lg:flex-row">
+  <div className="flex flex-col w-full lg:w-1/2 space-y-4">
+    <div className="flex items-center gap-2">
+      <label className="font-semibold text-lg">User Type</label>
+      <FaCircleExclamation 
+        onClick={() => setShowUserTypeDetails(!showUserTypeDetails)} 
+        className="text-slate-500 cursor-pointer hover:text-slate-800 transition-colors duration-300" 
+      />
+    </div>
+    {showUserTypeDetails && (
+      <div className="flex flex-col bg-zinc-500 text-white  shadow-2xl p-4 rounded-lg border border-slate-200 space-y-2">
+        <div className="flex justify-end">
+          <span 
+            onClick={() => setShowUserTypeDetails(false)}
+            className="flex justify-center items-center hover:bg-red-400 bg-red-500 opacity-100 text-white rounded-full w-5 h-5 cursor-pointer transition-colors duration-300"
+          >
+            ×
+          </span>
+        </div>
+        <p className="text-sm"><span className="font-bold text-lg">Verified:</span> The user scanning the code can only contact you after verifying themselves using an OTP.</p>
+        <p className="text-sm"><span className="font-bold text-lg">Unverified:</span> The user scanning the code can contact you after entering their phone, purpose, and name without verification.</p>
+        <p className="text-sm"><span className="font-bold text-lg">Unknown:</span> The user scanning the code can directly contact you.</p>
+      </div>
+    )}
+    <select 
+      name="userType" 
+      value={formData.userType}
+      onChange={handleChange} 
+      className="border-2 rounded-lg py-3 px-4 focus:outline-none focus:ring-2 focus:ring-sky-500 transition duration-300"
+    >
+      <option value="Verified">Verified</option>
+      <option value="Unverified">Unverified</option>
+      <option value="Unknown">Unknown</option>
+    </select>
+  </div>
+
+  <div className="flex flex-col w-full lg:w-1/2 space-y-4">
+    <label className="font-semibold text-lg">Allow Video Calls</label>
+    <div className="flex gap-4">
+      <label className="flex items-center">
+        <input 
+          type="radio" 
+          name="allowVedioCalls" 
+          value="true"
+          checked={formData.allowVedioCalls === true}
+          onChange={() => setFormData({ ...formData, allowVedioCalls: true })}
+          className="mr-2 accent-sky-500"
+        />
+        Yes
+      </label>
+      <label className="flex items-center">
+        <input 
+          type="radio" 
+          name="allowVedioCalls" 
+          value="false"
+          checked={formData.allowVedioCalls === false}
+          onChange={() => setFormData({ ...formData, allowVedioCalls: false })}
+          className="mr-2 accent-sky-500"
+        />
+        No
+      </label>
+    </div>
+  </div>
+</div>
+
 
           <div className="flex flex-col lg:flex-row justify-evenly items-center px-7 py-7 gap-4">
             <div className="relative p-3 border-2 rounded-lg">
