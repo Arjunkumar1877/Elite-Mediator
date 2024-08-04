@@ -108,7 +108,7 @@ class MongoUserRepository {
     }
     FindUserByIdPopulateAdminData(userId) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield User_1.UserModel.findOne({ _id: userId }).populate('adminId');
+            return yield User_1.UserModel.findOne({ _id: userId }).populate('adminId propId');
         });
     }
     FindAndGetUserMessages(conId) {

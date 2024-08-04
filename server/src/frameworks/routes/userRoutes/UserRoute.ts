@@ -22,7 +22,6 @@ router.post("/create_unverified_user", InjectedCheckAndSaveUnVerifiedUsersContro
 router.get("/update_property_scanned_count/:propId", InjectedUpdatePropertyScannedCountController.UpdatePropertyDataScannedCount.bind(InjectedUpdatePropertyScannedCountController));
 
 
-
 // // -------------------------------------| SAVE NEW UNVERIFIED USER DATA INTO THE DATABASE --------------------------------------------------------------------|
 router.post("/create_unknown_user_data", InjectedChekAndSaveUnknwnUserController.CheckAndSaveUnknownUserControl.bind(InjectedChekAndSaveUnknwnUserController));
 

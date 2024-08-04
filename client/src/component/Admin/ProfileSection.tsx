@@ -161,7 +161,7 @@ console.log("fcm updated succesfully ❤️❤️❤️❤️❤️❤️❤️�
               adminData && adminData?.phone === 910000000000 ? (
                 <>
                  <ImCross className="text-red-600 text-sm" />
-                 <span className="text-xs text-red-500">Invalid</span>
+                 <span className="text-xs text-red-500">Edit with your actual phone number</span>
                 </>
               ) : (
                 <>

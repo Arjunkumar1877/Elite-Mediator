@@ -77,7 +77,6 @@ export class MongoUserRepository implements IUserRepository {
     return "failed";
   }
   
-
   async CreateConversation(
     userId: string,
     adminId: string,
@@ -118,7 +117,7 @@ export class MongoUserRepository implements IUserRepository {
   }
 
   async FindUserByIdPopulateAdminData(userId: string): Promise<any> {
-    return await UserModel.findOne({_id: userId}).populate('adminId');   
+    return await UserModel.findOne({_id: userId}).populate('adminId propId');   
   }
 
   async FindAndGetUserMessages(conId: string): Promise<any> {

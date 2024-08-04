@@ -584,13 +584,7 @@ if (loading) {
                     : "justify-start"
                 } gap-3`}
               >
-                {message.senderModel !== "Admin" && (
-                  <img
-                    src={message.senderModel !== "User" ? currentAdmin?.image : "https://cdn-icons-png.flaticon.com/512/9385/9385289.png"}
-                    alt="User"
-                    className="w-10 h-10 rounded-full"
-                  />
-                )}
+           
                 <div className="flex flex-col max-w-[300px] md:max-w-[350px] lg:max-w-[650px]">
                   <div className="flex justify-between text-xs text-slate-400">
                     <span>{formatTime(message?.createdAt)}</span>
@@ -638,7 +632,7 @@ if (loading) {
                 </div>
                 {message.senderModel === "Admin" && (
                   <img
-                    src="/public/userIcon.webp"
+                    src={currentAdmin?.image || "https://cdn-icons-png.flaticon.com/512/9385/9385289.png"}
                     alt="User"
                     className="w-10 h-10 rounded-full"
                   />

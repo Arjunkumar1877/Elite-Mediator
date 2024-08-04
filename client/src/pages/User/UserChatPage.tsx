@@ -457,7 +457,7 @@ const UserChatPage: React.FC = () => {
               className="cursor-pointer hover:text-sky-800"
               onClick={() => startCall(false)}
             />
-            {currentUser.propId.allowVedioCalls && (
+            {currentUser?.propId?.allowVedioCalls && (
               <FaVideo
                 className="cursor-pointer hover:text-sky-800"
                 onClick={() => startCall(true)}
