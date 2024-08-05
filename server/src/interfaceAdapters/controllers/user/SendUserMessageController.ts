@@ -13,7 +13,7 @@ export class SendUserMessageController {
     console.log("🤷‍♂️🤷‍♂️🤷‍♂️🤷‍♂️🤷‍♂️🤷‍♂️🤷‍♂️🤷‍♂️😥😥😥 controller for sending messages from user to admin")
 
       const message: any = req.body.messageData;
-      const token: string = req.body.token;
+      const token: string[] = req.body.token;
       const username: string = req.body.username;
 
       const data = await this.isendandcreateusermessageusecase.SendNewMessageByUser(

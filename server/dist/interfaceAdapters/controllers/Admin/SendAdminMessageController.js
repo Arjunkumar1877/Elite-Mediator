@@ -28,13 +28,13 @@ class SendAdminMessageController {
             console.log("🖼️🖼️🖼️🖼️🖼️🖼️");
             let link = `${req.protocol}://${req.headers.host}/chat_user?conId=${message.conversationId}`;
             if (data.text.startsWith("https://")) {
-                const message = yield (0, SendPushNotification_1.sendPushMessage)("🖼️ User shared a media file", username, token, link);
+                const message = yield (0, SendPushNotification_1.sendPushMessageFromAdminToUser)("🖼️ User shared a media file", username, token, link);
             }
             else {
-                const message = yield (0, SendPushNotification_1.sendPushMessage)(data.text, username, token, link);
+                const message = yield (0, SendPushNotification_1.sendPushMessageFromAdminToUser)(data.text, username, token, link);
                 console.log("pushed messge by admin to user 🔥🔥🔥🔥💕💕💕💕💕");
             }
-            yield (0, SendPushNotification_1.sendPushMessage)(data.text, username, token, link);
+            yield (0, SendPushNotification_1.sendPushMessageFromAdminToUser)(data.text, username, token, link);
             res.json(data);
         });
     }

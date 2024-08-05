@@ -17,14 +17,7 @@ class AddAdminFcmTokenUseCase {
     ;
     AddAdminFcmToken(token, adminId) {
         return __awaiter(this, void 0, void 0, function* () {
-            const exsisitingToken = yield this.iadminrepository.FindAdminFcmToken(token, adminId);
-            if (exsisitingToken) {
-                return exsisitingToken;
-            }
-            else {
-                const addedToken = yield this.iadminrepository.FindAdminAndAddFcmToken(token, adminId);
-                return addedToken;
-            }
+            return yield this.iadminrepository.FindAdminAndAddFcmToken(token, adminId);
         });
     }
 }

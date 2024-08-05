@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.sendPushMessage = void 0;
+exports.sendPushMessage = exports.sendPushMessageFromAdminToUser = void 0;
 const firebase_admin_1 = __importDefault(require("firebase-admin"));
 const messaging_1 = require("firebase-admin/messaging");
 const dotenv_1 = __importDefault(require("dotenv"));
@@ -22,7 +22,7 @@ catch (error) {
 firebase_admin_1.default.initializeApp({
     credential: firebase_admin_1.default.credential.cert(serviceAccount),
 });
-const sendPushMessage = (messageText, title, token, link) => {
+const sendPushMessageFromAdminToUser = (messageText, title, token, link) => {
     try {
         console.log(token, messageText, title, link + "😥😣😣😣😣😣");
         console.log(link);
@@ -50,6 +50,47 @@ const sendPushMessage = (messageText, title, token, link) => {
     }
     catch (error) {
         console.log(error);
+        return error;
+    }
+};
+exports.sendPushMessageFromAdminToUser = sendPushMessageFromAdminToUser;
+const sendPushMessage = (messageText, title, tokens, link) => {
+    try {
+        const promises = tokens.map((token) => {
+            const message = {
+                notification: {
+                    title: title,
+                    body: messageText,
+                },
+                token: token,
+                webpush: {
+                    fcmOptions: {
+                        link: link,
+                    },
+                },
+            };
+            return (0, messaging_1.getMessaging)().send(message)
+                .then((response) => {
+                console.log(`Message sent to ${token}: ${response}`);
+                return response;
+            })
+                .catch((err) => {
+                console.log(`Error sending to ${token}: ${err}`);
+                return err;
+            });
+        });
+        return Promise.all(promises)
+            .then((responses) => {
+            console.log('All messages sent:', responses);
+            return responses;
+        })
+            .catch((error) => {
+            console.log('Error in sending messages:', error);
+            return error;
+        });
+    }
+    catch (error) {
+        console.log('Unexpected error:', error);
         return error;
     }
 };

@@ -50,7 +50,8 @@ const AdminSchema = new mongoose_1.default.Schema({
         default: false,
     },
     fcmToken: {
-        type: String
+        type: [String],
+        default: []
     },
     blocked: {
         type: Boolean,

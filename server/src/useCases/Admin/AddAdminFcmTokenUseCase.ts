@@ -8,13 +8,6 @@ export class AddAdminFcmTokenUseCase implements IAddAdminFcmTokenUseCase{
     constructor(private iadminrepository: IAdminRepository){};
 
     async AddAdminFcmToken(token: string, adminId: string): Promise<Admin> {
-        const exsisitingToken = await this.iadminrepository.FindAdminFcmToken(token, adminId);
-
-        if(exsisitingToken){
-            return  exsisitingToken;
-        }else{
-            const addedToken = await this.iadminrepository.FindAdminAndAddFcmToken(token, adminId);
-            return addedToken;
-        }
+        return  await this.iadminrepository.FindAdminAndAddFcmToken(token, adminId);
     }
 }

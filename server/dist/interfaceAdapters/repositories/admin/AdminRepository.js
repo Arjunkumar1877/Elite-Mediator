@@ -55,12 +55,19 @@ class MongoAdminRepository {
     }
     FindAdminAndAddFcmToken(token, adminId) {
         return __awaiter(this, void 0, void 0, function* () {
-            const data = yield AdminModel_1.AdminModel.findOneAndUpdate({ _id: adminId }, {
-                $set: {
-                    fcmToken: token,
-                },
-            });
-            return data;
+            try {
+                const data = yield AdminModel_1.AdminModel.findOneAndUpdate({ _id: adminId }, { $addToSet: { fcmToken: token } }, // Use $addToSet to avoid duplicates
+                { new: true } // Return the updated document
+                );
+                if (!data) {
+                    throw new Error(`Admin with id ${adminId} not found.`);
+                }
+                return data;
+            }
+            catch (error) {
+                console.error('Error updating FCM token:', error);
+                throw error;
+            }
         });
     }
     FindAdminFcmToken(token, adminId) {

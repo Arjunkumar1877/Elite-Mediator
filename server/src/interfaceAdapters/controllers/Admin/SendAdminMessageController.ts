@@ -1,5 +1,5 @@
 import { ISendAndCreateAdminMessageUseCase } from "../../../entities/useCasesInterfaces/admin/ISendAndCreateAdminMessageUseCase";
-import { sendPushMessage } from "../../../frameworks/services/pushNotication/SendPushNotification";
+import { sendPushMessageFromAdminToUser } from "../../../frameworks/services/pushNotication/SendPushNotification";
 import { Req, Res } from "../../../frameworks/types/ServerTypes";
 
 
@@ -19,18 +19,18 @@ export class  SendAdminMessageController{
 let link =   `${req.protocol}://${req.headers.host}/chat_user?conId=${message.conversationId}`;
     
     if (data.text.startsWith("https://")) {
-        const message = await sendPushMessage(
+        const message = await sendPushMessageFromAdminToUser(
           "🖼️ User shared a media file",
           username,
           token,
           link
         );
       } else {
-        const message = await sendPushMessage(data.text, username, token, link);
+        const message = await sendPushMessageFromAdminToUser(data.text, username, token, link);
         console.log("pushed messge by admin to user 🔥🔥🔥🔥💕💕💕💕💕")
       }
 
-     await sendPushMessage(data.text, username, token, link);
+     await sendPushMessageFromAdminToUser(data.text, username, token, link);
 
 
       res.json(data);

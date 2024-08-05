@@ -54,18 +54,25 @@ export class MongoAdminRepository implements IAdminRepository {
   }
 
   async FindAdminAndAddFcmToken(token: string, adminId: string): Promise<any> {
-    const data = await AdminModel.findOneAndUpdate(
-      { _id: adminId },
-      {
-        $set: {
-          fcmToken: token,
-        },
+    try {
+      const data = await AdminModel.findOneAndUpdate(
+        { _id: adminId },
+        { $addToSet: { fcmToken: token } },  // Use $addToSet to avoid duplicates
+        { new: true }  // Return the updated document
+      );
+  
+      if (!data) {
+        throw new Error(`Admin with id ${adminId} not found.`);
       }
-    );
-
-    return data;
+  
+      return data;
+    } catch (error) {
+      console.error('Error updating FCM token:', error);
+      throw error;
+    }
   }
-
+  
+  
   async FindAdminFcmToken(token: string, adminId: string): Promise<any> {
     return await AdminModel.findOne({ _id: adminId, fcmToken: token });
   }

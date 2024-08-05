@@ -9,9 +9,9 @@ export interface Admin {
     pincode?: number | null;
     verified?: boolean
     firebaseConfirm?: string | null;
-    image?: string
-    landmark?: string
-    fcmToken?: string
+    image?: string;
+    landmark?: string;
+    fcmToken?: string[];
     createdAt?: number;
     updatedAt?: number
 }

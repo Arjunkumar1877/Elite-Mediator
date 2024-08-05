@@ -19,7 +19,7 @@ class AddAdminFcmTokenController {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const data = yield this.iaddAdminfcmtokenusecase.AddAdminFcmToken(req.body.token, req.body.adminId);
-                res.json(data);
+                res.status(200).json(data);
             }
             catch (error) {
                 console.log(error);

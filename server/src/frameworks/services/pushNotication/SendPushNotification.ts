@@ -25,7 +25,7 @@ admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
 });
 
-export const sendPushMessage = (messageText: string, title: string, token: string, link:string) => {
+export const sendPushMessageFromAdminToUser = (messageText: string, title: string, token: string, link:string) => {
   try {
     
 
@@ -61,3 +61,51 @@ export const sendPushMessage = (messageText: string, title: string, token: strin
    return error
   }
 };
+
+
+export const sendPushMessage = (messageText: string, title: string, tokens: string[], link: string) => {
+  try {
+    const promises = tokens.map((token) => {
+      const message = {
+        notification: {
+          title: title,
+          body: messageText,
+        },
+        token: token,
+        webpush: {
+          fcmOptions: {
+            link: link,
+          },
+        },
+      };
+
+      return getMessaging().send(message)
+        .then((response) => {
+          console.log(`Message sent to ${token}: ${response}`);
+          return response;
+        })
+        .catch((err) => {
+          console.log(`Error sending to ${token}: ${err}`);
+          return err;
+        });
+    });
+
+    return Promise.all(promises)
+      .then((responses) => {
+        console.log('All messages sent:', responses);
+        return responses;
+      })
+      .catch((error) => {
+        console.log('Error in sending messages:', error);
+        return error;
+      });
+
+  } catch (error) {
+    console.log('Unexpected error:', error);
+    return error;
+  }
+};
+
+
+
+

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaDownload } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
@@ -18,16 +18,9 @@ type PropertyDataType = {
   scannedCount: number;
 };
 
-type RootState = {
-  admin: {
-    currentAdmin: {
-      _id: string;
-    };
-  };
-};
 
 const PropertyDataSection = () => {
-  const { currentAdmin } = useSelector((state: RootState) => state.admin);
+  const { currentAdmin } = useSelector((state: any) => state.admin);
   const [propertyData, setPropertyData] = useState<PropertyDataType[]>([]);
 
   const fetchPropertyData = async () => {
@@ -113,52 +106,54 @@ const PropertyDataSection = () => {
               </tr>
             </thead>
             <tbody className="text-white flex flex-col">
-              {propertyData.length > 0 ? (
-                propertyData.map((data: PropertyDataType) => (
-                 <>
-                  <tr key={data._id} className="flex gap-5 justify-center items-center mt-5 bg-sky-500 text-xs lg:text-lg px-2 py-2 rounded lg:gap-x-28">
-                    <td className="flex-1 text-left">
-                      <img
-                        src={data.code}
-                        alt="QR"
-                        className="w-10 h-10 lg:w-16 lg:h-16"
-                      />
-                    </td>
-                    <td className="flex-1 text-left cursor-pointer">
-                      <FaDownload onClick={() => downloadQRCode(data.code)} className="text-2xl hover:text-sky-800" />
-                    </td>
-                    <td className="flex-1 text-left text-green-200">
-                      {data.allowVedioCalls ? "ALLOWED" : "NOT ALLOWED"}
-                    </td>
-                    <td className="flex-1 text-left">{data.propertyName}</td>
-                    <td className="flex-1 text-left">
-                      <p>{data.propertyAddress}</p>
-                    </td>
-                    <td className="flex-1 text-left">
-                      <button
-                        onClick={() => confirmDelete(data._id)}
-                        className="bg-red-500 text-white text-xs cursor-pointer rounded hover:bg-red-700 lg:text-sm lg:py-1 lg:px-2"
-                      >
-                        delete
-                      </button>
-                    </td>
-                  </tr>
+  {propertyData.length > 0 ? (
+    propertyData.map((data: PropertyDataType) => (
+      <React.Fragment key={data._id}>
+        <tr className="flex gap-5 justify-center items-center mt-5 bg-sky-500 text-xs lg:text-lg px-2 py-2 rounded lg:gap-x-28">
+          <td className="flex-1 text-left">
+            <img
+              src={data.code}
+              alt="QR"
+              className="w-10 h-10 lg:w-16 lg:h-16"
+            />
+          </td>
+          <td className="flex-1 text-left cursor-pointer">
+            <FaDownload onClick={() => downloadQRCode(data.code)} className="text-2xl hover:text-sky-800" />
+          </td>
+          <td className="flex-1 text-left text-green-200">
+            {data.allowVedioCalls ? "ALLOWED" : "NOT ALLOWED"}
+          </td>
+          <td className="flex-1 text-left">{data.propertyName}</td>
+          <td className="flex-1 text-left">
+            <p>{data.propertyAddress}</p>
+          </td>
+          <td className="flex-1 text-left">
+            <button
+              onClick={() => confirmDelete(data._id)}
+              className="bg-red-500 text-white text-xs cursor-pointer rounded hover:bg-red-700 lg:text-sm lg:py-1 lg:px-2"
+            >
+              delete
+            </button>
+          </td>
+        </tr>
 
-                  <div className="flex text-slate-600 bg-sky-400 justify-between py-1 px-8 font-bold">
-                    <h2>Scanned count :- </h2>
-                    <h2>{data?.scannedCount}</h2>
-                  </div>
-                 </>
+        <tr className="bg-sky-400">
+          <td colSpan={6} className="flex justify-between py-1 px-8 font-bold text-slate-600">
+            <h2>Scanned count: </h2>
+            <h2>{data?.scannedCount}</h2>
+          </td>
+        </tr>
+      </React.Fragment>
+    ))
+  ) : (
+    <tr>
+      <td colSpan={6} className="text-center">
+        No Property data available
+      </td>
+    </tr>
+  )}
+</tbody>
 
-                ))
-              ) : (
-                <tr>
-                  <td colSpan={6} className="text-center">
-                    No Property data available
-                  </td>
-                </tr>
-              )}
-            </tbody>
           </table>
         </div>
       </div>
