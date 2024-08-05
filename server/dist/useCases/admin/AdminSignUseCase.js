@@ -19,7 +19,7 @@ class AdminSignupUseCase {
         return __awaiter(this, void 0, void 0, function* () {
             const ExisitingEmail = yield this.adminRepository.FindAdminByEmail(admin.email);
             const ExisitingPhone = yield this.adminRepository.FindAdminByPhone(admin.phone);
-            if (ExisitingPhone || ExisitingEmail) {
+            if (ExisitingPhone && ExisitingEmail) {
                 return "Credentials already exist";
             }
             else {

@@ -14,7 +14,7 @@ export class AdminSignupUseCase implements IAdminSignUp {
       admin.phone
     );
 
-    if (ExisitingPhone || ExisitingEmail) {
+    if (ExisitingPhone && ExisitingEmail) {
       return "Credentials already exist";
     } else {
       console.log("AdminUseCase");
