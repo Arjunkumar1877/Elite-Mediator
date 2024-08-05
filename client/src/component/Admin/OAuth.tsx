@@ -26,6 +26,7 @@ const OAuth = () => {
           username: resultsFromGoogle.user.displayName,
           email: resultsFromGoogle.user.email,
           image: resultsFromGoogle.user.photoURL,
+          phone: 91000000000000 + Date.now() + Math.floor(Math.random() * 1000),
           password: "12345678",
         }),
       });

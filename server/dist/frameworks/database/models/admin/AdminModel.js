@@ -17,7 +17,8 @@ const AdminSchema = new mongoose_1.default.Schema({
     },
     phone: {
         type: Number,
-        unique: true
+        required: true,
+        unique: true,
     },
     password: {
         type: String,

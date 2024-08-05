@@ -13,7 +13,8 @@ const AdminSchema = new mongoose.Schema(
     },
     phone: {
       type: Number,
-      unique: true
+      required: true,
+      unique: true,
     },
     password: {
       type: String,

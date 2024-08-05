@@ -158,10 +158,10 @@ console.log("fcm updated succesfully ❤️❤️❤️❤️❤️❤️❤️�
             <span className="text-gray-500 text-lg md:text-xl">Phone</span>
             <div className="flex items-center gap-2">
              {
-              adminData && !adminData?.phone  ? (
+              adminData && adminData?.phone.toString().length > 12 ? (
                 <>
                  <ImCross className="text-red-600 text-sm" />
-                 <span className="text-xs text-red-500">You can edit and add your phone number if needed</span>
+                 <span className="text-xs text-red-500">You can edit and add your phone number here</span>
                 </>
               ) : (
                 <>
@@ -179,7 +179,7 @@ console.log("fcm updated succesfully ❤️❤️❤️❤️❤️❤️❤️�
             <input
               type="text"
               className="border-2 w-full rounded-md placeholder:text-black placeholder-gray-400 py-2 px-4 md:py-3 md:px-5"
-              placeholder={adminData?.phone ?  adminData?.phone : "not available"}
+              placeholder={adminData?.phone.toString().length <= 12 ? adminData?.phone : "not available"}
               disabled
             />
           </div>
