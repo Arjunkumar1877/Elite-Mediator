@@ -49,11 +49,19 @@ import { GetAdminMessagesUseCase } from '../../useCases/admin/GetAdminMessagesUs
 import { GetAdminMessagesController } from '../../interfaceAdapters/controllers/Admin/GetAdminMessagesController';
 import { DeleteAdminPropertyUseCase } from '../../useCases/admin/DeleteAdminPropertyUseCase';
 import { DeleteAdminPropertyController } from '../../interfaceAdapters/controllers/Admin/DeleteAdminPropertyController';
+import { AdminSendEmailOtpAndUpdateUseCase } from '../../useCases/admin/AdminSendEmailOtpAndUpdateUseCase';
+import { AdminSendAndUpdateEmailOtpController } from '../../interfaceAdapters/controllers/Admin/AdminSendAndsendAndUpdateEmailOtpController';
 const mongoRepo = new MongoAdminRepository();
 
 // -----------------------------| ADMIN SIGNUP INJECTION ----------------------------------------------------------------------------------------
 const adminSignupUse = new AdminSignupUseCase(mongoRepo);
 export const InjectedAdminSignUpController = new AdminSignupController(adminSignupUse);
+
+
+// -----------------------------| SEND EMAIL OTP AND UPDATE INTO THE DATABASE INJECTION ----------------------------------------------------------------------------------------
+const sendEmailOtpAndUpdateUse = new AdminSendEmailOtpAndUpdateUseCase(mongoRepo);
+export const InjectedSenEmailOtpAndUpdateController = new AdminSendAndUpdateEmailOtpController(sendEmailOtpAndUpdateUse);
+
 
 
 // -----------------------------| ADMIN LOGIN VERIFY INJECTION ----------------------------------------------------------------------------------------

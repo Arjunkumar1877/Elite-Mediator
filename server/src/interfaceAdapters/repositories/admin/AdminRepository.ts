@@ -72,7 +72,6 @@ export class MongoAdminRepository implements IAdminRepository {
     }
   }
   
-  
   async FindAdminFcmToken(token: string, adminId: string): Promise<any> {
     return await AdminModel.findOne({ _id: adminId, fcmToken: token });
   }

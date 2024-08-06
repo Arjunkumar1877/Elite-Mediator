@@ -17,9 +17,8 @@ class AdminSignupController {
     signUpAdmin(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const admin = req.body;
                 const data = yield this.iadminsignupusecase.AdminSignupExecut(req.body);
-                console.log("Admin controller ✌️✌️✌️✌️");
+                console.log("Admin signup controller ✌️✌️✌️✌️");
                 res.status(200).json(data);
             }
             catch (error) {

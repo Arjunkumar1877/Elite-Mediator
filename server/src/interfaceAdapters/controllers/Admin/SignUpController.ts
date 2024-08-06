@@ -9,9 +9,9 @@ export class AdminSignupController {
 
   async signUpAdmin(req: Req, res: Res): Promise<void> {
         try {
-            const admin = req.body; 
+            
             const data = await  this.iadminsignupusecase.AdminSignupExecut(req.body)
-            console.log("Admin controller ✌️✌️✌️✌️");
+            console.log("Admin signup controller ✌️✌️✌️✌️");
 
             res.status(200).json(data);
         } catch (error) {

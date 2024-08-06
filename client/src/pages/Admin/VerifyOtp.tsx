@@ -1,10 +1,11 @@
 import { signInWithPhoneNumber } from 'firebase/auth';
 import { RecaptchaVerifier } from 'firebase/auth';
 import React, { useState, useEffect, ChangeEvent } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import {  useNavigate, useParams } from 'react-router-dom';
 import { auth } from '../../firebase/firebase';
 import { PhoneAuthProvider, signInWithCredential } from 'firebase/auth';
 import toast from 'react-hot-toast';
+import axios from 'axios';
 
 const OtpVerification: React.FC = () => {
   const [otp, setOtp] = useState<string[]>(new Array(6).fill(""));
@@ -109,6 +110,23 @@ const OtpVerification: React.FC = () => {
       console.log('Error verifying OTP:', error);
     }
   };
+
+  const handleSendingEmail = async()=>{
+    try {
+      const res = await axios.get(`/api/send_email_otp?id=${adminData._id}`)
+    
+      if(res.data.success){
+        navigate(`/verify_otp_email?phone=${adminData?.phone}`)
+      }else{
+        toast("Email sending failed.")
+      }
+
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4">
       <div className="bg-white shadow-lg rounded-lg p-8 max-w-sm w-full">
@@ -131,8 +149,12 @@ const OtpVerification: React.FC = () => {
           ))}
         </div>
         <button onClick={handleVerifyOtp} className="w-full py-2 bg-sky-500 text-white font-semibold rounded-md hover:bg-sky-600 transition duration-300">Verify</button>
-        <div className="mt-4 flex justify-center">
-          <button disabled={seconds !== 0} onClick={handleResendOtp} className="text-sky-500 underline">{seconds === 0 ? 'Resend OTP' : `Resend OTP in ${seconds} seconds`}</button>
+        <div className="mt-4 flex flex-col justify-center gap-1">
+        <button disabled={seconds !== 0} onClick={handleResendOtp} className="text-sky-500 hover:underline">{seconds === 0 ? 'Resend OTP' : `Resend OTP in ${seconds} seconds`}</button>
+       
+        <button className="text-sky-500 hover:underline" onClick={handleSendingEmail}>Verify using email</button>
+
+          
         </div>
       <div className="" id='recaptcha'></div>
       </div>

@@ -11,6 +11,8 @@ import { FaEyeSlash } from "react-icons/fa";
 import { IoEyeSharp } from "react-icons/io5";
 import axios from "axios";
 import { useSelector } from "react-redux";
+// import { toast } from 'react-toastify'; // Assuming you're using react-toastify for notifications
+
 
 interface Errors {
   username?: string;
@@ -32,21 +34,22 @@ const Signup: React.FC = () => {
   const [errors, setErrors] = useState<Errors>({});
   const [confirmOtp, setConfirmOtp] = useState<any>(null);
   const [viewPassword, setViewPassword] = useState<boolean>(false);
+  const [showEmailVerifyButton, setShowEmailVerifyButton] = useState<boolean>(false);
   const [posters, setPosters] = useState<PostersDataType[]>([]);
   const { currentAdmin } = useSelector((state: any)=> state.admin);
   const navigate = useNavigate();
 
 
-  useEffect(()=>{
+useEffect(()=>{
     handleFetchPosters();
   if(currentAdmin && currentAdmin.address){
     navigate('/profile')
   }else if(currentAdmin && !currentAdmin.address){
     navigate('/admin-data')
   }
-  },[])
+},[])
 
-  const validateForm = (): boolean => {
+const validateForm = (): boolean => {
     let formErrors: Errors = {};
     let isValid = true;
 
@@ -75,9 +78,9 @@ const Signup: React.FC = () => {
 
     setErrors(formErrors);
     return isValid;
-  };
+};
 
-  const onSubmit = async (confirmationResult: any) => {
+const onSubmit = async (confirmationResult: any) => {
     try {
       const res = await fetch("/api/signup", {
         method: "POST",
@@ -89,13 +92,13 @@ const Signup: React.FC = () => {
           email,
           password,
           phone,
-          firebaseConfirm: confirmationResult.verificationId,
+          firebaseConfirm: confirmationResult,
         }),
       });
 
       if (res.ok) {
         const data = await res.json();
-        if (data === "Credantials already exisit") {
+        if (data === "Phone number already exists" || data === "Email already exists") {
           return toast(data);
         }
 
@@ -105,29 +108,58 @@ const Signup: React.FC = () => {
     } catch (error) {
       console.log(error);
     }
-  };
+};
 
-  const onSendOtp = async () => {
-    if (!validateForm()) {
-      return;
+const onSendOtp = async () => {
+  if (!validateForm()) {
+    return;
+  }
+
+  try {
+    const recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha', {});
+    const confirmationResult = await signInWithPhoneNumber(auth, phone, recaptchaVerifier);
+
+    if (confirmationResult) {
+      setConfirmOtp(confirmationResult);
+      onSubmit(confirmationResult.verificationId);
     } else {
-      try {
-        const recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha', {});
-        const confirmationResult = await signInWithPhoneNumber(auth, phone, recaptchaVerifier);
-
-        if (confirmationResult) {
-          setConfirmOtp(confirmationResult);
-          onSubmit(confirmationResult);
-        } else {
-          console.log('Error confirming the captcha.');
-        }
-      } catch (error) {
-        console.log(error);
-      }
+      toast.error('Error confirming the reCAPTCHA. Please try again.');
     }
-  };
+  } catch (error: any) {
+    console.log('Error:', error);
+    handleFirebaseError(error);
+  }
+};
 
-  const handleFetchPosters = async () => {
+const handleFirebaseError = (error: any) => {
+  switch (error.code) {
+    case 'auth/invalid-app-credential':
+      toast.error('Otp limit reached please try email verification by clicking the email verifiy button to signup');
+      setShowEmailVerifyButton(true);
+      break;
+    case 'auth/invalid-phone-number':
+      toast.error('Invalid phone number. Please enter a valid phone number.');
+      break;
+    case 'auth/missing-phone-number':
+      toast.error('Phone number is missing. Please provide a phone number.');
+      break;
+    case 'auth/quota-exceeded':
+      toast.error('Otp limit reached please try email verification by clicking the email verifiy button to signup');
+      setShowEmailVerifyButton(true);
+      break;
+    case 'auth/captcha-check-failed':
+      toast.error('reCAPTCHA verification failed. Please try again.');
+      break;
+    case 'auth/user-disabled':
+      toast.error('This user account has been disabled. Please contact support.');
+      break;
+    default:
+      toast.error('Otp limit reached please try email verification by clicking the email verifiy button to signup');
+      setShowEmailVerifyButton(true);
+  }
+};
+
+const handleFetchPosters = async () => {
     try {
       const response = await axios.get('/superAdmin/get_posters');
       setPosters(response.data);
@@ -135,11 +167,63 @@ const Signup: React.FC = () => {
       console.log(error);
       toast("Failed to fetch posters.");
     }
-  };
+};
 
-  useEffect(()=>{
+useEffect(()=>{
     handleFetchPosters();
-  },[])
+},[])
+
+
+
+const handleSendingEmail = async(id: string)=>{
+  try {
+    const res = await axios.get(`/api/send_email_otp?id=${id}`)
+  
+    if(res.data.success){
+      toast("Verification message sucessfully send to your Email");
+      navigate(`/verify_otp_email?phone=${res?.data.data?.phone}`);
+    }else{
+      toast("Email sending failed.")
+    }
+
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+
+const sendEmailOtp = async()=>{
+  try {
+    const res = await fetch("/api/signup", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        username,
+        email,
+        password,
+        phone,
+        firebaseConfirm: "hai",
+      }),
+    });
+
+    if (res.ok) {
+      const data = await res.json();
+      if (data === "Phone number already exists" || data === "Email already exists") {
+        return toast(data);
+      }
+
+handleSendingEmail(data._id);
+
+    
+    
+    }
+  } catch (error) {
+    console.log(error);
+  }
+
+}
 
 
   console.log(confirmOtp);
@@ -271,15 +355,24 @@ const Signup: React.FC = () => {
           </div>
 
           <div className="w-[300px] mt-6">
-            <button
+         {
+          !showEmailVerifyButton ? <button
+          className="bg-sky-500 w-full rounded py-1 px-5 text-white hover:bg-sky-600"
+          onClick={onSendOtp}
+        >
+          Signup
+        </button> : <button
               className="bg-sky-500 w-full rounded py-1 px-5 text-white hover:bg-sky-600"
-              onClick={onSendOtp}
+              onClick={sendEmailOtp}
             >
-              Signup
+              Signup verify by email
             </button>
+         }   
           </div>
 
-          <div className="w-[300px] mt-6" id="recaptcha"></div>
+        {
+          !showEmailVerifyButton &&   <div className="w-[300px] mt-6" id="recaptcha"></div>
+        }
 
           <div className="mt-5 mb-5 text-sm">
             <Link to="/login">Already have an account</Link>

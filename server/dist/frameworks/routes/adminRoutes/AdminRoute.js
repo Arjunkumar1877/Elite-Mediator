@@ -8,19 +8,21 @@ const router = (0, express_1.Router)();
 const JwtToken = new TokenService_1.JwtTokenAdapter();
 // -------------------------------------| ADMIN SIGN UP-------------------------------------------------------------------------------------------------|
 router.post("/signup", AdminInjects_1.InjectedAdminSignUpController.signUpAdmin.bind(AdminInjects_1.InjectedAdminSignUpController));
+// -------------------------------------| SEND EMAIL OTP AND UPDATE ON DB-------------------------------------------------------------------------------------------------|
+router.get("/send_email_otp", AdminInjects_1.InjectedSenEmailOtpAndUpdateController.SendEmailOtpAndSaveToDbControl.bind(AdminInjects_1.InjectedSenEmailOtpAndUpdateController));
 // -------------------------------------| GET THE UNVERIFIED ADMIN--------------------------------------------------------------------------------------|
 router.get("/unverified_admin/:phone", AdminInjects_1.InjectedGetUnverifiedAdminController.getUnverifiedAdminController.bind(AdminInjects_1.InjectedGetUnverifiedAdminController));
-// -------------------------------------| VERIFY THE ADMIN BY THE FIREBASE VERIFICATION ID -------------------------------------------------------------|
+// -------------------------------------| VERIFY THE ADMIN BY THE FIREBASE VERIFICATION ID-------------------------------------------------------------|
 router.post("/update_firebase_verify", AdminInjects_1.InjectedUpdateVerifyAdminController.UpdateAdminVerifyController.bind(AdminInjects_1.InjectedUpdateVerifyAdminController));
-// -------------------------------------| VERIFY THE ADMIN AND LOGIN -----------------------------------------------------------------------------------|
+// -------------------------------------| VERIFY THE ADMIN AND LOGIN-----------------------------------------------------------------------------------|
 router.post("/admin_login", JwtToken.CreateJwtToken, AdminInjects_1.InjectedAdminlogincontroller.login.bind(AdminInjects_1.InjectedAdminlogincontroller));
-// -------------------------------------| GOOGLE AUTHENTICATION ----------------------------------------------------------------------------------------|
+// -------------------------------------| GOOGLE AUTHENTICATION----------------------------------------------------------------------------------------|
 router.post("/google_oauth", JwtToken.CreateJwtToken, AdminInjects_1.InjectedGoogleLoginController.GoogleoauthController.bind(AdminInjects_1.InjectedGoogleLoginController));
-// -------------------------------------| UPDATE THE ADDMIN PROFILE ------------------------------------------------------------------------------------|
+// -------------------------------------| UPDATE THE ADDMIN PROFILE------------------------------------------------------------------------------------|
 router.post("/update_admin/:id", JwtToken.verifyToken, AdminInjects_1.InjectedUpdateAdminProfileController.UpdateAdminProfileData.bind(AdminInjects_1.InjectedUpdateAdminProfileController));
-// -------------------------------------| ADD A NEW FCM TOKEN TO ADMIN OR GET THE ADMIN WITH THE EXSISTING FCM TOKEN   -----------------------------------------------------------------------------------|
+// -------------------------------------| ADD A NEW FCM TOKEN TO ADMIN OR GET THE ADMIN WITH THE EXSISTING FCM TOKEN-----------------------------------------------------------------------------------|
 router.post('/admin_add_or_get_fcmtoken', AdminInjects_1.InjectedAddNewFcmTokenOrGetExsistingeController.AddAdminFcmTokenControl.bind(AdminInjects_1.InjectedAddNewFcmTokenOrGetExsistingeController));
-// -------------------------------------| GET THE ADMIN DATA BY THE ADMIN ID ---------------------------------------------------------------------------|
+// -------------------------------------| GET THE ADMIN DATA BY THE ADMIN ID---------------------------------------------------------------------------|
 router.get("/get_admin/:id", JwtToken.verifyToken, AdminInjects_1.InjectedGetAdminDataController.GetAdminDataByIdController.bind(AdminInjects_1.InjectedGetAdminDataController));
 // -------------------------------------| GET THE USER STATISTIC GRAPH DATA FOR THE ADMIN DASHBOARD   -----------------------------------------------------------------------------------|
 router.get("/admin_dash_graph/:adminId", AdminInjects_1.InjectedUserStatisticsGraphController.GetUserStatisticsGraphDataControl.bind(AdminInjects_1.InjectedUserStatisticsGraphController));

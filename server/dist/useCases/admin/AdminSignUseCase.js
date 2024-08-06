@@ -19,15 +19,30 @@ class AdminSignupUseCase {
         return __awaiter(this, void 0, void 0, function* () {
             const ExisitingEmail = yield this.adminRepository.FindAdminByEmail(admin.email);
             const ExisitingPhone = yield this.adminRepository.FindAdminByPhone(admin.phone);
-            if (ExisitingPhone && ExisitingEmail) {
-                return "Credentials already exist";
+            if (ExisitingEmail) {
+                return "Email already exists";
             }
-            else {
+            if (ExisitingPhone) {
+                return "Phone number already exists";
+            }
+            try {
                 console.log("AdminUseCase");
                 const hashedPassword = (0, bcrypt_1.hashSync)(admin.password, 10);
                 admin.password = hashedPassword;
                 const adminData = yield this.adminRepository.CreateAdmin(admin);
                 return adminData;
+            }
+            catch (error) {
+                if (error.code === 11000) {
+                    // Handling the duplicate key error
+                    if (error.keyPattern.email) {
+                        return "Email already exists";
+                    }
+                    if (error.keyPattern.phone) {
+                        return "Phone number already exists";
+                    }
+                }
+                throw error; // rethrow if it's some other error
             }
         });
     }

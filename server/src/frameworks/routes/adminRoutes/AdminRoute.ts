@@ -1,8 +1,9 @@
 import { Router } from "express";
 import {  Route } from "../../../frameworks/types/ServerTypes";
 import { JwtTokenAdapter } from "../../../frameworks/services/jwtService/TokenService";
-import { InjectedAdminSignUpController, InjectedAdminlogincontroller, InjectedGenerateQrCodeController, InjectedGetAdminDataController, InjectedGetAdminAllPropertyDataController, InjectedGetUnverifiedAdminController, InjectedGoogleLoginController, InjectedSavePropertyDataController, InjectedUpdateAdminProfileController, InjectedUpdateVerifyAdminController, InjectedUpdateConversationReadCountToZeroController, InjectedGetSelectedConversationController, InjectedGetConversationListController, InjectedGetAdminsCallListController, InjectedGetUsersListController, InjectedClearAdminChatMessagesController, InjectedEditUnknownUsernameController, InjectedAddNewFcmTokenOrGetExsistingeController, InjectedSendAdminMessageController, InjectedUserStatisticsGraphController, InjectedGetAdminPropertyDataForFilteringController, InjectedDeleteUserDataAndConversationController, InjectedAdminCallFunctionalitiesController, InjectedGetAdminMessagessController, InjectedDeleteAdminPropertDataController } from "../../../frameworks/injection/AdminInjects";
+import { InjectedAdminSignUpController, InjectedAdminlogincontroller, InjectedGenerateQrCodeController, InjectedGetAdminDataController, InjectedGetAdminAllPropertyDataController, InjectedGetUnverifiedAdminController, InjectedGoogleLoginController, InjectedSavePropertyDataController, InjectedUpdateAdminProfileController, InjectedUpdateVerifyAdminController, InjectedUpdateConversationReadCountToZeroController, InjectedGetSelectedConversationController, InjectedGetConversationListController, InjectedGetAdminsCallListController, InjectedGetUsersListController, InjectedClearAdminChatMessagesController, InjectedEditUnknownUsernameController, InjectedAddNewFcmTokenOrGetExsistingeController, InjectedSendAdminMessageController, InjectedUserStatisticsGraphController, InjectedGetAdminPropertyDataForFilteringController, InjectedDeleteUserDataAndConversationController, InjectedAdminCallFunctionalitiesController, InjectedGetAdminMessagessController, InjectedDeleteAdminPropertDataController, InjectedSenEmailOtpAndUpdateController } from "../../../frameworks/injection/AdminInjects";
 import { InjectedCreateConversationController } from "../../../frameworks/injection/UserInjects";
+import { SendEmailOtp } from "../../services/NodeMailerService/nodeMailer";
 
 const router: Route = Router();
 
@@ -11,25 +12,28 @@ const JwtToken = new JwtTokenAdapter();
 // -------------------------------------| ADMIN SIGN UP-------------------------------------------------------------------------------------------------|
 router.post("/signup", InjectedAdminSignUpController.signUpAdmin.bind(InjectedAdminSignUpController));
 
+// -------------------------------------| SEND EMAIL OTP AND UPDATE ON DB-------------------------------------------------------------------------------------------------|
+router.get("/send_email_otp", InjectedSenEmailOtpAndUpdateController.SendEmailOtpAndSaveToDbControl.bind(InjectedSenEmailOtpAndUpdateController));
+
 // -------------------------------------| GET THE UNVERIFIED ADMIN--------------------------------------------------------------------------------------|
 router.get("/unverified_admin/:phone", InjectedGetUnverifiedAdminController.getUnverifiedAdminController.bind(InjectedGetUnverifiedAdminController));
 
-// -------------------------------------| VERIFY THE ADMIN BY THE FIREBASE VERIFICATION ID -------------------------------------------------------------|
+// -------------------------------------| VERIFY THE ADMIN BY THE FIREBASE VERIFICATION ID-------------------------------------------------------------|
 router.post("/update_firebase_verify", InjectedUpdateVerifyAdminController.UpdateAdminVerifyController.bind(InjectedUpdateVerifyAdminController));
 
-// -------------------------------------| VERIFY THE ADMIN AND LOGIN -----------------------------------------------------------------------------------|
+// -------------------------------------| VERIFY THE ADMIN AND LOGIN-----------------------------------------------------------------------------------|
 router.post("/admin_login", JwtToken.CreateJwtToken, InjectedAdminlogincontroller.login.bind(InjectedAdminlogincontroller));
 
-// -------------------------------------| GOOGLE AUTHENTICATION ----------------------------------------------------------------------------------------|
+// -------------------------------------| GOOGLE AUTHENTICATION----------------------------------------------------------------------------------------|
 router.post("/google_oauth",JwtToken.CreateJwtToken,  InjectedGoogleLoginController.GoogleoauthController.bind(InjectedGoogleLoginController));
 
-// -------------------------------------| UPDATE THE ADDMIN PROFILE ------------------------------------------------------------------------------------|
+// -------------------------------------| UPDATE THE ADDMIN PROFILE------------------------------------------------------------------------------------|
 router.post("/update_admin/:id",JwtToken.verifyToken,  InjectedUpdateAdminProfileController.UpdateAdminProfileData.bind(InjectedUpdateAdminProfileController));
 
-// -------------------------------------| ADD A NEW FCM TOKEN TO ADMIN OR GET THE ADMIN WITH THE EXSISTING FCM TOKEN   -----------------------------------------------------------------------------------|
+// -------------------------------------| ADD A NEW FCM TOKEN TO ADMIN OR GET THE ADMIN WITH THE EXSISTING FCM TOKEN-----------------------------------------------------------------------------------|
 router.post('/admin_add_or_get_fcmtoken', InjectedAddNewFcmTokenOrGetExsistingeController.AddAdminFcmTokenControl.bind(InjectedAddNewFcmTokenOrGetExsistingeController));
 
-// -------------------------------------| GET THE ADMIN DATA BY THE ADMIN ID ---------------------------------------------------------------------------|
+// -------------------------------------| GET THE ADMIN DATA BY THE ADMIN ID---------------------------------------------------------------------------|
 router.get("/get_admin/:id",JwtToken.verifyToken, InjectedGetAdminDataController.GetAdminDataByIdController.bind(InjectedGetAdminDataController));
 
 // -------------------------------------| GET THE USER STATISTIC GRAPH DATA FOR THE ADMIN DASHBOARD   -----------------------------------------------------------------------------------|
