@@ -51,6 +51,8 @@ import { DeleteAdminPropertyUseCase } from '../../useCases/admin/DeleteAdminProp
 import { DeleteAdminPropertyController } from '../../interfaceAdapters/controllers/Admin/DeleteAdminPropertyController';
 import { AdminSendEmailOtpAndUpdateUseCase } from '../../useCases/admin/AdminSendEmailOtpAndUpdateUseCase';
 import { AdminSendAndUpdateEmailOtpController } from '../../interfaceAdapters/controllers/Admin/AdminSendAndsendAndUpdateEmailOtpController';
+import { GetAdminDataByEmailUseCase } from '../../useCases/admin/GetAdminDataByEmailUseCase';
+import { GetAdminDataByEmailController } from '../../interfaceAdapters/controllers/Admin/GetAdminDataByEmailController';
 const mongoRepo = new MongoAdminRepository();
 
 // -----------------------------| ADMIN SIGNUP INJECTION ----------------------------------------------------------------------------------------
@@ -62,6 +64,10 @@ export const InjectedAdminSignUpController = new AdminSignupController(adminSign
 const sendEmailOtpAndUpdateUse = new AdminSendEmailOtpAndUpdateUseCase(mongoRepo);
 export const InjectedSenEmailOtpAndUpdateController = new AdminSendAndUpdateEmailOtpController(sendEmailOtpAndUpdateUse);
 
+
+// -----------------------------| GET ADMIN DATA BY EMAIL INJECTION ----------------------------------------------------------------------------------------
+const getAdminDataByEmailUse = new GetAdminDataByEmailUseCase(mongoRepo);
+export const InjectedGetAdminDataByEmailController = new GetAdminDataByEmailController(getAdminDataByEmailUse);
 
 
 // -----------------------------| ADMIN LOGIN VERIFY INJECTION ----------------------------------------------------------------------------------------

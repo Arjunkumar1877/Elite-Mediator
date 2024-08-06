@@ -10,7 +10,8 @@ const EmailOtpVerify : React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const query = new URLSearchParams(location.search);
-  const phone = query.get('phone')
+  const phone = query.get('phone');
+  const reset = query.get('reset');
 
   useEffect(() => {
     if (seconds > 0) {
@@ -36,7 +37,7 @@ const EmailOtpVerify : React.FC = () => {
     fetchUser();
   }, []);
 
-  // console.log(adminData)
+ 
 
   const handleChange = (element: HTMLInputElement, index: number) => {
   
@@ -65,21 +66,27 @@ const EmailOtpVerify : React.FC = () => {
       console.log(error)
     }
   }
+
   const handleVerifyOtp = async () => {
     const enteredOtp = otp.join('').toUpperCase();
   
     if (enteredOtp === adminData.firebaseConfirm) {
+   
+    if(reset === 'true'){
+      toast("You have been successfully verified. You can add your new password.");
+      navigate(`/forgot_password_page?phone=${adminData.phone}`);
+    }else{
       toast("You have been successfully verified. You can log in using your credentials.");
       navigate("/login");
+    }
     } else {
       toast("The OTP entered is incorrect. Please enter the correct OTP or resend it.");
     }
   };
   
-  console.log(adminData.firebaseConfirm);
   
 
-  console.log(adminData.firebaseConfirm)
+  console.log(adminData)
 
 
   return (

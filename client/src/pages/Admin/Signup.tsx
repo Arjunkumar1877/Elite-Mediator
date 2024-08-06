@@ -13,7 +13,6 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 // import { toast } from 'react-toastify'; // Assuming you're using react-toastify for notifications
 
-
 interface Errors {
   username?: string;
   email?: string;
@@ -34,22 +33,22 @@ const Signup: React.FC = () => {
   const [errors, setErrors] = useState<Errors>({});
   const [confirmOtp, setConfirmOtp] = useState<any>(null);
   const [viewPassword, setViewPassword] = useState<boolean>(false);
-  const [showEmailVerifyButton, setShowEmailVerifyButton] = useState<boolean>(false);
+  const [showEmailVerifyButton, setShowEmailVerifyButton] =
+    useState<boolean>(false);
   const [posters, setPosters] = useState<PostersDataType[]>([]);
-  const { currentAdmin } = useSelector((state: any)=> state.admin);
+  const { currentAdmin } = useSelector((state: any) => state.admin);
   const navigate = useNavigate();
 
-
-useEffect(()=>{
+  useEffect(() => {
     handleFetchPosters();
-  if(currentAdmin && currentAdmin.address){
-    navigate('/profile')
-  }else if(currentAdmin && !currentAdmin.address){
-    navigate('/admin-data')
-  }
-},[])
+    if (currentAdmin && currentAdmin.address) {
+      navigate("/profile");
+    } else if (currentAdmin && !currentAdmin.address) {
+      navigate("/admin-data");
+    }
+  }, []);
 
-const validateForm = (): boolean => {
+  const validateForm = (): boolean => {
     let formErrors: Errors = {};
     let isValid = true;
 
@@ -78,9 +77,9 @@ const validateForm = (): boolean => {
 
     setErrors(formErrors);
     return isValid;
-};
+  };
 
-const onSubmit = async (confirmationResult: any) => {
+  const onSubmit = async (confirmationResult: any) => {
     try {
       const res = await fetch("/api/signup", {
         method: "POST",
@@ -98,7 +97,10 @@ const onSubmit = async (confirmationResult: any) => {
 
       if (res.ok) {
         const data = await res.json();
-        if (data === "Phone number already exists" || data === "Email already exists") {
+        if (
+          data === "Phone number already exists" ||
+          data === "Email already exists"
+        ) {
           return toast(data);
         }
 
@@ -108,123 +110,129 @@ const onSubmit = async (confirmationResult: any) => {
     } catch (error) {
       console.log(error);
     }
-};
+  };
 
-const onSendOtp = async () => {
-  if (!validateForm()) {
-    return;
-  }
-
-  try {
-    const recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha', {});
-    const confirmationResult = await signInWithPhoneNumber(auth, phone, recaptchaVerifier);
-
-    if (confirmationResult) {
-      setConfirmOtp(confirmationResult);
-      onSubmit(confirmationResult.verificationId);
-    } else {
-      toast.error('Error confirming the reCAPTCHA. Please try again.');
+  const onSendOtp = async () => {
+    if (!validateForm()) {
+      return;
     }
-  } catch (error: any) {
-    console.log('Error:', error);
-    handleFirebaseError(error);
-  }
-};
 
-const handleFirebaseError = (error: any) => {
-  switch (error.code) {
-    case 'auth/invalid-app-credential':
-      toast.error('Otp limit reached please try email verification by clicking the email verifiy button to signup');
-      setShowEmailVerifyButton(true);
-      break;
-    case 'auth/invalid-phone-number':
-      toast.error('Invalid phone number. Please enter a valid phone number.');
-      break;
-    case 'auth/missing-phone-number':
-      toast.error('Phone number is missing. Please provide a phone number.');
-      break;
-    case 'auth/quota-exceeded':
-      toast.error('Otp limit reached please try email verification by clicking the email verifiy button to signup');
-      setShowEmailVerifyButton(true);
-      break;
-    case 'auth/captcha-check-failed':
-      toast.error('reCAPTCHA verification failed. Please try again.');
-      break;
-    case 'auth/user-disabled':
-      toast.error('This user account has been disabled. Please contact support.');
-      break;
-    default:
-      toast.error('Otp limit reached please try email verification by clicking the email verifiy button to signup');
-      setShowEmailVerifyButton(true);
-  }
-};
-
-const handleFetchPosters = async () => {
     try {
-      const response = await axios.get('/superAdmin/get_posters');
+      const recaptchaVerifier = new RecaptchaVerifier(auth, "recaptcha", {});
+      const confirmationResult = await signInWithPhoneNumber(
+        auth,
+        phone,
+        recaptchaVerifier
+      );
+
+      if (confirmationResult) {
+        setConfirmOtp(confirmationResult);
+        onSubmit(confirmationResult.verificationId);
+      } else {
+        toast.error("Error confirming the reCAPTCHA. Please try again.");
+      }
+    } catch (error: any) {
+      console.log("Error:", error);
+      handleFirebaseError(error);
+    }
+  };
+
+  const handleFirebaseError = (error: any) => {
+    switch (error.code) {
+      case "auth/invalid-app-credential":
+        toast.error(
+          "Otp limit reached please try email verification by clicking the email verifiy button to signup"
+        );
+        setShowEmailVerifyButton(true);
+        break;
+      case "auth/invalid-phone-number":
+        toast.error("Invalid phone number. Please enter a valid phone number.");
+        break;
+      case "auth/missing-phone-number":
+        toast.error("Phone number is missing. Please provide a phone number.");
+        break;
+      case "auth/quota-exceeded":
+        toast.error(
+          "Otp limit reached please try email verification by clicking the email verifiy button to signup"
+        );
+        setShowEmailVerifyButton(true);
+        break;
+      case "auth/captcha-check-failed":
+        toast.error("reCAPTCHA verification failed. Please try again.");
+        break;
+      case "auth/user-disabled":
+        toast.error(
+          "This user account has been disabled. Please contact support."
+        );
+        break;
+      default:
+        toast.error(
+          "Otp limit reached please try email verification by clicking the email verifiy button to signup"
+        );
+        setShowEmailVerifyButton(true);
+    }
+  };
+
+  const handleFetchPosters = async () => {
+    try {
+      const response = await axios.get("/superAdmin/get_posters");
       setPosters(response.data);
     } catch (error) {
       console.log(error);
       toast("Failed to fetch posters.");
     }
-};
+  };
 
-useEffect(()=>{
+  useEffect(() => {
     handleFetchPosters();
-},[])
+  }, []);
 
+  const handleSendingEmail = async (id: string) => {
+    try {
+      const res = await axios.get(`/api/send_email_otp?id=${id}`);
 
-
-const handleSendingEmail = async(id: string)=>{
-  try {
-    const res = await axios.get(`/api/send_email_otp?id=${id}`)
-  
-    if(res.data.success){
-      toast("Verification message sucessfully send to your Email");
-      navigate(`/verify_otp_email?phone=${res?.data.data?.phone}`);
-    }else{
-      toast("Email sending failed.")
-    }
-
-  } catch (error) {
-    console.log(error)
-  }
-}
-
-
-const sendEmailOtp = async()=>{
-  try {
-    const res = await fetch("/api/signup", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        username,
-        email,
-        password,
-        phone,
-        firebaseConfirm: "hai",
-      }),
-    });
-
-    if (res.ok) {
-      const data = await res.json();
-      if (data === "Phone number already exists" || data === "Email already exists") {
-        return toast(data);
+      if (res.data.success) {
+        toast("Verification message sucessfully send to your Email");
+        navigate(`/verify_otp_email?phone=${res?.data.data?.phone}&reset=false`);
+      } else {
+        toast("Email sending failed.");
       }
-
-handleSendingEmail(data._id);
-
-    
-    
+    } catch (error) {
+      console.log(error);
     }
-  } catch (error) {
-    console.log(error);
-  }
+  };
 
-}
+  const sendEmailOtp = async () => {
+    try {
+      const res = await fetch("/api/signup", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username,
+          email,
+          password,
+          phone,
+          firebaseConfirm: "hai",
+        }),
+      });
 
+      if (res.ok) {
+        const data = await res.json();
+        if (
+          data === "Phone number already exists" ||
+          data === "Email already exists"
+        ) {
+          return toast(data);
+        }
+
+        handleSendingEmail(data._id);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   console.log(confirmOtp);
 
@@ -232,7 +240,11 @@ handleSendingEmail(data._id);
     <div className="flex justify-center h-screen w-full">
       <div className="hidden sm:flex sm:flex-1 sm:h-full">
         <img
-          src={posters.length > 0 ? posters[9].imageUrl : 'https://firebasestorage.googleapis.com/v0/b/elite-mediator.appspot.com/o/login.jpg?alt=media&token=23fd7400-7426-40c8-87c3-dc4c1eabc8c9'}
+          src={
+            posters.length > 0
+              ? posters[9].imageUrl
+              : "https://firebasestorage.googleapis.com/v0/b/elite-mediator.appspot.com/o/login.jpg?alt=media&token=23fd7400-7426-40c8-87c3-dc4c1eabc8c9"
+          }
           alt="Dummy"
           className="h-full object-cover w-full"
         />
@@ -334,19 +346,24 @@ handleSendingEmail(data._id);
               </div>
             </div>
             <div className="relative">
-            <input
-              type={`${viewPassword ? 'text' : "password"}`}
-              className="w-[300px] border rounded py-1 px-5"
-              placeholder="Enter your password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-{
-  viewPassword ? <FaEyeSlash  className="absolute top-2 right-3" onClick={()=> setViewPassword(false)}/> :  (
-<IoEyeSharp className="absolute top-2 right-3" onClick={()=> setViewPassword(true)} />
-
-  )
-}
+              <input
+                type={`${viewPassword ? "text" : "password"}`}
+                className="w-[300px] border rounded py-1 px-5"
+                placeholder="Enter your password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+              {viewPassword ? (
+                <FaEyeSlash
+                  className="absolute top-2 right-3"
+                  onClick={() => setViewPassword(false)}
+                />
+              ) : (
+                <IoEyeSharp
+                  className="absolute top-2 right-3"
+                  onClick={() => setViewPassword(true)}
+                />
+              )}
             </div>
 
             {errors.password && (
@@ -355,24 +372,26 @@ handleSendingEmail(data._id);
           </div>
 
           <div className="w-[300px] mt-6">
-         {
-          !showEmailVerifyButton ? <button
-          className="bg-sky-500 w-full rounded py-1 px-5 text-white hover:bg-sky-600"
-          onClick={onSendOtp}
-        >
-          Signup
-        </button> : <button
-              className="bg-sky-500 w-full rounded py-1 px-5 text-white hover:bg-sky-600"
-              onClick={sendEmailOtp}
-            >
-              Signup verify by email
-            </button>
-         }   
+            {!showEmailVerifyButton ? (
+              <button
+                className="bg-sky-500 w-full rounded py-1 px-5 text-white hover:bg-sky-600"
+                onClick={onSendOtp}
+              >
+                Signup
+              </button>
+            ) : (
+              <button
+                className="bg-sky-500 w-full rounded py-1 px-5 text-white hover:bg-sky-600"
+                onClick={sendEmailOtp}
+              >
+                Signup verify by email
+              </button>
+            )}
           </div>
 
-        {
-          !showEmailVerifyButton &&   <div className="w-[300px] mt-6" id="recaptcha"></div>
-        }
+          {!showEmailVerifyButton && (
+            <div className="w-[300px] mt-6" id="recaptcha"></div>
+          )}
 
           <div className="mt-5 mb-5 text-sm">
             <Link to="/login">Already have an account</Link>

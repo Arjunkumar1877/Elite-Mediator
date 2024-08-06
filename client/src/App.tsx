@@ -33,6 +33,7 @@ import SuperAdmiPosterPage from "./pages/SuperAdmin/SuperAdmiPosterPage";
 import SuperAdminPrivateRoute from "./component/SuperAdmin/SuperAdminPrivateRoute";
 import AdminAllCallListPage from "./pages/Admin/AdminAllCallListPage";
 import EmailOtpVerify from "./pages/Admin/EmailOtpVerify";
+import AdminPasswordResetpage from "./pages/Admin/AdminPasswordResetpage";
 
 const App: React.FC = () => {
   useEffect(() => {
@@ -57,6 +58,7 @@ const App: React.FC = () => {
             <Route path="/signup" element={<Signup />} />
             <Route path="/verify_otp_page/:ph" element={<OtpVerification />} />
             <Route path="/verify_otp_email" element={<EmailOtpVerify />} />
+            <Route path="/forgot_password_page" element={<AdminPasswordResetpage />} />
 
             <Route element={<AdminPrivateRoute />}>
               <Route path="/admin-data" element={<UserVerifyData />} />

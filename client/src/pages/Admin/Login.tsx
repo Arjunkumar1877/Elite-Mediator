@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { BsCheckCircleFill, BsXCircleFill } from "react-icons/bs";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import { signInStart,signInSuccess } from "../../redux/admin/adminSlice";
+import { signInStart, signInSuccess } from "../../redux/admin/adminSlice";
 import { FaEyeSlash } from "react-icons/fa";
 import OAuth from "../../component/Admin/OAuth";
 import { IoEyeSharp } from "react-icons/io5";
@@ -25,26 +25,25 @@ const Login: React.FC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [posters, setPosters] = useState<PostersDataType[]>([]);
-  
 
-    const handleFetchPosters = async () => {
-      try {
-        const response = await axios.get('/superAdmin/get_posters');
-        setPosters(response.data);
-      } catch (error) {
-        console.log(error);
-        toast("Failed to fetch posters.");
-      }
-    };
+  const handleFetchPosters = async () => {
+    try {
+      const response = await axios.get("/superAdmin/get_posters");
+      setPosters(response.data);
+    } catch (error) {
+      console.log(error);
+      toast("Failed to fetch posters.");
+    }
+  };
 
-  useEffect(()=>{
+  useEffect(() => {
     handleFetchPosters();
-  if(currentAdmin && currentAdmin.address){
-    navigate('/profile')
-  }else if(currentAdmin && !currentAdmin.address){
-    navigate('/admin-data')
-  }
-  },[])
+    if (currentAdmin && currentAdmin.address) {
+      navigate("/profile");
+    } else if (currentAdmin && !currentAdmin.address) {
+      navigate("/admin-data");
+    }
+  }, []);
 
   const validateEmail = (email: string): boolean => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -81,11 +80,11 @@ const Login: React.FC = () => {
         const data = await res.json();
         console.log(data);
         console.log("Login successful:", data);
-        if(data === 'Invalid credentials'){
-           toast(data)
+        if (data === "Invalid credentials") {
+          toast(data);
         }
 
-        if (data !== 'Invalid credentials') {
+        if (data !== "Invalid credentials") {
           if (data && !data?.address) {
             navigate("/admin-data");
             dispatch(signInSuccess(data));
@@ -104,11 +103,56 @@ const Login: React.FC = () => {
     }
   };
 
+
+  const handleSendingEmail = async (id: string, phone: number) => {
+    try {
+      const res = await axios.get(`/api/send_email_otp?id=${id}`);
+
+      if (res.data.success) {
+        toast("Verification message sucessfully send to your Email");
+        navigate(`/verify_otp_email?phone=${phone}&reset=true`);
+      } else {
+        toast("Email sending failed.");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+
+
+
+
+  const handleSendotpForgotpassword = async () => {
+    try {
+
+      if(!email){
+        return toast("Enter email to proceed with password resetting.")
+      }
+      const res = await axios.get(`/api/get_admin_by_email/${email}`);
+
+      if(res.data){
+     handleSendingEmail(res.data._id, res.data.phone);
+      }else{
+        toast("Email doesnot exisit...")
+      }
+
+
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+
   return (
     <div className="flex justify-center h-screen w-full">
       <div className="hidden sm:flex sm:flex-1 sm:h-full">
         <img
-          src={posters.length > 0 ? posters[9].imageUrl : 'https://firebasestorage.googleapis.com/v0/b/elite-mediator.appspot.com/o/login.jpg?alt=media&token=23fd7400-7426-40c8-87c3-dc4c1eabc8c9'}
+          src={
+            posters.length > 0
+              ? posters[9].imageUrl
+              : "https://firebasestorage.googleapis.com/v0/b/elite-mediator.appspot.com/o/login.jpg?alt=media&token=23fd7400-7426-40c8-87c3-dc4c1eabc8c9"
+          }
           alt="Dummy"
           className="h-full object-cover w-full"
         />
@@ -167,25 +211,29 @@ const Login: React.FC = () => {
                 </span>
               </div>
             </div>
-           
-          <div className=" relative ">
-          <input
-              type={`${viewPassword ? 'text' : 'password'}`}
-              className={`w-[300px] border rounded py-1 px-5${
-                !passwordValid ? "border-red-500" : ""
-              }`}
-              placeholder="Enter your password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-{
-  viewPassword ? <FaEyeSlash  className="absolute top-2 right-3" onClick={()=> setViewPassword(false)}/> :  (
-<IoEyeSharp className="absolute top-2 right-3" onClick={()=> setViewPassword(true)} />
 
-  )
-}
-
-          </div>
+            <div className=" relative ">
+              <input
+                type={`${viewPassword ? "text" : "password"}`}
+                className={`w-[300px] border rounded py-1 px-5${
+                  !passwordValid ? "border-red-500" : ""
+                }`}
+                placeholder="Enter your password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+              {viewPassword ? (
+                <FaEyeSlash
+                  className="absolute top-2 right-3"
+                  onClick={() => setViewPassword(false)}
+                />
+              ) : (
+                <IoEyeSharp
+                  className="absolute top-2 right-3"
+                  onClick={() => setViewPassword(true)}
+                />
+              )}
+            </div>
           </div>
 
           {loginError && (
@@ -202,7 +250,7 @@ const Login: React.FC = () => {
           </div>
 
           <div className="mt-5 mb-5 text-sm">
-            {/* <Link to="/forgot-password">Forgot password?</Link> */}
+            <button onClick={handleSendotpForgotpassword}>Forgot password?</button>
           </div>
           <div className="mt-5 mb-5 text-blue-700 text-sm">
             <Link to="/signup">Click here to sign up</Link>
