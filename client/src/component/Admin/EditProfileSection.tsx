@@ -319,7 +319,7 @@ const EditProfileSection: React.FC = () => {
                 />
               </div>
             </div>
-            <div className="flex flex-col w-full px-2 py-3 md:px-3 md:py-4 lg:px-5 lg:py-5 rounded-md shadow-sm">
+            {/* <div className="flex flex-col w-full px-2 py-3 md:px-3 md:py-4 lg:px-5 lg:py-5 rounded-md shadow-sm">
               <div className="flex justify-between items-center mb-4 px-2">
                 <span className="text-gray-500 text-lg md:text-xl">
                   {" "}
@@ -351,7 +351,8 @@ const EditProfileSection: React.FC = () => {
                   onChange={(e) => handleChange(e, "email")}
                 />
               </div>
-            </div>
+            </div> */}
+
             <div className="flex flex-col w-full px-2 py-3 md:px-3 md:py-4 lg:px-5 lg:py-5 rounded-md shadow-sm">
               <div className="flex justify-between items-center mb-4 px-2">
                 <span className="text-gray-500 text-lg md:text-xl">
@@ -385,7 +386,8 @@ const EditProfileSection: React.FC = () => {
                 />
               </div>
             </div>
-            <div className="flex flex-col w-full px-2 py-3 md:px-3 md:py-4 lg:px-5 lg:py-5 rounded-md shadow-sm">
+
+            {/* <div className="flex flex-col w-full px-2 py-3 md:px-3 md:py-4 lg:px-5 lg:py-5 rounded-md shadow-sm">
               <div className="flex justify-between items-center mb-4 px-2">
                 <span className="text-gray-500 text-lg md:text-xl">
                   {" "}
@@ -417,7 +419,8 @@ const EditProfileSection: React.FC = () => {
                   onChange={(e) => handleChange(e, "phone")}
                 />
               </div>
-            </div>
+            </div> */}
+           
             <div className="flex flex-col w-full px-2 py-3 md:px-3 md:py-4 lg:px-5 lg:py-5 rounded-md shadow-sm">
               <div className="flex justify-between items-center mb-4 px-2">
                 <span className="text-gray-500 text-lg md:text-xl">

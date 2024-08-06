@@ -153,37 +153,31 @@ console.log("fcm updated succesfully ❤️❤️❤️❤️❤️❤️❤️�
           </div>
         </div>
 
-        <div className="flex flex-col w-full px-2 py-3 md:px-3 md:py-4 lg:px-5 lg:py-5 rounded-md shadow-sm">
-          <div className="flex justify-between items-center mb-4 px-2">
-            <span className="text-gray-500 text-lg md:text-xl">Phone</span>
-            <div className="flex items-center gap-2">
-             {
-              adminData && adminData?.phone.toString().length > 12 ? (
-                <>
-                 <ImCross className="text-red-600 text-sm" />
-                 <span className="text-xs text-red-500">You can edit and add your phone number here</span>
-                </>
-              ) : (
-                <>
-                 <BsCheckCircleFill className="text-green-600 text-sm" />
-                 <span className="text-xs text-green-500">Valid</span>
-                </>
-              )
-             }
+{
+  adminData?.phone.toString().length <= 12 &&         <div className="flex flex-col w-full px-2 py-3 md:px-3 md:py-4 lg:px-5 lg:py-5 rounded-md shadow-sm">
+  <div className="flex justify-between items-center mb-4 px-2">
+    <span className="text-gray-500 text-lg md:text-xl">Phone</span>
+    <div className="flex items-center gap-2">
 
-             
-            </div>
-          </div>
-          <div className="flex relative">
-            <FiPhone className="absolute right-4 top-1/2 transform -translate-y-1/2 text-lg md:text-xl" />
-            <input
-              type="text"
-              className="border-2 w-full rounded-md placeholder:text-black placeholder-gray-400 py-2 px-4 md:py-3 md:px-5"
-              placeholder={adminData?.phone.toString().length <= 12 ? adminData?.phone : "not available"}
-              disabled
-            />
-          </div>
-        </div>
+        <>
+         <BsCheckCircleFill className="text-green-600 text-sm" />
+         <span className="text-xs text-green-500">Valid</span>
+        </>
+ 
+     
+    </div>
+  </div>
+  <div className="flex relative">
+    <FiPhone className="absolute right-4 top-1/2 transform -translate-y-1/2 text-lg md:text-xl" />
+    <input
+      type="text"
+      className="border-2 w-full rounded-md placeholder:text-black placeholder-gray-400 py-2 px-4 md:py-3 md:px-5"
+      placeholder={adminData?.phone}
+      disabled
+    />
+  </div>
+</div> 
+}
 
         <div className="flex flex-col w-full px-2 py-3 md:px-3 md:py-4 lg:px-5 lg:py-5 rounded-md shadow-sm">
           <div className="flex justify-between items-center mb-4 px-2">
