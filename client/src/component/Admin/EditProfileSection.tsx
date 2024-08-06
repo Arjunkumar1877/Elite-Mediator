@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { BsCheckCircleFill, BsExclamationCircleFill } from "react-icons/bs";
 import { FaRegUser, FaRegAddressCard } from "react-icons/fa";
-import { FiPhone } from "react-icons/fi";
 import {
-  MdOutlineMail,
   MdOutlineEditLocationAlt,
   MdMyLocation,
 } from "react-icons/md";

@@ -14,7 +14,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useSocket } from "../../contexts/AdminContext";
 import toast from "react-hot-toast";
 import axios from "axios";
-
+import Swal from 'sweetalert2';
 // const socket = io('http://localhost:7000');
 
 interface SideNavBarProps {
@@ -105,16 +105,39 @@ const SideNavBar: React.FC<SideNavBarProps> = ({ navShowSet }) => {
     };
   }, []);
 
+
+
   const handleSignout = async () => {
-    const res = await fetch("/api/admin_logout");
-    const data: any = await res.json();
-    console.log(data);
-    if (data.message === "success") {
-      dispatch(signoutSuccess());
-    } else {
-      toast("sigout failed token not cleared");
-    }
+    Swal.fire({
+      title: "Are you sure?",
+      text: "Do you  want to logout ?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes !"
+    }).then(async (result) => { // Make the callback async
+      if (result.isConfirmed) {
+        try {
+          const res = await fetch("/api/admin_logout");
+          const data = await res.json();
+          console.log(data);
+  
+          if (data.message === "success") {
+            dispatch(signoutSuccess());
+            Swal.fire("You have been sucessfully logged out ");
+          } else {
+            toast("Signout failed: token not cleared");
+          }
+        } catch (error) {
+          console.error("Error during signout:", error);
+          toast("An error occurred during signout.");
+        }
+      }
+    });
   };
+  
+
 
   return (
     <div className="fixed z-20 bg-sky-50 h-full">
