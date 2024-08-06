@@ -56,9 +56,7 @@ class MongoAdminRepository {
     FindAdminAndAddFcmToken(token, adminId) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const data = yield AdminModel_1.AdminModel.findOneAndUpdate({ _id: adminId }, { $addToSet: { fcmToken: token } }, // Use $addToSet to avoid duplicates
-                { new: true } // Return the updated document
-                );
+                const data = yield AdminModel_1.AdminModel.findOneAndUpdate({ _id: adminId }, { $addToSet: { fcmToken: token } }, { new: true });
                 if (!data) {
                     throw new Error(`Admin with id ${adminId} not found.`);
                 }

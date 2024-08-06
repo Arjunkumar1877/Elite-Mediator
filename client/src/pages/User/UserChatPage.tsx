@@ -159,7 +159,6 @@ const UserChatPage: React.FC = () => {
   useEffect(() => {
     fetchOrSaveFcmToken();
     socket.emit("join room", conId);
-    socket.emit("join room", currentUser.adminId._id);
 
     const handleIncomingCall = (data: any) => {
       console.log(data);
@@ -193,8 +192,8 @@ const UserChatPage: React.FC = () => {
             callType: isVideo ? "video" : "audio",
             receiver: "Admin",
           },
-          token: currentUser.adminId.fcmToken,
-          username: currentUser.username,
+          token: currentUser?.adminId?.fcmToken,
+          username: currentUser?.username,
         }),
       });
 

@@ -89,8 +89,8 @@ function initializeSocket(server) {
             }
             else {
                 io.to(data.adminId).emit("incoming-call", data);
+                io.to(data.conId).emit("incoming-call", data);
             }
-            // io.to(data.adminId._id).emit("incoming-call", data);
         });
         socket.on("webrtc-offer", (data) => {
             // console.log("Received WebRTC offer:", data);

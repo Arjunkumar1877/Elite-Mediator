@@ -67,7 +67,7 @@ const SideNavBar: React.FC<SideNavBarProps> = ({ navShowSet }) => {
 
       socket.on("join room", (data)=>{
         console.log(data);
-        console.log("socket connected 📀🔥💕💕💕💕")
+        console.log("socket connected admin joined the room  📀🔥💕💕💕💕")
       })
 
       // socket.emit("notify", currentAdmin._id);
@@ -80,7 +80,7 @@ const SideNavBar: React.FC<SideNavBarProps> = ({ navShowSet }) => {
 
     socket.on("incoming-call", (data: any) => {
       if (location.pathname !== `/admin_chat?conId=${data.conId}`) {
-        console.log("emitted on side nave bar....🤷‍♂️🤷‍♂️🤷‍♂️💕💕🔥🔥🔥🔥");
+        console.log("on user calling on side nave bar....🤷‍♂️🤷‍♂️🤷‍♂️💕💕🔥🔥🔥🔥");
         navigate(
           `/call_admin_page?conId=${data.conId}&incommingId=${data.incommingId}&callerId=${data.callerId}&videoCall=${data.videoCall}`
         );

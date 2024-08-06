@@ -57,8 +57,8 @@ export class MongoAdminRepository implements IAdminRepository {
     try {
       const data = await AdminModel.findOneAndUpdate(
         { _id: adminId },
-        { $addToSet: { fcmToken: token } },  // Use $addToSet to avoid duplicates
-        { new: true }  // Return the updated document
+        { $addToSet: { fcmToken: token } },  
+        { new: true }  
       );
   
       if (!data) {
