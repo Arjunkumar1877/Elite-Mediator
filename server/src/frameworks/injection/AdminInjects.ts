@@ -53,6 +53,8 @@ import { AdminSendEmailOtpAndUpdateUseCase } from '../../useCases/admin/AdminSen
 import { AdminSendAndUpdateEmailOtpController } from '../../interfaceAdapters/controllers/Admin/AdminSendAndsendAndUpdateEmailOtpController';
 import { GetAdminDataByEmailUseCase } from '../../useCases/admin/GetAdminDataByEmailUseCase';
 import { GetAdminDataByEmailController } from '../../interfaceAdapters/controllers/Admin/GetAdminDataByEmailController';
+import { AdminResetPasswordUseCase } from '../../useCases/admin/AdminResetPasswordUseCase';
+import { AdminResetPasswordController } from '../../interfaceAdapters/controllers/Admin/AdminResetPasswordController';
 const mongoRepo = new MongoAdminRepository();
 
 // -----------------------------| ADMIN SIGNUP INJECTION ----------------------------------------------------------------------------------------
@@ -93,6 +95,14 @@ export const InjectedAdminlogincontroller = new AdminLoginController(adminLoginU
 // -----------------------------| UPDATE ADMIN PROFILE DETAILS INJECTION ----------------------------------------------------------------------------------------
 const adminProfileUpdateUse = new UpdateAdminProfileUseCase(mongoRepo);
 export const InjectedUpdateAdminProfileController = new UpdateAdminProfileController(adminProfileUpdateUse);
+
+
+
+// -----------------------------| RESET ADMIN PASSWORD INJECTION ----------------------------------------------------------------------------------------
+const resetAdminPasswordUse = new AdminResetPasswordUseCase(mongoRepo);
+export const InjectedAdminResetPasswordController = new AdminResetPasswordController(resetAdminPasswordUse);
+
+
 
 
 // -----------------------------|GET ADMIN PROFILE DETAILS INJECTION ----------------------------------------------------------------------------------------

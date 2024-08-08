@@ -97,6 +97,21 @@ class MongoAdminRepository {
             return adminData;
         });
     }
+    FindByIdAndUpdatePassword(adminId, password) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const updated = yield AdminModel_1.AdminModel.findOneAndUpdate({ _id: adminId }, {
+                $set: {
+                    password: password
+                }
+            }, { $new: true });
+            if (updated) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        });
+    }
     CreatePropertyData(propertyData) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield QrDataModel_1.QrModel.create(propertyData);

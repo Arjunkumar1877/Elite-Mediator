@@ -42,4 +42,5 @@ export interface IAdminRepository {
     DisconnectAdminCallAndUpdateOnDb(id: string): Promise<Call | any>;
     FindAllAdminMessages(conId: string): Promise<any>;
     FindPropertyByIdAndDelete(propId: string): Promise<any>;
+    FindByIdAndUpdatePassword(adminId: string, password: string): Promise<any>;
 }

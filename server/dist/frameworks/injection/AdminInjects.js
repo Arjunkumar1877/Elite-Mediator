@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.InjectedAdminCallFunctionalitiesController = exports.InjectedDeleteUserDataAndConversationController = exports.InjectedUserStatisticsGraphController = exports.InjectedSendAdminMessageController = exports.InjectedAddNewFcmTokenOrGetExsistingeController = exports.InjectedEditUnknownUsernameController = exports.InjectedClearAdminChatMessagesController = exports.InjectedGetAdminMessagessController = exports.InjectedGetUsersListController = exports.InjectedGetAdminsCallListController = exports.InjectedGetConversationListController = exports.InjectedGetSelectedConversationController = exports.InjectedDeleteAdminPropertDataController = exports.InjectedUpdateConversationReadCountToZeroController = exports.InjectedGetAdminPropertyDataForFilteringController = exports.InjectedGetAdminAllPropertyDataController = exports.InjectedSavePropertyDataController = exports.InjectedGenerateQrCodeController = exports.InjectedGetAdminDataController = exports.InjectedUpdateAdminProfileController = exports.InjectedAdminlogincontroller = exports.InjectedUpdateVerifyAdminController = exports.InjectedGoogleLoginController = exports.InjectedGetUnverifiedAdminController = exports.InjectedSenEmailOtpAndUpdateController = exports.InjectedAdminSignUpController = void 0;
+exports.InjectedAdminCallFunctionalitiesController = exports.InjectedDeleteUserDataAndConversationController = exports.InjectedUserStatisticsGraphController = exports.InjectedSendAdminMessageController = exports.InjectedAddNewFcmTokenOrGetExsistingeController = exports.InjectedEditUnknownUsernameController = exports.InjectedClearAdminChatMessagesController = exports.InjectedGetAdminMessagessController = exports.InjectedGetUsersListController = exports.InjectedGetAdminsCallListController = exports.InjectedGetConversationListController = exports.InjectedGetSelectedConversationController = exports.InjectedDeleteAdminPropertDataController = exports.InjectedUpdateConversationReadCountToZeroController = exports.InjectedGetAdminPropertyDataForFilteringController = exports.InjectedGetAdminAllPropertyDataController = exports.InjectedSavePropertyDataController = exports.InjectedGenerateQrCodeController = exports.InjectedGetAdminDataController = exports.InjectedAdminResetPasswordController = exports.InjectedUpdateAdminProfileController = exports.InjectedAdminlogincontroller = exports.InjectedUpdateVerifyAdminController = exports.InjectedGoogleLoginController = exports.InjectedGetUnverifiedAdminController = exports.InjectedGetAdminDataByEmailController = exports.InjectedSenEmailOtpAndUpdateController = exports.InjectedAdminSignUpController = void 0;
 const AdminLoginController_1 = require("../../interfaceAdapters/controllers/Admin/AdminLoginController");
 const GenerateQrCodeController_1 = require("../../interfaceAdapters/controllers/Admin/GenerateQrCodeController");
 const GetAdminDataController_1 = require("../../interfaceAdapters/controllers/Admin/GetAdminDataController");
@@ -54,6 +54,10 @@ const DeleteAdminPropertyUseCase_1 = require("../../useCases/admin/DeleteAdminPr
 const DeleteAdminPropertyController_1 = require("../../interfaceAdapters/controllers/Admin/DeleteAdminPropertyController");
 const AdminSendEmailOtpAndUpdateUseCase_1 = require("../../useCases/admin/AdminSendEmailOtpAndUpdateUseCase");
 const AdminSendAndsendAndUpdateEmailOtpController_1 = require("../../interfaceAdapters/controllers/Admin/AdminSendAndsendAndUpdateEmailOtpController");
+const GetAdminDataByEmailUseCase_1 = require("../../useCases/admin/GetAdminDataByEmailUseCase");
+const GetAdminDataByEmailController_1 = require("../../interfaceAdapters/controllers/Admin/GetAdminDataByEmailController");
+const AdminResetPasswordUseCase_1 = require("../../useCases/admin/AdminResetPasswordUseCase");
+const AdminResetPasswordController_1 = require("../../interfaceAdapters/controllers/Admin/AdminResetPasswordController");
 const mongoRepo = new AdminRepository_1.MongoAdminRepository();
 // -----------------------------| ADMIN SIGNUP INJECTION ----------------------------------------------------------------------------------------
 const adminSignupUse = new AdminSignUseCase_1.AdminSignupUseCase(mongoRepo);
@@ -61,6 +65,9 @@ exports.InjectedAdminSignUpController = new SignUpController_1.AdminSignupContro
 // -----------------------------| SEND EMAIL OTP AND UPDATE INTO THE DATABASE INJECTION ----------------------------------------------------------------------------------------
 const sendEmailOtpAndUpdateUse = new AdminSendEmailOtpAndUpdateUseCase_1.AdminSendEmailOtpAndUpdateUseCase(mongoRepo);
 exports.InjectedSenEmailOtpAndUpdateController = new AdminSendAndsendAndUpdateEmailOtpController_1.AdminSendAndUpdateEmailOtpController(sendEmailOtpAndUpdateUse);
+// -----------------------------| GET ADMIN DATA BY EMAIL INJECTION ----------------------------------------------------------------------------------------
+const getAdminDataByEmailUse = new GetAdminDataByEmailUseCase_1.GetAdminDataByEmailUseCase(mongoRepo);
+exports.InjectedGetAdminDataByEmailController = new GetAdminDataByEmailController_1.GetAdminDataByEmailController(getAdminDataByEmailUse);
 // -----------------------------| ADMIN LOGIN VERIFY INJECTION ----------------------------------------------------------------------------------------
 const getUnverifiedAdminUse = new GetUnverifiedAdminUseCase_1.GetUnverifiedAdminDataUsecase(mongoRepo);
 exports.InjectedGetUnverifiedAdminController = new GetUnverifiedAdminController_1.GetUnverifiedAdminController(getUnverifiedAdminUse);
@@ -76,6 +83,9 @@ exports.InjectedAdminlogincontroller = new AdminLoginController_1.AdminLoginCont
 // -----------------------------| UPDATE ADMIN PROFILE DETAILS INJECTION ----------------------------------------------------------------------------------------
 const adminProfileUpdateUse = new UpdateAdminUseCase_1.UpdateAdminProfileUseCase(mongoRepo);
 exports.InjectedUpdateAdminProfileController = new UpdateAdminProfileController_1.UpdateAdminProfileController(adminProfileUpdateUse);
+// -----------------------------| RESET ADMIN PASSWORD INJECTION ----------------------------------------------------------------------------------------
+const resetAdminPasswordUse = new AdminResetPasswordUseCase_1.AdminResetPasswordUseCase(mongoRepo);
+exports.InjectedAdminResetPasswordController = new AdminResetPasswordController_1.AdminResetPasswordController(resetAdminPasswordUse);
 // -----------------------------|GET ADMIN PROFILE DETAILS INJECTION ----------------------------------------------------------------------------------------
 const getAdminDataByIdUse = new GetAdminDataUseCase_1.GetAdminDataUseCase(mongoRepo);
 exports.InjectedGetAdminDataController = new GetAdminDataController_1.GetAdminDataController(getAdminDataByIdUse);

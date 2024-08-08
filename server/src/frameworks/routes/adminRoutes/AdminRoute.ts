@@ -1,7 +1,7 @@
 import { Router } from "express";
 import {  Route } from "../../../frameworks/types/ServerTypes";
 import { JwtTokenAdapter } from "../../../frameworks/services/jwtService/TokenService";
-import { InjectedAdminSignUpController, InjectedAdminlogincontroller, InjectedGenerateQrCodeController, InjectedGetAdminDataController, InjectedGetAdminAllPropertyDataController, InjectedGetUnverifiedAdminController, InjectedGoogleLoginController, InjectedSavePropertyDataController, InjectedUpdateAdminProfileController, InjectedUpdateVerifyAdminController, InjectedUpdateConversationReadCountToZeroController, InjectedGetSelectedConversationController, InjectedGetConversationListController, InjectedGetAdminsCallListController, InjectedGetUsersListController, InjectedClearAdminChatMessagesController, InjectedEditUnknownUsernameController, InjectedAddNewFcmTokenOrGetExsistingeController, InjectedSendAdminMessageController, InjectedUserStatisticsGraphController, InjectedGetAdminPropertyDataForFilteringController, InjectedDeleteUserDataAndConversationController, InjectedAdminCallFunctionalitiesController, InjectedGetAdminMessagessController, InjectedDeleteAdminPropertDataController, InjectedSenEmailOtpAndUpdateController, InjectedGetAdminDataByEmailController } from "../../../frameworks/injection/AdminInjects";
+import { InjectedAdminSignUpController, InjectedAdminlogincontroller, InjectedGenerateQrCodeController, InjectedGetAdminDataController, InjectedGetAdminAllPropertyDataController, InjectedGetUnverifiedAdminController, InjectedGoogleLoginController, InjectedSavePropertyDataController, InjectedUpdateAdminProfileController, InjectedUpdateVerifyAdminController, InjectedUpdateConversationReadCountToZeroController, InjectedGetSelectedConversationController, InjectedGetConversationListController, InjectedGetAdminsCallListController, InjectedGetUsersListController, InjectedClearAdminChatMessagesController, InjectedEditUnknownUsernameController, InjectedAddNewFcmTokenOrGetExsistingeController, InjectedSendAdminMessageController, InjectedUserStatisticsGraphController, InjectedGetAdminPropertyDataForFilteringController, InjectedDeleteUserDataAndConversationController, InjectedAdminCallFunctionalitiesController, InjectedGetAdminMessagessController, InjectedDeleteAdminPropertDataController, InjectedSenEmailOtpAndUpdateController, InjectedGetAdminDataByEmailController, InjectedAdminResetPasswordController } from "../../../frameworks/injection/AdminInjects";
 import { InjectedCreateConversationController } from "../../../frameworks/injection/UserInjects";
 import { SendEmailOtp } from "../../services/NodeMailerService/nodeMailer";
 import { AdminModel } from "../../database/models/admin/AdminModel";
@@ -106,18 +106,8 @@ router.post('/edit_unknown_username', JwtToken.verifyToken, InjectedEditUnknownU
 // -------------------------------------| LOGOUT THE USER AND REMOVE THE JWT TOKEN FROM THE COOKIES   -----------------------------------------------------------------------------------|
 router.get("/admin_logout", JwtToken.removeToken);
 
-
-router.post('/admin_reset_password', async(req, res)=>{
-    const update = await AdminModel.findOneAndUpdate({_id: req.body.id}, {
-        password: req.body.password
-    });
-
-    if(update){
-        res.json("success");
-    }else{
-        res.json("failed")
-    }
-})
+// -------------------------------------| RESET PASSWORD OF THE ADMIN AND UPDATE IT   -----------------------------------------------------------------------------------|
+router.post('/admin_reset_password', InjectedAdminResetPasswordController.ResetPasswordControl.bind(InjectedAdminResetPasswordController));
 
 
 

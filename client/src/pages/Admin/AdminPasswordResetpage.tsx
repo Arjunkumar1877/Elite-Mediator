@@ -42,7 +42,7 @@ const AdminPasswordResetPage = () => {
         password: password,
       });
 
-      if (res.data === "success") {
+      if (res.data) {
         toast.success("Password reset successfully.");
         navigate("/login");
       } else {

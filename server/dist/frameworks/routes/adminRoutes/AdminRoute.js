@@ -15,6 +15,8 @@ router.get("/unverified_admin/:phone", AdminInjects_1.InjectedGetUnverifiedAdmin
 // -------------------------------------| VERIFY THE ADMIN BY THE FIREBASE VERIFICATION ID-------------------------------------------------------------|
 router.post("/update_firebase_verify", AdminInjects_1.InjectedUpdateVerifyAdminController.UpdateAdminVerifyController.bind(AdminInjects_1.InjectedUpdateVerifyAdminController));
 // -------------------------------------| VERIFY THE ADMIN AND LOGIN-----------------------------------------------------------------------------------|
+router.get('/get_admin_by_email/:email', AdminInjects_1.InjectedGetAdminDataByEmailController.GetAdminDataControl.bind(AdminInjects_1.InjectedGetAdminDataByEmailController));
+// -------------------------------------| VERIFY THE ADMIN AND LOGIN-----------------------------------------------------------------------------------|
 router.post("/admin_login", JwtToken.CreateJwtToken, AdminInjects_1.InjectedAdminlogincontroller.login.bind(AdminInjects_1.InjectedAdminlogincontroller));
 // -------------------------------------| GOOGLE AUTHENTICATION----------------------------------------------------------------------------------------|
 router.post("/google_oauth", JwtToken.CreateJwtToken, AdminInjects_1.InjectedGoogleLoginController.GoogleoauthController.bind(AdminInjects_1.InjectedGoogleLoginController));
@@ -68,4 +70,6 @@ router.get('/clear_admin_chat/:conId', JwtToken.verifyToken, AdminInjects_1.Inje
 router.post('/edit_unknown_username', JwtToken.verifyToken, AdminInjects_1.InjectedEditUnknownUsernameController.EditUnknownUsernameControl.bind(AdminInjects_1.InjectedEditUnknownUsernameController));
 // -------------------------------------| LOGOUT THE USER AND REMOVE THE JWT TOKEN FROM THE COOKIES   -----------------------------------------------------------------------------------|
 router.get("/admin_logout", JwtToken.removeToken);
+// -------------------------------------| RESET PASSWORD OF THE ADMIN AND UPDATE IT   -----------------------------------------------------------------------------------|
+router.post('/admin_reset_password', AdminInjects_1.InjectedAdminResetPasswordController.ResetPasswordControl.bind(AdminInjects_1.InjectedAdminResetPasswordController));
 exports.default = router;

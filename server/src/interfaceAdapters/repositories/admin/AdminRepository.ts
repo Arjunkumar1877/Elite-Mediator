@@ -102,6 +102,20 @@ export class MongoAdminRepository implements IAdminRepository {
     return adminData;
   }
 
+  async FindByIdAndUpdatePassword(adminId: string, password: string): Promise<any> {
+    const updated = await AdminModel.findOneAndUpdate({_id: adminId},{
+      $set: {
+        password: password
+      }
+    }, {$new: true});
+
+    if(updated){
+      return true;
+    }else{
+      return false;
+    }
+  }
+
   async CreatePropertyData(propertyData: PropertyData): Promise<any> {
     return await QrModel.create(propertyData);
   }
