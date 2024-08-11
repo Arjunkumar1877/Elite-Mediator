@@ -8,6 +8,8 @@ import OAuth from "../../component/Admin/OAuth";
 import { IoEyeSharp } from "react-icons/io5";
 import toast from "react-hot-toast";
 import axios from "axios";
+import { TailSpin } from 'react-loader-spinner';
+
 
 type PostersDataType = {
   _id: string;
@@ -142,6 +144,26 @@ const Login: React.FC = () => {
       console.log(error);
     }
   };
+
+
+  if(!posters[9]){
+    return(
+      <div className="w-full h-screen flex justify-center items-center relative z-10 overflow-x-hidden">
+       <TailSpin   
+    height="80"
+    width="80"
+    color="#00ABE4"
+    ariaLabel="tail-spin-loading"
+    radius="1"
+    wrapperStyle={{}}
+    wrapperClass=""
+    visible={true}
+/>
+    </div>
+    )
+  }
+
+  console.log(posters)
 
 
   return (

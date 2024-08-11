@@ -3,6 +3,7 @@ import Footer from "../../component/Admin/Footer";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { TailSpin  } from 'react-loader-spinner'
 
 type PostersDataType = {
   _id: string;
@@ -23,6 +24,23 @@ const ServicePage = () => {
         toast("Failed to fetch posters.");
       }
     };
+
+    if(!posters){
+      return(
+        <div className="w-full h-screen flex flex-col justify-center items-center relative z-10 overflow-x-hidden">
+         <TailSpin   
+      height="80"
+      width="80"
+      color="#00ABE4"
+      ariaLabel="tail-spin-loading"
+      radius="1"
+      wrapperStyle={{}}
+      wrapperClass=""
+      visible={true}
+  />
+      </div>
+      )
+    }
   return (
     <div className="relative bg-white  overflow-hidden p-8 md:p-10 lg:p-0">
       <div className="absolute rounded-2xl top-0 left-1/4 transform -translate-x-1/2 -translate-y-1/2 bg-blue-100 w-40 h-40 lg:w-72 lg:h-72 rotate-45"></div>

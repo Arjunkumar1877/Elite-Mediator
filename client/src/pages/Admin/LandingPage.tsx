@@ -7,6 +7,7 @@ import { useEffect, useState} from "react";
 import { useSocket } from "../../contexts/AdminContext";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { TailSpin  } from 'react-loader-spinner'
 
 type PostersDataType = {
   _id: string;
@@ -34,6 +35,24 @@ const Landing = () => {
       toast("Failed to fetch posters.");
     }
   };
+
+  
+  if(!posters){
+    return(
+      <div className="w-full h-screen flex flex-col justify-center items-center relative z-10 overflow-x-hidden">
+       <TailSpin   
+    height="80"
+    width="80"
+    color="#00ABE4"
+    ariaLabel="tail-spin-loading"
+    radius="1"
+    wrapperStyle={{}}
+    wrapperClass=""
+    visible={true}
+/>
+    </div>
+    )
+  }
 
   console.log(posters)
 

@@ -41,7 +41,6 @@ const UsersListSection = () => {
     fetchFileredUserData();
   }, [currentAdmin, propertyNameFilter, userTypeFilter]);
 
-
   
   const handleDeleteUserData = async(userId: string)=>{
     const res = await fetch(`/api/admin_delete_user_data/${userId}`);
@@ -52,7 +51,6 @@ const UsersListSection = () => {
       fetchFileredUserData();
     }
   }
-
 
   const confirmDelete = (id: string) => {
     Swal.fire({
@@ -70,8 +68,6 @@ const UsersListSection = () => {
       }
     });
   };
-
-
 
   const fetchFileredUserData = async () => {
     try {
@@ -142,7 +138,8 @@ const UsersListSection = () => {
     }
   };
 
-  console.log(filteredUsersList)
+  console.log(filteredUsersList);
+
 
   return (
    <div className="p-2 h-screen">

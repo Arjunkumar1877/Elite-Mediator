@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 import { useSocket } from "../../contexts/AdminContext";
 import { MdOutlinePermMedia } from "react-icons/md";
 import toast from "react-hot-toast";
+import { TailSpin } from 'react-loader-spinner'
 
 type UserDataType = {
   adminId: string;
@@ -242,6 +243,26 @@ const AdminChatListSection: React.FC = () => {
       toast.error("please select the dates..");
     }
   };
+
+  if(!conversations || !properties){
+    
+  
+    return(
+      <div className="w-full h-screen flex flex-col justify-center items-center relative z-10 overflow-x-hidden">
+       <TailSpin   
+    height="80"
+    width="80"
+    color="#00ABE4"
+    ariaLabel="tail-spin-loading"
+    radius="1"
+    wrapperStyle={{}}
+    wrapperClass=""
+    visible={true}
+/>
+    </div>
+    )
+
+  }
 
   return (
     <div className="bg-gray-50 max-h-screen p-1">

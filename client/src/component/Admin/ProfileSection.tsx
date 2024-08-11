@@ -11,8 +11,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { requestPermission } from "../../firebase/firebase";
 import { signInSuccess } from "../../redux/admin/adminSlice";
-
-
+import {TailSpin} from 'react-loader-spinner'
 
 
 
@@ -63,12 +62,28 @@ console.log("fcm updated succesfully ❤️❤️❤️❤️❤️❤️❤️�
 
   console.log(adminData)
 
+  if(!adminData){
+    return(
+      <div className="w-full h-screen flex flex-col justify-center items-center relative z-10 overflow-x-hidden">
+       <TailSpin   
+    height="80"
+    width="80"
+    color="#00ABE4"
+    ariaLabel="tail-spin-loading"
+    radius="1"
+    wrapperStyle={{}}
+    wrapperClass=""
+    visible={true}
+/>
+    </div>
+    )
+  }
+
   return (
     <div className="w-full h-screen flex flex-col relative z-10 overflow-x-hidden">
   <div className="p-6 bg-white shadow-sm">
     <h1 className="text-3xl font-bold">Account Information</h1>
   </div>
-
   <div className="flex flex-col items-center p-6 overflow-y-auto bg-gray-100 relative z-20">
     <div className="absolute z-0 rounded-2xl -top-14 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-zinc-300 w-40 h-40 lg:w-72 lg:h-72 rotate-45"></div>
     <div className="absolute z-0 rounded-2xl left-1/2 lg:-right-10 lg:top-96 transform -translate-x-1/2 -translate-y-1/2 bg-sky-500 w-40 h-40 lg:w-72 lg:h-72 rotate-45"></div>

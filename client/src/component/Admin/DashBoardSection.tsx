@@ -6,6 +6,7 @@ import { FaPhone, FaVideo, FaCheck, FaTimes, FaClock, FaRegTrashAlt } from 'reac
 import { useSocket } from "../../contexts/AdminContext";
 import axios from "axios";
 import DashBoardGraph from "./DashBoardGraph";
+import {TailSpin} from 'react-loader-spinner'
 
 
 
@@ -153,6 +154,26 @@ console.log(admincallList)
   // console.log(usersList)
   // // console.log(adminData);
   // console.log(admincallList)
+
+
+  if(!adminData || !usersList || !graphData){
+    return(
+      <div className="w-full h-screen flex flex-col justify-center items-center relative z-10 overflow-x-hidden">
+      <TailSpin   
+    height="80"
+    width="80"
+    color="#00ABE4"
+    ariaLabel="tail-spin-loading"
+    radius="1"
+    wrapperStyle={{}}
+    wrapperClass=""
+    visible={true}
+/>
+    </div>
+    )
+  }
+
+
 
   return (
     <div className="container mx-auto p-4">

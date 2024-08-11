@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import Swal from "sweetalert2";
 
+
 type PropertyDataType = {
   _id: string;
   adminId: string;
@@ -75,6 +76,8 @@ const PropertyDataSection = () => {
       }
     });
   };
+
+
 
   return (
     <div className="relative p-1">

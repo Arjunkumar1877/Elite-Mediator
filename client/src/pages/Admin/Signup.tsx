@@ -11,6 +11,7 @@ import { FaEyeSlash } from "react-icons/fa";
 import { IoEyeSharp } from "react-icons/io5";
 import axios from "axios";
 import { useSelector } from "react-redux";
+import { TailSpin } from 'react-loader-spinner'
 // import { toast } from 'react-toastify'; // Assuming you're using react-toastify for notifications
 
 interface Errors {
@@ -235,6 +236,24 @@ const Signup: React.FC = () => {
   };
 
   console.log(confirmOtp);
+
+  if(!posters[9]){
+    return(
+      <div className="w-full h-screen flex justify-center items-center relative z-10 overflow-x-hidden">
+       <TailSpin   
+    height="80"
+    width="80"
+    color="#00ABE4"
+    ariaLabel="tail-spin-loading"
+    radius="1"
+    wrapperStyle={{}}
+    wrapperClass=""
+    visible={true}
+/>
+    </div>
+    )
+  }
+
 
   return (
     <div className="flex justify-center h-screen w-full">
