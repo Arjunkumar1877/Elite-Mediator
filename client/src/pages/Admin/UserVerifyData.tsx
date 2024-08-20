@@ -36,9 +36,6 @@ const UserVerifyData = () => {
     image: currentAdmin?.image || "",
   });
 
-  console.log(formData);
-  console.log(currentAdmin._id);
-
   const [formErrors, setFormErrors] = useState({
     address: false,
     state: false,
@@ -50,13 +47,12 @@ const UserVerifyData = () => {
 
   const validateInput = (key: keyof FormDataType, value: string): boolean => {
     if (key === "pincode") {
-      return /^\d{6}$/.test(value); 
+      return /^\d{6}$/.test(value);
     }
     return value.trim() !== "";
   };
 
-
-  const handleImageChange = (e: React.ChangeEvent < HTMLInputElement > ) => {
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       handleImageUpload(e.target.files[0]);
     }
@@ -92,7 +88,7 @@ const UserVerifyData = () => {
             setImageUploadError(null);
             setFormData((prevData) => ({
               ...prevData,
-              image: downloadURL
+              image: downloadURL,
             }));
           });
         }
@@ -152,14 +148,14 @@ const UserVerifyData = () => {
   };
 
   return (
-    <div>
+    <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-gray-100">
       <div className="absolute z-0 rounded-2xl -top-14 sm:ml-30 md:ml-28 lg:left-64 transform translate-x-1/2 -translate-y-1/2 bg-zinc-300 w-40 h-40 lg:w-72 lg:h-72 rotate-45"></div>
-      <h1 className="relative font-semibold text-2xl z-10 flex justify-center items-center mt-8 text-center md:text-5xl">
+      <h1 className="relative font-semibold text-2xl z-10 flex justify-center items-center mt-8 text-center md:text-4xl lg:text-5xl">
         WE KEEP YOUR DATA SAFE IN OUR HANDS
       </h1>
-      <div className="p-10 z-10">
-        <div className="flex flex-col justify-center items-center border-2 relative rounded-md z-10 px-8">
-          <div className="mb-6 md:mb-0 relative mt-9 P-3">
+      <div className="p-6 z-10 w-full max-w-5xl">
+        <div className="flex flex-col justify-center items-center bg-white shadow-md p-6 rounded-md w-full">
+          <div className="mb-6 relative mt-9 P-3 flex flex-col items-center">
             <label htmlFor="profile-image" className="cursor-pointer">
               <div className="relative h-24 w-24 md:h-32 md:w-32 lg:h-48 lg:w-48">
                 {imageUploadProgress !== null && (
@@ -174,7 +170,9 @@ const UserVerifyData = () => {
                           height: "100%",
                         },
                         path: {
-                          stroke: `rgba(62, 152, 199, ${imageUploadProgress / 100})`,
+                          stroke: `rgba(62, 152, 199, ${
+                            imageUploadProgress / 100
+                          })`,
                         },
                       }}
                     />
@@ -198,46 +196,48 @@ const UserVerifyData = () => {
               className="hidden"
               onChange={handleImageChange}
             />
-            <h1 className="text-center p-3 text-zinc-500">Upload Profile Image</h1>
+            <h1 className="text-center p-3 text-zinc-500">
+              Upload Profile Image
+            </h1>
           </div>
           {imageUploadError && (
             <div className="text-red-500 mt-2">{imageUploadError}</div>
           )}
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-10 mb-20">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10 w-full">
             {Object.keys(formData).map((key) => {
               if (key !== "image") {
                 const error = formErrors[key as keyof FormDataType];
                 return (
-                  <div key={key}>
-                    <div className="flex justify-between px-2">
-                      <span className="text-zinc-500 md:text-xl">
+                  <div key={key} className="w-full">
+                    <div className="flex justify-between px-2 mb-2">
+                      <span className="text-zinc-500 md:text-lg">
                         {key.charAt(0).toUpperCase() + key.slice(1)}
                       </span>
-                      <div className="flex justify-between gap-1">
-                        {formData[key as keyof FormDataType] &&
-                          (error ? (
-                            <BsXCircleFill className="text-red-600 text-xs" />
-                          ) : (
-                            <BsCheckCircleFill className="text-green-600 text-xs" />
-                          ))}
-                        <span
-                          className={`text-xs text-center ${
-                            error ? "text-red-500" : "text-green-500"
-                          }`}
-                        >
-                          {formData[key as keyof FormDataType].length > 0 &&
-                            (error ? "Invalid" : "Valid")}
-                        </span>
+                      <div className="flex items-center gap-1">
+                        {formData[key as keyof FormDataType] && (
+                          <>
+                            {error ? (
+                              <BsXCircleFill className="text-red-600 text-sm" />
+                            ) : (
+                              <BsCheckCircleFill className="text-green-600 text-sm" />
+                            )}
+                            <span
+                              className={`text-xs text-center ${
+                                error ? "text-red-500" : "text-green-500"
+                              }`}
+                            >
+                              {formData[key as keyof FormDataType].length > 0 &&
+                                (error ? "Invalid" : "Valid")}
+                            </span>
+                          </>
+                        )}
                       </div>
                     </div>
                     <input
                       type="text"
-                      className={`w-[300px] border-2 px-4 py-3 rounded-lg lg:w-[400px] ${
+                      className={`w-full border-2 px-4 py-3 rounded-lg ${
                         error ? "border-red-500" : ""
-                      }`}
-                      placeholder={`Enter your ${
-                        key.charAt(0).toUpperCase() + key.slice(1)
                       }`}
                       value={formData[key as keyof FormDataType]}
                       onChange={handleChange(key as keyof FormDataType)}
@@ -248,13 +248,14 @@ const UserVerifyData = () => {
               return null;
             })}
           </div>
-
-          <button
-            onClick={handleSubmit}
-            className="px-10 py-3 bg-sky-500 text-white font-semibold rounded-md hover:bg-sky-600 transition duration-300 mb-10"
-          >
-            PROCEED
-          </button>
+          <div className="flex flex-col justify-center items-center">
+            <button
+              className="bg-gradient-to-r from-zinc-900 to-zinc-600 w-40 md:w-48 h-12 lg:w-64 lg:h-16 rounded-md text-white hover:bg-gradient-to-r hover:from-zinc-800 hover:to-zinc-500"
+              onClick={handleSubmit}
+            >
+              Save Changes
+            </button>
+          </div>
         </div>
       </div>
     </div>
