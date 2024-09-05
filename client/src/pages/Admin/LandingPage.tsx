@@ -15,7 +15,9 @@ type PostersDataType = {
 };
 
 const Landing = () => {
-  const { setToken }: any = useSocket()
+  const { setToken }: any = useSocket();
+  const url = new URLSearchParams();
+  console.log(url)
   const [posters, setPosters] = useState<PostersDataType[]>([]);
   const getToken = async()=>{
    const token: string = await requestPermission();

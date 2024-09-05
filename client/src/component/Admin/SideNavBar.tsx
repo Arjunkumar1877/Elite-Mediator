@@ -124,6 +124,7 @@ const SideNavBar: React.FC<SideNavBarProps> = ({ navShowSet }) => {
           console.log(data);
   
           if (data.message === "success") {
+            localStorage.clear();
             dispatch(signoutSuccess());
             Swal.fire("You have been sucessfully logged out ");
           } else {
