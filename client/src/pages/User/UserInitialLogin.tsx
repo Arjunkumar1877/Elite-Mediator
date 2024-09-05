@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { BsCheckCircleFill } from "react-icons/bs";
-import {  useLocation, useNavigate } from "react-router-dom";
+import {  Link, useLocation, useNavigate } from "react-router-dom";
 import { auth } from "../../firebase/firebase";
 import { signInWithPhoneNumber, RecaptchaVerifier } from "firebase/auth";
 import { useDispatch, useSelector } from "react-redux";
@@ -302,95 +302,100 @@ console.log(propertyData)
 
 
   return (
-    <div className="relative min-h-screen flex flex-col items-center justify-center bg-gray-100 p-4">
-      <div className="absolute z-0 rounded-2xl -top-40 left-1/2 transform -translate-x-1/2 bg-sky-500 w-60 h-40 lg:h-96 rotate-45"></div>
-      <div className="w-full flex justify-end p-4">
-        <button className="bg-sky-500 py-2 px-3 rounded text-white hover:bg-sky-700">
-          Register
+<div className="relative min-h-screen flex flex-col items-center justify-center bg-gray-100 p-4">
+  <div className="absolute z-0 rounded-2xl -top-40 left-1/2 transform -translate-x-1/2 bg-sky-500 w-48 h-32 sm:w-60 sm:h-40 lg:w-60 lg:h-40 xl:w-80 xl:h-60 rotate-45"></div>
+  <div className="w-full flex justify-end p-4">
+<Link to={"/"} >
+<button className="bg-sky-500 py-2 px-3 rounded text-white hover:bg-sky-700">
+      Register
+    </button>
+</Link>
+  </div>
+
+  <div className="w-full max-w-4xl mx-auto p-4 lg:px-16">
+    <div className="p-4 sm:p-6 md:p-8 lg:p-10 flex flex-col justify-center items-center rounded relative z-10 border-2 bg-white gap-4 sm:gap-5 md:gap-6 lg:gap-8 shadow-md">
+      <h1 className="uppercase text-lg sm:text-xl md:text-2xl lg:text-3xl text-center font-bold tracking-wider">
+        Enter User Details
+      </h1>
+      <div className="w-full flex flex-col gap-4 sm:gap-5 md:gap-6 lg:gap-8">
+        <div className="flex flex-col">
+          <div className="flex justify-between px-2 sm:px-4 lg:px-6">
+            <span>Name</span>
+            {formData?.username && (
+              <div className="flex gap-2 items-center">
+                <BsCheckCircleFill className="text-green-600 text-xs" />
+                <span>Valid</span>
+              </div>
+            )}
+          </div>
+          <input
+            type="text"
+            onChange={handleChange}
+            value={formData?.username}
+            name="username"
+            className="rounded border-2 w-full px-4 py-2 sm:px-5 sm:py-3 lg:px-6 lg:py-4 placeholder:font-semibold placeholder:px-2 lg:placeholder:px-6"
+            placeholder="Enter your name"
+          />
+        </div>
+
+        <div className="flex flex-col">
+          <div className="flex justify-between px-2 sm:px-4 lg:px-6">
+            <span>Purpose</span>
+            {formData?.purpose && (
+              <div className="flex gap-2 items-center">
+                <BsCheckCircleFill className="text-green-600 text-xs" />
+                <span>Valid</span>
+              </div>
+            )}
+          </div>
+          <input
+            type="text"
+            onChange={handleChange}
+            value={formData?.purpose}
+            name="purpose"
+            className="rounded border-2 w-full px-4 py-2 sm:px-5 sm:py-3 lg:px-6 lg:py-4 placeholder:font-semibold placeholder:px-2 lg:placeholder:px-6"
+            placeholder="Enter purpose of contacting"
+          />
+        </div>
+
+        <div className="flex flex-col">
+  <div className="flex justify-between items-center px-2 sm:px-4 lg:px-6">
+    <span className="text-sm sm:text-base lg:text-lg">Phone</span>
+    {formData.phone && (
+      <div className="flex gap-2 items-center">
+        <BsCheckCircleFill className="text-green-600 text-xs" />
+        <span className="text-xs sm:text-sm lg:text-base">Valid</span>
+      </div>
+    )}
+  </div>
+  <PhoneInput
+    country={"in"}
+    value={formData?.phone as any}
+    onChange={handlePhoneChange}
+    containerClass="rounded border-2 w-full  py-2 sm:px-5 sm:py-3 lg:px-6 lg:py-4"
+    
+    placeholder="Enter your phone"
+  />
+</div>
+
+      </div>
+
+      <div id="recaptcha" className="recaptcha mt-4"></div>
+
+      <div>
+        <button
+          className="bg-sky-500 py-2 px-4 rounded text-white hover:bg-sky-700"
+          onClick={formSubmit}
+          disabled={!validateForm()}
+        >
+          Proceed
         </button>
       </div>
-
-      <div className="w-full max-w-4xl mx-auto p-4 lg:px-16">
-        <div className="p-6 lg:p-10 flex flex-col justify-center items-center rounded relative z-10 border-2 bg-white gap-5 shadow-md">
-          <h1 className="uppercase text-lg lg:text-2xl text-center font-bold tracking-wider">
-            Enter User Details
-          </h1>
-          <div className="flex flex-col gap-4 lg:gap-8">
-            <div className="flex flex-col">
-              <div className="flex justify-between px-2 lg:px-10">
-                <span>Name</span>
-                {formData?.username && (
-                  <div className="flex gap-2 items-center">
-                    <BsCheckCircleFill className="text-green-600 text-xs" />
-                    <span>Valid</span>
-                  </div>
-                )}
-              </div>
-              <input
-                type="text"
-                onChange={handleChange}
-                value={formData?.username}
-                name="username"
-                className="rounded border-2 w-full px-5 lg:w-[600px] py-3 placeholder:font-semibold placeholder:px-2 lg:placeholder:px-6"
-                placeholder="Enter your name"
-              />
-            </div>
-
-            <div className="flex flex-col">
-              <div className="flex justify-between px-2 lg:px-10">
-                <span>Purpose</span>
-                {formData?.purpose && (
-                  <div className="flex gap-2 items-center">
-                    <BsCheckCircleFill className="text-green-600 text-xs" />
-                    <span>Valid</span>
-                  </div>
-                )}
-              </div>
-              <input
-                type="text"
-                onChange={handleChange}
-                value={formData?.purpose}
-                name="purpose"
-                className="rounded border-2 w-full px-5 lg:w-[600px] py-3 placeholder:font-semibold placeholder:px-2 lg:placeholder:px-6"
-                placeholder="Enter purpose of contacting"
-              />
-            </div>
-
-            <div className="flex flex-col">
-              <div className="flex justify-between px-2 lg:px-10">
-                <span>Phone</span>
-                {formData.phone && (
-                  <div className="flex gap-2 items-center">
-                    <BsCheckCircleFill className="text-green-600 text-xs" />
-                    <span>Valid</span>
-                  </div>
-                )}
-              </div>
-              <PhoneInput
-                country={"in"}
-                value={formData?.phone as any}
-                onChange={handlePhoneChange}
-                containerClass="rounded border-2 w-full px-5 lg:w-[600px] py-3 placeholder:font-semibold placeholder:px-2 lg:placeholder:px-6"
-                inputClass="w-full"
-                placeholder="Enter your phone"
-              />
-            </div>
-          </div>
-
-          <div id="recaptcha" className="recaptcha"></div>
-
-          <div>
-            <button
-              className="bg-sky-500 py-2 px-4 rounded text-white hover:bg-sky-700"
-              onClick={formSubmit}
-              disabled={!validateForm()}
-            >
-              Proceed
-            </button>
-          </div>
-        </div>
-      </div>
     </div>
+  </div>
+</div>
+
+
   );
 };
 
